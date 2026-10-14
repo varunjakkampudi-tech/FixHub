@@ -2,7 +2,7 @@
 
 ## Scope and authority
 
-- Workspace: `C:\Users\Admin\Desktop\A-Z`
+- Workspace: local Windows desktop workspace (historical exact path intentionally omitted from current public documentation)
 - Migration date: 2026-10-14
 - Reference received: an attached text describing the proposed `viswatra-marketplace` documentation pack.
 - The reference text described a packaged set of documents, but no packaged roadmap file is present in this workspace for provenance inspection. The nine-file mapping below is taken from the reference text itself.
@@ -67,7 +67,7 @@ Viswatra is the confirmed parent brand. “A–Z Services” and `viswatra-marke
 
 The owner subsequently selected **Fix Hub** as the product name under Viswatra. This amendment supersedes the earlier statement above that the commercial name was open. The original nine-file migration matrix and source hashes remain historical evidence and are not rewritten. Their active destination files were updated for current naming. At this review, `.migration-backup/` is absent from the workspace snapshot; prior backup existence was recorded, but current backup retention and original-byte revalidation cannot be confirmed. No replacement archive was reconstructed from edited files. `fixhub-platform` is recorded only as a recommended future repository identifier; the workspace directory and repository state were not renamed or initialized.
 
-The requested import files, `CODEX_IMPORT_INSTRUCTIONS.md` and `Viswatra_AZ_Services_Master_Execution_Roadmap_V4.md`, are still absent from the workspace. No V4 content or original-roadmap checksum is available to preserve, and the import notice remains active. DEC-016 and RISK-005 therefore remain BLOCKED.
+The requested import files, `CODEX_IMPORT_INSTRUCTIONS.md` and `Viswatra_AZ_Services_Master_Execution_Roadmap_V4.md`, were absent in this historical snapshot. No V4 content or original-roadmap checksum was available to preserve at that time. The import blocker was not resolved by later V4.1 reconstruction; see the amendment below. DEC-016 and RISK-005 remain unresolved pending owner decision/evidence.
 
 Current SHA-256 values after the naming amendment and senior-review update:
 
@@ -91,3 +91,15 @@ The canonical active roadmap is [`../roadmap/master-roadmap.md`](../roadmap/mast
 The earlier statements in this ledger that the import source remained absent are historical snapshots from before the inline specification was supplied. They remain as history and are superseded for current planning by this amendment. The historical V4 source/checksum remains unavailable. No recovery candidates were found anywhere inside this workspace; the historical backup folder is absent and no substitute backup was created. The nine historical source/destination hash pairs remain recorded historical evidence, not present-day proof of recoverable originals.
 
 DEC-016 is updated to PROPOSED: V4.1 is a candidate sequencing baseline, pending owner confirmation. RISK-005 is OPEN: historical V4 provenance remains unresolved and proposed V4.1 must not govern later phases until confirmed. No owner confirmation or Phase 00 closure is implied.
+
+## Public-repository audit remediation amendment — 2026-10-14
+
+The owner subsequently supplied the public repository URL and requested repository remediation. The current checkout was verified clean on `main` at `da0661bfc709e9aba31e364c4459b7b129cf92e2`, tracking `origin/main` at `https://github.com/varunjakkampudi-tech/FixHub`. This repository is documentation-only; its existence does not mean Phase 09 or any application implementation has started. The root and docs indexes and this record were corrected to describe that current state. Earlier statements that no Git repository existed remain historical observations, not current status.
+
+The earlier migration report records the exact local desktop path, and commit `da0661bfc709e9aba31e364c4459b7b129cf92e2` is public. The current file now omits the exact path, but editing it does not erase prior public commit content. The commit author email also uses a personal address. Future local commits are configured to use this account's GitHub noreply address; history will not be rewritten without separate owner authorization. This is a residual historical-disclosure risk, not a claim that the information was removed from GitHub history.
+
+The owner-supplied independent audit reports prior creation of a Lovable project. That claim has not been independently checked in the Lovable account. No Lovable tool/project was opened or modified during this remediation; current documents no longer claim the project is unopened, and further Lovable activity remains unauthorized.
+
+`SECURITY.md`, `CONTRIBUTING.md`, a dependency-free documentation validation script, a Dependabot GitHub Actions schedule, and a GitHub Actions documentation-check workflow were added. The workflow action is pinned to an immutable commit. Before changes, GitHub showed public visibility, `main` default branch, secret scanning and push protection enabled, no license, no branch protection/ruleset, vulnerability alerts and private vulnerability reporting disabled, Dependabot security updates disabled, and only the owner listed as collaborator. After remediation, vulnerability alerts, Dependabot security updates, and private vulnerability reporting were enabled and their GitHub API state was rechecked. Branch protection and hosted CI remain pending; local checks do not establish hosted CI success.
+
+The historical `.migration-backup/` directory and original source bytes remain missing; the prior nine hash pairs cannot be revalidated. The current public Git history is a recoverable snapshot of committed documents only and is not a substitute for the missing historical originals. No claim of historical backup recovery is made.

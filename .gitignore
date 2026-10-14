@@ -1,2 +1,10 @@
 # Retained source snapshots for documentation migrations; keep recoverable locally.
 .migration-backup/
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+build/
+coverage/
+*.log

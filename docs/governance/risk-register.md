@@ -23,6 +23,7 @@
 | RISK-013 | Multi-channel identity and notification delivery may diverge. | Technical | Duplicate requests, missed offers, privacy leakage. | Canonical IDs, idempotency, correlation, delivery logs, and fallback design. | Engineering owner | Open |
 | RISK-014 | Initial city expansion may occur before local supply/demand and operations evidence. | Product | Poor service quality and cost. | Evidence-gated expansion decision. | Product owner | Open |
 | RISK-015 | Support, incident response, dispute, and fraud operations are under-specified. | Operations | Unsafe or unresolved customer/merchant outcomes. | Define support model, hours, escalation, audit, and runbooks. | Operations owner | Open |
+| RISK-016 | Public repository content may be reused under unclear expectations because no license is selected; prior commits may retain local path or personal email metadata. | Legal / privacy / repository governance | Rights ambiguity and historical disclosure that cannot be removed without rewriting public history. | Keep the repository public per current owner-provided URL; do not invent a license. Current files should omit private paths and use the GitHub noreply address for future commits. Owner to choose a license and decide whether historical metadata risk is accepted; no history rewrite is authorized. | Product owner | Open |
 
 ## Assumption ledger
 

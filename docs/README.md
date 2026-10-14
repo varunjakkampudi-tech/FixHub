@@ -1,6 +1,6 @@
 # Documentation index
 
-This tree contains product foundation and governance documents for Fix Hub, the owner-selected product name under parent company Viswatra. `A–Z Services` and `viswatra-marketplace` are historical planning identifiers. `fixhub-platform` is the recommended future repository identifier only; no repository exists. Logo, visual identity, colors, typography, domain, and tagline remain OPEN.
+This tree contains product foundation and governance documents for Fix Hub, the owner-selected product name under parent company Viswatra. `A–Z Services` and `viswatra-marketplace` are historical planning identifiers. `fixhub-platform` is a recommended identifier; the current public repository is `varunjakkampudi-tech/FixHub`, default branch `main`. Logo, visual identity, colors, typography, domain, and tagline remain OPEN.
 
 ## Product
 
@@ -24,6 +24,7 @@ This tree contains product foundation and governance documents for Fix Hub, the 
 - [Foundation review](reviews/foundation-review.md)
 - [Phase review policy](governance/phase-review-policy.md)
 - [Phase review template](reviews/phase-review-template.md)
+- [Repository audit remediation findings](reviews/foundation-review.md#current-repository-audit-remediation)
 
 ## Roadmap and design
 
@@ -32,3 +33,5 @@ This tree contains product foundation and governance documents for Fix Hub, the 
 - `design/` and `engineering/` are reserved documentation domains. No design system, UI, or implementation blueprint was present in the supplied files.
 
 No application source, infrastructure, or test directories are created by this documentation migration.
+
+Repository-level guidance: [contributing](../CONTRIBUTING.md), [security reporting](../SECURITY.md), and automated [documentation validation](../scripts/validate-docs.mjs). These do not represent application security or product tests.

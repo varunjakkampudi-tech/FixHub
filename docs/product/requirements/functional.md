@@ -6,6 +6,8 @@
 - Status: Working draft for owner review
 - Priority meanings: P0 required for launch hypothesis; P1 important; P2 later or validation-dependent
 - Acceptance note: requirements describe expected behavior, not implemented behavior or test evidence.
+- Document owner: Product owner (role; individual assignee not recorded)
+- Review history: 2026-10-14 — repository audit remediation; stable requirement IDs retained.
 
 ## Customer requirements
 

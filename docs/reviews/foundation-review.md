@@ -110,6 +110,51 @@ The [phase review policy](../governance/phase-review-policy.md) defines these as
 5. Resolve scope/business decisions and evidence gaps in DEC-015 and RISK-006 through RISK-015 before related commitments.
 6. If historical comparison/recovery is required, provide original V4 and backup candidates with provenance. Accept backup candidates only when each file hash matches its corresponding historical manifest entry.
 
-## Phase 00 recommendation
+## Phase 00 recommendation (review snapshot)
 
 **CONDITIONAL — ready for owner review, NOT CLOSED.** The documentation structure and traceability are in place, and V4.1 accurately records the owner-supplied proposed sequencing. Phase 00 cannot be closed until the owner reviews the foundation and requirements, confirms or revises the proposed roadmap, and records explicit approval. Missing historical V4 and backup bytes remain provenance limitations; feasibility, implementation security, runtime, and production-readiness categories remain unassessed. No Lovable, implementation, or Phase 01 work was started.
+
+## Current repository audit remediation
+
+### Scope and baseline
+
+This section amends repository-specific observations in the preceding review, which accurately described the workspace before GitHub repository creation. On 2026-10-14, the current checkout was inspected read-only before edits: branch `main`, clean working tree, `origin` set to `https://github.com/varunjakkampudi-tech/FixHub`, HEAD `da0661bfc709e9aba31e364c4459b7b129cf92e2`. GitHub reported a public repository with default branch `main`. Repository existence and documentation changes do not close Phase 00 or start Phase 01.
+
+### Findings addressed in repository content
+
+- Corrected README and documentation index to identify the existing repository and retained `main` as canonical branch; updated roadmap Phase 09 so repository existence is not described as future creation or completed engineering.
+- Added `CONTRIBUTING.md` and `SECURITY.md`; clarified public-repository handling, review expectations, scope, and private vulnerability reporting.
+- Added a dependency-free Markdown/link/phase/requirement-index validation script and a least-permission GitHub Actions workflow pinned to an immutable action commit. Local execution is not hosted CI evidence.
+- Extended `.gitignore` for common secret, dependency, build, and generated-output paths while retaining `.migration-backup/` exclusion.
+- Added an explicit proposed action/resource access matrix and delegated merchant-manager role while keeping all role choices unapproved.
+- Added functional/non-functional document owner roles and revision history without inventing named assignees.
+- Corrected the stale DOD-018 claim: the owner-supplied audit reports prior Lovable project creation; this report has not verified account state, and no Lovable action was taken.
+- Added DEC-017 and RISK-016 for the unresolved license choice and residual public-history disclosure. No license was chosen and no public Git history was rewritten.
+
+### Repository control evidence and remaining gates
+
+| Control | Observed before remediation | Review result |
+|---|---|---|
+| Default branch | `main` | PASS; retained |
+| Secret scanning / push protection | Enabled / enabled | PASS as repository setting only; no claim of complete secret detection |
+| Branch protection / rulesets | No protection; ruleset list empty | Pending; will configure after documentation CI is published and verified |
+| Dependabot security updates | Disabled | Enabled via GitHub API; post-change repository settings verified |
+| Vulnerability alerts | Disabled | Enabled via GitHub API; endpoint returned success |
+| Private vulnerability reporting | Disabled | Enabled via GitHub API; endpoint returned success |
+| Independent reviewers | Only repository owner listed | BLOCKER for enforcing future PR merges; owner must add an independent reviewer |
+| License | None | OPEN owner/legal decision; do not select a license on the owner's behalf |
+| Commit signing | GPG unavailable; previous commit unsigned | Future signing remains NOT ASSESSED / unavailable; no history rewrite, key generation, or signed-commit requirement inferred |
+| Historical path/email in public Git history | Present in prior commit metadata/content | Residual disclosure; current docs/future email can be corrected, but history rewrite requires separate authorization |
+| Historical migration backup | Missing; 0/9 source copies revalidated in prior review | Unresolved; Git history is not a substitute for original migration bytes |
+
+### Evidence-based current percentages
+
+- Documentation validator: local result is reported in the execution handoff; denominator is all Markdown files scanned in the current checkout. This is documentation-integrity coverage, not a product test or quality score.
+- Roadmap: 20/20 phase headings and 1/1 single-public-release rule are locally checked by the validator. This remains V4.1 proposal coverage; historical V4 was not imported or verified, and owner confirmation is still needed.
+- Requirements: the index checker validates all identifiers extracted from the functional and non-functional requirements against the index. This does not prove requirement approval, completeness, implementation, or acceptance-test execution.
+- Phase approvals: 0/20 owner-approved phases evidenced; Phase 00 remains open. No overall completion percentage or aggregate score is reported because no approved weighted rubric exists.
+- Security implementation, architecture feasibility, runtime, reliability, production readiness, legal compliance, and market viability: **NOT ASSESSED**.
+
+### Updated recommendation
+
+**Repository-documentation remediation: conditional on remote setting verification and a successful hosted workflow run. Phase 00: CONDITIONAL, NOT CLOSED.** Remaining owner decisions include roadmap V4.1 supersession, foundation/requirements approval, whether to approve Phase 01, license selection, history-disclosure acceptance or separately authorized history treatment, and an independent reviewer. This audit does not claim “100%” or “Excellent”: no calibrated aggregate rubric exists, and several required evidence/owner gates remain open. No Lovable activity, application development, deployment, or subsequent phase is authorized by this update.

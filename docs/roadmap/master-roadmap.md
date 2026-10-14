@@ -8,7 +8,7 @@
 - Authority: reconstructed from the complete owner-supplied inline specification received 2026-10-14.
 - Historical V4: `Viswatra_AZ_Services_Master_Execution_Roadmap_V4.md` was unavailable in the workspace. It was not inspected, imported, compared, or checksum-verified. No historical V4 checksum is claimed.
 - Local SHA-256 of this V4.1 document: recorded in [`docs/governance/document-migration.md`](../governance/document-migration.md) and the [`foundation review`](../reviews/foundation-review.md); it identifies this exact reconstructed file only.
-- Scope: planning and governance. This document does not authorize application code, Git/GitHub operations, infrastructure, paid services, Lovable, deployment, or phase execution.
+- Scope: planning and governance. This document does not authorize application code, infrastructure, paid services, Lovable, product deployment, or phase execution. Repository governance work is tracked separately; the existing documentation repository is not application implementation.
 - Completion evidence: each phase requires its phase-specific evidence, independent review where applicable, and explicit owner sign-off. A phase is not complete merely because its documents or code exist.
 
 ## Release policy
@@ -86,7 +86,7 @@ Verify Lovable export, role-isolated builds, shared components, framework compat
 
 ### PHASE 09 — Engineering Baseline & CI/CD
 
-Only after authorization, establish the GitHub monorepo, isolated applications, shared packages, API, workers, environment configuration, protected branches, automated tests, security checks, and deployment pipelines.
+Only after authorization, evolve the existing GitHub repository into the separately approved engineering baseline: decide repository topology, then add isolated applications, shared packages, API, workers, environment configuration, protected branches, automated tests, security checks, and deployment pipelines. The current repository contains documentation only; this phase is not already complete by virtue of repository existence or documentation CI.
 
 **Exit:** reproducible development environment and verified engineering baseline.
 

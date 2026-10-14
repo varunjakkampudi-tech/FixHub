@@ -5,6 +5,8 @@
 - Document ID: P00-NFR
 - Status: Working draft for owner review
 - Note: Numeric targets below are proposed acceptance targets, not measured baselines. They require owner and technical review.
+- Document owner: Product owner (role; individual assignee not recorded)
+- Review history: 2026-10-14 — repository audit remediation; stable requirement IDs retained.
 
 | ID | Area | Requirement / proposed target | Evidence required |
 |---|---|---|---|

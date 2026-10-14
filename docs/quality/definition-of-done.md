@@ -32,7 +32,7 @@ Phase 00 is done only when all conditions below are evidenced. Document completi
 - DOD-015: Product owner explicitly approves the requirements baseline before Phase 01.
 - DOD-016: Architecture owner later validates the technical baseline; Phase 00 does not pre-approve it.
 - DOD-017: Logo and identity decisions remain OPEN until their separate owner approval; permanent visual implementation is gated on that approval.
-- DOD-018: Lovable remains unopened until requirements, architecture, branding, user journeys, and screen specifications are explicitly approved.
+- DOD-018: No new Lovable work is initiated until requirements, architecture, branding, user journeys, and screen specifications are explicitly approved. A previously supplied repository audit reports that a Lovable project was created earlier; its current state and provenance have not been independently verified, and this requirement does not claim it is unopened or authorize changes to it.
 
 ## Evidence exclusions
 
