@@ -54,11 +54,32 @@ try {
     await writeFile(indexPath, indexText.replace('`FR-C-001`, ', ''), 'utf8');
   }, /FR-C-001 is missing/);
 
+  await expectFailure('missing NFR ID removed from source and index', async () => {
+    const requirementPath = path.join(fixtureRoot, 'docs/product/requirements/non-functional.md');
+    const requirementText = await readFile(requirementPath, 'utf8');
+    await writeFile(requirementPath, requirementText.replace(/^\| NFR-SEC-001 \|.*\r?\n/m, ''), 'utf8');
+    const indexPath = path.join(fixtureRoot, 'docs/README.md');
+    const indexText = await readFile(indexPath, 'utf8');
+    await writeFile(indexPath, indexText.replace('`NFR-SEC-001`, ', ''), 'utf8');
+  }, /NFR-SEC-001 is missing/);
+
+  await expectFailure('source NFR omitted from index', async () => {
+    const indexPath = path.join(fixtureRoot, 'docs/README.md');
+    const indexText = await readFile(indexPath, 'utf8');
+    await writeFile(indexPath, indexText.replace('`NFR-PERF-001`', ''), 'utf8');
+  }, /NFR-PERF-001 from non-functional requirements is not listed/);
+
   await expectFailure('unexpected malformed ID', async () => {
     const file = path.join(fixtureRoot, 'docs/product/requirements/functional.md');
     const text = await readFile(file, 'utf8');
     await writeFile(file, `${text}\nMalformed identifier fixture: FR-CC-001\n`, 'utf8');
   }, /unexpected identifier FR-CC-001/);
+
+  await expectFailure('unexpected malformed NFR ID', async () => {
+    const file = path.join(fixtureRoot, 'docs/product/requirements/non-functional.md');
+    const text = await readFile(file, 'utf8');
+    await writeFile(file, `${text}\nMalformed identifier fixture: NFR-SEC-1000\n`, 'utf8');
+  }, /unexpected identifier NFR-SEC-1000/);
 
   await expectFailure('duplicate requirement ID', async () => {
     const file = path.join(fixtureRoot, 'docs/product/requirements/functional.md');
