@@ -1,4 +1,5 @@
 import { readFile, readdir, stat } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -60,15 +61,56 @@ const phases = [...roadmap.matchAll(/^### PHASE (\d{2})\b/gm)].map(m => m[1]);
 const expected = Array.from({ length: 20 }, (_, i) => String(i).padStart(2, '0'));
 if (JSON.stringify(phases) !== JSON.stringify(expected)) errors.push(`roadmap: expected phases 00-19 exactly once in order; found ${phases.join(', ')}`);
 if (!/one complete coordinated public production release/i.test(roadmap)) errors.push('roadmap: single coordinated public production release policy missing');
+const roadmapProvenancePath = path.join(root, 'docs', 'governance', 'roadmap-provenance.json');
+try {
+  const provenance = JSON.parse(await readFile(roadmapProvenancePath, 'utf8'));
+  const currentHash = createHash('sha256').update(roadmap, 'utf8').digest('hex').toUpperCase();
+  const expectedHash = provenance.currentRevision?.sha256?.toUpperCase();
+  if (provenance.document !== 'docs/roadmap/master-roadmap.md') errors.push('roadmap provenance: document path does not match canonical roadmap');
+  if (!expectedHash || currentHash !== expectedHash) errors.push(`roadmap provenance: current SHA-256 ${currentHash} does not match recorded ${expectedHash ?? 'missing checksum'}`);
+  const currentRevisionRecorded = provenance.revisions?.some(revision =>
+    revision.commit === provenance.currentRevision?.commit && revision.sha256?.toUpperCase() === expectedHash,
+  );
+  if (!currentRevisionRecorded) errors.push('roadmap provenance: current revision is missing from the immutable revision ledger');
+} catch (error) {
+  errors.push(`roadmap provenance: unable to validate checksum manifest (${error.message})`);
+}
 for (const id of ['DEC-016', 'DEC-017', 'RISK-005', 'RISK-016']) {
   if (!all.includes(id)) errors.push(`traceability: required identifier ${id} not found`);
 }
 const functional = contents.get(path.join(root, 'docs', 'product', 'requirements', 'functional.md')) ?? '';
 const nonfunctional = contents.get(path.join(root, 'docs', 'product', 'requirements', 'non-functional.md')) ?? '';
 const index = contents.get(path.join(root, 'docs', 'README.md')) ?? '';
-for (const [label, source] of [['functional', functional], ['non-functional', nonfunctional]]) {
-  const ids = [...new Set(source.match(/\b(?:FR-[A-Z]-\d{3}|NFR-[A-Z]+-\d{3})\b/g) ?? [])];
-  for (const id of ids) if (!index.includes(id)) errors.push(`index: ${id} from ${label} requirements is not listed`);
+const expectedFunctional = [
+  ...['C', 'M'].flatMap(group => Array.from({ length: 8 }, (_, i) => `FR-${group}-${String(i + 1).padStart(3, '0')}`)),
+  ...Array.from({ length: 6 }, (_, i) => `FR-A-${String(i + 1).padStart(3, '0')}`),
+  ...Array.from({ length: 5 }, (_, i) => `FR-X-${String(i + 1).padStart(3, '0')}`),
+];
+const expectedNonfunctional = [
+  ...Array.from({ length: 3 }, (_, i) => `NFR-SEC-${String(i + 1).padStart(3, '0')}`),
+  ...Array.from({ length: 2 }, (_, i) => `NFR-REL-${String(i + 1).padStart(3, '0')}`),
+  ...['PERF', 'SCALE', 'OBS', 'BCP', 'EXT', 'OPS', 'COST'].map(area => `NFR-${area}-001`),
+  ...Array.from({ length: 2 }, (_, i) => `NFR-UX-${String(i + 1).padStart(3, '0')}`),
+];
+for (const [label, source, expectedIds] of [
+  ['functional', functional, expectedFunctional],
+  ['non-functional', nonfunctional, expectedNonfunctional],
+]) {
+  const found = source.match(/\b(?:FR-[A-Z]-\d{3}|NFR-[A-Z]+-\d{3})\b/g) ?? [];
+  const counts = new Map();
+  for (const id of found) counts.set(id, (counts.get(id) ?? 0) + 1);
+  const actual = new Set(found);
+  for (const id of expectedIds) {
+    if (!actual.has(id)) errors.push(`${label} requirements: required identifier ${id} is missing`);
+    const indexCount = (index.match(new RegExp(`\\b${id}\\b`, 'g')) ?? []).length;
+    if (indexCount === 0) errors.push(`index: required identifier ${id} from ${label} requirements is not listed`);
+    if (indexCount > 1) errors.push(`index: required identifier ${id} appears ${indexCount} times`);
+  }
+  for (const id of actual) {
+    if (!expectedIds.includes(id)) errors.push(`${label} requirements: unexpected identifier ${id}`);
+    if (counts.get(id) > 1) errors.push(`${label} requirements: duplicate identifier ${id} appears ${counts.get(id)} times`);
+  }
+  if (actual.size !== expectedIds.length) errors.push(`${label} requirements: expected ${expectedIds.length} unique identifiers; found ${actual.size}`);
 }
 
 if (errors.length) {
@@ -76,5 +118,5 @@ if (errors.length) {
   for (const error of errors) console.error(`- ${error}`);
   process.exitCode = 1;
 } else {
-  console.log(`Documentation validation passed: ${markdown.length} Markdown files; ${phases.length} roadmap phases; single-release policy and indexed requirement IDs verified.`);
+  console.log(`Documentation validation passed: ${markdown.length} Markdown files; ${phases.length} roadmap phases; 27 functional and 14 non-functional IDs complete, unique, and indexed; roadmap checksum and single-release policy verified.`);
 }

@@ -37,7 +37,7 @@ Additional governance and planning references: [documentation index](../README.m
 
 The historical `Viswatra_AZ_Services_Master_Execution_Roadmap_V4.md` and `CODEX_IMPORT_INSTRUCTIONS.md` were not present in the workspace. Historical V4 was therefore **not inspected, imported, compared, or SHA-256 verified**. The new [`V4.1 proposal`](../roadmap/master-roadmap.md) was reconstructed solely from the complete owner-supplied inline specification. It is explicitly PROPOSED pending owner confirmation as superseding roadmap; it is not historical V4 and is not yet the approved governing baseline.
 
-The proposal enumerates exactly 20 phases, PHASE 00 through PHASE 19, and includes the single coordinated public production release policy plus gates G0–G5. Its actual local SHA-256 is `49FC8F6B35E1CF20740002DE125E67AE97B35D29FD48C42720CF9C9DAEC21763`. This checksum identifies only the V4.1 file at the time hashed, not historical V4.
+The proposal enumerates exactly 20 phases, PHASE 00 through PHASE 19, and includes the single coordinated public production release policy plus gates G0–G5. SHA-256 `49FC8F6B35E1CF20740002DE125E67AE97B35D29FD48C42720CF9C9DAEC21763` identifies the initial reconstructed bytes at commit `da0661bfc709e9aba31e364c4459b7b129cf92e2`; SHA-256 `089E73B14BA797FC1518B4ECE9C3852D20EADCEA360DCEC9BBEFA48A782D3E48` identifies the later roadmap bytes at commit `424dede7371cd7a3c592f3ace3bde91573e939d2`. The versioned [provenance manifest](../governance/roadmap-provenance.json) is authoritative for these byte-level records. Neither hash is historical V4.
 
 ## Senior assessment by dimension
 
@@ -124,7 +124,7 @@ This section amends repository-specific observations in the preceding review, wh
 
 - Corrected README and documentation index to identify the existing repository and retained `main` as canonical branch; updated roadmap Phase 09 so repository existence is not described as future creation or completed engineering.
 - Added `CONTRIBUTING.md` and `SECURITY.md`; clarified public-repository handling, review expectations, scope, and private vulnerability reporting.
-- Added a dependency-free Markdown/link/phase/requirement-index validation script and a least-permission GitHub Actions workflow pinned to an immutable action commit. Local execution is not hosted CI evidence.
+- Added a dependency-free Markdown/link/phase/requirement-index validation script and a least-permission GitHub Actions workflow pinned to an immutable action commit. The initial validator checked that discovered IDs were indexed but did not enforce completeness; see the checksum and ID-inventory follow-up recorded below.
 - Extended `.gitignore` for common secret, dependency, build, and generated-output paths while retaining `.migration-backup/` exclusion.
 - Added an explicit proposed action/resource access matrix and delegated merchant-manager role while keeping all role choices unapproved.
 - Added functional/non-functional document owner roles and revision history without inventing named assignees.
@@ -154,6 +154,12 @@ This section amends repository-specific observations in the preceding review, wh
 - Requirements: the index checker validates all identifiers extracted from the functional and non-functional requirements against the index. This does not prove requirement approval, completeness, implementation, or acceptance-test execution.
 - Phase approvals: 0/20 owner-approved phases evidenced; Phase 00 remains open. No overall completion percentage or aggregate score is reported because no approved weighted rubric exists.
 - Security implementation, architecture feasibility, runtime, reliability, production readiness, legal compliance, and market viability: **NOT ASSESSED**.
+
+### Provenance and requirement-inventory follow-up
+
+The audit identified that the 2026-10-14 roadmap edit changed its checksum while the migration ledger still presented the initial reconstruction hash as the completed file hash. The ledger now separates the initial `da0661b` bytes from the later `424dede` bytes; their independently recomputed SHA-256 values are recorded in the provenance manifest. Validation now checks the current roadmap bytes against that manifest.
+
+The validator now requires the complete expected inventory of 27 functional IDs and 14 non-functional IDs, rejects unexpected or duplicate IDs, and checks all expected IDs are indexed. This prevents an identifier removed from both a source file and index from passing merely because no discovered ID is missing from the index. The required hosted `docs-validation` result is tracked on the live PR; a local pass is not treated as hosted evidence.
 
 ### Updated recommendation
 

@@ -88,6 +88,17 @@ The owner supplied the complete roadmap specification inline in the Codex reques
 
 The canonical active roadmap is [`../roadmap/master-roadmap.md`](../roadmap/master-roadmap.md). It contains the specified Phase 00 through Phase 19 sequence and the single coordinated public production release rule. Its status is **PROPOSED — awaiting owner confirmation as superseding roadmap**. SHA-256 of the completed V4.1 file: `49FC8F6B35E1CF20740002DE125E67AE97B35D29FD48C42720CF9C9DAEC21763`.
 
+### Roadmap checksum drift reconciliation
+
+The hash above identifies the initial reconstructed V4.1 bytes at commit `da0661bfc709e9aba31e364c4459b7b129cf92e2`; it is not a mutable “current file” checksum. The roadmap was subsequently edited in `424dede7371cd7a3c592f3ace3bde91573e939d2`. Independent SHA-256 recomputation from each Git revision verified:
+
+| Roadmap revision | Commit | SHA-256 |
+|---|---|---|
+| Initial reconstructed V4.1 | `da0661bfc709e9aba31e364c4459b7b129cf92e2` | `49FC8F6B35E1CF20740002DE125E67AE97B35D29FD48C42720CF9C9DAEC21763` |
+| Roadmap after repository documentation edits | `424dede7371cd7a3c592f3ace3bde91573e939d2` | `089E73B14BA797FC1518B4ECE9C3852D20EADCEA360DCEC9BBEFA48A782D3E48` |
+
+The machine-readable [roadmap provenance manifest](roadmap-provenance.json) records both immutable revisions. `scripts/validate-docs.mjs` recomputes the current file hash and fails CI if it differs from the manifest's current revision. A future intentional roadmap edit must add a new revision entry and update `currentRevision`; this does not authenticate the unavailable historical V4 source.
+
 The earlier statements in this ledger that the import source remained absent are historical snapshots from before the inline specification was supplied. They remain as history and are superseded for current planning by this amendment. The historical V4 source/checksum remains unavailable. No recovery candidates were found anywhere inside this workspace; the historical backup folder is absent and no substitute backup was created. The nine historical source/destination hash pairs remain recorded historical evidence, not present-day proof of recoverable originals.
 
 DEC-016 is updated to PROPOSED: V4.1 is a candidate sequencing baseline, pending owner confirmation. RISK-005 is OPEN: historical V4 provenance remains unresolved and proposed V4.1 must not govern later phases until confirmed. No owner confirmation or Phase 00 closure is implied.

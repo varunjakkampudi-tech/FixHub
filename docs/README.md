@@ -19,6 +19,7 @@ This tree contains product foundation and governance documents for Fix Hub, the 
 - [Decision register](governance/decision-register.md)
 - [Risk register and assumptions](governance/risk-register.md)
 - [Document migration record](governance/document-migration.md)
+- [Roadmap checksum provenance](governance/roadmap-provenance.json)
 - [Access control and roles](security/access-control.md)
 - [Definition of done](quality/definition-of-done.md)
 - [Foundation review](reviews/foundation-review.md)
