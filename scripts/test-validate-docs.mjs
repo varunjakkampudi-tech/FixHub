@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { cp, mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
@@ -135,6 +136,19 @@ try {
   const expansionValidator = await readFile(expansionValidatorPath, 'utf8');
   assert.match(expansionValidator, /label === 'functional' \? 27 : 14/);
   await writeFile(expansionValidatorPath, expansionValidator.replace("label === 'functional' ? 27 : 14", "label === 'functional' ? 28 : 14"), 'utf8');
+  // A reviewed expansion must also update the conceptual matrix and exact
+  // artifact scope, rather than silently orphaning the additional ID.
+  const expansionMatrixPath = path.join(fixtureRoot, 'docs/blueprint/traceability-matrix.md');
+  const expansionMatrix = await readFile(expansionMatrixPath, 'utf8');
+  const expansionRow = expansionMatrix.match(/^\| FR-C-001 \|.*$/m)?.[0];
+  assert.ok(expansionRow, 'expansion fixture requires an existing traceability row');
+  const expandedMatrix = `${expansionMatrix}\n${expansionRow.replace('FR-C-001', 'FR-C-009')}\n`;
+  await writeFile(expansionMatrixPath, expandedMatrix, 'utf8');
+  const expansionScopePath = path.join(fixtureRoot, 'docs/governance/phase-00-approval-scope.json');
+  const expansionScope = JSON.parse(await readFile(expansionScopePath, 'utf8'));
+  expansionScope.conceptualBlueprints.find(entry => entry.document === 'docs/blueprint/traceability-matrix.md').sha256 =
+    createHash('sha256').update(expandedMatrix, 'utf8').digest('hex').toUpperCase();
+  await writeFile(expansionScopePath, `${JSON.stringify(expansionScope, null, 2)}\n`, 'utf8');
   const expansionResult = runValidator();
   assert.equal(expansionResult.status, 0, `reviewed inventory expansion fixture failed:\n${expansionResult.stdout}\n${expansionResult.stderr}`);
   assert.match(expansionResult.stdout, /28 functional and 14 non-functional IDs/);
@@ -277,6 +291,77 @@ try {
     const text = await readFile(file, 'utf8');
     await writeFile(file, text.replace('`NFR-SEC-001`', '`NFR-SEC-001`, `NFR-SEC-001`'), 'utf8');
   }, /NFR-SEC-001 appears 2 times/);
+
+  await expectFailure('missing required architecture document', async () => {
+    await rm(path.join(fixtureRoot, 'docs/architecture/system-context.md'));
+  }, /required document missing or empty docs\/architecture\/system-context\.md/);
+
+  await expectFailure('missing required phase dossier', async () => {
+    await rm(path.join(fixtureRoot, 'docs/phases/phase-19.md'));
+  }, /required document missing or empty docs\/phases\/phase-19\.md/);
+
+  await expectFailure('missing phase dossier section', async () => {
+    const file = path.join(fixtureRoot, 'docs/phases/phase-12.md');
+    const text = await readFile(file, 'utf8');
+    await writeFile(file, text.replace('## Testing requirements', '## Removed test section'));
+  }, /phase section missing or duplicate.*Testing requirements/);
+
+  await expectFailure('duplicate mandatory flow heading', async () => {
+    const file = path.join(fixtureRoot, 'docs/flows/flow-04-atomic-acceptance.md');
+    const text = await readFile(file, 'utf8');
+    await writeFile(file, `${text}\n# FLOW 04 — Duplicate\n`);
+  }, /required flow heading missing or duplicate # FLOW 04/);
+
+  await expectFailure('missing required Mermaid source', async () => {
+    const file = path.join(fixtureRoot, 'docs/architecture/system-context.md');
+    const text = await readFile(file, 'utf8');
+    await writeFile(file, text.replace('```mermaid', '```text'));
+  }, /expected 1 Mermaid diagrams.*system-context/);
+
+  await expectFailure('unsupported Mermaid diagram declaration', async () => {
+    const file = path.join(fixtureRoot, 'docs/architecture/system-context.md');
+    const text = await readFile(file, 'utf8');
+    await writeFile(file, text.replace('flowchart LR', 'unknownDiagram'));
+  }, /unsupported or empty Mermaid diagram/);
+
+  await expectFailure('missing customer journey stage', async () => {
+    const file = path.join(fixtureRoot, 'docs/journeys/customer-journey.md');
+    const text = await readFile(file, 'utf8');
+    await writeFile(file, text.replace(/^\| CJ-24:.*\r?\n/m, ''));
+  }, /customer journey stages missing, duplicate or out of order/);
+
+  await expectFailure('missing blueprint traceability row', async () => {
+    const file = path.join(fixtureRoot, 'docs/blueprint/traceability-matrix.md');
+    const text = await readFile(file, 'utf8');
+    await writeFile(file, text.replace(/^\| FR-C-001 \|.*\r?\n/m, ''));
+  }, /blueprint traceability: required identifier FR-C-001 must have exactly one row/);
+
+  await expectFailure('duplicate blueprint traceability row', async () => {
+    const file = path.join(fixtureRoot, 'docs/blueprint/traceability-matrix.md');
+    const text = await readFile(file, 'utf8');
+    const row = text.match(/^\| FR-C-001 \|.*$/m)?.[0];
+    assert.ok(row);
+    await writeFile(file, `${text}\n${row}\n`);
+  }, /blueprint traceability: required identifier FR-C-001 must have exactly one row/);
+
+  await expectFailure('missing expanded DOD criterion', async () => {
+    const file = path.join(fixtureRoot, 'docs/quality/definition-of-done.md');
+    const text = await readFile(file, 'utf8');
+    await writeFile(file, text.replace(/^- DOD-022:.*\r?\n/m, ''));
+  }, /expected DOD-001 through DOD-022 exactly once in order/);
+
+  await expectFailure('approved artifact scope detects content drift', async () => {
+    const file = path.join(fixtureRoot, 'docs/architecture/system-context.md');
+    const text = await readFile(file, 'utf8');
+    await writeFile(file, `${text}\nUnrecorded scope amendment.\n`);
+  }, /approval scope: artifact hash mismatch docs\/architecture\/system-context\.md/);
+
+  await expectFailure('duplicate approval-scope entry cannot hide a missing artifact', async () => {
+    const file = path.join(fixtureRoot, 'docs/governance/phase-00-approval-scope.json');
+    const scope = JSON.parse(await readFile(file, 'utf8'));
+    scope.conceptualBlueprints[1] = scope.conceptualBlueprints[0];
+    await writeFile(file, `${JSON.stringify(scope, null, 2)}\n`);
+  }, /exact conceptual document inventory missing, duplicate or unexpected/);
 
   await createFixture();
   const externalTarget = path.join(tempRoot, 'outside.md');

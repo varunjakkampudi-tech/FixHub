@@ -3,9 +3,9 @@
 ## Document control
 
 - Document ID: P00-SCOPE
-- Status: Working draft for owner review
-- Scope baseline: derived from the supplied Phase 00 master prompt only
-- Sequencing reference: proposed Fix Hub Master Execution Roadmap V4.1; owner confirmation as superseding roadmap is pending. Historical V4 was not available for inspection or checksum verification.
+- Status: Owner-delegated planning baseline approved 2026-10-15; see [approval record](../reviews/phase-00-owner-approval.md). Detailed implementation decisions remain separately gated.
+- Scope baseline: initial foundation plus owner-authorized conceptual architecture, flows, role journeys and all-phase planning dossiers; see [blueprint guide](../blueprint/README.md).
+- Sequencing reference: approved governing Fix Hub Master Execution Roadmap V4.1. Historical V4 remains unavailable/unverified; its limitation is accepted. No later-phase execution authority is granted.
 
 ## In scope for the proposed launch product
 

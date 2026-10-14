@@ -1,0 +1,3 @@
+# Canonical documentation/provenance bytes must survive Windows checkouts.
+*.md text eol=lf
+*.json text eol=lf

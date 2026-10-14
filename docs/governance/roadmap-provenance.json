@@ -1,10 +1,10 @@
 {
   "document": "docs/roadmap/master-roadmap.md",
   "currentRevision": {
-    "commit": "424dede7371cd7a3c592f3ace3bde91573e939d2",
-    "sha256": "089E73B14BA797FC1518B4ECE9C3852D20EADCEA360DCEC9BBEFA48A782D3E48"
+    "commit": "96ea4d94cc44440918b36573d84e7ef77520bea3",
+    "sha256": "6053CC821FC3697BE1038E5D1402B5690FF4620B4B02068C8DE0EAD82AB36919"
   },
-  "integrityLimit": "SHA-256 detects byte drift against this manifest; it does not independently authenticate the roadmap or manifest. Trust depends on protected main, the required independent human review, and retained Git history.",
+  "integrityLimit": "SHA-256 detects byte drift against this manifest; it does not independently authenticate the roadmap or manifest. Trust depends on protected main, retained Git history and risk-based assurance under the solo-maintainer policy: exact-head CI, recorded AI audit and human owner self-review for qualifying low-risk work; additional independent assurance for sensitive work before release.",
   "revisions": [
     {
       "label": "Initial reconstructed V4.1",
@@ -15,6 +15,11 @@
       "label": "Roadmap after repository documentation edits",
       "commit": "424dede7371cd7a3c592f3ace3bde91573e939d2",
       "sha256": "089E73B14BA797FC1518B4ECE9C3852D20EADCEA360DCEC9BBEFA48A782D3E48"
+    },
+    {
+      "label": "Owner-delegated approval of governing V4.1; phase sequence unchanged",
+      "commit": "96ea4d94cc44440918b36573d84e7ef77520bea3",
+      "sha256": "6053CC821FC3697BE1038E5D1402B5690FF4620B4B02068C8DE0EAD82AB36919"
     }
   ]
 }

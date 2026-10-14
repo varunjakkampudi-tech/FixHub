@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "purpose": "Required traceability inventory for the current owner-review requirements baseline. Update only through an explicitly reviewed requirements change.",
+  "purpose": "Owner-delegated approved initial 27-FR/14-NFR Phase 00 baseline, 2026-10-15. Phase 02 expansion/refinement requires reviewed inventory, source, index, validator-policy and regression changes.",
   "functional": [
     "FR-C-001", "FR-C-002", "FR-C-003", "FR-C-004", "FR-C-005", "FR-C-006", "FR-C-007", "FR-C-008",
     "FR-M-001", "FR-M-002", "FR-M-003", "FR-M-004", "FR-M-005", "FR-M-006", "FR-M-007", "FR-M-008",

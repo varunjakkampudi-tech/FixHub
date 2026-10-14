@@ -24,6 +24,10 @@ This repository currently holds product and governance documentation only. Its c
 - Preserve stable requirement, decision, risk, and other traceability IDs.
 - Mark facts, proposals, assumptions, and unresolved external dependencies distinctly.
 - Do not claim owner approval, roadmap completion, implementation, testing, or release evidence that is not present.
-- Historical roadmap V4 was not available in the workspace and has not been inspected or checksum-verified. `docs/roadmap/master-roadmap.md` is a newly reconstructed V4.1 proposal from an owner-supplied inline specification; it is not authoritative or a verified replacement until the owner confirms supersession.
+- Historical roadmap V4 remains unavailable/unverified. Reconstructed V4.1 is approved as governing future planning through explicit owner delegation recorded 2026-10-15 in `docs/reviews/phase-00-owner-approval.md`; the provenance limitation is accepted without claiming recovery. Conceptual blueprints do not approve detailed architecture/UX or authorize Phase 01. Repository closure publication follows `docs/governance/solo-maintainer-policy.md`: qualifying low-risk work requires exact-head CI, recorded AI audit and actual human OWNER SELF-REVIEW; sensitive work requires additional independent assurance before release.
 - The repository is public. Do not put secrets, private filesystem paths, personal data, or confidential material in tracked content. Historical commits may retain previously committed content even after current files are corrected.
 - Repository security settings, CI results, and local documentation checks are separate evidence; never infer application security or production readiness from documentation validation.
+
+## Delegated ownership and review workflow
+
+ChatGPT acts as delegated technical product owner/chief architect/quality lead; Codex implements and verifies approved tasks. Resolve routine internal decisions within authorized scope without repeated confirmation. The human owner retains legal, financial, account and external authority and final merge accountability. Read the solo-maintainer policy before delivery. Do not simulate independent approval, change protections without separate authorization, merge automatically under the current owner-review instruction or start an unapproved phase.
