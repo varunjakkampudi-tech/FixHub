@@ -145,7 +145,7 @@ This section amends repository-specific observations in the preceding review, wh
 | License | None | OPEN owner/legal decision; do not select a license on the owner's behalf |
 | Commit signing | GPG unavailable; previous commit unsigned | Future signing remains NOT ASSESSED / unavailable; no history rewrite, key generation, or signed-commit requirement inferred |
 | Historical path/email in public Git history | Present in prior commit metadata/content | Residual disclosure; current docs/future email can be corrected, but history rewrite requires separate authorization |
-| Historical migration backup | Missing; 0/9 source copies revalidated in prior review | Unresolved; Git history is not a substitute for original migration bytes |
+| Historical migration backup | Missing; 0/9 source copies revalidated in prior review | Historical originals remain unrecovered. A new local Git bundle baseline at commit `b4794f1` was verified and is explicitly not a substitute; see the migration ledger. |
 
 ### Evidence-based current percentages
 
