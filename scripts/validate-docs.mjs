@@ -4,6 +4,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const canonicalRoot = await realpath(root);
 const errors = [];
 const markdown = [];
 
@@ -69,16 +70,25 @@ function markdownLinks(text) {
   }
 
   const links = [];
+  const undefinedReferences = [];
   const pattern = /!?\[([^\]]*)\](?:\(\s*(<[^>]+>|(?:\\.|[^()\s]|\([^()]*\))*)(?:\s+"[^"]*")?\s*\)|\[([^\]]*)\])?/g;
   for (const match of source.matchAll(pattern)) {
     if (match[2] !== undefined) {
       links.push(match[2].replace(/^<|>$/g, ''));
       continue;
     }
-    const reference = (match[3] || match[1]).trim().replace(/\s+/g, ' ').toLowerCase();
-    if (references.has(reference)) links.push(references.get(reference));
+    if (match[3] !== undefined) {
+      const reference = (match[3] || match[1]).trim().replace(/\s+/g, ' ').toLowerCase();
+      if (references.has(reference)) links.push(references.get(reference));
+      else undefinedReferences.push({ label: match[1], reference });
+    }
   }
-  return links;
+  return { links, undefinedReferences };
+}
+
+function isWithinRoot(candidate, base = canonicalRoot) {
+  const relative = path.relative(base, candidate);
+  return relative === '' || (relative !== '..' && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative));
 }
 
 for (const [file, text] of contents) {
@@ -86,7 +96,11 @@ for (const [file, text] of contents) {
   const { text: withoutFences, hasUnclosedFence } = removeFencedCode(text);
   const markdownText = withoutFences.replace(/(`+)([\s\S]*?)\1/g, match => match.replace(/[^\r\n]/g, ' '));
   const headings = headingAnchors(markdownText);
-  for (const linkTarget of markdownLinks(text)) {
+  const { links, undefinedReferences } = markdownLinks(text);
+  for (const { label, reference } of undefinedReferences) {
+    errors.push(`${rel}: undefined Markdown reference [${label}][${reference}]`);
+  }
+  for (const linkTarget of links) {
     const raw = linkTarget.trim();
     if (!raw || /^(https?:|mailto:|tel:|data:|\/\/)/i.test(raw)) continue;
     const [target, fragment] = raw.split('#', 2);
@@ -111,13 +125,13 @@ for (const [file, text] of contents) {
       continue;
     }
     const resolved = path.resolve(path.dirname(file), decodedTarget);
-    if (resolved !== root && !resolved.startsWith(root + path.sep)) {
+    if (!isWithinRoot(resolved, root)) {
       errors.push(`${rel}: local link escapes repository root ${raw}`);
       continue;
     }
     try {
-      const [realRoot, realTarget] = await Promise.all([realpath(root), realpath(resolved)]);
-      if (realTarget !== realRoot && !realTarget.startsWith(realRoot + path.sep)) {
+      const realTarget = await realpath(resolved);
+      if (!isWithinRoot(realTarget)) {
         errors.push(`${rel}: local link escapes repository root through a symlink ${raw}`);
         continue;
       }
@@ -226,5 +240,5 @@ if (errors.length) {
   for (const error of errors) console.error(`- ${error}`);
   process.exitCode = 1;
 } else {
-  console.log(`Documentation validation passed: ${markdown.length} Markdown files; ${phases.length} roadmap phases; 27 functional and 14 non-functional IDs complete, unique, and indexed; roadmap checksum and single-release policy verified.`);
+  console.log(`Documentation validation passed: ${markdown.length} Markdown files; ${phases.length} roadmap phases; ${expectedFunctional.length} functional and ${expectedNonfunctional.length} non-functional IDs complete, unique, and indexed; roadmap checksum and single-release policy verified.`);
 }

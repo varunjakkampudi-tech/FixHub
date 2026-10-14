@@ -120,6 +120,26 @@ try {
     await writeFile(indexPath, index.replace('`NFR-SEC-001`, ', ''), 'utf8');
   }, /expected 14 non-functional IDs; found 13/);
 
+  await createFixture();
+  const expansionInventoryPath = path.join(fixtureRoot, 'docs/product/requirements/id-inventory.json');
+  const expansionInventory = JSON.parse(await readFile(expansionInventoryPath, 'utf8'));
+  expansionInventory.functional.push('FR-C-009');
+  await writeFile(expansionInventoryPath, `${JSON.stringify(expansionInventory, null, 2)}\n`, 'utf8');
+  const expansionRequirementsPath = path.join(fixtureRoot, 'docs/product/requirements/functional.md');
+  const expansionRequirements = await readFile(expansionRequirementsPath, 'utf8');
+  await writeFile(expansionRequirementsPath, `${expansionRequirements}\nFR-C-009: Coordinated baseline-expansion fixture.\n`, 'utf8');
+  const expansionIndexPath = path.join(fixtureRoot, 'docs/README.md');
+  const expansionIndex = await readFile(expansionIndexPath, 'utf8');
+  await writeFile(expansionIndexPath, `${expansionIndex}\nReviewed expansion fixture: \`FR-C-009\`.\n`, 'utf8');
+  const expansionValidatorPath = path.join(fixtureRoot, 'scripts/validate-docs.mjs');
+  const expansionValidator = await readFile(expansionValidatorPath, 'utf8');
+  assert.match(expansionValidator, /label === 'functional' \? 27 : 14/);
+  await writeFile(expansionValidatorPath, expansionValidator.replace("label === 'functional' ? 27 : 14", "label === 'functional' ? 28 : 14"), 'utf8');
+  const expansionResult = runValidator();
+  assert.equal(expansionResult.status, 0, `reviewed inventory expansion fixture failed:\n${expansionResult.stdout}\n${expansionResult.stderr}`);
+  assert.match(expansionResult.stdout, /28 functional and 14 non-functional IDs/);
+  console.log('PASS coordinated reviewed requirement-inventory expansion');
+
   await expectFailure('malformed inventory identifier', async () => {
     const file = path.join(fixtureRoot, 'docs/product/requirements/id-inventory.json');
     const inventory = JSON.parse(await readFile(file, 'utf8'));
@@ -146,6 +166,18 @@ try {
     const text = await readFile(readme, 'utf8');
     await writeFile(readme, `${text}\n[missing target][validator-ref]\n\n[validator-ref]: absent-target.md\n`, 'utf8');
   }, /broken local link absent-target\.md/);
+
+  await expectFailure('undefined explicit reference link', async () => {
+    const readme = path.join(fixtureRoot, 'README.md');
+    const text = await readFile(readme, 'utf8');
+    await writeFile(readme, `${text}\n[documentation][missing-definition]\n`, 'utf8');
+  }, /undefined Markdown reference \[documentation\]\[missing-definition\]/);
+
+  await expectFailure('undefined collapsed reference link', async () => {
+    const readme = path.join(fixtureRoot, 'README.md');
+    const text = await readFile(readme, 'utf8');
+    await writeFile(readme, `${text}\n[missing-definition][]\n`, 'utf8');
+  }, /undefined Markdown reference \[missing-definition\]\[missing-definition\]/);
 
   await expectFailure('reference link cannot traverse outside repository', async () => {
     const readme = path.join(fixtureRoot, 'README.md');
@@ -205,7 +237,7 @@ try {
   await writeFile(path.join(fixtureRoot, 'file_(draft).md'), '# Nested destination target\n', 'utf8');
   const referenceReadme = path.join(fixtureRoot, 'README.md');
   const referenceText = await readFile(referenceReadme, 'utf8');
-  await writeFile(referenceReadme, `${referenceText}\n[reference target][validator-ref]\n[inline target](<target (draft).md#parenthesized-target>)\n[unbracketed nested path](file_(draft).md)\n\n[validator-ref]:\n  target%20(draft).md\n  "title"\n`, 'utf8');
+  await writeFile(referenceReadme, `${referenceText}\n[reference target][validator-ref]\n[validator-ref][]\n[ordinary bracketed text]\n[inline target](<target (draft).md#parenthesized-target>)\n[unbracketed nested path](file_(draft).md)\n\n[validator-ref]:\n  target%20(draft).md\n  "title"\n`, 'utf8');
   const markdownResult = runValidator();
   assert.equal(markdownResult.status, 0, `reference and parenthesized link fixture failed:\n${markdownResult.stdout}\n${markdownResult.stderr}`);
   console.log('PASS reference-style and parenthesized local links');
