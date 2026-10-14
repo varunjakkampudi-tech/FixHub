@@ -49,15 +49,15 @@ The proposal enumerates exactly 20 phases, PHASE 00 through PHASE 19, and includ
 | Architecture | CONDITIONAL as planning only; implementation NOT ASSESSED | Modular monolith, Node/Fastify/TypeScript, PostgreSQL/PostGIS, workers/outbox and atomic dispatch are proposals. No approved ADR set, detailed ERD, API contracts, deployment/recovery design, or concurrency proof. |
 | Security and privacy planning | CONDITIONAL; security implementation/posture NOT ASSESSED | Least privilege, role boundaries, privileged MFA, audit, privacy and dispatch integrity requirements are documented. Threat model, data-flow inventory, legal basis/retention, location/photo handling, abuse controls, incident response, vendor review and security test evidence are absent. No security score is assigned. |
 | UI/UX and brand | NOT ASSESSED for design quality; approval guardrails PASS | No UI/screens or identity were generated. Owner decisions remain open; screen registry and journeys require later approval before Lovable. |
-| Code quality | NOT APPLICABLE | No application code exists in scope. |
-| Tests and coverage | NOT ASSESSED | No test suite or implementation exists. Documentation checks in this review are not product tests. |
+| Code quality | PASS for repository validation tooling; application code NOT APPLICABLE | The documentation validator and regression suite received static review, Node syntax checks, local execution, and hosted CI. No application code exists. |
+| Tests and coverage | PASS for documentation validation; product tests NOT ASSESSED | The repository validator and its 32 regression cases pass. They are not application tests and provide no product behavior coverage. |
 | Performance and scalability | NOT ASSESSED | No numeric approved targets, workload model, benchmark, or scale test. |
-| Reliability and recovery | NOT ASSESSED | No runtime, failure-injection, backup restore, or recovery test evidence. |
+| Reliability and recovery | NOT ASSESSED for product/runtime; repository bundle rehearsal PASS | Git bundle verification and a disposable mirror-clone `git fsck --full` passed; this does not test product backup/restore or recover the missing nine historical documents. |
 | Operational readiness | NOT ASSESSED | Support hours, staffing, escalation, incident runbooks, merchant verification operations and capacity are unresolved. |
 | Documentation integrity | PASS for checks listed below; historical source bytes not revalidated | Nine foundation files, stable IDs, index, proposal provenance, and working links were checked. The original backup bytes are unavailable. |
-| Repository cleanliness | NOT ASSESSED as Git cleanliness | No `.git` directory exists, so status, tracked/untracked state and exercised ignore rules cannot be checked. Read-only inventory found no application-code trees; `.gitignore` includes `.migration-backup/`. |
+| Repository cleanliness | PASS for current Git state | The final checkout is clean on `docs/audit-settings-evidence`, with 25 tracked files and no application/infrastructure trees. `.migration-backup/` is ignored. The no-Git statement above is a historical migration snapshot. |
 | Legal/compliance readiness | NOT ASSESSED | No legal/privacy advice, vendor terms review, WhatsApp approval, or app-store approval evidence. |
-| Independent review | NOT ASSESSED | No separate reviewer evidence was supplied; this review is not represented as independent verification. |
+| Independent review | CONDITIONAL; required human approval outstanding | PR #1 has no submitted reviews and remains `REVIEW_REQUIRED`; the in-host adversarial code review is not an independent GitHub human approval. |
 
 ## Governance reconciliation and open risks
 
