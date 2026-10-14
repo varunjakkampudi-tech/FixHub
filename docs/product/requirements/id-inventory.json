@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "purpose": "Required traceability inventory for the current owner-review requirements baseline. Update only through an explicitly reviewed requirements change.",
+  "functional": [
+    "FR-C-001", "FR-C-002", "FR-C-003", "FR-C-004", "FR-C-005", "FR-C-006", "FR-C-007", "FR-C-008",
+    "FR-M-001", "FR-M-002", "FR-M-003", "FR-M-004", "FR-M-005", "FR-M-006", "FR-M-007", "FR-M-008",
+    "FR-A-001", "FR-A-002", "FR-A-003", "FR-A-004", "FR-A-005", "FR-A-006",
+    "FR-X-001", "FR-X-002", "FR-X-003", "FR-X-004", "FR-X-005"
+  ],
+  "nonFunctional": [
+    "NFR-SEC-001", "NFR-SEC-002", "NFR-SEC-003",
+    "NFR-REL-001", "NFR-REL-002",
+    "NFR-PERF-001", "NFR-SCALE-001", "NFR-UX-001", "NFR-UX-002",
+    "NFR-OBS-001", "NFR-BCP-001", "NFR-EXT-001", "NFR-OPS-001", "NFR-COST-001"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "document": "docs/roadmap/master-roadmap.md",
+  "currentRevision": {
+    "commit": "424dede7371cd7a3c592f3ace3bde91573e939d2",
+    "sha256": "089E73B14BA797FC1518B4ECE9C3852D20EADCEA360DCEC9BBEFA48A782D3E48"
+  },
+  "integrityLimit": "SHA-256 detects byte drift against this manifest; it does not independently authenticate the roadmap or manifest. Trust depends on protected main, the required independent human review, and retained Git history.",
+  "revisions": [
+    {
+      "label": "Initial reconstructed V4.1",
+      "commit": "da0661bfc709e9aba31e364c4459b7b129cf92e2",
+      "sha256": "49FC8F6B35E1CF20740002DE125E67AE97B35D29FD48C42720CF9C9DAEC21763"
+    },
+    {
+      "label": "Roadmap after repository documentation edits",
+      "commit": "424dede7371cd7a3c592f3ace3bde91573e939d2",
+      "sha256": "089E73B14BA797FC1518B4ECE9C3852D20EADCEA360DCEC9BBEFA48A782D3E48"
+    }
+  ]
+}

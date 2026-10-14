@@ -37,7 +37,7 @@ Additional governance and planning references: [documentation index](../README.m
 
 The historical `Viswatra_AZ_Services_Master_Execution_Roadmap_V4.md` and `CODEX_IMPORT_INSTRUCTIONS.md` were not present in the workspace. Historical V4 was therefore **not inspected, imported, compared, or SHA-256 verified**. The new [`V4.1 proposal`](../roadmap/master-roadmap.md) was reconstructed solely from the complete owner-supplied inline specification. It is explicitly PROPOSED pending owner confirmation as superseding roadmap; it is not historical V4 and is not yet the approved governing baseline.
 
-The proposal enumerates exactly 20 phases, PHASE 00 through PHASE 19, and includes the single coordinated public production release policy plus gates G0–G5. Its actual local SHA-256 is `49FC8F6B35E1CF20740002DE125E67AE97B35D29FD48C42720CF9C9DAEC21763`. This checksum identifies only the V4.1 file at the time hashed, not historical V4.
+The proposal enumerates exactly 20 phases, PHASE 00 through PHASE 19, and includes the single coordinated public production release policy plus gates G0–G5. SHA-256 `49FC8F6B35E1CF20740002DE125E67AE97B35D29FD48C42720CF9C9DAEC21763` identifies the initial reconstructed bytes at commit `da0661bfc709e9aba31e364c4459b7b129cf92e2`; SHA-256 `089E73B14BA797FC1518B4ECE9C3852D20EADCEA360DCEC9BBEFA48A782D3E48` identifies the later roadmap bytes at commit `424dede7371cd7a3c592f3ace3bde91573e939d2`. The versioned [provenance manifest](../governance/roadmap-provenance.json) is authoritative for these byte-level records. Neither hash is historical V4.
 
 ## Senior assessment by dimension
 
@@ -49,15 +49,15 @@ The proposal enumerates exactly 20 phases, PHASE 00 through PHASE 19, and includ
 | Architecture | CONDITIONAL as planning only; implementation NOT ASSESSED | Modular monolith, Node/Fastify/TypeScript, PostgreSQL/PostGIS, workers/outbox and atomic dispatch are proposals. No approved ADR set, detailed ERD, API contracts, deployment/recovery design, or concurrency proof. |
 | Security and privacy planning | CONDITIONAL; security implementation/posture NOT ASSESSED | Least privilege, role boundaries, privileged MFA, audit, privacy and dispatch integrity requirements are documented. Threat model, data-flow inventory, legal basis/retention, location/photo handling, abuse controls, incident response, vendor review and security test evidence are absent. No security score is assigned. |
 | UI/UX and brand | NOT ASSESSED for design quality; approval guardrails PASS | No UI/screens or identity were generated. Owner decisions remain open; screen registry and journeys require later approval before Lovable. |
-| Code quality | NOT APPLICABLE | No application code exists in scope. |
-| Tests and coverage | NOT ASSESSED | No test suite or implementation exists. Documentation checks in this review are not product tests. |
+| Code quality | PASS for repository validation tooling; application code NOT APPLICABLE | The documentation validator and regression suite received static review, Node syntax checks, local execution, and hosted CI. No application code exists. |
+| Tests and coverage | PASS for documentation validation; product tests NOT ASSESSED | All 32 non-symlink regression cases pass locally; the symlink-specific case is separately covered in hosted Linux CI. These are not application tests and provide no product behavior coverage. |
 | Performance and scalability | NOT ASSESSED | No numeric approved targets, workload model, benchmark, or scale test. |
-| Reliability and recovery | NOT ASSESSED | No runtime, failure-injection, backup restore, or recovery test evidence. |
+| Reliability and recovery | NOT ASSESSED for product/runtime; repository bundle rehearsal PASS | Git bundle verification and a disposable mirror-clone `git fsck --full` passed; this does not test product backup/restore or recover the missing nine historical documents. |
 | Operational readiness | NOT ASSESSED | Support hours, staffing, escalation, incident runbooks, merchant verification operations and capacity are unresolved. |
 | Documentation integrity | PASS for checks listed below; historical source bytes not revalidated | Nine foundation files, stable IDs, index, proposal provenance, and working links were checked. The original backup bytes are unavailable. |
-| Repository cleanliness | NOT ASSESSED as Git cleanliness | No `.git` directory exists, so status, tracked/untracked state and exercised ignore rules cannot be checked. Read-only inventory found no application-code trees; `.gitignore` includes `.migration-backup/`. |
+| Repository cleanliness | PASS for current Git state | The final checkout is clean on `docs/audit-settings-evidence`, with 25 tracked files and no application/infrastructure trees. `.migration-backup/` is ignored. The no-Git statement above is a historical migration snapshot. |
 | Legal/compliance readiness | NOT ASSESSED | No legal/privacy advice, vendor terms review, WhatsApp approval, or app-store approval evidence. |
-| Independent review | NOT ASSESSED | No separate reviewer evidence was supplied; this review is not represented as independent verification. |
+| Independent review | CONDITIONAL; required human approval outstanding | PR #1 has no submitted reviews and remains `REVIEW_REQUIRED`; the in-host adversarial code review is not an independent GitHub human approval. |
 
 ## Governance reconciliation and open risks
 
@@ -124,7 +124,7 @@ This section amends repository-specific observations in the preceding review, wh
 
 - Corrected README and documentation index to identify the existing repository and retained `main` as canonical branch; updated roadmap Phase 09 so repository existence is not described as future creation or completed engineering.
 - Added `CONTRIBUTING.md` and `SECURITY.md`; clarified public-repository handling, review expectations, scope, and private vulnerability reporting.
-- Added a dependency-free Markdown/link/phase/requirement-index validation script and a least-permission GitHub Actions workflow pinned to an immutable action commit. Local execution is not hosted CI evidence.
+- Added a dependency-free Markdown/link/phase/requirement-index validation script and a least-permission GitHub Actions workflow pinned to an immutable action commit. The initial validator checked that discovered IDs were indexed but did not enforce completeness; see the checksum and ID-inventory follow-up recorded below.
 - Extended `.gitignore` for common secret, dependency, build, and generated-output paths while retaining `.migration-backup/` exclusion.
 - Added an explicit proposed action/resource access matrix and delegated merchant-manager role while keeping all role choices unapproved.
 - Added functional/non-functional document owner roles and revision history without inventing named assignees.
@@ -137,7 +137,7 @@ This section amends repository-specific observations in the preceding review, wh
 |---|---|---|
 | Default branch | `main` | PASS; retained |
 | Secret scanning / push protection | Enabled / enabled | PASS as repository setting only; no claim of complete secret detection |
-| Branch protection / rulesets | No protection; ruleset list empty | Pending; will configure after documentation CI is published and verified |
+| Branch protection / rulesets | No protection; ruleset list empty | Branch protection now enabled: strict `docs-validation`, one approving PR review, stale approvals dismissed, conversation resolution required, admins included, force-push and deletion blocked. No ruleset is used. |
 | Dependabot security updates | Disabled | Enabled via GitHub API; post-change repository settings verified |
 | Vulnerability alerts | Disabled | Enabled via GitHub API; endpoint returned success |
 | Private vulnerability reporting | Disabled | Enabled via GitHub API; endpoint returned success |
@@ -145,7 +145,7 @@ This section amends repository-specific observations in the preceding review, wh
 | License | None | OPEN owner/legal decision; do not select a license on the owner's behalf |
 | Commit signing | GPG unavailable; previous commit unsigned | Future signing remains NOT ASSESSED / unavailable; no history rewrite, key generation, or signed-commit requirement inferred |
 | Historical path/email in public Git history | Present in prior commit metadata/content | Residual disclosure; current docs/future email can be corrected, but history rewrite requires separate authorization |
-| Historical migration backup | Missing; 0/9 source copies revalidated in prior review | Unresolved; Git history is not a substitute for original migration bytes |
+| Historical migration backup | Missing; 0/9 source copies revalidated in prior review | Historical originals remain unrecovered. A new local Git bundle baseline at commit `01e33f5` was verified and is explicitly not a substitute; see the migration ledger. |
 
 ### Evidence-based current percentages
 
@@ -155,6 +155,30 @@ This section amends repository-specific observations in the preceding review, wh
 - Phase approvals: 0/20 owner-approved phases evidenced; Phase 00 remains open. No overall completion percentage or aggregate score is reported because no approved weighted rubric exists.
 - Security implementation, architecture feasibility, runtime, reliability, production readiness, legal compliance, and market viability: **NOT ASSESSED**.
 
+### Provenance and requirement-inventory follow-up
+
+The audit identified that the 2026-10-14 roadmap edit changed its checksum while the migration ledger still presented the initial reconstruction hash as the completed file hash. The ledger now separates the initial `da0661b` bytes from the later `424dede` bytes; their independently recomputed SHA-256 values are recorded in the provenance manifest. Validation now checks the current roadmap bytes against that manifest.
+
+The validator loads the reviewed inventory of 27 functional IDs and 14 non-functional IDs from [`id-inventory.json`](../product/requirements/id-inventory.json), rejects missing, unexpected, malformed, or duplicate IDs, and checks that source requirements and the documentation index agree. Expected counts and accepted ID forms remain validator policy; baseline expansion requires a reviewed update across the inventory, validator policy, source requirements, index, and tests. This does not constitute owner approval of the requirements.
+
+Link checking covers inline and reference-style links, including undefined explicit-reference rejection, local targets, fragments, angle-bracket destinations, and fenced/inline code exclusion, with regression cases for valid/missing references and parenthesized paths. It is intentionally not described as a complete CommonMark parser; broader syntax coverage remains a documented limitation.
+
+Roadmap hashes provide integrity comparison against the manifest, not independent authenticity. The manifest and roadmap can be edited together in a branch; protected `main`, independent human review, and retained Git history provide the separate provenance controls. PR #1 still has no submitted independent approval.
+
 ### Updated recommendation
 
-**Repository-documentation remediation: conditional on remote setting verification and a successful hosted workflow run. Phase 00: CONDITIONAL, NOT CLOSED.** Remaining owner decisions include roadmap V4.1 supersession, foundation/requirements approval, whether to approve Phase 01, license selection, history-disclosure acceptance or separately authorized history treatment, and an independent reviewer. This audit does not claim “100%” or “Excellent”: no calibrated aggregate rubric exists, and several required evidence/owner gates remain open. No Lovable activity, application development, deployment, or subsequent phase is authorized by this update.
+**Repository-documentation remediation: local checks and hosted workflow PASS; branch protections and GitHub security controls verified. Future PR merge readiness remains BLOCKED until an independent reviewer is added. Phase 00: CONDITIONAL, NOT CLOSED.** Remaining owner decisions include roadmap V4.1 supersession, foundation/requirements approval, whether to approve Phase 01, license selection, history-disclosure acceptance or separately authorized history treatment, and an independent reviewer. This audit does not claim “100%” or “Excellent”: no calibrated aggregate rubric exists, and several required evidence/owner gates remain open. No Lovable activity, application development, deployment, or subsequent phase is authorized by this update.
+
+## Phase 00 current audit addendum — 2026-10-14
+
+The current checkout was refreshed from `origin`; the working branch is `docs/audit-settings-evidence`, and the validator/recovery changes described below were audited on PR head `37011be4212f63c6868e7526677bb817f312eab5`. All 25 tracked repository files and all 9 files in PR #1 were enumerated and reviewed. The PR contains documentation, governance, a JSON requirements inventory, a documentation validator, its tests, and a read-only validation workflow; no application code, infrastructure, or implementation trees were introduced. This review addendum is a documentation-only follow-up and its own commit requires the same hosted validation.
+
+On Node `v22.23.2`, `node scripts/validate-docs.mjs` passed: 18 Markdown files, 20 roadmap phases, all 27 FR and 14 NFR IDs present exactly once and indexed, current roadmap checksum matching its manifest, and the single coordinated public-release rule present. The regression suite has 33 scenarios: 32 passed locally with 0 failures, and its symlink-creation scenario was skipped locally because Windows returned `EPERM`. Hosted run [38606517275](https://github.com/varunjakkampudi-tech/FixHub/actions/runs/38606517275) passed validation and all 33 scenarios on Ubuntu, including `PASS Markdown link symlink escape`; no hosted case was skipped.
+
+The validator now rejects undefined explicit full and collapsed Markdown references, while a regression confirms ordinary bracketed prose and valid references remain accepted. It resolves the canonical repository root once and retains lexical traversal and real-path symlink containment checks. This is a focused Markdown validator, not complete CommonMark support; deeper nested destinations and other unsupported constructs remain documented limitations. No product test, runtime, performance, application-security, or production-readiness evidence is implied.
+
+The roadmap file SHA-256 remains `089E73B14BA797FC1518B4ECE9C3852D20EADCEA360DCEC9BBEFA48A782D3E48`; Phase 00 still references reconstructed V4.1 as proposed, while historical V4 remains unavailable and unverified. The three retained Git bundles match their local manifest hashes and pass `git bundle verify`; a disposable mirror-clone rehearsal passed `git fsck --full`. These bundles are all on one device and are not substitutes for the missing nine historical documents. A separate encrypted organizational backup is recommended but was not selected or uploaded. The temporary rehearsal clone remains in the OS temporary directory because cleanup was refused by the execution environment.
+
+Current repository settings show `main` protected with strict required `docs-validation`, one approving PR review, conversation resolution, admin enforcement, and force-push/deletion restrictions. Secret scanning, push protection, and Dependabot security updates are enabled; non-provider-pattern secret scanning and validity checks are disabled. Private vulnerability-reporting status could not be verified because the available API endpoint returned 404. PR #1 is open at the audited head with `REVIEW_REQUIRED`, zero submitted reviews, and merge status `BLOCKED`.
+
+Phase progress remains **14/17 applicable documented DOD criteria = 82.4%**, the existing evidence-coverage ratio only; DOD-013, DOD-014, and DOD-015 remain owner gates. Cumulative owner-approved phases remain **0/20**. Overall product/engineering completion remains **NOT MEASURABLE**. V4.1 supersession, formal Phase 00 foundation/requirements approval, Phase 01 authorization, repository licensing/IP policy, historical public-metadata disposition, acceptance of the historical recovery limitation, and selection of an eligible independent GitHub reviewer remain owner decisions. Recommendation remains **CONDITIONAL — ready for independent human review, NOT CLOSED**.
