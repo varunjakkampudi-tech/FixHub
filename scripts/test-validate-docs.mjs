@@ -393,7 +393,7 @@ try {
   }, /authority or provisional conclusion changed/);
 
   await expectFailure('Phase01 final report percentage consistency', async () => {
-    const file = path.join(fixtureRoot, 'docs/phases/phase-01-execution/final-feasibility-report.md'); const v = await readFile(file, 'utf8'); await writeFile(file, v.replace('75.0%', '100%'));
+    const file = path.join(fixtureRoot, 'docs/phases/phase-01-execution/final-feasibility-report.md'); const v = await readFile(file, 'utf8'); await writeFile(file, v.replaceAll('75.0%', '100%'));
   }, /completion percentage mismatch/);
 
   await expectFailure('Phase01 evidence must resolve to approved inventory', async () => {
