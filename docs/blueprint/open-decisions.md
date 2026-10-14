@@ -13,7 +13,7 @@ Phase 00 planning authority is recorded in [owner approval](../reviews/phase-00-
 | Tenant and case authorization | Manager delegation, technician login, masking and emergency dual control remain precise-contract decisions | Security/engineering, 03/10 |
 | Identity correlation, consent and vendor access (DEC-006/013, RISK-007/008/013) | No assumed WhatsApp access, store approval or Lovable repository import | Product/engineering, 01/03/06–08/14 |
 | Targets and recovery | Traffic, latency, uptime, RPO/RTO, retention and support hours are OPEN | Product/engineering/operations, 02/03/17 |
-| Independent reviewer and effective protection | Owner delegation cannot supply a separate eligible GitHub review | Repository owner before closure merge |
+| Owner self-review and effective protection | [Solo-maintainer policy](../governance/solo-maintainer-policy.md) permits qualifying low-risk work with exact-head CI and recorded AI audit; human owner must inspect and accept merge responsibility. An enforced independent-review setting needs separate change authorization. No independent approval is claimed. | Repository owner before closure merge |
 | Off-device recovery destination | Existing verified bundles are older same-device snapshots; no paid vendor/upload authority granted | Repository owner before backup implementation |
 | Subsequent phase authorization | Each dossier is a plan only; Phase 01 execution authorization is NOT GRANTED | Product owner before each phase |
 

@@ -30,3 +30,7 @@
 ## Decision history — 2026-10-15
 
 DEC-016 changed PROPOSED to LOCKED under the owner's final master prompt Approval A. DEC-017 changed OPEN to LOCKED for temporary no-license posture only under Approval E. DEC-008/013/014 are LOCKED as approved planning targets/objectives only, preserving separate feasibility/vendor/store evidence gates. The initial foundation and 41-ID intent are approved planning baselines under Approvals B/C. Unresolved branding, legal policies, technology/provider choices and future phase authorizations remain separate. The record is delegated authority, not a personal signature or independent GitHub review.
+
+## Solo-maintainer review amendment — 2026-10-15
+
+The human owner's permanent-ownership instruction authorizes the [risk-based solo-maintainer policy](solo-maintainer-policy.md). ChatGPT resolves delegated internal technical/product decisions within approved scope; Codex implements/verifies; human legal, financial, account/external authority and final merge accountability are retained. Routine documentation delivery uses exact-head CI, recorded adversarial AI audit and actual human OWNER SELF-REVIEW. Sensitive work requires additional independent assurance before release. GitHub setting changes remain separately authorized; PR #1 history and all stable IDs are preserved. Policy publication and final PR #2 owner disposition remain pending.

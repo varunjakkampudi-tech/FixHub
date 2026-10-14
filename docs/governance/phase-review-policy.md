@@ -2,7 +2,7 @@
 
 ## Purpose and authority
 
-This policy defines the minimum evidence required to report phase progress and recommend a phase exit. It applies to every phase in the proposed Fix Hub roadmap. It is a review method, not owner approval, implementation authorization, or a substitute for phase-specific acceptance criteria.
+This policy defines the minimum evidence required to report phase progress and recommend a phase exit. It applies to every phase in the approved governing V4.1 roadmap. It is a review method, not implementation authorization or a substitute for phase-specific acceptance criteria.
 
 ## Status vocabulary
 
@@ -45,4 +45,8 @@ For every assessment, distinguish documented intent, static inspection, local te
 
 A phase can be recommended for owner approval only when every applicable mandatory exit criterion passes and no unresolved critical blocker remains. The phase becomes **APPROVED/CLOSED** only after explicit owner sign-off is recorded with date, scope, evidence reviewed, and any accepted residual risks. Otherwise it remains open, conditional, or failed. The next phase does not start automatically.
 
-For Phase 00, owner review and explicit approval of the foundation and requirements baseline are required. Confirmation that proposed roadmap V4.1 supersedes historical V4 is a separate decision. Neither is implied by completion of this review.
+For Phase 00, delegated foundation/requirements approval and V4.1 supersession are already recorded in the [owner approval](../reviews/phase-00-owner-approval.md). Repository closure still requires proper publication and post-merge verification.
+
+## Risk-based reviewer model — 2026-10-15
+
+The [solo-maintainer policy](solo-maintainer-policy.md) supersedes a blanket independent-human review gate for qualifying low-risk planning/documentation changes. Require exact-head CI, a recorded adversarial AI audit and human OWNER SELF-REVIEW with merge responsibility. This is not independent approval or certification. Sensitive authentication/authorization, privacy, payment, irreversible/sensitive integration and launch work requires additional competent independent assurance before release. Enforced GitHub rules remain binding; settings changes require separate authorization. Reinstate stronger independent-review controls when another eligible maintainer joins.

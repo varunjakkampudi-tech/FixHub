@@ -1,6 +1,6 @@
 # Phase 00 Senior Foundation Review
 
-Current expanded Phase 00 status is recorded in the [owner-delegated approval and 21-criterion checklist](phase-00-owner-approval.md). The [post-merge audit](#post-merge-governance-audit-and-owner-sign-off-preparation) and earlier observations below retain their original review context and are superseded where explicitly amended.
+Current expanded Phase 00 status is recorded in the [owner-delegated approval and 21-criterion checklist](phase-00-owner-approval.md), with the [owner-authorized solo-maintainer review policy](../governance/solo-maintainer-policy.md). The post-merge audit and earlier observations below retain their original review context and are superseded where explicitly amended; no historical independent approval is fabricated.
 
 ## Document control
 

@@ -12,7 +12,7 @@ Make the product intent and decision authority understandable before commitments
 
 ## Current status
 
-Owner-delegated planning approval recorded; repository closure publication pending independent review. This dossier is a plan/evidence index, not proof of publication.
+Owner-delegated planning approval recorded; closure publication pending human OWNER SELF-REVIEW and normal merge under the [solo-maintainer policy](../governance/solo-maintainer-policy.md). This dossier is a plan/evidence index, not proof of publication.
 
 ## Preconditions
 
@@ -20,7 +20,7 @@ The initial nine documents and 41-ID baseline are reviewed; owner delegation app
 
 ## Dependencies
 
-Existing audit commit and provenance ledger; protected-main delivery and an eligible independent reviewer.
+Existing audit commit and provenance ledger; protected-main delivery, exact-head CI, recorded adversarial AI audit and actual human owner self-review under the authorized policy. Enforced GitHub rules remain binding.
 
 ## Scope
 
@@ -56,7 +56,7 @@ Foundation registers, conceptual architecture/flows, five role journeys, 20 phas
 
 ## External services and feasibility dependencies
 
-No new vendor use; eligible independent GitHub reviewer needed; retain actual access/terms/cost evidence before commitments.
+No new vendor use; human owner review/merge accountability and effective protection verification remain required. If an enforced review rule blocks the solo route, a separate setting-change authorization is needed. Retain actual access/terms/cost evidence before commitments.
 
 ## Roles and responsible owners
 

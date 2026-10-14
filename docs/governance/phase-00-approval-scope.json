@@ -143,7 +143,7 @@
     },
     {
       "document": "docs/phases/phase-00.md",
-      "sha256": "BCD04EA94CF14652AAAADFA1877E66EECC845F7B9F980B1E5D3F794069526BF9"
+      "sha256": "01AF2586569B37914B51A1D98981E9CBAE672D7AB171A8CFC46811779610FE63"
     },
     {
       "document": "docs/phases/phase-01.md",
@@ -235,7 +235,7 @@
     },
     {
       "document": "docs/blueprint/open-decisions.md",
-      "sha256": "59B93D8058D427D380F3BD0D35EC63C8B184DF78BCF4132990DE1A76DEEF5EA1"
+      "sha256": "75F76A8B0427713062E4053DBA29A1542CC0D3872D97F57CDCE6893ACA5DA9E1"
     },
     {
       "document": "docs/blueprint/glossary.md",

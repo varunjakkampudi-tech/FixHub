@@ -144,3 +144,9 @@ Approved roadmap bytes first occur at actual commit `96ea4d94cc44440918b36573d84
 Delivery now uses one consolidated PR, actual hosted head checks and eligible independent approval. No protection setting is changed. Owner-delegated planning acceptance is not GitHub review, published repository closure, vendor authorization or Phase 01 permission. New conceptual files are versioned plans, not later-phase designs/tests/implementation.
 
 Markdown and JSON use canonical LF through `.gitattributes` so Windows autocrlf checkouts do not silently alter approved roadmap/artifact bytes. This controls future checkout reproducibility without normalizing away hash mismatches or rewriting historical commits.
+
+## Solo-maintainer transition amendment — 2026-10-15
+
+The human owner's permanent-technical-ownership instruction supersedes the blanket independent-review delivery requirement for qualifying low-risk documentation. The [policy](solo-maintainer-policy.md) requires exact-head CI, a recorded adversarial AI audit and actual human OWNER SELF-REVIEW/merge accountability; sensitive work retains additional independent assurance before release. No GitHub setting or PR #1 history is changed. Policy adoption is recorded on the existing PR #2 branch; publication still awaits final owner review and normal merge. Any actually enforced review-rule adjustment requires separate authorization.
+
+Two conceptual documents receive governance-reference updates only: the Phase 00 dossier and open-decision register. Their current hashes are updated in the approval-scope manifest; original `a44bd3d9908f40bd311da0eb04032f37ea28984c` bytes and manifest remain in retained Git history. The 41 requirements, 20 dossier sequence, 34 diagrams and approved roadmap bytes are unchanged.

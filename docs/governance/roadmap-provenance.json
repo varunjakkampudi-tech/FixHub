@@ -4,7 +4,7 @@
     "commit": "96ea4d94cc44440918b36573d84e7ef77520bea3",
     "sha256": "6053CC821FC3697BE1038E5D1402B5690FF4620B4B02068C8DE0EAD82AB36919"
   },
-  "integrityLimit": "SHA-256 detects byte drift against this manifest; it does not independently authenticate the roadmap or manifest. Trust depends on protected main, the required independent human review, and retained Git history.",
+  "integrityLimit": "SHA-256 detects byte drift against this manifest; it does not independently authenticate the roadmap or manifest. Trust depends on protected main, retained Git history and risk-based assurance under the solo-maintainer policy: exact-head CI, recorded AI audit and human owner self-review for qualifying low-risk work; additional independent assurance for sensitive work before release.",
   "revisions": [
     {
       "label": "Initial reconstructed V4.1",

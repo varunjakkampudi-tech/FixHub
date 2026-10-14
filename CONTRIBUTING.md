@@ -11,8 +11,8 @@ This repository currently contains planning and governance documentation, not ap
 
 ## Changes and review
 
-- Keep `main` as the default branch. Once repository rules are active, submit changes through a pull request and obtain the required independent approval and passing `docs-validation` check.
+- Keep `main` protected and submit feature-branch changes through a PR. Apply the [risk-based solo-maintainer policy](docs/governance/solo-maintainer-policy.md): exact-head CI, a recorded adversarial AI audit and explicit human OWNER SELF-REVIEW for qualifying low-risk work; additional independent assurance for sensitive work before release. Owner self-review is not an independent GitHub approval, and enforced rules cannot be bypassed.
 - Keep changes scoped, run `node scripts/validate-docs.mjs` and `node scripts/test-validate-docs.mjs`, and describe any checks not run.
 - Do not include secrets, personal data, confidential content, or local machine paths. The repository is public.
 
-No license has been selected. See [DEC-017](docs/governance/decision-register.md); contribution guidance does not grant additional rights to reuse repository content.
+Temporary proprietary/no-license posture is approved under [DEC-017](docs/governance/decision-register.md); no reuse license or commercial terms have been added. Revisit before external contributions/redistribution/licensing commitments. This guidance grants no additional rights.
