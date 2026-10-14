@@ -411,7 +411,7 @@ try {
     'technical/experiments-register.md',
     'technical/hosting-capacity-cost.md',
   ];
-  const expectedIds = Array.from({ length: 14 }, (_, i) => 'P01-DOD-' + String(i + 1).padStart(3, '0'));
+  const expectedIds = [1, 2, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].map(i => 'P01-DOD-' + String(i).padStart(3, '0'));
   if (inventory.version !== 1 || inventory.phase !== '01' || inventory.status !== 'IN PROGRESS' ||
       inventory.phase02Authorized !== false || inventory.overallViability !== 'NOT ASSESSED') {
     errors.push('phase01: authority or provisional conclusion changed without review');
@@ -425,9 +425,9 @@ try {
   const rows = [...doc(base + 'definition-of-done.md').matchAll(/^\| (P01-DOD-\d{3})[^|]*\|[^|]*\|[^|]*\| (PASS|CONDITIONAL|FAIL|NOT ASSESSED) \|/gm)];
   if (JSON.stringify(rows.map(m => m[1])) !== JSON.stringify(expectedIds) ||
       JSON.stringify((inventory.criteria ?? []).map(e => e.id)) !== JSON.stringify(expectedIds)) {
-    errors.push('phase01: expected exact 14 unique ordered exit criteria');
+    errors.push('phase01: expected exact 12 unique ordered exit criteria');
   }
-  const counts = { pass: 0, conditional: 0, fail: 0, notAssessed: 0, total: 14 };
+  const counts = { pass: 0, conditional: 0, fail: 0, notAssessed: 0, total: 12 };
   const keys = { PASS: 'pass', CONDITIONAL: 'conditional', FAIL: 'fail', 'NOT ASSESSED': 'notAssessed' };
   for (const [i, entry] of (inventory.criteria ?? []).entries()) {
     if (!keys[entry.status]) { errors.push('phase01: invalid criterion status'); continue; }
@@ -436,15 +436,18 @@ try {
     if (!requiredPhase01.includes(entry.evidence) || !doc(base + entry.evidence)) errors.push('phase01: missing criterion evidence ' + entry.id);
   }
   if (Object.entries(counts).some(([k, v]) => inventory.counts?.[k] !== v)) errors.push('phase01: evidenced count mismatch');
-  if (inventory.primaryResearch?.customers !== 0 || inventory.primaryResearch?.merchants !== 0 ||
-      inventory.criteria?.[2]?.status !== 'NOT ASSESSED' || inventory.criteria?.[3]?.status !== 'NOT ASSESSED') {
+  if (inventory.primaryResearch?.customers !== 0 || inventory.primaryResearch?.merchants !== 0) {
     errors.push('phase01: primary research baseline requires genuine reviewed evidence before changing');
+  }
+  if (inventory.criteriaPolicy?.priorCount !== 14 || inventory.criteriaPolicy?.activeCount !== 12 ||
+      inventory.criteriaPolicy?.effectiveDate !== '2026-10-15' || !inventory.criteriaPolicy.historicalReview) {
+    errors.push('phase01: owner-authorized criteria change lacks audit metadata');
   }
   const percentage = (100 * counts.pass / counts.total).toFixed(1) + '%';
   for (const relative of ['definition-of-done.md', 'final-feasibility-report.md']) {
     if (!doc(base + relative).includes(percentage)) errors.push('phase01: completion percentage mismatch ' + relative);
   }
-  phase01Summary = '; ' + requiredPhase01.length + ' Phase01 assessment documents and 14 exit criteria reconciled (' + percentage + ' evidenced; not product completion)';
+  phase01Summary = '; ' + requiredPhase01.length + ' Phase01 assessment documents and 12 active exit criteria reconciled (' + percentage + ' evidenced; not product completion)';
 } catch (error) {
   errors.push('phase01: unable to validate execution evidence (' + error.message + ')');
 }

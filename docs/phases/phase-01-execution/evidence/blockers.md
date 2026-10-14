@@ -1,11 +1,11 @@
 # Feasibility blockers and decision matrix
 
-Snapshot2026-10-15. Phase01 IN PROGRESS, Phase02 NOT GRANTED. Risk history and stable IDs preserved in [risk register](../../../governance/risk-register.md).
+Snapshot 2026-10-15. Phase 01 IN PROGRESS, Phase 02 NOT AUTHORIZED. Two formal-interview tasks are no longer Phase 01 exit criteria by explicit owner direction. Missing demand and qualified merchant supply **remain real-world prelaunch blockers**, never completed findings; see [risk history](../../../governance/risk-register.md).
 
 | Finding | Evidence / priority | Effect and proposed mitigation | Owner / external action / status |
 |---|---|---|---|
-| P01-F01 Primary demand absent |0 customer cases; critical | No demand/GO claim; use nonleading quota plan and negative cases | Human outreach/data authority + research lead; PENDING |
-| P01-F02 Verified supply absent |0 merchant interviews/commitments; critical | No zone/category capacity promise; verify independent staffing and recent workload | Human outreach + providers/research lead; PENDING |
+| P01-F01 Actual demand unverified | Zero observed customer cases; critical for market/launch | Do not claim market viability; require evidence of actual customer demand and successful service outcomes through authorized future private pilot or equivalent credible method | Owner/operations; future prelaunch risk, not active interview criterion |
+| P01-F02 Merchant supply unverified | No verified willing/capable providers; critical for service safety | Confirm actual consent, competence, availability, category/zone capacity and contingency before serving customers | Founder/operations; future prelaunch risk, not active interview criterion |
 | P01-F03 Effective Meta rate/access |Official/BSP contradiction; critical mandatory dependency | Obtain dated India rate card, identity/eligibility, callback/account constraints; stress model meanwhile | Human accounts/provider authority; PENDING |
 | P01-F04 GST/entity/worker/legal |Unclear9(5)/52 and entity classification; high | Qualified scoped Indian legal/tax assessment; no clearance/collection commitment | Human adviser/purchase authority + counsel/CA; PENDING |
 | P01-F05 Economics uncalibrated |BASE surplus flips at lower acceptance; high | Validate fee collection/CAC/support and add taxes/full personnel | Research/finance + real quotes; CONDITIONAL |
@@ -15,6 +15,6 @@ Snapshot2026-10-15. Phase01 IN PROGRESS, Phase02 NOT GRANTED. Risk history and s
 | P01-F09 Current market/catchment |Historical municipal figures conflict; medium | Dated current official data and independent census row | Research, outreach if needed; CONDITIONAL |
 | P01-F10 Funding single full launch |₹50 k is validation ceiling only; high | Separate build/ops/legal budgets; consider explicit owner roadmap decision if evidence contradicts scope | Human funding/roadmap authority; PENDING |
 
-External constraints cannot be manufactured by additional documents: actual participants, legal opinion, effective official billing/account evidence, quotes and named staffing. Technical proof is an internal future test obligation but application/provisioning authority is absent now; do not describe it as executed.
+External constraints cannot be manufactured from desk research: actual participant outcomes, consented providers, professional legal guidance, dated Meta rate/account evidence, itemized quotes and staffed capacity. Removing formal interview criteria does not resolve these. Keep mandatory prelaunch pilot, supply and safety requirements; later code/runtime tests remain unexecuted.
 
-Recommendation: continue only authorized research/instrument refinement and obtain narrowly scoped external approvals. Proposed build/next-phase GO is NOT ASSESSED. No evidence yet establishes NO-GO conclusively; do not hide adverse economics or replace full launch with an unauthorized staged public release.
+Recommendation: complete remaining active Phase 01 criteria 005, 008 and 014 with bounded official evidence and owner risk assessment. Overall actual build/launch feasibility remains NOT ASSESSED. Do not convert unverified local market demand into GO.

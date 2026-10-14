@@ -60,16 +60,6 @@
       "evidence": "market/tanuku-market.md"
     },
     {
-      "id": "P01-DOD-003",
-      "status": "NOT ASSESSED",
-      "evidence": "research/customer-results.md"
-    },
-    {
-      "id": "P01-DOD-004",
-      "status": "NOT ASSESSED",
-      "evidence": "research/merchant-results.md"
-    },
-    {
       "id": "P01-DOD-005",
       "status": "CONDITIONAL",
       "evidence": "market/service-category-opportunities.md"
@@ -130,7 +120,16 @@
     "pass": 9,
     "conditional": 3,
     "fail": 0,
-    "notAssessed": 2,
-    "total": 14
+    "notAssessed": 0,
+    "total": 12
+  },
+  "criteriaPolicy": {
+    "effectiveDate": "2026-10-15",
+    "authority": "Owner explicitly directed removal of formal interview criteria; not a certification of research",
+    "priorCount": 14,
+    "activeCount": 12,
+    "historicalReview": "docs/reviews/phase-01-desk-research-review.md",
+    "limitation": "zero primary interviews, no verified supply/demand, future private-pilot and prelaunch evidence mandatory",
+    "phase02Authorized": false
   }
 }
