@@ -137,7 +137,7 @@ This section amends repository-specific observations in the preceding review, wh
 |---|---|---|
 | Default branch | `main` | PASS; retained |
 | Secret scanning / push protection | Enabled / enabled | PASS as repository setting only; no claim of complete secret detection |
-| Branch protection / rulesets | No protection; ruleset list empty | Pending; will configure after documentation CI is published and verified |
+| Branch protection / rulesets | No protection; ruleset list empty | Branch protection now enabled: strict `docs-validation`, one approving PR review, stale approvals dismissed, conversation resolution required, admins included, force-push and deletion blocked. No ruleset is used. |
 | Dependabot security updates | Disabled | Enabled via GitHub API; post-change repository settings verified |
 | Vulnerability alerts | Disabled | Enabled via GitHub API; endpoint returned success |
 | Private vulnerability reporting | Disabled | Enabled via GitHub API; endpoint returned success |
@@ -157,4 +157,4 @@ This section amends repository-specific observations in the preceding review, wh
 
 ### Updated recommendation
 
-**Repository-documentation remediation: conditional on remote setting verification and a successful hosted workflow run. Phase 00: CONDITIONAL, NOT CLOSED.** Remaining owner decisions include roadmap V4.1 supersession, foundation/requirements approval, whether to approve Phase 01, license selection, history-disclosure acceptance or separately authorized history treatment, and an independent reviewer. This audit does not claim “100%” or “Excellent”: no calibrated aggregate rubric exists, and several required evidence/owner gates remain open. No Lovable activity, application development, deployment, or subsequent phase is authorized by this update.
+**Repository-documentation remediation: local checks and hosted workflow PASS; branch protections and GitHub security controls verified. Future PR merge readiness remains BLOCKED until an independent reviewer is added. Phase 00: CONDITIONAL, NOT CLOSED.** Remaining owner decisions include roadmap V4.1 supersession, foundation/requirements approval, whether to approve Phase 01, license selection, history-disclosure acceptance or separately authorized history treatment, and an independent reviewer. This audit does not claim “100%” or “Excellent”: no calibrated aggregate rubric exists, and several required evidence/owner gates remain open. No Lovable activity, application development, deployment, or subsequent phase is authorized by this update.
