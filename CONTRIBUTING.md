@@ -12,7 +12,7 @@ This repository currently contains planning and governance documentation, not ap
 ## Changes and review
 
 - Keep `main` as the default branch. Once repository rules are active, submit changes through a pull request and obtain the required independent approval and passing `docs-validation` check.
-- Keep changes scoped, validate Markdown links and documentation checks locally with `node scripts/validate-docs.mjs`, and describe any checks not run.
+- Keep changes scoped, run `node scripts/validate-docs.mjs` and `node scripts/test-validate-docs.mjs`, and describe any checks not run.
 - Do not include secrets, personal data, confidential content, or local machine paths. The repository is public.
 
 No license has been selected. See [DEC-017](docs/governance/decision-register.md); contribution guidance does not grant additional rights to reuse repository content.

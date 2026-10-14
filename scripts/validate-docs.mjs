@@ -1,4 +1,4 @@
-import { readFile, readdir, stat } from 'node:fs/promises';
+import { readFile, readdir, realpath, stat } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -45,9 +45,14 @@ for (const [file, text] of contents) {
       continue;
     }
     try {
-      const targetStat = await stat(resolved);
+      const [realRoot, realTarget] = await Promise.all([realpath(root), realpath(resolved)]);
+      if (realTarget !== realRoot && !realTarget.startsWith(realRoot + path.sep)) {
+        errors.push(`${rel}: local link escapes repository root through a symlink ${raw}`);
+        continue;
+      }
+      const targetStat = await stat(realTarget);
       if (fragment && targetStat.isFile() && resolved.toLowerCase().endsWith('.md')) {
-        const dest = contents.get(resolved) ?? await readFile(resolved, 'utf8');
+        const dest = contents.get(realTarget) ?? await readFile(realTarget, 'utf8');
         const destHeadings = new Set([...dest.matchAll(/^#{1,6}\s+(.+?)\s*#*\s*$/gm)].map(m => anchor(m[1])));
         if (!destHeadings.has(decodeURIComponent(fragment))) errors.push(`${rel}: missing heading ${target}#${fragment}`);
       }
@@ -96,23 +101,31 @@ const expectedNonfunctional = [
   ...['PERF', 'SCALE', 'OBS', 'BCP', 'EXT', 'OPS', 'COST'].map(area => `NFR-${area}-001`),
   ...Array.from({ length: 2 }, (_, i) => `NFR-UX-${String(i + 1).padStart(3, '0')}`),
 ];
+const allExpectedRequirements = new Set([...expectedFunctional, ...expectedNonfunctional]);
+const requirementTokens = text => text.match(/\b(?:FR|NFR)(?:[-_][A-Za-z0-9]+)+\b/g) ?? [];
 for (const [label, source, expectedIds] of [
   ['functional', functional, expectedFunctional],
   ['non-functional', nonfunctional, expectedNonfunctional],
 ]) {
-  const found = source.match(/\b(?:FR-[A-Z]-\d{3}|NFR-[A-Z]+-\d{3})\b/g) ?? [];
+  const found = requirementTokens(source);
+  const indexed = requirementTokens(index);
   const counts = new Map();
   for (const id of found) counts.set(id, (counts.get(id) ?? 0) + 1);
+  const indexCounts = new Map();
+  for (const id of indexed) indexCounts.set(id, (indexCounts.get(id) ?? 0) + 1);
   const actual = new Set(found);
   for (const id of expectedIds) {
     if (!actual.has(id)) errors.push(`${label} requirements: required identifier ${id} is missing`);
-    const indexCount = (index.match(new RegExp(`\\b${id}\\b`, 'g')) ?? []).length;
+    const indexCount = indexCounts.get(id) ?? 0;
     if (indexCount === 0) errors.push(`index: required identifier ${id} from ${label} requirements is not listed`);
     if (indexCount > 1) errors.push(`index: required identifier ${id} appears ${indexCount} times`);
   }
   for (const id of actual) {
     if (!expectedIds.includes(id)) errors.push(`${label} requirements: unexpected identifier ${id}`);
     if (counts.get(id) > 1) errors.push(`${label} requirements: duplicate identifier ${id} appears ${counts.get(id)} times`);
+  }
+  for (const id of new Set(indexed)) {
+    if (!allExpectedRequirements.has(id)) errors.push(`index: unexpected or malformed requirement identifier ${id}`);
   }
   if (actual.size !== expectedIds.length) errors.push(`${label} requirements: expected ${expectedIds.length} unique identifiers; found ${actual.size}`);
 }

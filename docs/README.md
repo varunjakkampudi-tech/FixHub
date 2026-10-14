@@ -35,4 +35,4 @@ This tree contains product foundation and governance documents for Fix Hub, the 
 
 No application source, infrastructure, or test directories are created by this documentation migration.
 
-Repository-level guidance: [contributing](../CONTRIBUTING.md), [security reporting](../SECURITY.md), and automated [documentation validation](../scripts/validate-docs.mjs). These do not represent application security or product tests.
+Repository-level guidance: [contributing](../CONTRIBUTING.md), [security reporting](../SECURITY.md), automated [documentation validation](../scripts/validate-docs.mjs), and its [regression checks](../scripts/test-validate-docs.mjs). These do not represent application security or product tests.

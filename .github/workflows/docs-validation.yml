@@ -23,3 +23,5 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Validate documentation
         run: node scripts/validate-docs.mjs
+      - name: Test documentation validation safeguards
+        run: node scripts/test-validate-docs.mjs
