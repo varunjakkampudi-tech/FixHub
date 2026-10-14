@@ -8,11 +8,13 @@ This tree contains product foundation and governance documents for Fix Hub, the 
 - [Product scope](product/scope.md)
 - [Functional requirements](product/requirements/functional.md)
 - [Non-functional requirements](product/requirements/non-functional.md)
+- [Requirement ID inventory and validation baseline](product/requirements/id-inventory.json)
 
 ### Requirement traceability
 
 - Functional requirements: `FR-C-001`, `FR-C-002`, `FR-C-003`, `FR-C-004`, `FR-C-005`, `FR-C-006`, `FR-C-007`, `FR-C-008`; `FR-M-001`, `FR-M-002`, `FR-M-003`, `FR-M-004`, `FR-M-005`, `FR-M-006`, `FR-M-007`, `FR-M-008`; `FR-A-001`, `FR-A-002`, `FR-A-003`, `FR-A-004`, `FR-A-005`, `FR-A-006`; `FR-X-001`, `FR-X-002`, `FR-X-003`, `FR-X-004`, `FR-X-005`.
 - Non-functional requirements: `NFR-SEC-001`, `NFR-SEC-002`, `NFR-SEC-003`; `NFR-REL-001`, `NFR-REL-002`; `NFR-PERF-001`; `NFR-SCALE-001`; `NFR-UX-001`, `NFR-UX-002`; `NFR-OBS-001`; `NFR-BCP-001`; `NFR-EXT-001`; `NFR-OPS-001`; `NFR-COST-001`.
+- The machine-readable [ID inventory](product/requirements/id-inventory.json) is the reviewed baseline used by CI. Intentional additions, removals, or renames must update the inventory, validator policy (including expected counts and accepted ID forms), requirements, index, and regression tests together in a reviewed change.
 
 ## Governance and assurance
 

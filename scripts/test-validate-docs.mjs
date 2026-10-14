@@ -63,11 +63,152 @@ try {
     await writeFile(indexPath, indexText.replace('`NFR-SEC-001`, ', ''), 'utf8');
   }, /NFR-SEC-001 is missing/);
 
+  await expectFailure('source FR omitted from index', async () => {
+    const indexPath = path.join(fixtureRoot, 'docs/README.md');
+    const indexText = await readFile(indexPath, 'utf8');
+    await writeFile(indexPath, indexText.replace('`FR-C-001`, ', ''), 'utf8');
+  }, /FR-C-001 from functional requirements is not listed/);
+
   await expectFailure('source NFR omitted from index', async () => {
     const indexPath = path.join(fixtureRoot, 'docs/README.md');
     const indexText = await readFile(indexPath, 'utf8');
     await writeFile(indexPath, indexText.replace('`NFR-PERF-001`', ''), 'utf8');
   }, /NFR-PERF-001 from non-functional requirements is not listed/);
+
+  await expectFailure('inventory ID missing from source', async () => {
+    const file = path.join(fixtureRoot, 'docs/product/requirements/functional.md');
+    const text = await readFile(file, 'utf8');
+    await writeFile(file, text.replace(/^\| FR-C-001 \|.*\r?\n/m, ''), 'utf8');
+  }, /required identifier FR-C-001 is missing/);
+
+  await expectFailure('source ID missing from reviewed inventory', async () => {
+    const file = path.join(fixtureRoot, 'docs/product/requirements/functional.md');
+    const text = await readFile(file, 'utf8');
+    await writeFile(file, `${text}\nUnreviewed inventory expansion: FR-C-009\n`, 'utf8');
+  }, /unexpected identifier FR-C-009/);
+
+  await expectFailure('duplicate inventory identifier', async () => {
+    const file = path.join(fixtureRoot, 'docs/product/requirements/id-inventory.json');
+    const inventory = JSON.parse(await readFile(file, 'utf8'));
+    inventory.functional.push('FR-C-001');
+    await writeFile(file, `${JSON.stringify(inventory, null, 2)}\n`, 'utf8');
+  }, /functional IDs must be strings and unique/);
+
+  await expectFailure('inventory cannot silently shrink with source and index', async () => {
+    const inventoryPath = path.join(fixtureRoot, 'docs/product/requirements/id-inventory.json');
+    const inventory = JSON.parse(await readFile(inventoryPath, 'utf8'));
+    inventory.functional = inventory.functional.filter(id => id !== 'FR-C-001');
+    await writeFile(inventoryPath, `${JSON.stringify(inventory, null, 2)}\n`, 'utf8');
+    const requirementsPath = path.join(fixtureRoot, 'docs/product/requirements/functional.md');
+    const requirements = await readFile(requirementsPath, 'utf8');
+    await writeFile(requirementsPath, requirements.replace(/^\| FR-C-001 \|.*\r?\n/m, ''), 'utf8');
+    const indexPath = path.join(fixtureRoot, 'docs/README.md');
+    const index = await readFile(indexPath, 'utf8');
+    await writeFile(indexPath, index.replace('`FR-C-001`, ', ''), 'utf8');
+  }, /expected 27 functional IDs; found 26/);
+
+  await expectFailure('NFR inventory cannot silently shrink with source and index', async () => {
+    const inventoryPath = path.join(fixtureRoot, 'docs/product/requirements/id-inventory.json');
+    const inventory = JSON.parse(await readFile(inventoryPath, 'utf8'));
+    inventory.nonFunctional = inventory.nonFunctional.filter(id => id !== 'NFR-SEC-001');
+    await writeFile(inventoryPath, `${JSON.stringify(inventory, null, 2)}\n`, 'utf8');
+    const requirementsPath = path.join(fixtureRoot, 'docs/product/requirements/non-functional.md');
+    const requirements = await readFile(requirementsPath, 'utf8');
+    await writeFile(requirementsPath, requirements.replace(/^\| NFR-SEC-001 \|.*\r?\n/m, ''), 'utf8');
+    const indexPath = path.join(fixtureRoot, 'docs/README.md');
+    const index = await readFile(indexPath, 'utf8');
+    await writeFile(indexPath, index.replace('`NFR-SEC-001`, ', ''), 'utf8');
+  }, /expected 14 non-functional IDs; found 13/);
+
+  await expectFailure('malformed inventory identifier', async () => {
+    const file = path.join(fixtureRoot, 'docs/product/requirements/id-inventory.json');
+    const inventory = JSON.parse(await readFile(file, 'utf8'));
+    inventory.functional[0] = 'FR-BOGUS-001';
+    await writeFile(file, `${JSON.stringify(inventory, null, 2)}\n`, 'utf8');
+  }, /malformed functional identifier FR-BOGUS-001/);
+
+  await expectFailure('malformed NFR inventory identifier', async () => {
+    const file = path.join(fixtureRoot, 'docs/product/requirements/id-inventory.json');
+    const inventory = JSON.parse(await readFile(file, 'utf8'));
+    inventory.nonFunctional[0] = 'NFR-BOGUS-001';
+    await writeFile(file, `${JSON.stringify(inventory, null, 2)}\n`, 'utf8');
+  }, /malformed non-functional identifier NFR-BOGUS-001/);
+
+  await expectFailure('duplicate NFR inventory identifier', async () => {
+    const file = path.join(fixtureRoot, 'docs/product/requirements/id-inventory.json');
+    const inventory = JSON.parse(await readFile(file, 'utf8'));
+    inventory.nonFunctional.push('NFR-SEC-001');
+    await writeFile(file, `${JSON.stringify(inventory, null, 2)}\n`, 'utf8');
+  }, /non-functional IDs must be strings and unique/);
+
+  await expectFailure('broken reference-style link', async () => {
+    const readme = path.join(fixtureRoot, 'README.md');
+    const text = await readFile(readme, 'utf8');
+    await writeFile(readme, `${text}\n[missing target][validator-ref]\n\n[validator-ref]: absent-target.md\n`, 'utf8');
+  }, /broken local link absent-target\.md/);
+
+  await expectFailure('reference link cannot traverse outside repository', async () => {
+    const readme = path.join(fixtureRoot, 'README.md');
+    const text = await readFile(readme, 'utf8');
+    await writeFile(readme, `${text}\n[escape][outside-target]\n\n[outside-target]: ../outside.md\n`, 'utf8');
+  }, /local link escapes repository root \.\.\/outside\.md/);
+
+  await expectFailure('missing destination fragment', async () => {
+    const readme = path.join(fixtureRoot, 'README.md');
+    const text = await readFile(readme, 'utf8');
+    await writeFile(readme, `${text}\n[missing heading](docs/README.md#not-a-heading)\n`, 'utf8');
+  }, /missing heading docs\/README\.md#not-a-heading/);
+
+  await expectFailure('query-only destination still validates its fragment', async () => {
+    const readme = path.join(fixtureRoot, 'README.md');
+    const text = await readFile(readme, 'utf8');
+    await writeFile(readme, `${text}\n[query fragment](?view=compact#not-a-heading)\n`, 'utf8');
+  }, /missing heading #not-a-heading/);
+
+  await expectFailure('backtick-fenced headings cannot satisfy fragments', async () => {
+    const readme = path.join(fixtureRoot, 'README.md');
+    const text = await readFile(readme, 'utf8');
+    await writeFile(readme, `${text}\n[fenced heading](#fenced-only)\n\n\`\`\`md\n# fenced-only\n\`\`\`\`\n`, 'utf8');
+  }, /missing heading #fenced-only/);
+
+  await expectFailure('tilde-fenced headings cannot satisfy fragments', async () => {
+    const readme = path.join(fixtureRoot, 'README.md');
+    const text = await readFile(readme, 'utf8');
+    await writeFile(readme, `${text}\n[tilde heading](#tilde-only)\n\n~~~md\n# tilde-only\n~~~~\n`, 'utf8');
+  }, /missing heading #tilde-only/);
+
+  await createFixture();
+  const targetReadme = path.join(fixtureRoot, 'docs/README.md');
+  const targetReadmeText = await readFile(targetReadme, 'utf8');
+  await writeFile(targetReadme, `${targetReadmeText}\n# Repeated heading\n\n# Repeated heading\n`);
+  const duplicateHeadingReadme = path.join(fixtureRoot, 'README.md');
+  const duplicateHeadingText = await readFile(duplicateHeadingReadme, 'utf8');
+  await writeFile(duplicateHeadingReadme, `${duplicateHeadingText}\n[second repeated heading](docs/README.md#repeated-heading-1)\n`, 'utf8');
+  const duplicateHeadingResult = runValidator();
+  assert.equal(duplicateHeadingResult.status, 0, `duplicate heading anchor fixture failed:\n${duplicateHeadingResult.stdout}\n${duplicateHeadingResult.stderr}`);
+  console.log('PASS duplicate ATX heading anchor suffix');
+
+  await expectFailure('unclosed tilde fence is reported', async () => {
+    const readme = path.join(fixtureRoot, 'README.md');
+    const text = await readFile(readme, 'utf8');
+    await writeFile(readme, `${text}\n~~~md\n# still code\n`, 'utf8');
+  }, /unclosed fenced code block/);
+
+  await expectFailure('malformed percent encoding is reported as validation failure', async () => {
+    const readme = path.join(fixtureRoot, 'README.md');
+    const text = await readFile(readme, 'utf8');
+    await writeFile(readme, `${text}\n[malformed encoding](bad%ZZ.md)\n`, 'utf8');
+  }, /invalid percent-encoding in local link bad%ZZ\.md/);
+
+  await createFixture();
+  await writeFile(path.join(fixtureRoot, 'target (draft).md'), '# Parenthesized target\n', 'utf8');
+  await writeFile(path.join(fixtureRoot, 'file_(draft).md'), '# Nested destination target\n', 'utf8');
+  const referenceReadme = path.join(fixtureRoot, 'README.md');
+  const referenceText = await readFile(referenceReadme, 'utf8');
+  await writeFile(referenceReadme, `${referenceText}\n[reference target][validator-ref]\n[inline target](<target (draft).md#parenthesized-target>)\n[unbracketed nested path](file_(draft).md)\n\n[validator-ref]:\n  target%20(draft).md\n  "title"\n`, 'utf8');
+  const markdownResult = runValidator();
+  assert.equal(markdownResult.status, 0, `reference and parenthesized link fixture failed:\n${markdownResult.stdout}\n${markdownResult.stderr}`);
+  console.log('PASS reference-style and parenthesized local links');
 
   await expectFailure('unexpected malformed ID', async () => {
     const file = path.join(fixtureRoot, 'docs/product/requirements/functional.md');

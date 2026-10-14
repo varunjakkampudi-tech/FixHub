@@ -159,7 +159,11 @@ This section amends repository-specific observations in the preceding review, wh
 
 The audit identified that the 2026-10-14 roadmap edit changed its checksum while the migration ledger still presented the initial reconstruction hash as the completed file hash. The ledger now separates the initial `da0661b` bytes from the later `424dede` bytes; their independently recomputed SHA-256 values are recorded in the provenance manifest. Validation now checks the current roadmap bytes against that manifest.
 
-The validator now requires the complete expected inventory of 27 functional IDs and 14 non-functional IDs, rejects unexpected or duplicate IDs, and checks all expected IDs are indexed. This prevents an identifier removed from both a source file and index from passing merely because no discovered ID is missing from the index. The required hosted `docs-validation` result is tracked on the live PR; a local pass is not treated as hosted evidence.
+The validator loads the reviewed inventory of 27 functional IDs and 14 non-functional IDs from [`id-inventory.json`](../product/requirements/id-inventory.json), rejects missing, unexpected, malformed, or duplicate IDs, and checks that source requirements and the documentation index agree. Expected counts and accepted ID forms remain validator policy; baseline expansion requires a reviewed update across the inventory, validator policy, source requirements, index, and tests. This does not constitute owner approval of the requirements.
+
+Link checking covers inline and reference-style links, local targets, fragments, angle-bracket destinations, and fenced/inline code exclusion, with regression cases for reference-style and parenthesized paths. It is intentionally not described as a complete CommonMark parser; broader syntax coverage remains a documented limitation.
+
+Roadmap hashes provide integrity comparison against the manifest, not independent authenticity. The manifest and roadmap can be edited together in a branch; protected `main`, independent human review, and retained Git history provide the separate provenance controls. PR #1 still has no submitted independent approval.
 
 ### Updated recommendation
 
