@@ -4,7 +4,8 @@
 
 - Product: Fix Hub, under parent company Viswatra.
 - Version: V4.1.
-- Status: **PROPOSED — awaiting owner confirmation as superseding roadmap.**
+- Status: **APPROVED governing planning roadmap — owner-delegated decision recorded 2026-10-15.**
+- Approval authority: the owner's final Phase 00 master prompts explicitly approve V4.1 supersession; see the [delegated approval record](../reviews/phase-00-owner-approval.md). Subsequent phase execution still needs separate authorization.
 - Authority: reconstructed from the complete owner-supplied inline specification received 2026-10-14.
 - Historical V4: `Viswatra_AZ_Services_Master_Execution_Roadmap_V4.md` was unavailable in the workspace. It was not inspected, imported, compared, or checksum-verified. No historical V4 checksum is claimed.
 - Local SHA-256 of this V4.1 document: recorded in [`docs/governance/document-migration.md`](../governance/document-migration.md) and the [`foundation review`](../reviews/foundation-review.md); it identifies this exact reconstructed file only.
@@ -152,4 +153,4 @@ Launch the approved website, WhatsApp experiences, customer mobile apps, merchan
 
 ## Owner confirmation record
 
-No owner confirmation that V4.1 supersedes historical V4 is recorded. Until that confirmation, V4.1 is a planning proposal only, DEC-016 remains PROPOSED, and roadmap-dependent phase execution must not begin. No phase status is implied by this roadmap.
+On 2026-10-15 the owner explicitly delegated and authorized approval of reconstructed V4.1 as superseding historical V4 for governing future planning. DEC-016 is LOCKED for this decision. The owner accepts unavailable historical V4 as a documented provenance limitation; no historical import or verification is claimed. The phase sequence, gates G0–G5 and single-public-release policy are unchanged. This roadmap approval does not authorize Phase 01 or pass any later gate. The [approval record](../reviews/phase-00-owner-approval.md) distinguishes planning approval, evidence completion and repository closure publication.
