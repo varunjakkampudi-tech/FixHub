@@ -12,7 +12,7 @@ Establish whether Tanuku supply, demand, economics and integrations support the 
 
 ## Current status
 
-PENDING — planning dossier only. No execution, design, tests, integration approval or phase sign-off is claimed.
+IN PROGRESS for feasibility research/documentation under separate human owner authorization dated 2026-10-15. See [kickoff and verified publication baseline](phase-01-execution/kickoff.md), [execution index](phase-01-execution/README.md) and [finite exit evidence](phase-01-execution/definition-of-done.md). This dossier's original workstream plan is retained; no primary interviews, app/prototype implementation, integration/account approval or phase sign-off is claimed.
 
 ## Preconditions
 

@@ -4,7 +4,7 @@ This tree contains product foundation and governance documents for Fix Hub, the 
 
 ## Product
 
-Current planning status: owner-delegated approval recorded; closure publication pending human OWNER SELF-REVIEW and normal merge under the [solo-maintainer policy](governance/solo-maintainer-policy.md). Start with the [conceptual blueprint](blueprint/README.md), [all 20 phase plans](phases/README.md) and [approval/evidence record](reviews/phase-00-owner-approval.md). Historical reviews retain their original results.
+Current status: Phase 00 planning publication verified at main `ff6425ac1a4436bbe36aa119df1f95fed9e26592` with successful post-merge CI. Phase 01 feasibility research/documentation is separately authorized and IN PROGRESS; see [execution index](phases/phase-01-execution/README.md), [authorization](phases/phase-01-execution/kickoff.md) and [14-criterion evidence](phases/phase-01-execution/definition-of-done.md). Phase 02 remains NOT GRANTED. Human review/merge follows the [solo-maintainer policy](governance/solo-maintainer-policy.md). Start with the [conceptual blueprint](blueprint/README.md), [all 20 phase plans](phases/README.md) and [approval/evidence record](reviews/phase-00-owner-approval.md). Historical reviews retain their original results.
 
 - [Product charter](product/charter.md)
 - [Product scope](product/scope.md)

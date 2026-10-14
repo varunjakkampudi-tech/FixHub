@@ -361,10 +361,98 @@ try {
   errors.push(`blueprint: unable to validate approved scope (${error.message})`);
 }
 
+let phase01Summary = '';
+try {
+  const base = 'docs/phases/phase-01-execution/';
+  const doc = relative => contents.get(path.join(root, ...relative.split('/'))) ?? '';
+  const inventory = JSON.parse(await readFile(path.join(root, base, 'execution-inventory.json'), 'utf8'));
+  // Fixed owner-requested deliverables; intentional scope changes update this policy and tests.
+  const requiredPhase01 = [
+    'README.md',
+    'definition-of-done.md',
+    'evidence/assumptions-register.md',
+    'evidence/blockers.md',
+    'evidence/interview-register.md',
+    'evidence/source-register.md',
+    'final-feasibility-report.md',
+    'finance/build-and-operating-costs.md',
+    'finance/business-model-options.md',
+    'finance/scenario-analysis.md',
+    'finance/unit-economics.md',
+    'finance/validation-budget.md',
+    'integrations/android-feasibility.md',
+    'integrations/app-store-readiness.md',
+    'integrations/ios-feasibility.md',
+    'integrations/whatsapp-feasibility.md',
+    'kickoff.md',
+    'legal/india-compliance-register.md',
+    'legal/legal-counsel-questions.md',
+    'legal/marketplace-liability.md',
+    'legal/merchant-verification.md',
+    'legal/privacy-and-data-map.md',
+    'market/competitor-analysis.md',
+    'market/service-category-opportunities.md',
+    'market/tanuku-market.md',
+    'operations/capacity-and-staffing.md',
+    'operations/merchant-operations.md',
+    'operations/support-and-disputes.md',
+    'operations/verification-and-safety.md',
+    'research/customer-consent-template.md',
+    'research/customer-interview-guide.md',
+    'research/customer-research-plan.md',
+    'research/customer-results.md',
+    'research/merchant-interview-guide.md',
+    'research/merchant-research-plan.md',
+    'research/merchant-results.md',
+    'research/merchant-supply-model.md',
+    'technical/architecture-feasibility.md',
+    'technical/channel-integration-feasibility.md',
+    'technical/dispatch-feasibility.md',
+    'technical/experiments-register.md',
+    'technical/hosting-capacity-cost.md',
+  ];
+  const expectedIds = Array.from({ length: 14 }, (_, i) => 'P01-DOD-' + String(i + 1).padStart(3, '0'));
+  if (inventory.version !== 1 || inventory.phase !== '01' || inventory.status !== 'IN PROGRESS' ||
+      inventory.phase02Authorized !== false || inventory.overallViability !== 'NOT ASSESSED') {
+    errors.push('phase01: authority or provisional conclusion changed without review');
+  }
+  if (JSON.stringify([...(inventory.requiredDocuments ?? [])].sort()) !== JSON.stringify(requiredPhase01)) {
+    errors.push('phase01: exact required document inventory differs');
+  }
+  for (const relative of requiredPhase01) {
+    if (!doc(base + relative)) errors.push('phase01: missing or empty required document ' + relative);
+  }
+  const rows = [...doc(base + 'definition-of-done.md').matchAll(/^\| (P01-DOD-\d{3})[^|]*\|[^|]*\|[^|]*\| (PASS|CONDITIONAL|FAIL|NOT ASSESSED) \|/gm)];
+  if (JSON.stringify(rows.map(m => m[1])) !== JSON.stringify(expectedIds) ||
+      JSON.stringify((inventory.criteria ?? []).map(e => e.id)) !== JSON.stringify(expectedIds)) {
+    errors.push('phase01: expected exact 14 unique ordered exit criteria');
+  }
+  const counts = { pass: 0, conditional: 0, fail: 0, notAssessed: 0, total: 14 };
+  const keys = { PASS: 'pass', CONDITIONAL: 'conditional', FAIL: 'fail', 'NOT ASSESSED': 'notAssessed' };
+  for (const [i, entry] of (inventory.criteria ?? []).entries()) {
+    if (!keys[entry.status]) { errors.push('phase01: invalid criterion status'); continue; }
+    counts[keys[entry.status]]++;
+    if (rows[i]?.[2] !== entry.status) errors.push('phase01: Markdown/JSON status mismatch ' + entry.id);
+    if (!requiredPhase01.includes(entry.evidence) || !doc(base + entry.evidence)) errors.push('phase01: missing criterion evidence ' + entry.id);
+  }
+  if (Object.entries(counts).some(([k, v]) => inventory.counts?.[k] !== v)) errors.push('phase01: evidenced count mismatch');
+  if (inventory.primaryResearch?.customers !== 0 || inventory.primaryResearch?.merchants !== 0 ||
+      inventory.criteria?.[2]?.status !== 'NOT ASSESSED' || inventory.criteria?.[3]?.status !== 'NOT ASSESSED') {
+    errors.push('phase01: primary research baseline requires genuine reviewed evidence before changing');
+  }
+  const percentage = (100 * counts.pass / counts.total).toFixed(1) + '%';
+  for (const relative of ['definition-of-done.md', 'final-feasibility-report.md']) {
+    if (!doc(base + relative).includes(percentage)) errors.push('phase01: completion percentage mismatch ' + relative);
+  }
+  phase01Summary = '; ' + requiredPhase01.length + ' Phase01 assessment documents and 14 exit criteria reconciled (' + percentage + ' evidenced; not product completion)';
+} catch (error) {
+  errors.push('phase01: unable to validate execution evidence (' + error.message + ')');
+}
+
 if (errors.length) {
   console.error(`Documentation validation failed (${errors.length} issue(s)):`);
   for (const error of errors) console.error(`- ${error}`);
   process.exitCode = 1;
 } else {
-  console.log(`Documentation validation passed: ${markdown.length} Markdown files; ${phases.length} roadmap phases; ${expectedFunctional.length} functional and ${expectedNonfunctional.length} non-functional IDs complete, unique, and indexed; roadmap checksum and single-release policy verified; ${blueprintDocumentCount} required blueprint documents, ${diagramCount} Mermaid sources and 21 applicable DOD criteria checked.`);
+  console.log(`Documentation validation passed: ${markdown.length} Markdown files; ${phases.length} roadmap phases; ${expectedFunctional.length} functional and ${expectedNonfunctional.length} non-functional IDs complete, unique, and indexed; roadmap checksum and single-release policy verified; ${blueprintDocumentCount} required blueprint documents, ${diagramCount} Mermaid sources and 21 applicable DOD criteria checked${phase01Summary}.`);
 }

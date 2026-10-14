@@ -25,3 +25,5 @@ jobs:
         run: node scripts/validate-docs.mjs
       - name: Test documentation validation safeguards
         run: node scripts/test-validate-docs.mjs
+      - name: Test offline Phase 01 financial modelling
+        run: node scripts/test-phase-01-model.mjs

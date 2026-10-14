@@ -147,7 +147,7 @@
     },
     {
       "document": "docs/phases/phase-01.md",
-      "sha256": "EF116B109C330C07967445D81AD8FCFBF725FEACCDD7F77FB12492EA4C3F2F8D"
+      "sha256": "187064D991BD14547AB107A4A9857A45B6CE5D4E43A1588E8F6DD522ADC91380"
     },
     {
       "document": "docs/phases/phase-02.md",
@@ -223,11 +223,11 @@
     },
     {
       "document": "docs/phases/README.md",
-      "sha256": "13A2A1BC224B3E0E1A93792A80B4ED8DBAFA329A4965F91E6029469B59910C4C"
+      "sha256": "DD3CCB6D6E8EE75D6D07DBF462E409CC6F384AE8585A3337568CA1780165A1DA"
     },
     {
       "document": "docs/blueprint/README.md",
-      "sha256": "4813900F92370050B73800C42B911785D5DCE2E6C4C15EE7980C6ED61298811D"
+      "sha256": "F8B864D3CA257C9FBDE62832AD63FEE8787D06F546B0AFB9AD39291E3B846D5A"
     },
     {
       "document": "docs/blueprint/traceability-matrix.md",
@@ -235,12 +235,43 @@
     },
     {
       "document": "docs/blueprint/open-decisions.md",
-      "sha256": "75F76A8B0427713062E4053DBA29A1542CC0D3872D97F57CDCE6893ACA5DA9E1"
+      "sha256": "1D486A6C483745B7CC4116D10F7901E2B2B7DC65EBF5E338649F1497F4E5CEB0"
     },
     {
       "document": "docs/blueprint/glossary.md",
       "sha256": "0CC934AB77FEF29F07EC335B50BB54ABFAC3C39A331849303C264222CBD9E698"
     }
   ],
-  "limit": "Owner-delegated planning scope; no personal owner review, implementation evidence or independent GitHub approval. Self and approval record excluded to avoid circular hashes."
+  "limit": "Owner-delegated planning scope; no personal owner review, implementation evidence or independent GitHub approval. Self and approval record excluded to avoid circular hashes.",
+  "authorizationAmendments": [
+    {
+      "date": "2026-10-15",
+      "authority": "Human-owner Phase01 master prompt; feasibility research/documentation only",
+      "historicalBaseline": "ff6425ac1a4436bbe36aa119df1f95fed9e26592",
+      "evidence": "docs/phases/phase-01-execution/kickoff.md",
+      "scope": "Current-facing authorization/publication status only; original Phase00 conceptual designs, 41 IDs and roadmap unchanged; no detailed architecture or phase-exit approval",
+      "documents": [
+        {
+          "document": "docs/phases/phase-01.md",
+          "priorSha256": "EF116B109C330C07967445D81AD8FCFBF725FEACCDD7F77FB12492EA4C3F2F8D",
+          "currentSha256": "187064D991BD14547AB107A4A9857A45B6CE5D4E43A1588E8F6DD522ADC91380"
+        },
+        {
+          "document": "docs/phases/README.md",
+          "priorSha256": "13A2A1BC224B3E0E1A93792A80B4ED8DBAFA329A4965F91E6029469B59910C4C",
+          "currentSha256": "DD3CCB6D6E8EE75D6D07DBF462E409CC6F384AE8585A3337568CA1780165A1DA"
+        },
+        {
+          "document": "docs/blueprint/README.md",
+          "priorSha256": "4813900F92370050B73800C42B911785D5DCE2E6C4C15EE7980C6ED61298811D",
+          "currentSha256": "F8B864D3CA257C9FBDE62832AD63FEE8787D06F546B0AFB9AD39291E3B846D5A"
+        },
+        {
+          "document": "docs/blueprint/open-decisions.md",
+          "priorSha256": "75F76A8B0427713062E4053DBA29A1542CC0D3872D97F57CDCE6893ACA5DA9E1",
+          "currentSha256": "1D486A6C483745B7CC4116D10F7901E2B2B7DC65EBF5E338649F1497F4E5CEB0"
+        }
+      ]
+    }
+  ]
 }
