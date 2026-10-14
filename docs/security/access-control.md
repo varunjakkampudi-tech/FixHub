@@ -3,7 +3,7 @@
 ## Document control
 
 - Document ID: P00-ROLES
-- Status: Working draft for owner review
+- Status: Owner-delegated planning baseline approved 2026-10-15; see [approval record](../reviews/phase-00-owner-approval.md). Detailed implementation decisions remain separately gated.
 - Authorization model: proposed least-privilege RBAC with explicit resource and action checks
 
 ## Role catalog

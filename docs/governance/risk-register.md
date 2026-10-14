@@ -3,7 +3,7 @@
 ## Document control
 
 - Document ID: P00-RISK
-- Status: Working draft for owner review
+- Status: Owner-delegated planning baseline approved 2026-10-15; see [approval record](../reviews/phase-00-owner-approval.md). Detailed implementation decisions remain separately gated.
 - Evidence rule: absence of evidence is recorded as unverified, not as approval.
 
 | ID | Assumption or risk | Type | Impact | Mitigation / evidence | Owner | Status |
@@ -12,7 +12,7 @@
 | RISK-002 | A permanent logo or brand system may be created before approval. | Governance | Brand rework and unauthorized commitment. | No logo, palette, typography, tagline, domain, or visual identity in Phase 00. | Product owner | Open |
 | RISK-003 | Lovable may not import or synchronize the existing repository. | Tooling | Source divergence, lost work, integration cost. | Treat standalone project/export/Codex integration as the only current plan; verify capability before initiation. | Engineering owner | Open |
 | RISK-004 | Lovable project may be started before design and requirements approval. | Governance | Premature implementation and scope lock-in. | DEC-007 gate; require approval record and screen specification first. | Product owner | Open |
-| RISK-005 | Historical Master Execution Roadmap V4.0 is unavailable; reconstructed V4.1 is a proposal and is not yet owner-confirmed as its replacement. | Provenance / governance | Historical sequencing cannot be compared or checksum-verified; proposed sequencing cannot govern later phases until owner confirmation. | V4.1 was reconstructed from the complete owner-supplied inline specification and its local SHA-256 is recorded in the roadmap and migration ledger. Preserve historical V4 as unverified/unavailable; obtain it only if historical comparison is required. Owner must confirm V4.1 supersession before it governs sequencing. | Product owner | Open |
+| RISK-005 | Historical V4 and nine original migration source documents remain unavailable. Approved reconstructed V4.1 governs planning. | Provenance / governance | Historical comparison/authentication and original-byte recovery remain unproven. | Explicit owner-delegated acceptance 2026-10-15 under Approvals A/D; retain original hash records and accept candidates only on matching hashes. Git bundles are repository snapshots, not historical originals. [Approval scope](../reviews/phase-00-owner-approval.md) records the limit. | Product owner through explicit delegation | Accepted residual limitation; recovery NOT achieved |
 | RISK-006 | ₹50,000 validation allowance may not fund complete multi-channel engineering. | Financial | Scope, quality, or launch feasibility failure. | Separate validation budget from build budget; produce cost model before commitment. | Product owner | Open |
 | RISK-007 | WhatsApp Cloud API policies/templates/limits may constrain flows. | External | Messaging failure or compliance breach. | Verify official terms, consent, templates, opt-out, delivery, and fallback. | Product + legal | Open |
 | RISK-008 | App Store and Play Store approval is not guaranteed. | External | Mobile launch timing and channel scope risk. | Validate account, policy, privacy, permissions, testing, and review requirements. | Product owner | Open |
@@ -23,12 +23,16 @@
 | RISK-013 | Multi-channel identity and notification delivery may diverge. | Technical | Duplicate requests, missed offers, privacy leakage. | Canonical IDs, idempotency, correlation, delivery logs, and fallback design. | Engineering owner | Open |
 | RISK-014 | Initial city expansion may occur before local supply/demand and operations evidence. | Product | Poor service quality and cost. | Evidence-gated expansion decision. | Product owner | Open |
 | RISK-015 | Support, incident response, dispute, and fraud operations are under-specified. | Operations | Unsafe or unresolved customer/merchant outcomes. | Define support model, hours, escalation, audit, and runbooks. | Operations owner | Open |
-| RISK-016 | Public repository content may be reused under unclear expectations because no license is selected; prior commits may retain local path or personal email metadata. | Legal / privacy / repository governance | Rights ambiguity and historical disclosure that cannot be removed without rewriting public history. | Keep the repository public per current owner-provided URL; do not invent a license. Current files should omit private paths and use the GitHub noreply address for future commits. Owner to choose a license and decide whether historical metadata risk is accepted; no history rewrite is authorized. | Product owner | Open |
+| RISK-016 | Public no-license planning material and known limited historical local-path/commit-email exposure. | Legal / privacy / repository governance | Public readability, residual rights ambiguity and already disclosed metadata remain. | Explicit owner-delegated acceptance 2026-10-15 under Approvals E/F. Retain temporary no-license posture; no history rewrite. Continue noreply future commits. Actual secrets, sensitive customer records or materially different exposures require separate escalation. | Product owner through explicit delegation | Known limited exposure accepted; new/material exposure not accepted |
 
 ## Assumption ledger
 
 - ASM-001: Tanuku is the first target market because the supplied prompt states it; no market validation was provided.
 - ASM-002: English and Telugu are required launch languages because the supplied prompt states it; translation quality is unverified.
 - ASM-003: The proposed technology baseline is a recommendation, not an approved architecture.
-- ASM-004: The owner will confirm or revise proposed roadmap V4.1 as the sequencing baseline before any roadmap-dependent phase begins; this does not establish historical V4 provenance.
+- ASM-004: V4.1 supersession is approved through explicit owner delegation on 2026-10-15; this establishes governing planning scope, not historical V4 provenance or next-phase authorization.
+
+## Risk-disposition history — 2026-10-15
+
+RISK-005 was OPEN for unavailable historical provenance and pending supersession; the owner now accepts the historical limitation and approves supersession. Missing originals remain 0/9 recoverable/revalidated. RISK-016 was OPEN for licensing and known public metadata; temporary no-license posture and known limited exposure are now accepted, without rewriting history. The PR #1 review-evidence gap is accepted as a historical exception under Approval G, with root cause unverified and retrospective independent review recommended. Existing verified same-device bundles are accepted as limited snapshots under Approval H; encryption, off-device access control, retention and tested restoration remain future requirements. No current mandatory GitHub approval is supplied by these acceptances. See [delegated approval](../reviews/phase-00-owner-approval.md).
 - ASM-005: External vendors and app stores may change terms, pricing, quotas, and approval criteria; current verification is pending.

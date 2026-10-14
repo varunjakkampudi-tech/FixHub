@@ -4,6 +4,8 @@ This tree contains product foundation and governance documents for Fix Hub, the 
 
 ## Product
 
+Current planning status: owner-delegated approval recorded; repository closure publication pending independent review. Start with the [conceptual blueprint](blueprint/README.md), [all 20 phase plans](phases/README.md) and [approval/evidence record](reviews/phase-00-owner-approval.md). Historical reviews retain their original results.
+
 - [Product charter](product/charter.md)
 - [Product scope](product/scope.md)
 - [Functional requirements](product/requirements/functional.md)
@@ -29,10 +31,13 @@ This tree contains product foundation and governance documents for Fix Hub, the 
 - [Phase review template](reviews/phase-review-template.md)
 - [Repository audit remediation findings](reviews/foundation-review.md#current-repository-audit-remediation)
 - [Post-merge governance audit and prepared owner sign-off](reviews/foundation-review.md#post-merge-governance-audit-and-owner-sign-off-preparation)
+- [Owner-delegated approval and current 21-criterion evidence](reviews/phase-00-owner-approval.md)
+- [Required blueprint structure](governance/blueprint-inventory.json)
+- [Exact approval revision/hash scope](governance/phase-00-approval-scope.json)
 
 ## Roadmap and design
 
-- [Fix Hub Master Execution Roadmap V4.1](roadmap/master-roadmap.md) (PROPOSED; reconstructed from the complete owner-supplied inline specification; awaiting owner confirmation as superseding roadmap)
+- [Fix Hub Master Execution Roadmap V4.1](roadmap/master-roadmap.md) (APPROVED governing planning roadmap through explicit owner delegation, 2026-10-15; future execution separately gated)
 - Historical V4 source and SHA-256 remain unavailable and unverified; see the [provenance ledger](governance/document-migration.md).
 - `design/` and `engineering/` are reserved documentation domains. No design system, UI, or implementation blueprint was present in the supplied files.
 

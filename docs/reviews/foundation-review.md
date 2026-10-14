@@ -1,6 +1,6 @@
 # Phase 00 Senior Foundation Review
 
-Current repository state and owner sign-off preparation are recorded in the [post-merge audit](#post-merge-governance-audit-and-owner-sign-off-preparation). Earlier observations below retain their original review context and are superseded where explicitly amended.
+Current expanded Phase 00 status is recorded in the [owner-delegated approval and 21-criterion checklist](phase-00-owner-approval.md). The [post-merge audit](#post-merge-governance-audit-and-owner-sign-off-preparation) and earlier observations below retain their original review context and are superseded where explicitly amended.
 
 ## Document control
 
@@ -252,3 +252,9 @@ All entries below are PENDING. To record a decision, supply owner identity, actu
 | Phase 01 | Decide separately after foundation/roadmap decisions; do not treat documentation approval as feasibility proof. | Explicit authorization and scope for Phase 01; later execution remains unauthorized. |
 
 Recommendation: **CONDITIONAL — technically validated documentation, ready for owner decisions and retrospective independent review.** Historical recovery availability remains FAIL/unavailable; review enforcement remains CONDITIONAL/unverified. No phase is approved or closed by this record.
+
+## Owner-delegated scope and approval amendment — 2026-10-15
+
+The owner subsequently provided two explicit final master prompts authorizing V4.1 supersession, the initial nine-document/41-ID foundation, accepted historical limitations, temporary no-license posture, known limited metadata exposure, PR #1's historical review gap and limited repository recovery snapshots. The second prompt adds conceptual architecture, all role journeys, flows/state machines, 20 substantive phase dossiers and traceability. It preserves DOD-001 through DOD-018 and adds DOD-019 through DOD-022, with DOD-016 excluded: current denominator 21 applicable criteria. The earlier 14/17 and 0/20 records above are historical.
+
+See [delegated approval](phase-00-owner-approval.md), [blueprint guide](../blueprint/README.md) and the [revision/hash scope](../governance/phase-00-approval-scope.json). These records distinguish owner delegation, assistant review of newly generated concepts, documentation evidence and repository publication. No personal owner review of new diagrams or independent GitHub approval is fabricated. Architecture/UX final approval and implementation evidence remain later-phase responsibilities; feasibility and production readiness remain NOT ASSESSED. Phase 01 execution is NOT GRANTED. Closure publication remains pending legitimate independent review and merge.

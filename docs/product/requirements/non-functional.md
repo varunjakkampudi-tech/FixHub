@@ -3,7 +3,7 @@
 ## Document control
 
 - Document ID: P00-NFR
-- Status: Working draft for owner review
+- Status: Owner-delegated planning baseline approved 2026-10-15; see [approval record](../../reviews/phase-00-owner-approval.md). Detailed implementation decisions remain separately gated.
 - Note: Numeric targets below are proposed acceptance targets, not measured baselines. They require owner and technical review.
 - Document owner: Product owner (role; individual assignee not recorded)
 - Review history: 2026-10-14 — repository audit remediation; stable requirement IDs retained.

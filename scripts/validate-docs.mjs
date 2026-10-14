@@ -235,10 +235,136 @@ for (const [label, source, expectedIds] of [
   if (actual.size !== expectedIds.length) errors.push(`${label} requirements: expected ${expectedIds.length} unique identifiers; found ${actual.size}`);
 }
 
+// Phase 00 conceptual scope is finite and owner-authorized; this is structural
+// validation, not a Mermaid renderer, a full Markdown parser or product testing.
+let blueprintDocumentCount = 0;
+let diagramCount = 0;
+try {
+  const policy = JSON.parse(await readFile(path.join(root, 'docs/governance/blueprint-inventory.json'), 'utf8'));
+  if (policy.version !== 1 || !Array.isArray(policy.requiredDocuments) ||
+      policy.requiredDocuments.length !== 51 || new Set(policy.requiredDocuments).size !== 51) {
+    throw new Error('expected 51 unique required blueprint documents');
+  }
+  const doc = relative => contents.get(path.join(root, ...relative.split('/'))) ?? '';
+  for (const relative of policy.requiredDocuments) {
+    if (!/^docs\/[A-Za-z0-9/-]+\.md$/.test(relative) || !isWithinRoot(path.resolve(root, relative), root)) {
+      errors.push(`blueprint: unsafe required path ${relative}`);
+      continue;
+    }
+    if (!doc(relative)) errors.push(`blueprint: required document missing or empty ${relative}`);
+    else blueprintDocumentCount++;
+  }
+  const headingCount = (source, heading) => source.split(/\r?\n/).filter(line => line === `## ${heading}`).length;
+  if (policy.phaseDocuments?.length !== 20 || policy.phaseHeadings?.length !== 25) {
+    errors.push('blueprint: expected 20 phase dossiers with 25 required sections');
+  }
+  for (let i = 0; i < 20; i++) {
+    const relative = `docs/phases/phase-${String(i).padStart(2, '0')}.md`;
+    if (policy.phaseDocuments?.[i] !== relative) errors.push(`blueprint: phase dossier inventory mismatch ${relative}`);
+    for (const heading of policy.phaseHeadings ?? []) {
+      if (headingCount(doc(relative), heading) !== 1) errors.push(`blueprint: phase section missing or duplicate ${relative}: ${heading}`);
+    }
+  }
+  for (let i = 0; i < 12; i++) {
+    const relative = policy.flowDocuments?.[i];
+    const expectedPrefix = `# FLOW ${String(i + 1).padStart(2, '0')} — `;
+    if (!relative || doc(relative).split(/\r?\n/).filter(line => line.startsWith(expectedPrefix)).length !== 1) {
+      errors.push(`blueprint: required flow heading missing or duplicate ${expectedPrefix}`);
+    }
+  }
+  for (const heading of policy.stateHeadings ?? []) {
+    if (headingCount(doc('docs/flows/state-machines.md'), heading) !== 1) errors.push(`blueprint: state heading missing or duplicate ${heading}`);
+  }
+  for (const [relative, expectedCount] of Object.entries(policy.diagramCounts ?? {})) {
+    const source = doc(relative);
+    const blocks = [...source.matchAll(/^```mermaid\r?\n([\s\S]*?)^```\s*$/gm)];
+    if (blocks.length !== expectedCount) errors.push(`blueprint: expected ${expectedCount} Mermaid diagrams in ${relative}; found ${blocks.length}`);
+    for (const block of blocks) {
+      const diagram = block[1].trim();
+      if (!/^(flowchart (?:LR|TB|TD|RL|BT)|sequenceDiagram|stateDiagram-v2|erDiagram)\r?\n/.test(diagram) ||
+          diagram.split(/\r?\n/).length < 3) {
+        errors.push(`blueprint: unsupported or empty Mermaid diagram in ${relative}`);
+      }
+      diagramCount++;
+    }
+  }
+  for (const [role, prefix, expectedCount] of [['customer', 'CJ', 24], ['merchant', 'MJ', 30]]) {
+    const source = doc(`docs/journeys/${role}-journey.md`);
+    const stages = [...source.matchAll(/^\| (CJ|MJ)-(\d{2}):/gm)].map(match => `${match[1]}-${match[2]}`);
+    const expectedStages = Array.from({ length: expectedCount }, (_, i) => `${prefix}-${String(i + 1).padStart(2, '0')}`);
+    if (JSON.stringify(stages) !== JSON.stringify(expectedStages)) errors.push(`blueprint: ${role} journey stages missing, duplicate or out of order`);
+  }
+  const matrixRows = [...doc('docs/blueprint/traceability-matrix.md').matchAll(/^\| ((?:FR|NFR)-[A-Z]+-\d{3}) \|/gm)].map(match => match[1]);
+  for (const id of allExpectedRequirements) {
+    if (matrixRows.filter(value => value === id).length !== 1) errors.push(`blueprint traceability: required identifier ${id} must have exactly one row`);
+  }
+  for (const id of matrixRows) {
+    if (!allExpectedRequirements.has(id)) errors.push(`blueprint traceability: unexpected identifier ${id}`);
+  }
+  const dod = doc('docs/quality/definition-of-done.md');
+  const dodDefinitions = [...dod.matchAll(/^- (DOD-\d{3}):/gm)].map(match => match[1]);
+  const expectedDOD = Array.from({ length: 22 }, (_, i) => `DOD-${String(i + 1).padStart(3, '0')}`);
+  if (JSON.stringify(dodDefinitions) !== JSON.stringify(expectedDOD)) errors.push('blueprint: expected DOD-001 through DOD-022 exactly once in order');
+  const approval = doc('docs/reviews/phase-00-owner-approval.md');
+  const criteria = [...approval.matchAll(/^\| (DOD-\d{3}) \| (PASS|CONDITIONAL|FAIL|NOT APPLICABLE) \|/gm)];
+  if (JSON.stringify(criteria.map(match => match[1])) !== JSON.stringify(expectedDOD) ||
+      criteria.filter(match => match[2] === 'PASS').length !== 21 ||
+      criteria.find(match => match[1] === 'DOD-016')?.[2] !== 'NOT APPLICABLE') {
+    errors.push('blueprint: expected 21 evidenced criteria and only DOD-016 not applicable');
+  }
+  // Resolve discoverability using the same focused link extractor, without
+  // following external links or reading outside the already scanned map.
+  const reachable = new Set([path.join(root, 'README.md')]);
+  const queue = [...reachable];
+  for (const file of queue) {
+    const source = contents.get(file);
+    if (!source) continue;
+    for (const raw of markdownLinks(source).links) {
+      if (/^(https?:|mailto:|tel:|data:|\/\/)/i.test(raw)) continue;
+      try {
+        const target = decodeURIComponent(raw.split('#')[0].split('?')[0]);
+        if (!target) continue;
+        const resolved = path.resolve(path.dirname(file), target);
+        if (contents.has(resolved) && !reachable.has(resolved)) { reachable.add(resolved); queue.push(resolved); }
+      } catch { /* Main link validation reports malformed targets. */ }
+    }
+  }
+  for (const relative of policy.requiredDocuments) {
+    if (!reachable.has(path.join(root, ...relative.split('/')))) errors.push(`blueprint: orphaned document ${relative}`);
+  }
+  const scope = JSON.parse(await readFile(path.join(root, 'docs/governance/phase-00-approval-scope.json'), 'utf8'));
+  if (scope.version !== 1 || scope.initialFoundation?.length !== 9 || scope.conceptualBlueprints?.length !== 50) {
+    errors.push('approval scope: expected nine original foundation records and 50 exact conceptual artifacts');
+  }
+  const expectedScopedDocuments = policy.requiredDocuments.filter(relative => relative !== 'docs/reviews/phase-00-owner-approval.md');
+  const scopedDocuments = (scope.conceptualBlueprints ?? []).map(entry => entry.document);
+  if (new Set(scopedDocuments).size !== scopedDocuments.length ||
+      JSON.stringify([...scopedDocuments].sort()) !== JSON.stringify([...expectedScopedDocuments].sort())) {
+    errors.push('approval scope: exact conceptual document inventory missing, duplicate or unexpected');
+  }
+  for (const entry of scope.conceptualBlueprints ?? []) {
+    const source = doc(entry.document);
+    const actualHash = createHash('sha256').update(source, 'utf8').digest('hex').toUpperCase();
+    if (!source || actualHash !== entry.sha256) errors.push(`approval scope: artifact hash mismatch ${entry.document}`);
+  }
+  const governanceDefinitions = new Set();
+  for (const register of ['docs/governance/decision-register.md', 'docs/governance/risk-register.md']) {
+    for (const match of doc(register).matchAll(/^\| ((?:DEC|RISK)-\d{3}) \|/gm)) {
+      if (governanceDefinitions.has(match[1])) errors.push(`traceability: duplicate governance definition ${match[1]}`);
+      governanceDefinitions.add(match[1]);
+    }
+  }
+  for (const id of new Set(all.match(/\b(?:DEC|RISK)-\d{3}\b/g) ?? [])) {
+    if (!governanceDefinitions.has(id)) errors.push(`traceability: unresolved governance reference ${id}`);
+  }
+} catch (error) {
+  errors.push(`blueprint: unable to validate approved scope (${error.message})`);
+}
+
 if (errors.length) {
   console.error(`Documentation validation failed (${errors.length} issue(s)):`);
   for (const error of errors) console.error(`- ${error}`);
   process.exitCode = 1;
 } else {
-  console.log(`Documentation validation passed: ${markdown.length} Markdown files; ${phases.length} roadmap phases; ${expectedFunctional.length} functional and ${expectedNonfunctional.length} non-functional IDs complete, unique, and indexed; roadmap checksum and single-release policy verified.`);
+  console.log(`Documentation validation passed: ${markdown.length} Markdown files; ${phases.length} roadmap phases; ${expectedFunctional.length} functional and ${expectedNonfunctional.length} non-functional IDs complete, unique, and indexed; roadmap checksum and single-release policy verified; ${blueprintDocumentCount} required blueprint documents, ${diagramCount} Mermaid sources and 21 applicable DOD criteria checked.`);
 }

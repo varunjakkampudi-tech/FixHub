@@ -24,6 +24,6 @@ This repository currently holds product and governance documentation only. Its c
 - Preserve stable requirement, decision, risk, and other traceability IDs.
 - Mark facts, proposals, assumptions, and unresolved external dependencies distinctly.
 - Do not claim owner approval, roadmap completion, implementation, testing, or release evidence that is not present.
-- Historical roadmap V4 was not available in the workspace and has not been inspected or checksum-verified. `docs/roadmap/master-roadmap.md` is a newly reconstructed V4.1 proposal from an owner-supplied inline specification; it is not authoritative or a verified replacement until the owner confirms supersession.
+- Historical roadmap V4 remains unavailable/unverified. Reconstructed V4.1 is approved as governing future planning through explicit owner delegation recorded 2026-10-15 in `docs/reviews/phase-00-owner-approval.md`; the provenance limitation is accepted without claiming recovery. Conceptual blueprints do not approve detailed architecture/UX or authorize Phase 01. Repository closure publication remains subject to legitimate delivery and independent review.
 - The repository is public. Do not put secrets, private filesystem paths, personal data, or confidential material in tracked content. Historical commits may retain previously committed content even after current files are corrected.
 - Repository security settings, CI results, and local documentation checks are separate evidence; never infer application security or production readiness from documentation validation.
