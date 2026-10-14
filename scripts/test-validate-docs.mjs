@@ -87,11 +87,23 @@ try {
     await writeFile(file, `${text}\nDuplicate identifier fixture: FR-C-001\n`, 'utf8');
   }, /duplicate identifier FR-C-001/);
 
+  await expectFailure('duplicate NFR identifier', async () => {
+    const file = path.join(fixtureRoot, 'docs/product/requirements/non-functional.md');
+    const text = await readFile(file, 'utf8');
+    await writeFile(file, `${text}\nDuplicate identifier fixture: NFR-REL-001\n`, 'utf8');
+  }, /duplicate identifier NFR-REL-001/);
+
   await expectFailure('duplicate index entry', async () => {
     const file = path.join(fixtureRoot, 'docs/README.md');
     const text = await readFile(file, 'utf8');
     await writeFile(file, text.replace('`FR-C-001`', '`FR-C-001`, `FR-C-001`'), 'utf8');
   }, /FR-C-001 appears 2 times/);
+
+  await expectFailure('duplicate NFR index entry', async () => {
+    const file = path.join(fixtureRoot, 'docs/README.md');
+    const text = await readFile(file, 'utf8');
+    await writeFile(file, text.replace('`NFR-SEC-001`', '`NFR-SEC-001`, `NFR-SEC-001`'), 'utf8');
+  }, /NFR-SEC-001 appears 2 times/);
 
   await createFixture();
   const externalTarget = path.join(tempRoot, 'outside.md');
