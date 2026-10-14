@@ -1,0 +1,93 @@
+# Documentation migration record
+
+## Scope and authority
+
+- Workspace: `C:\Users\Admin\Desktop\A-Z`
+- Migration date: 2026-10-14
+- Reference received: an attached text describing the proposed `viswatra-marketplace` documentation pack.
+- The reference text described a packaged set of documents, but no packaged roadmap file is present in this workspace for provenance inspection. The nine-file mapping below is taken from the reference text itself.
+- No Git repository existed in this workspace. The workspace `AGENTS.md` was added during migration. No destination collisions were found.
+
+## Dry-run and applied mapping
+
+| Source | Destination | Result |
+|---|---|---|
+| `phase-00/PRODUCT_CHARTER.md` | `docs/product/charter.md` | Moved |
+| `phase-00/PRODUCT_SCOPE.md` | `docs/product/scope.md` | Moved |
+| `phase-00/FUNCTIONAL_REQUIREMENTS.md` | `docs/product/requirements/functional.md` | Moved |
+| `phase-00/NON_FUNCTIONAL_REQUIREMENTS.md` | `docs/product/requirements/non-functional.md` | Moved |
+| `phase-00/ROLES_PERMISSIONS.md` | `docs/security/access-control.md` | Moved |
+| `phase-00/DECISION_REGISTER.md` | `docs/governance/decision-register.md` | Moved |
+| `phase-00/ASSUMPTIONS_RISKS.md` | `docs/governance/risk-register.md` | Moved |
+| `phase-00/DEFINITION_OF_DONE.md` | `docs/quality/definition-of-done.md` | Moved |
+| `phase-00/PHASE_00_REVIEW.md` | `docs/reviews/foundation-review.md` | Moved |
+
+## Preservation and edits (migration-time record)
+
+At the time of migration, all nine original files were copied to `.migration-backup/2026-10-14/phase-00-originals/` and their original SHA-256 hashes were checked against those copies. The migration records that their substantive content and FR, NFR, DEC, RISK, ASM, PERM, ROLE, and DOD identifiers were preserved.
+
+The review document's inventory and DOD-001 are updated to describe the permanent domain-oriented locations. The roadmap status is explicitly pending owner confirmation: no authoritative V4 copy was available to inspect or import. The prior Phase 00 result remains CONDITIONAL; this migration does not approve Phase 00.
+
+| Original | Destination | Original SHA-256 | Destination SHA-256 | Reconciliation |
+|---|---|---|---|---|
+| `PRODUCT_CHARTER.md` | `docs/product/charter.md` | `FD610C011D36B900A367467E5AC6DFAE34465E551E560100E2A70B627BD69095` | `FD610C011D36B900A367467E5AC6DFAE34465E551E560100E2A70B627BD69095` | Exact |
+| `PRODUCT_SCOPE.md` | `docs/product/scope.md` | `61E154AF18B68B92DC9B642A611EE2AD467BCE05716D82A61CD865E62150A3B0` | `61E154AF18B68B92DC9B642A611EE2AD467BCE05716D82A61CD865E62150A3B0` | Exact |
+| `FUNCTIONAL_REQUIREMENTS.md` | `docs/product/requirements/functional.md` | `86D758B7C5B9D2D952B6692CCC6888A7BA2BD38DA5FA926EF6B562AEC477F271` | `86D758B7C5B9D2D952B6692CCC6888A7BA2BD38DA5FA926EF6B562AEC477F271` | Exact |
+| `NON_FUNCTIONAL_REQUIREMENTS.md` | `docs/product/requirements/non-functional.md` | `1194AED9DB483317B96E7FB8CA3C7B5D16A7C5C72A04EC0F3E8B9CC29237DE83` | `1194AED9DB483317B96E7FB8CA3C7B5D16A7C5C72A04EC0F3E8B9CC29237DE83` | Exact |
+| `ROLES_PERMISSIONS.md` | `docs/security/access-control.md` | `D57D90C4E02B1C9E7B74A883D236CFE34CB5BBAA6BDD365CBD6ED62FCDB87DA4` | `D57D90C4E02B1C9E7B74A883D236CFE34CB5BBAA6BDD365CBD6ED62FCDB87DA4` | Exact |
+| `DECISION_REGISTER.md` | `docs/governance/decision-register.md` | `DD5DDBA474152B2F416231A03F9AAFE756878C9343D47B3B5B5E2A2A70287AC5` | `53CF897835FBB886F74B102076962FF508C2F6F9BDC083C9E56A26E7991AEDA4` | Roadmap provenance wording updated; status normalized to allowed value; IDs preserved |
+| `ASSUMPTIONS_RISKS.md` | `docs/governance/risk-register.md` | `CFD5BE8B01246A44766EE1DCC4915F6B69B2F0DE65A72B8B44961CF3FE415BD7` | `466D968CADD3CCE4712D39852A748C547F5E7734288ABB7A5EE2C27017DE4A06` | Roadmap provenance wording updated; IDs preserved |
+| `DEFINITION_OF_DONE.md` | `docs/quality/definition-of-done.md` | `A7A2896F1E82A66A66DEE1370C764F38C1EF87DE20394AD505AF3FA0CA1B7157` | `AA589DEE8A05BB544926FAA1B0C5C168931E17C65957F2270E6BF0365D30A5BA` | DOD-001 location wording updated; IDs preserved |
+| `PHASE_00_REVIEW.md` | `docs/reviews/foundation-review.md` | `533AB521941E46A8E42361822C09BB6EFFFE9923137AAFD4CC5B94F33331A636` | `D5DFB2FE24A596617BF63552E1E1A8006FD38A47D29804DFCBC240690B35B6FC` | Inventory, links, roadmap provenance, gate results, and owner decisions updated; IDs preserved |
+
+## Roadmap provenance at original migration (historical snapshot)
+
+At the original migration, the reference text stated that a V4 roadmap existed in a separate prepared package, but no roadmap source file was present for inspection. The then-current `docs/roadmap/master-roadmap.md` recorded an import blocker rather than roadmap content. This paragraph records that earlier state; see the 2026-10-14 V4.1 reconstruction amendment below for current status.
+
+## Root guidance files at original migration (historical snapshot)
+
+No generated `README.md`, `AGENTS.md`, or `docs/README.md` versions were supplied. The root README, workspace guidance, and docs index were created from the explicit constraints and the documentation present here. They contain no commercial name or brand approval.
+
+## Reconciliation checklist
+
+- Nine source documents mapped: complete.
+- Destination collision check: complete; none found before moves.
+- Original backup and initial SHA-256 verification: recorded complete at migration time; the backup directory is absent from the current workspace snapshot and cannot be revalidated here.
+- Requirement, decision, risk, role, and DOD identifiers: preserved.
+- Markdown link and cross-reference checks: passed for all documentation files; governance ID references resolve.
+- Roadmap import and traceability: blocked at original migration until an authoritative V4 file was supplied (historical status; see the V4.1 reconstruction amendment below).
+- `.migration-backup/` is excluded by the workspace `.gitignore`; the workspace currently has no Git repository, so Git ignore behavior has not been exercised.
+- `phase-00/` removal: recorded as completed after migration-time destination/hash/link/identifier checks; the backup directory is not present in the current workspace snapshot (see owner naming amendment).
+
+## Naming and tooling decisions at original migration (historical snapshot)
+
+Viswatra is the confirmed parent brand. “A–Z Services” and `viswatra-marketplace` are placeholders. Product name, logo, color system, domain, and tagline remain OPEN. Lovable repository access/import is unverified; the standalone-to-export workflow remains a proposal and requires separate approval. Any existing Lovable project remains untouched.
+
+## Owner naming decision amendment — 2026-10-14 (historical snapshot)
+
+The owner subsequently selected **Fix Hub** as the product name under Viswatra. This amendment supersedes the earlier statement above that the commercial name was open. The original nine-file migration matrix and source hashes remain historical evidence and are not rewritten. Their active destination files were updated for current naming. At this review, `.migration-backup/` is absent from the workspace snapshot; prior backup existence was recorded, but current backup retention and original-byte revalidation cannot be confirmed. No replacement archive was reconstructed from edited files. `fixhub-platform` is recorded only as a recommended future repository identifier; the workspace directory and repository state were not renamed or initialized.
+
+The requested import files, `CODEX_IMPORT_INSTRUCTIONS.md` and `Viswatra_AZ_Services_Master_Execution_Roadmap_V4.md`, are still absent from the workspace. No V4 content or original-roadmap checksum is available to preserve, and the import notice remains active. DEC-016 and RISK-005 therefore remain BLOCKED.
+
+Current SHA-256 values after the naming amendment and senior-review update:
+
+| File | SHA-256 |
+|---|---|
+| `README.md` | `C0FF6E79E7F27E76C77DB56A7E00F33EC6D0C7B1A76A3E694C1870BCB5AE6A13` |
+| `AGENTS.md` | `AEE52BCCEDBE754A3ADD23EC26C69076CBFCCC6AFA669E9742005508F8F8D287` |
+| `docs/README.md` | `AF2D1E7755BF069114601CFCC96A0811C91214649F273256D51679F4CD55290D` |
+| `docs/product/charter.md` | `48313F44AAA4F92673717DAAAF40A040A99EEBB4640A1922428A7BBD79514EB0` |
+| `docs/product/scope.md` | `7356E3FB5844EAABAECCC68E516F5BC7B79E81D6E3523E3C9F66FFC5258311F3` |
+| `docs/governance/decision-register.md` | `7F870BCD8C840E081EBF5FB96539556A22980C496B3283959A1F6D04C98DBAB2` |
+| `docs/governance/risk-register.md` | `7284F759424EFCE6B9807AD8D62BC9F6697F97B6C54D9AC067DFA7963E805374` |
+| `docs/reviews/foundation-review.md` | `E436AD9672F0205629C147F840C5436DDAEBA4545DCECA089E32EC9D43B59513` |
+
+## Roadmap V4.1 reconstruction amendment — 2026-10-14
+
+The owner supplied the complete roadmap specification inline in the Codex request titled “CODEX MASTER PROMPT — FIX HUB: Authoritative Roadmap Reconstruction, Documentation Reconciliation & Phase 00 Senior Audit.” The local historical V4 roadmap and the separately named `CODEX_IMPORT_INSTRUCTIONS.md` were not present in this workspace. Therefore this amendment records a **new V4.1 reconstruction**, not an import, inspection, comparison, or checksum verification of historical V4.
+
+The canonical active roadmap is [`../roadmap/master-roadmap.md`](../roadmap/master-roadmap.md). It contains the specified Phase 00 through Phase 19 sequence and the single coordinated public production release rule. Its status is **PROPOSED — awaiting owner confirmation as superseding roadmap**. SHA-256 of the completed V4.1 file: `49FC8F6B35E1CF20740002DE125E67AE97B35D29FD48C42720CF9C9DAEC21763`.
+
+The earlier statements in this ledger that the import source remained absent are historical snapshots from before the inline specification was supplied. They remain as history and are superseded for current planning by this amendment. The historical V4 source/checksum remains unavailable. No recovery candidates were found anywhere inside this workspace; the historical backup folder is absent and no substitute backup was created. The nine historical source/destination hash pairs remain recorded historical evidence, not present-day proof of recoverable originals.
+
+DEC-016 is updated to PROPOSED: V4.1 is a candidate sequencing baseline, pending owner confirmation. RISK-005 is OPEN: historical V4 provenance remains unresolved and proposed V4.1 must not govern later phases until confirmed. No owner confirmation or Phase 00 closure is implied.

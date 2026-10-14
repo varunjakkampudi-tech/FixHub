@@ -1,0 +1,2 @@
+# Retained source snapshots for documentation migrations; keep recoverable locally.
+.migration-backup/
