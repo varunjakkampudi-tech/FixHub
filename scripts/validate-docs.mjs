@@ -9,7 +9,7 @@ const markdown = [];
 
 async function walk(dir) {
   for (const entry of await readdir(dir, { withFileTypes: true })) {
-    if (['.git', 'node_modules', 'coverage', 'dist', 'build'].includes(entry.name)) continue;
+    if (['.git', '.migration-backup', 'node_modules', 'coverage', 'dist', 'build'].includes(entry.name)) continue;
     const absolute = path.join(dir, entry.name);
     if (entry.isDirectory()) await walk(absolute);
     else if (entry.isFile() && entry.name.toLowerCase().endsWith('.md')) markdown.push(absolute);
@@ -40,6 +40,10 @@ for (const [file, text] of contents) {
       continue;
     }
     const resolved = path.resolve(path.dirname(file), decodeURIComponent(target.split('?')[0]));
+    if (resolved !== root && !resolved.startsWith(root + path.sep)) {
+      errors.push(`${rel}: local link escapes repository root ${raw}`);
+      continue;
+    }
     try {
       const targetStat = await stat(resolved);
       if (fragment && targetStat.isFile() && resolved.toLowerCase().endsWith('.md')) {
