@@ -28,6 +28,7 @@ This tree contains product foundation and governance documents for Fix Hub, the 
 - [Phase review policy](governance/phase-review-policy.md)
 - [Phase review template](reviews/phase-review-template.md)
 - [Repository audit remediation findings](reviews/foundation-review.md#current-repository-audit-remediation)
+- [Post-merge governance audit and prepared owner sign-off](reviews/foundation-review.md#post-merge-governance-audit-and-owner-sign-off-preparation)
 
 ## Roadmap and design
 
