@@ -14,6 +14,7 @@ import {
   offerState,
   type SampleAddress,
 } from "@/features/fixhub/location-model";
+import { canOpenAssignedDirections, googleMapsDirectionsUrl } from "@/features/fixhub/map-adapter";
 const now = Date.parse("2026-10-15T19:00:00Z");
 function act(
   s: DemoState,
@@ -55,6 +56,33 @@ function address(
   };
 }
 describe("three-city registry and precise sample location", () => {
+  it("builds a keyless Google Maps directions URL and rejects invalid coordinates", () => {
+    const url = new URL(googleMapsDirectionsUrl({ lat: 16.75, lng: 81.68 }));
+    expect(url.origin).toBe("https://www.google.com");
+    expect(url.pathname).toBe("/maps/dir/");
+    expect(url.searchParams.get("api")).toBe("1");
+    expect(url.searchParams.get("destination")).toBe("16.75,81.68");
+    expect(url.searchParams.get("travelmode")).toBe("driving");
+    expect(() => googleMapsDirectionsUrl({ lat: 91, lng: 0 })).toThrow(RangeError);
+    expect(() => googleMapsDirectionsUrl({ lat: 0, lng: Number.NaN })).toThrow(RangeError);
+  });
+  it("exposes directions only to the assigned merchant or technician during an active job", () => {
+    const s = seed(now);
+    const booking = s.bookings.find((item) => item.id === "SAMPLE-005");
+    const merchant = s.personas.find((item) => item.id === "sample-m1");
+    const technician = s.personas.find((item) => item.id === "sample-t1");
+    const otherMerchant = s.personas.find((item) => item.id === "sample-m2");
+    const customer = s.personas.find((item) => item.id === "sample-c1");
+    if (!booking || !merchant || !technician || !otherMerchant || !customer) throw Error();
+    const withLocation = { ...booking, location: address() };
+    expect(canOpenAssignedDirections(withLocation, merchant)).toBe(true);
+    expect(canOpenAssignedDirections(withLocation, technician)).toBe(true);
+    expect(canOpenAssignedDirections(withLocation, otherMerchant)).toBe(false);
+    expect(canOpenAssignedDirections(withLocation, customer)).toBe(false);
+    expect(canOpenAssignedDirections(withLocation, null)).toBe(false);
+    expect(canOpenAssignedDirections({ ...withLocation, status: "complete" }, merchant)).toBe(false);
+    expect(canOpenAssignedDirections({ ...booking, location: undefined }, merchant)).toBe(false);
+  });
   it("limits city service visibility and explains unavailable coverage", () => {
     const s = seed(now);
     expect(enabledServices(s, "eluru").map((v) => v.id)).not.toContain("appliance");

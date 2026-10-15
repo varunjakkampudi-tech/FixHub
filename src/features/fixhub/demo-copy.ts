@@ -8,6 +8,11 @@ export const demoCopy = {
   signin: ["Sign in as SAMPLE persona", "నమూనా ఖాతాతో ప్రవేశించండి"],
   signout: ["Demo logout", "డెమో నుండి నిష్క్రమించండి"],
   reset: ["Reset fixtures", "నమూనా డేటాను రీసెట్ చేయండి"],
+  openDirections: ["Open directions in Google Maps", "గూగుల్ మ్యాప్స్‌లో దిశలు తెరవండి"],
+  directionsPrivacy: [
+    "Google Maps receives this job destination only when you open the link.",
+    "మీరు లింక్ తెరిచినప్పుడే ఈ పని గమ్యస్థానం Google Maps‌కు పంపబడుతుంది.",
+  ],
   scenario: ["Test scenario", "పరీక్ష సందర్భం"],
   notifications: ["Notifications", "నోటిఫికేషన్లు"],
   read: ["Mark all as read", "అన్నీ చదివినట్లు గుర్తించండి"],

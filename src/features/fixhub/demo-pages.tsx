@@ -21,6 +21,7 @@ import {
 import { rolePath } from "./demo-controls";
 import { formattedAddress, offerState, placeLabel } from "./location-model";
 import { lt } from "./location-copy";
+import { canOpenAssignedDirections, googleMapsDirectionsUrl } from "./map-adapter";
 const scenarioOptions: [string, DemoKey][] = [
   ["normal", "normal"],
   ["decline", "declineScenario"],
@@ -467,6 +468,22 @@ export function DemoBookingDetail({ booking }: { booking: Booking }) {
               <p>
                 {booking.location.lat}, {booking.location.lng} · SAMPLE
               </p>
+              {canOpenAssignedDirections(booking, demo.persona) && (
+                <div className="mt-3">
+                  <Button asChild variant="outline">
+                    <a
+                      href={googleMapsDirectionsUrl(booking.location)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {dt("openDirections", locale)}
+                    </a>
+                  </Button>
+                  <p className="mt-2 text-xs text-muted-foreground">
+                    {dt("directionsPrivacy", locale)}
+                  </p>
+                </div>
+              )}
             </div>
           )}
         {offered && !booking.viewed?.includes(demo.persona?.merchantId ?? "") && (
