@@ -8,7 +8,7 @@ Latest [product foundation quality checkpoint](reviews/foundation-quality-review
 
 Current preparatory artifact: [Phase 02 requirements draft](product/requirements/product-requirements-draft.md), explicitly unapproved while Phase 01 exit remains open.
 
-Phase 03 preparation: [architecture and integration candidates](architecture/architecture-contracts-draft.md), [candidate API inventory](engineering/contracts/service-api-candidates.json) and [bounded PostgreSQL proof with limitations](reviews/dispatch-proof-review.md). These do not approve Phase 03 entry, detailed architecture or production implementation.
+Phase 03 preparation: [architecture and integration candidates](architecture/architecture-contracts-draft.md), [candidate API inventory](engineering/contracts/service-api-candidates.json), [bounded PostgreSQL proof with limitations](reviews/dispatch-proof-review.md), and the [local Express API foundation](engineering/api-foundation.md). The API foundation is a demo-only implementation, not an approved/deployed Phase 03 API; these artifacts do not approve Phase 03 entry or detailed architecture.
 
 Phase 04 preparation: [behaviour and channel contracts](product/behaviour/behaviour-specification.md), [interaction references](product/behaviour/interaction-catalogue.json), [state candidates](product/behaviour/state-catalogue.json) and [notification candidates](product/behaviour/notification-catalogue.json). Proposed additions and bilingual text require review; product behavior is not implemented or approved.
 
@@ -51,8 +51,8 @@ Current status: Phase 00 planning publication verified at main `ff6425ac1a4436bb
 
 - [Fix Hub Master Execution Roadmap V4.1](roadmap/master-roadmap.md) (APPROVED governing planning roadmap through explicit owner delegation, 2026-10-15; future execution separately gated)
 - Historical V4 source and SHA-256 remain unavailable and unverified; see the [provenance ledger](governance/document-provenance.md).
-- `design/` contains a proposed design system and visual concepts, not approved branding or product UI. `engineering/` contains candidate contracts and bounded local validation evidence, not production implementation.
+- `design/` contains a proposed design system and visual concepts; permanent brand identity remains OPEN. `engineering/` contains candidate contracts and bounded proofs. `src/` contains a local-only demo; `api/` contains a limited, non-production API foundation. Neither is production implementation or evidence of phase exit.
 
-No application source, production infrastructure, or product test directories are created by this documentation restructure.
+No production infrastructure or production readiness is claimed. The local demonstration and API tests are distinct from hosted validation and live service operation.
 
 Repository-level guidance: [contributing](../CONTRIBUTING.md), [security reporting](../SECURITY.md), automated [documentation validation](../scripts/validate-documentation.mjs), and its [regression checks](../scripts/documentation-validator.test.mjs). These do not represent application security or product tests.

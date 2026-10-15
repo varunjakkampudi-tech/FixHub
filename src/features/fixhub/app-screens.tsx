@@ -26,6 +26,7 @@ import { Button } from "@/components/ui/button";
 import { useFixHub } from "./context";
 import { useDemo } from "./demo-context";
 import { calculate, categoriesDemo, money, type Booking, type Category } from "./demo-model";
+import { demoBillLines } from "./demo-bill";
 import { enabledServices, formattedAddress, ratesFor, placeLabel } from "./location-model";
 import { servicePhoto } from "./service-photos";
 import { Brand, CategoryIcon, LocaleControl } from "./shared";
@@ -656,6 +657,7 @@ export function AppComplete({ id }: { id: string }) {
   const [text, setText] = useState("");
   const [sent, setSent] = useState(false);
   const final = b?.approvedQuote ?? b?.estimate;
+  const bill = b?.status === "complete" && b.approvedQuote ? b.approvedQuote : null;
   return (
     <AppShell nav={false}>
       <Top />
@@ -664,6 +666,37 @@ export function AppComplete({ id }: { id: string }) {
         <h1 className="app-h1">{b?.status === "complete" ? tr("Service completed", "సేవ పూర్తయింది") : tr("Not completed yet", "ఇంకా పూర్తి కాలేదు")}</h1>
         <p className="app-muted">{tr("Thank you for trying Fix Hub (DEMO).", "Fix Hub (DEMO) ఉపయోగించినందుకు ధన్యవాదాలు.")}</p>
         {final && <p className="app-price-line">{tr("Approved amount (DEMO receipt)", "ఆమోదించిన మొత్తం (DEMO రసీదు)")}: <strong>{money(final.total, locale)}</strong></p>}
+        {bill && b && (
+          <section className="app-bill" aria-labelledby="demo-bill-title">
+            <div className="app-bill-heading">
+              <div>
+                <h2 id="demo-bill-title" className="app-h2">{tr("Service bill · DEMO", "సేవా బిల్లు · DEMO")}</h2>
+                <p className="app-muted">{tr("Reference", "రిఫరెన్స్")}: {b.id}</p>
+              </div>
+              <span className="app-demo-badge">DEMO</span>
+            </div>
+            <p className="app-muted">{tr("Service", "సేవ")}: {b.category}</p>
+            <dl className="app-bill-lines">
+              {demoBillLines(bill, locale).map((line) => (
+                <div key={line.label}>
+                  <dt>{line.label}</dt>
+                  <dd>{line.amount === null ? line.note : money(line.amount, locale)}</dd>
+                </div>
+              ))}
+              <div className="app-bill-total">
+                <dt>{tr("Approved total", "ఆమోదించిన మొత్తం")}</dt>
+                <dd>{money(bill.total, locale)}</dd>
+              </div>
+            </dl>
+            <p className="app-note">{tr("Cash collection is outside this demo. No payment was processed or recorded; this is not proof of payment or a tax invoice.", "నగదు చెల్లింపు ఈ డెమో వెలుపల ఉంటుంది. చెల్లింపు ప్రాసెస్ లేదా రికార్డ్ చేయలేదు; ఇది చెల్లింపు రుజువు లేదా పన్ను ఇన్వాయిస్ కాదు.")}</p>
+            <div className="app-bill-actions">
+              <Button type="button" className="app-cta" onClick={() => window.print()}>
+                {tr("Print / save bill as PDF", "బిల్లును ప్రింట్ / PDFగా సేవ్ చేయండి")}
+              </Button>
+              <p className="app-small">{tr("Choose “Save as PDF” in your browser’s print dialog to download a copy.", "కాపీ డౌన్‌లోడ్ చేయడానికి బ్రౌజర్ ప్రింట్ డైలాగ్‌లో “PDFగా సేవ్ చేయండి” ఎంచుకోండి.")}</p>
+            </div>
+          </section>
+        )}
         {sent ? (
           <p className="app-note justify-center" role="status"><Check />{tr("Thanks! Review saved in this demo only.", "ధన్యవాదాలు! సమీక్ష ఈ డెమోలో మాత్రమే.")}</p>
         ) : (

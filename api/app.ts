@@ -1,0 +1,186 @@
+import cors from "cors";
+import express, { type ErrorRequestHandler, type RequestHandler } from "express";
+import { rateLimit } from "express-rate-limit";
+import helmet from "helmet";
+import pino, { type Logger } from "pino";
+import pinoHttp from "pino-http";
+import swaggerUi from "swagger-ui-express";
+import { z } from "zod";
+
+import { calculate, initialPolicy } from "../src/features/fixhub/demo-model";
+import { openApiDocument } from "./openapi";
+
+const categories = ["electrician", "plumbing", "ac", "appliance"] as const;
+const categoryParams = z.object({ category: z.enum(categories) }).strict();
+const originSchema = z
+  .string()
+  .url()
+  .refine((value) => {
+    const parsed = new URL(value);
+    return (parsed.protocol === "https:" || parsed.protocol === "http:") && parsed.origin === value;
+  }, "Expected an origin without a path, query, or fragment");
+
+export type ApiAppOptions = {
+  allowedOrigins?: string[];
+  logger?: Logger;
+  rateLimit?: { windowMs: number; limit: number };
+  environment?: "development" | "test" | "production";
+};
+
+function configuredOrigins(): string[] {
+  const configured = process.env.FIXHUB_WEB_ORIGINS;
+  const values = configured
+    ? configured.split(",").map((value) => value.trim()).filter(Boolean)
+    : ["http://localhost:5173", "http://127.0.0.1:5173"];
+  const checked = z.array(originSchema).min(1).safeParse(values);
+  if (!checked.success) throw new Error("FIXHUB_WEB_ORIGINS must be a comma-separated list of exact origins");
+  return checked.data;
+}
+
+function requestLogger(logger: Logger): RequestHandler {
+  return pinoHttp({
+    logger,
+    genReqId: () => crypto.randomUUID(),
+    customAttributeKeys: { reqId: "requestId" },
+    serializers: {
+      req(req) {
+        return { method: req.method, requestId: req.id };
+      },
+      res(res) {
+        return { statusCode: res.statusCode };
+      },
+      err(err) {
+        return { type: err.name };
+      },
+    },
+    customLogLevel(_req, res, error) {
+      if (error || res.statusCode >= 500) return "error";
+      if (res.statusCode >= 400) return "warn";
+      return "info";
+    },
+    customSuccessMessage: (req, res) => `${req.method} ${req.route?.path ?? "unmatched"} ${res.statusCode}`,
+    customErrorMessage: (req, res) => `${req.method} ${req.route?.path ?? "unmatched"} ${res.statusCode}`,
+    redact: {
+      paths: [
+        "req.headers.authorization",
+        "req.headers.cookie",
+        "req.headers.set-cookie",
+        "password",
+        "token",
+        "email",
+        "phone",
+        "address",
+      ],
+      censor: "[REDACTED]",
+    },
+  });
+}
+
+export function createApiApp(options: ApiAppOptions = {}) {
+  const app = express();
+  const environment = options.environment ?? (process.env.NODE_ENV === "production" ? "production" : "development");
+  const origins = options.allowedOrigins ?? configuredOrigins();
+  const logger = options.logger ?? pino({ level: environment === "test" ? "silent" : process.env.LOG_LEVEL ?? "info" });
+
+  app.disable("x-powered-by");
+  app.use(requestLogger(logger));
+  app.use((req, res, next) => {
+    res.setHeader("x-request-id", String(req.id));
+    next();
+  });
+  app.use(helmet());
+  app.use(
+    cors({
+      origin(origin, callback) {
+        if (origin === undefined || origins.includes(origin)) return callback(null, true);
+        return callback(null, false);
+      },
+      credentials: false,
+      optionsSuccessStatus: 204,
+    }),
+  );
+
+  app.get("/health/live", (_req, res) => res.status(200).json({ status: "alive", mode: "local-demo" }));
+  app.get("/health/ready", (_req, res) => {
+    if (environment === "production") {
+      return res.status(503).json({ status: "not_ready", reason: "production_auth_and_storage_not_configured" });
+    }
+    return res.status(200).json({ status: "ready", mode: "local-demo" });
+  });
+  app.get("/openapi.json", (_req, res) => res.status(200).json(openApiDocument));
+  app.use("/docs", swaggerUi.serve, swaggerUi.setup(openApiDocument));
+
+  const apiLimiter = rateLimit({
+    windowMs: options.rateLimit?.windowMs ?? 60_000,
+    limit: options.rateLimit?.limit ?? 120,
+    standardHeaders: "draft-8",
+    legacyHeaders: false,
+    handler(req, res) {
+      res.status(429).json({
+        error: { code: "RATE_LIMITED", message: "Too many requests. Please try again shortly." },
+        requestId: req.id,
+      });
+    },
+  });
+  app.use("/api/v1", apiLimiter);
+  app.use(express.json({ limit: "32kb", strict: true }));
+
+  app.get("/api/v1/demo/prices/:category", (req, res) => {
+    const parsed = categoryParams.safeParse(req.params);
+    if (!parsed.success) {
+      return res.status(400).json({
+        error: { code: "INVALID_INPUT", message: "The requested sample category is not supported." },
+        requestId: req.id,
+      });
+    }
+    const { category } = parsed.data;
+    const price = calculate(initialPolicy[category]);
+    return res.status(200).json({
+      demoOnly: true,
+      currency: "INR",
+      category,
+      items: [
+        { code: "visit", amount: price.visit },
+        { code: "labor_sample", amount: price.labor },
+        { code: "parts_allowance_sample", amount: price.parts },
+        { code: "platform_fee_sample", amount: price.fee },
+        { code: "discount_sample", amount: -price.discount },
+        { code: "tax", amount: null, configured: false },
+      ],
+      total: price.total,
+      collectionMethod: "cash_on_service_completion_in_demo_only",
+      priceVersion: price.rates.version,
+      notice: "Fictional estimate only; not an offer, merchant quote, tax determination, booking, or payment instruction.",
+    });
+  });
+
+  app.use((_req, res) => {
+    res.status(404).json({
+      error: { code: "NOT_FOUND", message: "The requested API resource was not found." },
+      requestId: res.getHeader("x-request-id") ?? null,
+    });
+  });
+
+  const errorHandler: ErrorRequestHandler = (error: unknown, req, res, _next) => {
+    const candidate = error as { status?: unknown; type?: unknown; name?: unknown };
+    if (candidate.type === "entity.too.large" || candidate.status === 413) {
+      return res.status(413).json({
+        error: { code: "PAYLOAD_TOO_LARGE", message: "Request body exceeds the allowed size." },
+        requestId: req.id,
+      });
+    }
+    if (candidate.type === "entity.parse.failed" || candidate.status === 400) {
+      return res.status(400).json({
+        error: { code: "INVALID_JSON", message: "Request body must contain valid JSON." },
+        requestId: req.id,
+      });
+    }
+    req.log.error({ errorType: typeof candidate.name === "string" ? candidate.name : "UnknownError" }, "Unhandled API error");
+    return res.status(500).json({
+      error: { code: "INTERNAL_ERROR", message: "The request could not be completed." },
+      requestId: req.id,
+    });
+  };
+  app.use(errorHandler);
+  return app;
+}

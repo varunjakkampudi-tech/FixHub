@@ -1863,6 +1863,27 @@
 .app-menu svg { width: 20px; color: var(--muted-foreground); }
 .app-menu em { font-style: normal; font-size: 0.8rem; color: var(--muted-foreground); }
 
+.app-bill { max-width: 34rem; margin: 1.25rem auto; padding: 1rem; border: 1px solid var(--border); border-radius: 1rem; background: var(--card); color: var(--foreground); text-align: left; }
+.app-bill-heading { display: flex; align-items: start; justify-content: space-between; gap: 1rem; }
+.app-demo-badge { flex: 0 0 auto; border: 1px solid var(--border); border-radius: 999px; padding: 0.15rem 0.55rem; color: var(--muted-foreground); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.08em; }
+.app-bill-lines { margin-top: 1rem; }
+.app-bill-lines > div { display: flex; justify-content: space-between; gap: 1rem; padding: 0.45rem 0; border-bottom: 1px solid var(--border); }
+.app-bill-lines dt { color: var(--muted-foreground); }
+.app-bill-lines dd { margin: 0; font-variant-numeric: tabular-nums; text-align: right; }
+.app-bill-lines .app-bill-total { border-bottom: 0; padding-top: 0.8rem; color: var(--foreground); font-size: 1.05rem; font-weight: 800; }
+.app-bill-actions { margin-top: 1rem; text-align: center; }
+.app-bill-actions .app-cta { width: 100%; }
+.app-small { color: var(--muted-foreground); font-size: 0.75rem; line-height: 1.5; }
+
+@media print {
+  body * { visibility: hidden !important; }
+  .app-bill, .app-bill * { visibility: visible !important; }
+  .app-bill { position: absolute; inset: 0 auto auto 0; width: 100%; max-width: none; margin: 0; padding: 0.55in; border: 0; border-radius: 0; background: #fff; color: #111; box-shadow: none; }
+  .app-bill .app-bill-lines > div { border-color: #ccc; }
+  .app-bill .app-bill-lines dt, .app-bill .app-muted { color: #444; }
+  .app-bill-actions { display: none !important; }
+}
+
 /* Telugu: keep whole words together in category tiles */
 :lang(te) .app-tile span { overflow-wrap: anywhere; word-break: normal; font-size: 0.72rem; padding-inline: 2px; line-height: 1.35; }
 :lang(te) .app-tile { min-width: 0; }
