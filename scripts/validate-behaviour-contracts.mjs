@@ -62,6 +62,10 @@ function validate({ state, interaction, notification }) {
   assert.equal(quotedStart.actor, 'assigned-technician', 'quote consent is not actual work start');
   assert.equal(quotedStart.event, 'booking.started', 'quoted work needs actual start event');
   assert.match(quotedStart.guard, /current unexpired customer quote consent/);
+  for (const id of ['P04-ST-021', 'P04-ST-023', 'P04-ST-031', 'P04-ST-033']) {
+    const edge = state.machines.flatMap(machine => machine.transitions).find(value => value.id === id);
+    assert.match(edge.actor, /merchant-manager only with an approved active action-specific grant, otherwise denied/, 'manager cannot inherit owner transition authority');
+  }
 
   const expectedInteractions = [];
   for (const [role, prefix, stagePrefix, count, source] of roles) {
@@ -86,6 +90,8 @@ function validate({ state, interaction, notification }) {
     }
   }
   exact(interaction.interactions.map(entry => entry.id), expectedInteractions, 'exact 83 source-stage references');
+  for (const id of ['P04-I-C019', 'P04-I-M026']) assert.equal(interaction.interactions.find(entry => entry.id === id).primaryFlow, 'FLOW-05', 'reviews map to service lifecycle');
+  assert.match(interaction.channelRule, /only where the stage, sensitivity, authentication\/linking, recipient consent, provider\/account eligibility, approved template and applicable messaging window all permit it/);
   const entryFor = id => interaction.interactions.find(entry => entry.id === id).entry;
   assert.match(entryFor('P04-I-M001'), /Public discovery.*no account, existing tenant or membership required/);
   assert.match(entryFor('P04-I-M002'), /Authenticated applicant.*no existing tenant required/);
@@ -127,6 +133,9 @@ if (process.argv[2] === '--self-test') {
     ['technician identity entry is not an assigned-job prerequisite loop', v => { v.interaction.interactions.find(entry => entry.id === 'P04-I-T001').entry = 'Already authenticated and assigned job required'; }],
     ['customer quote consent cannot claim actual work start', v => { v.state.machines.find(machine => machine.id === 'booking').transitions.find(edge => edge.from === 'QuotePending' && edge.to === 'InProgress').actor = 'customer'; }],
     ['quoted work must emit actual start event', v => { v.state.machines.find(machine => machine.id === 'booking').transitions.find(edge => edge.from === 'QuotePending' && edge.to === 'InProgress').event = 'quote.consented'; }],
+    ['merchant managers cannot inherit owner transition authority', v => { v.state.machines.flatMap(machine => machine.transitions).find(edge => edge.id === 'P04-ST-021').actor = 'merchant-manager'; }],
+    ['review interaction maps to lifecycle flow', v => { v.interaction.interactions.find(entry => entry.id === 'P04-I-C019').primaryFlow = 'FLOW-10'; }],
+    ['WhatsApp candidates remain subject to stage and account gates', v => { v.interaction.channelRule = 'Every listed channel is approved and universally available.'; }],
   ];
   for (const [name, mutate] of mutations) {
     const fixture = structuredClone(original);

@@ -240,7 +240,7 @@
           "id": "P04-ST-021",
           "from": "Offered",
           "to": "Won",
-          "actor": "merchant-owner",
+          "actor": "merchant-owner; merchant-manager only with an approved active action-specific grant, otherwise denied",
           "guard": "Authorized tenant; live generation; eligibility/capacity checked at locked decision and commit succeeds",
           "event": "assignment.committed",
           "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
@@ -258,7 +258,7 @@
           "id": "P04-ST-023",
           "from": "Offered",
           "to": "Declined",
-          "actor": "merchant-owner",
+          "actor": "merchant-owner; merchant-manager only with an approved active action-specific grant, otherwise denied",
           "guard": "Current own offer; same-key safe replay; does not cancel whole request",
           "event": "offer.declined",
           "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
@@ -362,7 +362,7 @@
           "id": "P04-ST-031",
           "from": "Assigned",
           "to": "Coordinating",
-          "actor": "merchant-owner",
+          "actor": "merchant-owner; merchant-manager only with an approved active action-specific grant, otherwise denied",
           "guard": "Eligible tenant technician allocated; private handoff; no second merchant acceptance",
           "event": "booking.coordinating",
           "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
@@ -380,7 +380,7 @@
           "id": "P04-ST-033",
           "from": "Arrived",
           "to": "QuotePending",
-          "actor": "merchant-owner",
+          "actor": "merchant-owner; merchant-manager only with an approved active action-specific grant, otherwise denied",
           "guard": "Approved quote policy requires exact scope and inspection/labour/parts/travel disclosure",
           "event": "quote.pending",
           "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"

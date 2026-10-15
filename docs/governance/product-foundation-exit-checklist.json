@@ -3,6 +3,8 @@
   "status": "UNRATIFIED PROPOSAL - NOT ACTIVE PHASE COMPLETION INVENTORIES",
   "date": "2026-10-15",
   "authority": "Phase 01-05 work authorization allows internal preparation; human accepts final findings and phase exits",
+  "assessmentState": "NOT ASSESSED - PROPOSED CHECKLIST ONLY",
+  "criterionStatusSemantics": "The per-criterion CONDITIONAL values below are provisional planning placeholders reflecting known dependencies, not formal assessments under stage-gate policy. No Phase 02-05 execution assessment has been performed; do not calculate completion percentages from this proposal.",
   "phase01Policy": "Existing active Phase 01 inventory remains exactly 12; no denominator or IDs changed here",
   "scoringPolicy": "No completion percentage is calculated from these proposals. Owner scope/checklist acceptance and evidence review precede formal phase scoring.",
   "phases": [
@@ -23,35 +25,35 @@
         {
           "id": "P02-DOD-002",
           "mandatory": true,
-          "acceptance": "Complete PRD and functional/non-functional catalogues have observable positive, negative and edge acceptance",
+          "acceptance": "One versioned PRD and both catalogues exist; every approved in-scope requirement has a unique stable ID, one positive, one negative and one edge acceptance reference, and an owner disposition for every exclusion",
           "status": "CONDITIONAL",
           "currentEvidence": "41-ID draft exists; launch-critical policies and numeric targets are not final"
         },
         {
           "id": "P02-DOD-003",
           "mandatory": true,
-          "acceptance": "Pricing, category, instant/scheduled, cancellation, no-show and support policies resolve launch-critical ambiguity",
+          "acceptance": "A decision record names the selected or explicitly deferred policy for each of pricing, category, instant/scheduled, cancellation, no-show and support; each deferred item has an owner, affected scope and gate that blocks it",
           "status": "CONDITIONAL",
           "currentEvidence": "Candidate exclusions exist; actual legal/safety/commercial choices remain open"
         },
         {
           "id": "P02-DOD-004",
           "mandatory": true,
-          "acceptance": "RBAC, identity, data rights, localization and accessibility baseline reviewed for all five roles and approved channels",
+          "acceptance": "A role-by-action access matrix covers all five roles; identity, data-rights, localization and accessibility decisions each cite evidence or remain explicitly deferred with an accountable owner and affected gate",
           "status": "CONDITIONAL",
           "currentEvidence": "Draft matrices exist; qualified review and detailed approved policies remain pending"
         },
         {
           "id": "P02-DOD-005",
           "mandatory": true,
-          "acceptance": "Measurable service, reliability, performance, scale and recovery targets have defensible workloads and operational assumptions",
+          "acceptance": "Each proposed service, reliability, performance, scale and recovery target has a numeric measure, workload/assumption, measurement method and owner, or is explicitly deferred with the evidence needed to set it",
           "status": "CONDITIONAL",
           "currentEvidence": "Targets are open, not invented from absent demand/funding"
         },
         {
           "id": "P02-DOD-006",
           "mandatory": true,
-          "acceptance": "Stable-ID traceability, change ledger, exclusions and assumption treatments are approved",
+          "acceptance": "A validator confirms every in-scope requirement ID appears exactly once in the index and maps to source and acceptance evidence; exclusions, assumptions and changes have linked dispositions",
           "status": "CONDITIONAL",
           "currentEvidence": "Initial 41 IDs preserved and draft mapping present; no new approved baseline"
         },
@@ -81,35 +83,35 @@
         {
           "id": "P03-DOD-002",
           "mandatory": true,
-          "acceptance": "Technology ADRs, alternatives, domain boundaries and cost/team trade-offs accepted",
+          "acceptance": "Every in-scope architecture decision has an ADR with at least one alternative, decision drivers, domain owner, cost/team impact, status and explicit owner disposition; unresolved ADRs block dependent commitments",
           "status": "CONDITIONAL",
           "currentEvidence": "Ten ADR candidates exist; technology/provider commitments not approved"
         },
         {
           "id": "P03-DOD-003",
           "mandatory": true,
-          "acceptance": "Schema/ERD, ownership, tenant/resource isolation and sensitive-data boundaries reviewed",
+          "acceptance": "Every in-scope entity/relationship has an owner and classification; tenant/resource isolation and sensitive-data access paths have documented allow/deny cases, reviewer and disposition",
           "status": "CONDITIONAL",
           "currentEvidence": "Conceptual ERD reused; detailed schema and security approval remain pending"
         },
         {
           "id": "P03-DOD-004",
           "mandatory": true,
-          "acceptance": "Versioned API/error/event/worker and storage contracts cover approved product scope and failure paths",
+          "acceptance": "A versioned contract inventory maps every approved in-scope operation/event/worker/storage boundary to request, response, authorization, error and retry/failure cases; uncovered scope is listed as a blocker",
           "status": "CONDITIONAL",
           "currentEvidence": "Candidate eight-operation subset exists; final complete API contract not claimed"
         },
         {
           "id": "P03-DOD-005",
           "mandatory": true,
-          "acceptance": "Atomic acceptance, idempotency and capacity properties have bounded executed evidence and explicit residuals",
+          "acceptance": "For each declared concurrency invariant, a reproducible bounded test records fixture, command, revision, expected and observed outcome, repetitions, failures and residual limits; untested invariants remain NOT ASSESSED",
           "status": "CONDITIONAL",
           "currentEvidence": "Separate synthetic winner and interval proofs; not production authentication, full eligibility or reassignment"
         },
         {
           "id": "P03-DOD-006",
           "mandatory": true,
-          "acceptance": "Identity, revocation, threat model and private upload/privacy design receive risk-appropriate review",
+          "acceptance": "Threat scenarios identify asset, actor, trust boundary, deny control and evidence; identity/revocation and upload/privacy designs receive named risk-appropriate review, with unresolved high risks explicitly blocking affected use",
           "status": "CONDITIONAL",
           "currentEvidence": "Threat/denial plan present; competent sensitive-work assurance required before affected deployment"
         },
@@ -123,7 +125,7 @@
         {
           "id": "P03-DOD-008",
           "mandatory": true,
-          "acceptance": "Recovery objectives, failure-domain design, portability assumptions and owner architecture acceptance recorded",
+          "acceptance": "RPO/RTO or explicit not-yet-set disposition, failure domains, restore/portability assumptions and test method are recorded; owner accepts exact architecture revision and residual risks",
           "status": "CONDITIONAL",
           "currentEvidence": "Normal local restart is not host-crash/off-device restore; approval/objectives/device evidence pending"
         }
@@ -146,35 +148,35 @@
         {
           "id": "P04-DOD-002",
           "mandatory": true,
-          "acceptance": "All five roles and approved-channel capabilities have truthful success/denial/offline recovery contracts",
+          "acceptance": "A traceable scenario inventory covers each of five roles against every in-scope capability/channel and records success, denial, offline/reconnect and recovery outcomes; unsupported combinations are explicitly excluded",
           "status": "CONDITIONAL",
           "currentEvidence": "83 conceptual-stage references and channel restrictions mapped; stakeholder approval pending"
         },
         {
           "id": "P04-DOD-003",
           "mandatory": true,
-          "acceptance": "Valid/forbidden transitions, ownership, generations and draft amendments reviewed and accepted",
+          "acceptance": "Every proposed transition has a unique ID, source/target state, authorized actor, guard, side effect and forbidden-case test reference; amendments are linked to the baseline and dispositioned",
           "status": "CONDITIONAL",
           "currentEvidence": "45 conceptual edges retained plus 11 separately marked candidate additions; no policy approval"
         },
         {
           "id": "P04-DOD-004",
           "mandatory": true,
-          "acceptance": "Expiry/cancel/capacity/reassignment, handoff/no-show, quote consent and completion rules reconcile",
+          "acceptance": "Each named race/exception has a deterministic winner or explicit unresolved blocker, state/version rule, customer/merchant outcome and linked scenario; no unresolved case is represented as approved",
           "status": "CONDITIONAL",
           "currentEvidence": "Detailed candidate scenarios exist; binding timers/safety/consent policies remain open"
         },
         {
           "id": "P04-DOD-005",
           "mandatory": true,
-          "acceptance": "Notification catalogue separates delivery facts from business state and respects current provider consent/permission rules",
+          "acceptance": "Each notification row specifies trigger, recipient, consent/permission prerequisite, payload class, delivery state versus business state, expiry and failure fallback; provider-dependent rows cite dated evidence or remain blocked",
           "status": "CONDITIONAL",
           "currentEvidence": "24 candidates; no approved templates or tested providers"
         },
         {
           "id": "P04-DOD-006",
           "mandatory": true,
-          "acceptance": "Six outcome classes per major flow, English/Telugu and visual/accessibility review completed",
+          "acceptance": "For each in-scope major flow, evidence records the six defined outcome classes, English/Telugu copy review, rendered diagram review and named accessibility review; unexecuted reviews remain NOT ASSESSED",
           "status": "CONDITIONAL",
           "currentEvidence": "Document checks present; actual human/assistive technology/Mermaid rendering review pending"
         },
@@ -218,14 +220,14 @@
         {
           "id": "P05-DOD-004",
           "mandatory": true,
-          "acceptance": "Colours/type/iconography/tokens pass declared checks and font/localization provenance review",
+          "acceptance": "Every proposed token has a source and passing declared contrast/consistency check; font, icon, localization and asset provenance are reviewed or explicitly marked unresolved and excluded from production use",
           "status": "CONDITIONAL",
           "currentEvidence": "20 token pairs pass arithmetic; font binaries/candidate-font rendering and fluent review absent"
         },
         {
           "id": "P05-DOD-005",
           "mandatory": true,
-          "acceptance": "Reusable components, responsive/accessibility states and future handoff are reviewed",
+          "acceptance": "A finite component inventory records default, loading, empty, error, disabled and responsive/accessibility states where applicable; handoff files and open decisions are versioned and reviewed",
           "status": "CONDITIONAL",
           "currentEvidence": "Candidate inventory exists; actual UI/device/assistive testing not performed"
         },

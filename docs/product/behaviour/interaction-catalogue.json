@@ -3,7 +3,7 @@
   "status": "DRAFT PREPARATION - NOT SCREENS OR IMPLEMENTED JOURNEYS",
   "sourcePolicy": "Existing conceptual stage identifiers preserved; new P04 interaction IDs are candidate stable cross-reference keys, not approved requirements.",
   "scenarioRule": "Each entry inherits the six explicitly specified outcomes for its primary flow in behaviour-specification.md. Stage-specific actions/constraints remain in the linked source, not silently replaced by generic outcomes.",
-  "channelRule": "Listed role/channel candidates are maximum scope, not full feature parity or account approval. Detailed channel restrictions in behaviour-specification.md override this list; sensitive setup/evidence uses scoped secure web/native forms, not arbitrary WhatsApp attachments.",
+  "channelRule": "Each channels array is a candidate upper bound, not a promise that the interaction exists or is available on every listed channel. A channel may be used only where the stage, sensitivity, authentication/linking, recipient consent, provider/account eligibility, approved template and applicable messaging window all permit it. Detailed restrictions in behaviour-specification.md override this list; sensitive setup/evidence uses scoped secure web/native forms, not arbitrary WhatsApp attachments.",
   "interactions": [
     {
       "id": "P04-I-C001",
@@ -424,7 +424,7 @@
       "role": "customer",
       "source": "docs/journeys/customer-journey.md",
       "sourceStage": "CJ-19",
-      "primaryFlow": "FLOW-10",
+      "primaryFlow": "FLOW-05",
       "entry": "Public discovery only where allowed; authenticated own subject/request for private actions",
       "channels": [
         "web",
@@ -1137,7 +1137,7 @@
       "role": "merchant",
       "source": "docs/journeys/merchant-journey.md",
       "sourceStage": "MJ-26",
-      "primaryFlow": "FLOW-10",
+      "primaryFlow": "FLOW-05",
       "entry": "Active own-business membership and explicit action grant; no implied reviewer/admin privilege",
       "channels": [
         "web",
