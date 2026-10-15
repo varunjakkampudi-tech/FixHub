@@ -9,9 +9,9 @@ function test(name, fn) { fn(); passed++; console.log('PASS ' + name); }
 const near = (a, b) => assert.ok(Math.abs(a - b) < 1e-7, a + ' differs from ' + b);
 test('exact scenario inventory', () => assert.deepEqual(Object.keys(results).sort(), ['BASE', 'HIGH', 'LOW']));
 for (const [name, expected] of Object.entries({
-  LOW: [112, 89600, 6720, 31443, 21000, -45723, 493, null],
-  BASE: [663, 795600, 79560, 49544, 21000, 9016, 1769, 838],
-  HIGH: [2160, 3240000, 324000, 83315, 35500, 205185, 4640, 441]
+  LOW: [112, 89600, 6720, 31456, 21000, -45736, 506, null],
+  BASE: [663, 795600, 79560, 49293, 21000, 9267, 1518, 833],
+  HIGH: [2160, 3240000, 324000, 82470, 35500, 206030, 3795, 441]
 })) {
   test(name + ' financial baseline and conservation', () => {
     const r = results[name];
@@ -43,11 +43,11 @@ test('zero completion does not fabricate realized fees', () => {
   assert.equal(r.contributionPerCompletedJob, null);
 });
 test('service free-allowance boundary and no-allowance stress', () => {
-  const s = { ...config.scenarios.BASE, utilityMessagesPerRequest: 0, authenticationMessagesPerRequest: 0, serviceMessagesPerRequest: 1 };
+  const s = { ...config.scenarios.BASE, utilityMessagesPerRequest: 0, authenticationMessagesPerRequest: 0, serviceMessagesPerRequest: 1, serviceFreeAllowance: 1000 };
   near(evaluate({ ...s, requests: 999 }, 0).whatsappCost, 0);
   near(evaluate({ ...s, requests: 1000 }, 0).whatsappCost, 0);
-  near(evaluate({ ...s, requests: 1001 }, 0).whatsappCost, 0.145);
-  near(results.BASE.sensitivities.noFreeServiceAllowance, 8871);
+  near(evaluate({ ...s, requests: 1001 }, 0).whatsappCost, 0.115);
+  near(results.BASE.sensitivities.noFreeServiceAllowance, results.BASE.operatingResult);
 });
 test('unprofitable LOW has no manufactured break-even', () => assert.equal(breakEven(config.scenarios.LOW), null));
 test('temporary profit before allowance ends is not missed', () => {
@@ -64,12 +64,12 @@ test('conversion and cost sensitivities are adverse', () => {
   for (const r of Object.values(results)) {
     for (const v of Object.values(r.sensitivities)) assert.ok(v <= r.operatingResult + 1e-7);
   }
-  near(results.BASE.sensitivities.lowerAcceptance, -4907);
-  near(results.BASE.sensitivities.noShows, 2054.5);
-  near(results.BASE.sensitivities.doubleMessagingSupport, 767);
+  near(results.BASE.sensitivities.lowerAcceptance, -4656);
+  near(results.BASE.sensitivities.noShows, 2305.5);
+  near(results.BASE.sensitivities.doubleMessagingSupport, 1269);
 });
 test('runway is not infinite for profitable scenarios', () => {
-  near(results.LOW.runwayMonths, 300000 / 45723);
+  near(results.LOW.runwayMonths, 300000 / 45736);
   assert.equal(results.BASE.runwayMonths, null);
   assert.equal(results.HIGH.runwayMonths, null);
 });

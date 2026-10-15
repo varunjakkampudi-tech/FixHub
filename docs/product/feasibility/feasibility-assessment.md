@@ -1,6 +1,6 @@
 # Fix Hub Phase 01 provisional feasibility report
 
-As of 2026-10-15. Status: **IN PROGRESS. Active Phase 01 DoD: 10/12 = 83.3% PASS, 2 CONDITIONAL.** The founder removed mandatory formal customer/merchant interview deliverables without representing them as completed. No genuine customer demand, verified merchant supply or mandatory provider access/price evidence exists. Real-world business/build GO remains NOT ASSESSED; formal Phase 02 execution awaits Phase 01 exit. [Later-phase draft preparation](../../governance/product-foundation-work-authority.md) is authorized but does not pass entry gates.
+As of 2026-10-16. Status: **IN PROGRESS. Active Phase 01 DoD: 10/12 = 83.3% PASS, 2 CONDITIONAL.** The founder removed mandatory formal customer/merchant interview deliverables without representing them as completed. No genuine customer demand or verified merchant supply exists; mandatory provider access/pricing conditions remain unresolved despite retrieval of the current public India/INR list rates. Real-world business/build GO remains NOT ASSESSED; formal Phase 02 execution awaits Phase 01 exit. [Later-phase draft preparation](../../governance/product-foundation-work-authority.md) is authorized but does not pass entry gates.
 
 ## Executive conclusion and market
 
@@ -17,19 +17,19 @@ Free basic listing preserved. Compare completed-job fee, accepted lead, optional
 | Completed expected jobs |112|663|2,160|
 | GTV |89,600|795,600|3,240,000|
 | Revenue |6,720|79,560|324,000|
-| Contribution/request |−61.81|25.01|80.23|
-| Operating result before exclusions |−45,723|9,016|205,185|
-| Break-even within unchanged cost tier |None|838|441|
+| Contribution/request |−61.84|25.22|80.51|
+| Operating result before exclusions |−45,736|9,267|206,030|
+| Break-even within unchanged cost tier |None|833|441|
 
-These are class 5 assumptions, not forecasts. BASE with 20% lower acceptance yields −₹4,907/month; doubled support/message cost leaves ₹767. HIGH requires unproved demand, fees and capacity. LOW modeled ₹300k operating cash gives 6.56 months of runway, excluding build spending. Positive results are not net profit; GST, collection, full personnel and unknown obligations are excluded.
+These are class 5 assumptions, not forecasts, recalculated with the public Meta India/INR utility/authentication/service list rate of₹0.115 per delivered message and zero service allowance. BASE with 20% lower acceptance yields −₹4,656/month; doubled support/message cost leaves₹1,269. HIGH requires unproved demand, fees and capacity. LOW modeled₹300k operating cash gives6.56 months of runway, excluding build spending. Positive results are not net profit; GST, collection, full personnel and unknown obligations are excluded.
 
 The ₹50k validation reference ceiling is NOT spending permission. Bottom-up one-time build/setup bounds of ₹11.4 lakh/₹25.2 lakh/₹50.4 lakh are estimates, not quotes, for unchanged all-channel scope. Monthly fixed costs are ₹21k/₹21k/₹35.5k, plus variable expenses. Legal, distribution and expansion obligations are separate; no capital adequacy is proved. [Finance detail](finance/scenario-analysis.md), [budget](finance/validation-budget.md).
 
 ## Integration, stores and legal
 
-WhatsApp is mandatory, but effective official India pricing, account eligibility and callback details are not established. Official explanatory text conflicts with October 2026 BSP charges. Modeled variable bills of ₹493/₹1,769/₹4,640, plus assumed BSP fixed cost, cannot establish actual billing. Do not treat free replies as fact or use unofficial automation. [Dependency](integrations/whatsapp-feasibility.md).
+WhatsApp is mandatory, and public India rates are now retrieved, but account eligibility, message classification, callback details and payable all-in terms are not established. Meta's public page and FAQ conflict on service-message free treatment. Modeled variable bills of₹506/₹1,518/₹3,795, plus assumed BSP fixed cost, are sensitivities and cannot establish actual billing. Do not treat free replies as fact or use unofficial automation. [Dependency](integrations/whatsapp-feasibility.md).
 
-Further official FAQ verification confirms October service charging and a 1,000-message monthly allowance per phone. The effective numeric India rate-card link still fails HTTP 429; mandatory pricing/access conditions remain unresolved. The obsolete free-service description is not a basis for zero-cost planning.
+Meta's public India/INR rate selector has now been read (SRC-009/SRC-042), but this is not proof of account eligibility, account-specific payable rate or billable category. The public pricing page's “free service” description conflicts with the FAQ's 2026-10-01 service-charge/1,000-message monthly allowance rule. Do not use either statement alone to characterize a Fix Hub account bill; the provider gate remains CONDITIONAL.
 
 Official Google/Apple fees, identity/D-U-N-S requirements and conditional personal testing were assessed; no accounts, builds, devices or publication approvals exist. A wrapper versus React Native remains a comparison, not final architecture; PWA cannot silently replace required store apps. [Store matrix](integrations/app-store-readiness.md).
 
