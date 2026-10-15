@@ -664,7 +664,12 @@ export function AppComplete({ id }: { id: string }) {
     <AppShell nav={false}>
       <Top />
       <section className="app-body text-center">
-        <span className="app-success"><Check /></span>
+        <span
+          className={`app-success ${b?.status === "complete" ? "app-success-complete" : "app-success-pending"}`}
+          aria-hidden="true"
+        >
+          {b?.status === "complete" ? <Check /> : <Timer />}
+        </span>
         <h1 className="app-h1">{b?.status === "complete" ? tr("Service completed", "సేవ పూర్తయింది") : tr("Not completed yet", "ఇంకా పూర్తి కాలేదు")}</h1>
         <p className="app-muted">{tr("Thank you for trying Fix Hub (DEMO).", "Fix Hub (DEMO) ఉపయోగించినందుకు ధన్యవాదాలు.")}</p>
         {final && <p className="app-price-line">{tr("Approved amount (DEMO receipt)", "ఆమోదించిన మొత్తం (DEMO రసీదు)")}: <strong>{money(final.total, locale)}</strong></p>}
