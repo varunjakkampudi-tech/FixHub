@@ -33,7 +33,7 @@
       "historicalPath": "docs/flows/flow-04-atomic-acceptance.md",
       "currentPath": "docs/flows/atomic-acceptance.md",
       "priorSha256": "F3AD676B1A68783A463A9DDA31025C0A93297118B1C6B91DDFA84D473444DDB6",
-      "currentSha256": "F3AD676B1A68783A463A9DDA31025C0A93297118B1C6B91DDFA84D473444DDB6",
+      "currentSha256": "B28DDEC53E733BBADCBE0990C31C59109C9015929A26BF145AE2720F11163009",
       "priorGitSha256": "F3AD676B1A68783A463A9DDA31025C0A93297118B1C6B91DDFA84D473444DDB6",
       "priorHashMeaning": "Original checkout bytes match baseline Git blob"
     },
@@ -113,7 +113,7 @@
       "historicalPath": "docs/governance/phase-00-approval-scope.json",
       "currentPath": "docs/governance/foundation-approval-scope.json",
       "priorSha256": "2F03248049BD9A46F08E6FB61F8B51A46B6C930B3F52EE4A3D64D6255131A594",
-      "currentSha256": "B03FC58CD84EBEC32EB710875C502B903E6336DB82AF603D00E607AE6AE75487",
+      "currentSha256": "CB0CEE32CB4D37CA7A17776061BA05B7E0B6249C3AF77AC2B1771FF350EAEB2D",
       "priorGitSha256": "2F03248049BD9A46F08E6FB61F8B51A46B6C930B3F52EE4A3D64D6255131A594",
       "priorHashMeaning": "Original checkout bytes match baseline Git blob"
     },
@@ -145,7 +145,7 @@
       "historicalPath": "docs/phases/README.md",
       "currentPath": "docs/roadmap/workstreams/README.md",
       "priorSha256": "DD3CCB6D6E8EE75D6D07DBF462E409CC6F384AE8585A3337568CA1780165A1DA",
-      "currentSha256": "8C213C450FE301473EDA857CC6777DD9F65C502F42911D24748B823F33B1D4C3",
+      "currentSha256": "F45EAD6A4356F224BD899CDB63839856B1DA1C98B721275ACCB4BA7396F4C76E",
       "priorGitSha256": "DD3CCB6D6E8EE75D6D07DBF462E409CC6F384AE8585A3337568CA1780165A1DA",
       "priorHashMeaning": "Original checkout bytes match baseline Git blob"
     },
@@ -153,7 +153,7 @@
       "historicalPath": "docs/phases/phase-00.md",
       "currentPath": "docs/roadmap/workstreams/product-foundation.md",
       "priorSha256": "01AF2586569B37914B51A1D98981E9CBAE672D7AB171A8CFC46811779610FE63",
-      "currentSha256": "F52394B491C21E6C50EDC2A842E263B4592AF5F81A7D26B51B746C2FDBA19A2C",
+      "currentSha256": "CF31C5CA9EA2490E59AD97B7A7B17943D6995E141B74302F8C7D3DAFDAACAB58",
       "priorGitSha256": "01AF2586569B37914B51A1D98981E9CBAE672D7AB171A8CFC46811779610FE63",
       "priorHashMeaning": "Original checkout bytes match baseline Git blob"
     },
@@ -529,7 +529,7 @@
       "historicalPath": "docs/phases/phase-02.md",
       "currentPath": "docs/roadmap/workstreams/product-requirements.md",
       "priorSha256": "85C74796EA5EE75AC9A968A94F39E9FF27190B89CD9BD813C426B190ABC49B4C",
-      "currentSha256": "9C32714E3C6261A4AE40E22EBD7FE9FEF647E4B077C45BA2F8F4266D12EAC653",
+      "currentSha256": "4C32863FD0DE14309621D53724C92B3BA9702A2AEC8D13C7888D433ACB3B06D0",
       "priorGitSha256": "85C74796EA5EE75AC9A968A94F39E9FF27190B89CD9BD813C426B190ABC49B4C",
       "priorHashMeaning": "Original checkout bytes match baseline Git blob"
     },
@@ -609,7 +609,7 @@
       "historicalPath": "docs/phases/phase-03.md",
       "currentPath": "docs/roadmap/workstreams/system-architecture.md",
       "priorSha256": "7F68B700BDBE5D19FB8B2D9EF3B7932AC145B720A03DE59EAACBF9144F66F063",
-      "currentSha256": "6A0EDDD9397EBE90942B94BA1D953D96FD63EC96E3F53CF2FDA123C8E7E916F6",
+      "currentSha256": "BA74AEF66314B6D15F2B150A308BF07A367F1D1A75432A84DAF1B5E8E3570BFF",
       "priorGitSha256": "7F68B700BDBE5D19FB8B2D9EF3B7932AC145B720A03DE59EAACBF9144F66F063",
       "priorHashMeaning": "Original checkout bytes match baseline Git blob"
     },
@@ -617,7 +617,7 @@
       "historicalPath": "docs/phases/phase-04-preparation/behaviour-specification.md",
       "currentPath": "docs/product/behaviour/behaviour-specification.md",
       "priorSha256": "793545217E9A6D1EA7F78FA7DB6371CFF3430EB1BB796809A72351080A2A11E1",
-      "currentSha256": "0A6969372135C639BE796FFC4F0988DB35063832960472AAF381C0540512C90F",
+      "currentSha256": "65A8B122C97615A5B5299D97824C7970DBDD79C57F1E0923AD513FEA988DA858",
       "priorGitSha256": "793545217E9A6D1EA7F78FA7DB6371CFF3430EB1BB796809A72351080A2A11E1",
       "priorHashMeaning": "Original checkout bytes match baseline Git blob"
     },
@@ -657,7 +657,7 @@
       "historicalPath": "docs/phases/phase-04.md",
       "currentPath": "docs/roadmap/workstreams/service-journeys.md",
       "priorSha256": "21D2FD2478A08793A3BC718322C70D14DD6DC5A53754FBD65001D8DD248330D6",
-      "currentSha256": "3EEE93F892517EA31BD011C781DCF45D3331B791F2BF7C1AEBE4ECA7A7AFF7E1",
+      "currentSha256": "CC2FE29CE6038325DE88119ADF41245D07C5830BE6A90252F378DFA8B48FB983",
       "priorGitSha256": "21D2FD2478A08793A3BC718322C70D14DD6DC5A53754FBD65001D8DD248330D6",
       "priorHashMeaning": "Original checkout bytes match baseline Git blob"
     },
@@ -713,7 +713,7 @@
       "historicalPath": "docs/phases/phase-05.md",
       "currentPath": "docs/roadmap/workstreams/brand-design-system.md",
       "priorSha256": "4903DC5650BBC63F074EF9711E42ED006D2C057E9D96677A7425A7172E29CBBA",
-      "currentSha256": "CAF648B9773E6F8DD7D3299392385767DBD8C10A7BF3B599807D1A5BC2AC657B",
+      "currentSha256": "D46AFA8BACD2106ABF962F26DD15E58004C116AEA2046FE1D91BF4323B24CA06",
       "priorGitSha256": "4903DC5650BBC63F074EF9711E42ED006D2C057E9D96677A7425A7172E29CBBA",
       "priorHashMeaning": "Original checkout bytes match baseline Git blob"
     },
@@ -833,7 +833,7 @@
       "historicalPath": "docs/quality/definition-of-done.md",
       "currentPath": "docs/quality/foundation-exit-criteria.md",
       "priorSha256": "6E2D1769450D9464F890C23EA355BACC1EAF51DF4EBABD0E913BCA60339A1057",
-      "currentSha256": "4CE3BF89F18663DED2BA4B4A60DC496245184F94B14B430C901FC023C9AFF340",
+      "currentSha256": "F2DCF1A9B700A2631FF0D85DC2CEC67B236E4C089B3C5D25BAEFF8F429B411BA",
       "priorGitSha256": "6E2D1769450D9464F890C23EA355BACC1EAF51DF4EBABD0E913BCA60339A1057",
       "priorHashMeaning": "Original checkout bytes match baseline Git blob"
     },
@@ -841,7 +841,7 @@
       "historicalPath": "docs/reviews/phase-00-owner-approval.md",
       "currentPath": "docs/reviews/foundation-approval.md",
       "priorSha256": "EA114A8BDBB6D8716ED147465CDF9E0E32B833715E05BAEEC0DFE76223958286",
-      "currentSha256": "CD68AE9E74E7A8BE3D6AC22DEC28258455750652B8546B91ABD3BCE7C9A9E204",
+      "currentSha256": "09594B3320FA99C94447AB168FB36EB737A9A7FC5260434AF73DDBE058DBF1A7",
       "priorGitSha256": "EA114A8BDBB6D8716ED147465CDF9E0E32B833715E05BAEEC0DFE76223958286",
       "priorHashMeaning": "Original checkout bytes match baseline Git blob"
     },
@@ -881,7 +881,7 @@
       "historicalPath": "scripts/test-validate-docs.mjs",
       "currentPath": "scripts/documentation-validator.test.mjs",
       "priorSha256": "908C6F6D0C42D14B08C70CC3EFF3FBA8C59FBBDA08F09B947B27A14A99ECFC25",
-      "currentSha256": "18EBD9820226788047CAFF561A58FFB4712F985D388198EBFF8D17D5CB2575BA",
+      "currentSha256": "F9639A21FFD5B73448CDD12D0497DA5B727AA6E7A03667493FB92DE54E468869",
       "priorGitSha256": "B16D7D7AAAE53592AAE477562924A31039441D35496CEB0FDB4AC0C20EA2DC9C",
       "priorHashMeaning": "Original Windows CRLF checkout; verified exact CRLF expansion of baseline LF Git blob"
     },
@@ -889,7 +889,7 @@
       "historicalPath": "scripts/validate-docs.mjs",
       "currentPath": "scripts/validate-documentation.mjs",
       "priorSha256": "98EC6CFDB670A8F996E4AB1D918288EDDE3D2976EDC11067C6EF7C7796C0F07A",
-      "currentSha256": "045D3D81B7A7C6A9C79C0419864E99DAF2FB7E54A4CB06594979D3DF9CDB060E",
+      "currentSha256": "DB427C401BDA7732752920BD0AF0D2E5227B4289696200932E7DBEC96E5CE588",
       "priorGitSha256": "4A81D92C47A0779A553474470BF9921B820E6AE7735D5DE3A4A42E6213078843",
       "priorHashMeaning": "Original Windows CRLF checkout; verified exact CRLF expansion of baseline LF Git blob"
     }
@@ -1052,7 +1052,7 @@
     {
       "path": "docs/blueprint/README.md",
       "priorGitSha256": "F8B864D3CA257C9FBDE62832AD63FEE8787D06F546B0AFB9AD39291E3B846D5A",
-      "currentSha256": "FFC9CF9453EDA8D9CDE5E8F262E98A5EE512F138722D37CBDA8AEE4E7D4C3505"
+      "currentSha256": "5316CFC363F3E9E6D26BB76A9101257B8A05E2D7E0F0281BC0E30D03FC5503F3"
     },
     {
       "path": "docs/blueprint/glossary.md",
@@ -1067,7 +1067,7 @@
     {
       "path": "docs/blueprint/traceability-matrix.md",
       "priorGitSha256": "91C08E656125C1A77AC9142A365F196F4E02885A5A9B021C80CA8CEB7FBBEFB5",
-      "currentSha256": "D287A59E669C40E2AA34A13F313DD9D5A82C04909B01A3689C9B971CE6BD8504"
+      "currentSha256": "DB38994C2FFFBB2AE722773FF28FB789B3456DBDD4D1092737F0070ECE9E5838"
     },
     {
       "path": "docs/flows/cross-channel-continuity.md",
@@ -1102,7 +1102,7 @@
     {
       "path": "docs/governance/solo-maintainer-policy.md",
       "priorGitSha256": "4C86D549B328DA88A17FE9CA1887CB413885016E8DAC9AFC915919376F7C9777",
-      "currentSha256": "884E9BEBFE5B9476918333FEFA5A1C68A6CBEC4FB7CF83E20149EDDB806BB447"
+      "currentSha256": "009E49E645654C12DFEE27465A3FAFF81324D7592B4B270593BBCCC9695CEC77"
     },
     {
       "path": "docs/journeys/customer-journey.md",
@@ -1183,7 +1183,7 @@
   "additionalFiles": [
     {
       "path": "docs/reviews/foundation-quality-review.md",
-      "sha256": "3A4E8099309A4827EC56D968B62BD59C5FE233BA3AE3C3C2A0CDF6C8284FE669"
+      "sha256": "7B2505F9CD16B8489F24F028DEEDB74E8437D8FC440193F3E322C0E6C3C2E6B0"
     }
   ],
   "selfReferencePolicy": "This new lineage file excludes its own hash; creation and later roadmap-manifest metadata commits provide Git provenance"

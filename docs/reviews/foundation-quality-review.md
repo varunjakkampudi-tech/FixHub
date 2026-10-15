@@ -28,7 +28,7 @@ Review date: 2026-10-16 (Asia/Calcutta). This is an implementing-agent and scope
 
 The above findings were MEDIUM or LOW in their bounded documentation/tooling scope. No critical/high application finding is asserted from an unimplemented system; absence of such a finding is not proof of application safety.
 
-## Executed local checks
+## Initial executed local checks
 
 | Check | Result and boundary |
 |---|---|
@@ -43,11 +43,31 @@ The above findings were MEDIUM or LOW in their bounded documentation/tooling sco
 
 The regression run above preceded final provenance/report wording; standalone validation and staged whitespace/hash reconciliation are separate final checks. Hosted Linux execution on the new local revision is NOT EXECUTED. [Existing main CI](https://github.com/varunjakkampudi-tech/FixHub/actions/runs/38749208725) succeeded only on `aff098c143e44199160ed8e31801b0df57628702`.
 
-## Review coverage and remaining work
+## Initial checkpoint review coverage and remaining work
 
 Recorded scoped AI full-file passes covered 54 product files, 34 architecture/engineering/flow/journey/security text files, 14 root/tooling/workflow files and five design artifacts (including visual inspection): 107 distinct baseline files. Subsequent fixes were inspected by the implementing agent. These counts describe source-review scope, not phase progress or defect-free certification. The remaining 43 baseline files received structural checks and targeted inspection, but a completed full-line review of every one is not evidenced. The broad governance/roadmap follow-up stopped on an account usage limit; do not count it as finished. Newly added lineage/report records receive separate implementing-agent checks.
 
 Thus the owner's requested every-file/every-line review is **INCOMPLETE**, not 100%. Structural validation does not substitute for the remaining semantic review or rendered diagrams. Proposed [exit checklists](../governance/product-foundation-exit-checklist.json) are UNRATIFIED; Phases 02–05 have no approved completion denominator, so their completion percentages are NOT MEASURABLE. A full finite review must resolve these gaps without adding repetitive audit cycles.
+
+## Follow-up source and rendering review — 2026-10-16
+
+Continued the same finite review, rather than reopening Phase 00. Read the workstream dossiers, blueprint guide/matrix/glossary/open decisions, governance policies/registers, roadmap and proposed checklists, quality criteria and historical review records. Exact repeated dossier paragraphs were compared once; unique content and dependencies were retained for inspection. Structured hash manifests require byte reconciliation as well as source review; reading a checksum is not independent authentication. The initial 107-file pass and its then-unfinished follow-up above remain historical scope evidence, not a claim that remaining work disappeared.
+
+Corrected these additional concrete findings:
+
+- Workstream index still described 14 active feasibility criteria; corrected to the owner-amended 12, without reintroducing interviews or changing statuses.
+- Foundation dossier still described pending publication; reconciled to the previously verified planning merge/CI. Four later dossiers now link existing draft preparation while retaining unapproved formal entry/exit.
+- Governance checklist mixed old PR #2 instructions with current delivery, and old branch URLs with renamed paths. Separated the historical checklist from reusable future review duties and replaced five diagram links with actual immutable historical paths. No protection or human-review requirement was weakened.
+- Replaced retired flow-filename labels in the current reader guide and traceability matrix with descriptive labels, preserving all FLOW/requirement IDs and destinations.
+- Corrected a draft's claim that current blueprint bytes were unchanged: historical bytes remain in Git while current reference/clarification revisions are separately recorded.
+
+Rendering exposed a **MEDIUM documentation defect** that structural checks had missed: GitHub's public atomic-acceptance sequence fails to parse because a note contains a raw semicolon. [Mermaid's official syntax guidance](https://mermaid.js.org/syntax/sequenceDiagram.html#entity-codes-to-escape-characters) requires escaping that separator in text. Replaced it with `#59;`, preserving the displayed meaning. Added a negative regression that restores the failing punctuation; the corrected escaped form is exercised by baseline validation. This is a focused safeguard, not a full Mermaid parser.
+
+Rendered evidence actually inspected: system context, ERD and service-discovery flow in GitHub at immutable main `aff098c143e44199160ed8e31801b0df57628702`; corrected acceptance sequence plus both new behaviour diagrams in Mermaid Live Editor **v12.2.0** using the visible editor/preview only. No account creation, Save/Share/export action, trial, dependency installation or repository publication was performed; this does not claim the preview application has no automatic local history. The corrected acceptance diagram visibly renders both concurrent contenders, one committed outcome, replay/outbox and the two notes; the behaviour sequence and notification decision loop also render. GitHub's corrected current revision is not yet published or retested there. Version compatibility beyond the observed renderers is not inferred.
+
+There are **36 Mermaid blocks repository-wide**, not only the 34 blueprint blocks counted by the existing inventory. Six distinct current-equivalent/corrected blocks have received actual rendered inspection in this pass; **30 remain visually unverified**. Before the syntax fix, all 34 public blueprint diagram blocks matched their local counterparts; the escaped acceptance note is now a separately recorded correction. Context/ERD required the viewer's expansion/zoom/pan for inspection; default inline fit is not proof of readable all-device layout. Full-line semantic coverage and all-diagram visual coverage must not be declared 100% from these partial checks. Phase/owner/provider boundaries and the overall disposition below are unchanged.
+
+Follow-up retest: documentation validation PASS for 120 Markdown files and the unchanged requirement/phase inventories; documentation safeguards **61 PASS, 0 FAIL, 1 Windows EPERM file-symlink SKIP**, including the new raw-semicolon rejection and both recovery-folder junction cases. Financial regressions **14 PASS**; behaviour mutations **19 PASS**; design checks **20 pairs, 7 negative cases and 3 reference assertions PASS**. A first fixture run failed on two newly introduced publication fragment links; the heading/links were reconciled, then the full suite reran successfully. No failed run is promoted to PASS. Historical nine baseline Git hashes and all five immutable historical GitHub file destinations were independently recomputed/resolved locally; this verifies repository snapshots, not missing originals. Exact-head hosted CI remains unexecuted because publication is blocked.
 
 ## Genuine external gates and owner actions
 

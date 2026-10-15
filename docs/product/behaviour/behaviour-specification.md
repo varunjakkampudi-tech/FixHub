@@ -1,6 +1,6 @@
 # Phase 04 behaviour and cross-channel specification candidates
 
-2026-10-15. **DRAFT PREPARATION — NOT FINAL JOURNEY, SCREEN OR PHASE APPROVAL.** [Work authority](../../governance/product-foundation-work-authority.md) permits preparation while prior exits remain open. Source: [Phase 04 dossier](../../roadmap/workstreams/service-journeys.md), existing [state machines](../../flows/state-machines.md), [continuity](../../flows/cross-channel-continuity.md), [requirements draft](../requirements/product-requirements-draft.md), [architecture candidates](../../architecture/architecture-contracts-draft.md). These candidates do not alter the approved roadmap or any Phase 00 blueprint bytes.
+2026-10-15. **DRAFT PREPARATION — NOT FINAL JOURNEY, SCREEN OR PHASE APPROVAL.** [Work authority](../../governance/product-foundation-work-authority.md) permits preparation while prior exits remain open. Source: [Phase 04 dossier](../../roadmap/workstreams/service-journeys.md), existing [state machines](../../flows/state-machines.md), [continuity](../../flows/cross-channel-continuity.md), [requirements draft](../requirements/product-requirements-draft.md), [architecture candidates](../../architecture/architecture-contracts-draft.md). These candidates do not change roadmap scope or silently approve new conceptual behaviour. Exact historical blueprint bytes remain in Git; current references, rendering corrections and reviewed clarifications are versioned separately in the provenance records.
 
 ## Catalogues, identity and default denial
 

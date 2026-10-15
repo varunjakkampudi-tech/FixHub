@@ -163,6 +163,16 @@ for (const [file, text] of contents) {
     }
   }
   if (hasUnclosedFence) errors.push(`${rel}: unclosed fenced code block`);
+  // Focused regression guard for a reproduced GitHub Mermaid parse failure;
+  // this is deliberately not presented as a complete Mermaid parser.
+  for (const block of text.matchAll(/^```mermaid\r?\n([\s\S]*?)^```\s*$/gm)) {
+    if (!/^sequenceDiagram\s*\r?\n/.test(block[1])) continue;
+    for (const line of block[1].split(/\r?\n/)) {
+      if (!/^\s*Note\b[^:]*:/i.test(line)) continue;
+      const note = line.slice(line.indexOf(':') + 1).replace(/#(?:\d+|[A-Za-z]+);/g, '');
+      if (note.includes(';')) errors.push(`${rel}: Mermaid sequence note contains unescaped semicolon; use #59;`);
+    }
+  }
 }
 
 const all = [...contents.values()].join('\n');

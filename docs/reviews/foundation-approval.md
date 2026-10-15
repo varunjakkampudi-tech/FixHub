@@ -1,6 +1,6 @@
 # Phase 00 owner-delegated planning approval
 
-## Publication reconciliation — 2026-10-16
+## Publication reconciliation 2026-10-16
 
 Phase 00 planning was subsequently published closed at `ff6425ac1a4436bbe36aa119df1f95fed9e26592`; [post-merge CI](https://github.com/varunjakkampudi-tech/FixHub/actions/runs/38628997301) passed on that exact revision. Published closed planning phases: **1/20**. The approval scope and 21/21 applicable planning evidence below are retained. Pending-publication, 0/20 and next-phase-unauthorized statements in the original snapshot below describe that earlier context, not current publication status. Later feasibility work and draft preparation follow the [separate current authority](../governance/product-foundation-work-authority.md); no later exit or permanent brand approval is granted here.
 

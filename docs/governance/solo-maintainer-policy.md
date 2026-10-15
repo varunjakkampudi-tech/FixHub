@@ -6,7 +6,7 @@ The owner now requests direct-main work toward Phases 01–05, without new branc
 
 ## Authority, scope and effective date
 
-Policy amendment date: **2026-10-15 (Asia/Calcutta)**. The human owner authorized preparation/adoption through “FIXHUB — PERMANENT TECHNICAL OWNERSHIP, SOLO-MAINTAINER GOVERNANCE & PHASE 00 CLOSURE”, supplied attachment SHA-256 `317E6B8FC5B4B2DA5DB1A13CAACEB5B3222AE57DB945DC6144B1776DC3044129`. The repository has one observed maintainer, `varunjakkampudi-tech`, who is also PR #2's author; no separate eligible collaborator or submitted review is evidenced. This amendment replaces the project's blanket independent-human approval requirement for qualifying low-risk changes. Its repository publication is pending PR #2's owner review and normal merge.
+Policy amendment date: **2026-10-15 (Asia/Calcutta)**. The human owner authorized preparation/adoption through “FIXHUB — PERMANENT TECHNICAL OWNERSHIP, SOLO-MAINTAINER GOVERNANCE & PHASE 00 CLOSURE”, supplied attachment SHA-256 `317E6B8FC5B4B2DA5DB1A13CAACEB5B3222AE57DB945DC6144B1776DC3044129`. At adoption, the repository had one observed maintainer, `varunjakkampudi-tech`, also PR #2's author; no separate eligible collaborator or submitted review was evidenced. This amendment replaces the blanket independent-human approval requirement for qualifying low-risk changes. PR #2 subsequently merged at `ff6425ac1a4436bbe36aa119df1f95fed9e26592`; the [publication record](../reviews/foundation-approval.md#publication-reconciliation-2026-10-16) distinguishes that event from independent approval. Current direct-main work remains subject to the separate proposal and actual enforcement above.
 
 ChatGPT is the delegated technical product owner, chief architect and engineering/governance quality lead; Codex executes and verifies authorized repository work. Internal product, architecture, documentation, technical-security, UX and prioritization decisions can be resolved within the approved phase/scope without repeated routine confirmation. The human owner retains legal, financial, account, vendor/external commitments and final merge accountability. No delegation grants credentials, spending, production access or an unapproved phase. Existing name/branding, licensing, Lovable and release constraints remain in force.
 
@@ -30,18 +30,22 @@ Preserve reproducible tests and required hosted checks. Evidence distinguishes s
 
 ## Human owner self-review and merge accountability
 
-Owner self-review is a human inspection/disposition, not an independent approving GitHub review. Do not fabricate a submitted review on an author's PR. Before the human performs a normal merge:
+Owner self-review is a human inspection/disposition, not an independent approving GitHub review. Do not fabricate a submitted review on an author's PR. For future authorized deliveries, use the actual change/revision, current CI and rendered material relevant to that delivery; record scope, findings, risks and final human disposition. Prior PR #2 acceptance cannot authorize a later change. The historical checklist below is retained as an example, not a currently open PR or a requirement to reopen it.
+
+### Historical PR #2 owner checklist
+
+Before that normal merge, the checklist required:
 
 1. Open [PR #2](https://github.com/varunjakkampudi-tech/FixHub/pull/2), confirm the final head SHA and read the complete material diff, including this governance change.
 2. Verify `docs-validation` succeeded on that exact SHA; inspect test counts, skipped cases and the hosted symlink result.
 3. Inspect the [approval record](../reviews/foundation-approval.md), source authority, 21/21 count and pending publication boundary. Confirm 41 IDs, 20 dossiers and unchanged V4.1 phase/release sequence.
-4. Inspect representative Mermaid diagrams using GitHub's rendered file view: [system context](https://github.com/varunjakkampudi-tech/FixHub/blob/docs/phase-00-final-closure/docs/architecture/system-context.md), [conceptual ERD](https://github.com/varunjakkampudi-tech/FixHub/blob/docs/phase-00-final-closure/docs/architecture/data-architecture.md), [atomic acceptance sequence](https://github.com/varunjakkampudi-tech/FixHub/blob/docs/phase-00-final-closure/docs/flows/atomic-acceptance.md), [state machines](https://github.com/varunjakkampudi-tech/FixHub/blob/docs/phase-00-final-closure/docs/flows/state-machines.md), and [phase gates](https://github.com/varunjakkampudi-tech/FixHub/blob/docs/phase-00-final-closure/docs/roadmap/workstreams/README.md). Check render errors, readable edges, one committed winner and policy boundaries. Record which diagrams were actually inspected; leave others visually unverified.
+4. Inspect representative Mermaid diagrams using GitHub's rendered file view: [system context](https://github.com/varunjakkampudi-tech/FixHub/blob/ff6425ac1a4436bbe36aa119df1f95fed9e26592/docs/architecture/system-context.md), [conceptual ERD](https://github.com/varunjakkampudi-tech/FixHub/blob/ff6425ac1a4436bbe36aa119df1f95fed9e26592/docs/architecture/data-architecture.md), [atomic acceptance sequence](https://github.com/varunjakkampudi-tech/FixHub/blob/ff6425ac1a4436bbe36aa119df1f95fed9e26592/docs/flows/flow-04-atomic-acceptance.md), [state machines](https://github.com/varunjakkampudi-tech/FixHub/blob/ff6425ac1a4436bbe36aa119df1f95fed9e26592/docs/flows/state-machines.md), and [phase gates](https://github.com/varunjakkampudi-tech/FixHub/blob/ff6425ac1a4436bbe36aa119df1f95fed9e26592/docs/phases/README.md). These immutable historical paths are deliberate, not current local destinations. Check render errors, readable edges, one committed winner and policy boundaries. Record actual inspection; leave other diagrams visually unverified.
 5. Accept or reject the documented historical V4/originals, metadata, PR #1 review gap and limited recovery risks without rewriting their history.
 6. Record a PR comment or trusted owner message with **OWNER SELF-REVIEW**, exact head SHA, date, inspected scope/diagrams, disposition, accepted risks and explicit responsibility for a normal merge. Example fields: `Head: ...; Date: ...; Reviewed: ...; Diagrams inspected: ...; Disposition: accepted/revise; Risks: ...; I accept merge responsibility.` This is a template, not an already given acceptance.
 7. The owner performs the normal merge only if GitHub permits it under accurately recorded controls. Codex does not merge automatically under the current instruction.
 8. After merge, verify the merge SHA, main document/provenance integrity and required post-merge CI. Record APPROVED AND CLOSED only after those checks pass.
 
-Current owner self-review disposition: **PENDING**. Requesting this policy amendment does not assert that the owner inspected the new final PR head. Mermaid visual rendering has not been inspected by Codex; local diagram checks are structural.
+At the original pre-merge snapshot, owner self-review disposition was **PENDING**, and Codex had performed structural rather than visual diagram checks. These are historical observations, not a claim that PR #2 remains open. Later AI rendering inspection does not retrospectively supply a human review.
 
 ## GitHub safeguards and separately authorized settings
 
@@ -72,6 +76,6 @@ Reviewer: Codex, AI-assisted static technical/governance audit; NOT independent 
 
 Audit decision: **PASS for the authorized documentary policy transition, conditional on final local/hosted checks and actual owner self-review before merge**. No reproducible material defect remains in the reviewed amendment. This is AI static assurance, not legal/privacy advice, product security certification, a personal owner attestation or independent GitHub approval. Exact test/CI execution is reported separately; this table does not fabricate results.
 
-## Phase and closure boundaries
+## Historical phase and closure boundaries
 
 Owner-delegated Phase 00 planning approvals remain recorded; 21/21 documentary evidence is unchanged. Current published closed count remains 0/20 until PR #2 is normally merged and verified. Phase 01 execution remains NOT AUTHORIZED. Future dossiers, legal/provider validation, final architecture/UX, brand identity, Lovable, application implementation and production tests retain their separate gates.

@@ -46,7 +46,7 @@ sequenceDiagram
   API-->>A: Same committed result
   DB-->>W: Committed outbox event
   W->>W: Deduplicate and retry authorized delivery
-  Note over API,DB: Crash before commit rolls back; crash after commit reconciles
+  Note over API,DB: Crash before commit rolls back#59; crash after commit reconciles
   Note over A,W: UI click or provider ACK never decides assignment
 ```
 

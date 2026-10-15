@@ -12,11 +12,11 @@ Make the product intent and decision authority understandable before commitments
 
 ## Current status
 
-Owner-delegated planning approval recorded; closure publication pending human OWNER SELF-REVIEW and normal merge under the [solo-maintainer policy](../../governance/solo-maintainer-policy.md). This dossier is a plan/evidence index, not proof of publication.
+Owner-delegated planning approval recorded and published closed at `ff6425ac1a4436bbe36aa119df1f95fed9e26592`, with successful exact-revision post-merge CI. See the [publication reconciliation](../../reviews/foundation-approval.md#publication-reconciliation-2026-10-16). This is planning closure only, not application readiness or a later phase exit.
 
 ## Preconditions
 
-The initial nine documents and 41-ID baseline are reviewed; owner delegation approves expanded planning scope. Published closure still needs proper repository delivery.
+The initial nine documents, 41-ID baseline and expanded conceptual planning scope were reviewed under recorded owner delegation. The publication prerequisite is evidenced in the approval record; missing historical originals and earlier review disclosures remain accepted limitations, not recovered files or invented independent approval.
 
 ## Dependencies
 

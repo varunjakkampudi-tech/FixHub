@@ -12,7 +12,7 @@ Define precise boundaries and prove the difficult consistency contracts.
 
 ## Current status
 
-PENDING — planning dossier only. No execution, design, tests, integration approval or phase sign-off is claimed.
+Formal phase entry/exit remains PENDING. Separately authorized preparation now supplies [architecture candidates and bounded proof references](../../architecture/architecture-contracts-draft.md); it is not an approved baseline or permission to bypass prior gates. Local checks and any bounded proof must be reported by their actual evidence class; no phase sign-off, provider access or implementation readiness is implied.
 
 ## Preconditions
 

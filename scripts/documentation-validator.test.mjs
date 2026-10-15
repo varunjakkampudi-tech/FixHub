@@ -327,6 +327,13 @@ try {
     await writeFile(file, text.replace('flowchart LR', 'unknownDiagram'));
   }, /unsupported or empty Mermaid diagram/);
 
+  await expectFailure('sequence note rejects reproduced unescaped semicolon', async () => {
+    const file = path.join(fixtureRoot, 'docs/flows/atomic-acceptance.md');
+    const text = await readFile(file, 'utf8');
+    assert.ok(text.includes('rolls back#59; crash after'), 'fixture must alter the corrected note');
+    await writeFile(file, text.replace('rolls back#59; crash after', 'rolls back; crash after'));
+  }, /Mermaid sequence note contains unescaped semicolon/);
+
   await expectFailure('missing customer journey stage', async () => {
     const file = path.join(fixtureRoot, 'docs/journeys/customer-journey.md');
     const text = await readFile(file, 'utf8');

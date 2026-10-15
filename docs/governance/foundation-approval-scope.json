@@ -79,7 +79,7 @@
     },
     {
       "document": "docs/flows/atomic-acceptance.md",
-      "sha256": "F3AD676B1A68783A463A9DDA31025C0A93297118B1C6B91DDFA84D473444DDB6"
+      "sha256": "B28DDEC53E733BBADCBE0990C31C59109C9015929A26BF145AE2720F11163009"
     },
     {
       "document": "docs/flows/service-lifecycle.md",
@@ -143,7 +143,7 @@
     },
     {
       "document": "docs/roadmap/workstreams/product-foundation.md",
-      "sha256": "F52394B491C21E6C50EDC2A842E263B4592AF5F81A7D26B51B746C2FDBA19A2C"
+      "sha256": "CF31C5CA9EA2490E59AD97B7A7B17943D6995E141B74302F8C7D3DAFDAACAB58"
     },
     {
       "document": "docs/roadmap/workstreams/market-commercial-feasibility.md",
@@ -151,19 +151,19 @@
     },
     {
       "document": "docs/roadmap/workstreams/product-requirements.md",
-      "sha256": "9C32714E3C6261A4AE40E22EBD7FE9FEF647E4B077C45BA2F8F4266D12EAC653"
+      "sha256": "4C32863FD0DE14309621D53724C92B3BA9702A2AEC8D13C7888D433ACB3B06D0"
     },
     {
       "document": "docs/roadmap/workstreams/system-architecture.md",
-      "sha256": "6A0EDDD9397EBE90942B94BA1D953D96FD63EC96E3F53CF2FDA123C8E7E916F6"
+      "sha256": "BA74AEF66314B6D15F2B150A308BF07A367F1D1A75432A84DAF1B5E8E3570BFF"
     },
     {
       "document": "docs/roadmap/workstreams/service-journeys.md",
-      "sha256": "3EEE93F892517EA31BD011C781DCF45D3331B791F2BF7C1AEBE4ECA7A7AFF7E1"
+      "sha256": "CC2FE29CE6038325DE88119ADF41245D07C5830BE6A90252F378DFA8B48FB983"
     },
     {
       "document": "docs/roadmap/workstreams/brand-design-system.md",
-      "sha256": "CAF648B9773E6F8DD7D3299392385767DBD8C10A7BF3B599807D1A5BC2AC657B"
+      "sha256": "D46AFA8BACD2106ABF962F26DD15E58004C116AEA2046FE1D91BF4323B24CA06"
     },
     {
       "document": "docs/roadmap/workstreams/interface-design.md",
@@ -223,15 +223,15 @@
     },
     {
       "document": "docs/roadmap/workstreams/README.md",
-      "sha256": "8C213C450FE301473EDA857CC6777DD9F65C502F42911D24748B823F33B1D4C3"
+      "sha256": "F45EAD6A4356F224BD899CDB63839856B1DA1C98B721275ACCB4BA7396F4C76E"
     },
     {
       "document": "docs/blueprint/README.md",
-      "sha256": "FFC9CF9453EDA8D9CDE5E8F262E98A5EE512F138722D37CBDA8AEE4E7D4C3505"
+      "sha256": "5316CFC363F3E9E6D26BB76A9101257B8A05E2D7E0F0281BC0E30D03FC5503F3"
     },
     {
       "document": "docs/blueprint/traceability-matrix.md",
-      "sha256": "D287A59E669C40E2AA34A13F313DD9D5A82C04909B01A3689C9B971CE6BD8504"
+      "sha256": "DB38994C2FFFBB2AE722773FF28FB789B3456DBDD4D1092737F0070ECE9E5838"
     },
     {
       "document": "docs/blueprint/open-decisions.md",
@@ -558,6 +558,59 @@
         }
       ],
       "scope": "Reference relocation, diagram-specific captions, read versus uncertain-write recovery and requested-window versus confirmed-assignment clarification; conceptual intent and historical hashes retained, not new owner approval"
+    },
+    {
+      "date": "2026-10-16",
+      "authority": "Owner-requested continued quality review; no new phase or permanent identity approval",
+      "historicalBaseline": "598dd15b82a9d5a5d42ada974f57cb8708be0670",
+      "scope": "Correct current publication/criterion/preparation references and human-readable labels; escape a semicolon in an otherwise unchanged acceptance sequence after actual GitHub rendering reproduced a parse error. Historical approvals and prior amendment hashes retained.",
+      "documents": [
+        {
+          "document": "docs/flows/atomic-acceptance.md",
+          "priorSha256": "F3AD676B1A68783A463A9DDA31025C0A93297118B1C6B91DDFA84D473444DDB6",
+          "currentSha256": "B28DDEC53E733BBADCBE0990C31C59109C9015929A26BF145AE2720F11163009"
+        },
+        {
+          "document": "docs/roadmap/workstreams/product-foundation.md",
+          "priorSha256": "F52394B491C21E6C50EDC2A842E263B4592AF5F81A7D26B51B746C2FDBA19A2C",
+          "currentSha256": "CF31C5CA9EA2490E59AD97B7A7B17943D6995E141B74302F8C7D3DAFDAACAB58"
+        },
+        {
+          "document": "docs/roadmap/workstreams/product-requirements.md",
+          "priorSha256": "9C32714E3C6261A4AE40E22EBD7FE9FEF647E4B077C45BA2F8F4266D12EAC653",
+          "currentSha256": "4C32863FD0DE14309621D53724C92B3BA9702A2AEC8D13C7888D433ACB3B06D0"
+        },
+        {
+          "document": "docs/roadmap/workstreams/system-architecture.md",
+          "priorSha256": "6A0EDDD9397EBE90942B94BA1D953D96FD63EC96E3F53CF2FDA123C8E7E916F6",
+          "currentSha256": "BA74AEF66314B6D15F2B150A308BF07A367F1D1A75432A84DAF1B5E8E3570BFF"
+        },
+        {
+          "document": "docs/roadmap/workstreams/service-journeys.md",
+          "priorSha256": "3EEE93F892517EA31BD011C781DCF45D3331B791F2BF7C1AEBE4ECA7A7AFF7E1",
+          "currentSha256": "CC2FE29CE6038325DE88119ADF41245D07C5830BE6A90252F378DFA8B48FB983"
+        },
+        {
+          "document": "docs/roadmap/workstreams/brand-design-system.md",
+          "priorSha256": "CAF648B9773E6F8DD7D3299392385767DBD8C10A7BF3B599807D1A5BC2AC657B",
+          "currentSha256": "D46AFA8BACD2106ABF962F26DD15E58004C116AEA2046FE1D91BF4323B24CA06"
+        },
+        {
+          "document": "docs/roadmap/workstreams/README.md",
+          "priorSha256": "8C213C450FE301473EDA857CC6777DD9F65C502F42911D24748B823F33B1D4C3",
+          "currentSha256": "F45EAD6A4356F224BD899CDB63839856B1DA1C98B721275ACCB4BA7396F4C76E"
+        },
+        {
+          "document": "docs/blueprint/README.md",
+          "priorSha256": "FFC9CF9453EDA8D9CDE5E8F262E98A5EE512F138722D37CBDA8AEE4E7D4C3505",
+          "currentSha256": "5316CFC363F3E9E6D26BB76A9101257B8A05E2D7E0F0281BC0E30D03FC5503F3"
+        },
+        {
+          "document": "docs/blueprint/traceability-matrix.md",
+          "priorSha256": "D287A59E669C40E2AA34A13F313DD9D5A82C04909B01A3689C9B971CE6BD8504",
+          "currentSha256": "DB38994C2FFFBB2AE722773FF28FB789B3456DBDD4D1092737F0070ECE9E5838"
+        }
+      ]
     }
   ]
 }

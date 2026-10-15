@@ -7,6 +7,8 @@
 
 Phase 00 is done only when all conditions below are evidenced. Document completion alone is not product approval or implementation readiness.
 
+Historical wording note: DOD-006 preserves the reconstruction-stage proposal/provenance distinction. Subsequent owner-delegated V4.1 supersession and planning approval are recorded separately; they do not authenticate historical V4 or recover missing originals. Phase 00 planning publication is now verified in the linked approval record. No criterion grants later architecture, identity or phase approval.
+
 ## Documentation completion
 
 - DOD-001: All nine required documents exist in the permanent domain-oriented documentation tree and are indexed.
