@@ -1,8 +1,10 @@
 # Canonical documentation/provenance bytes must survive Windows checkouts.
 *.md text eol=lf
 *.json text eol=lf
-docs/phases/phase-03-preparation/proof/*.sql text eol=lf
-docs/phases/phase-03-preparation/proof/*.mjs text eol=lf
-docs/phases/phase-04-preparation/*.mjs text eol=lf
-docs/phases/phase-05-preparation/*.mjs text eol=lf
-docs/phases/phase-05-preparation/*.svg text eol=lf
+*.yml text eol=lf
+.gitignore text eol=lf
+.gitattributes text eol=lf
+docs/engineering/validation/dispatch/*.sql text eol=lf
+docs/engineering/validation/dispatch/*.mjs text eol=lf
+scripts/*.mjs text eol=lf
+docs/design/*.svg text eol=lf

@@ -4,7 +4,7 @@
 
 - Document ID: P00-CHARTER
 - Phase: 00, product foundation and governance
-- Status: Owner-delegated planning baseline approved 2026-10-15; see [approval record](../reviews/phase-00-owner-approval.md). Detailed implementation decisions remain separately gated.
+- Status: Owner-delegated planning baseline approved 2026-10-15; see [approval record](../reviews/foundation-approval.md). Detailed implementation decisions remain separately gated.
 - Product name: Fix Hub, selected by the owner.
 - Historical planning identifier: “Viswatra A–Z Services”; retained in migration backups and historical records only.
 - Parent brand: Viswatra is confirmed. The eventual marketplace may use a distinct Viswatra ecosystem brand.

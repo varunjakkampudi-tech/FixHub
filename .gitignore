@@ -1,5 +1,6 @@
-# Retained source snapshots for documentation migrations; keep recoverable locally.
-.migration-backup/
+# Private recovery snapshots stay outside tracked documentation.
+.recovery/
+.*-backup/
 .env
 .env.*
 !.env.example

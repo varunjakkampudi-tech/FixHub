@@ -3,7 +3,7 @@
 ## Document control
 
 - Document ID: P00-FR
-- Status: Owner-delegated planning baseline approved 2026-10-15; see [approval record](../../reviews/phase-00-owner-approval.md). Detailed implementation decisions remain separately gated.
+- Status: Owner-delegated planning baseline approved 2026-10-15; see [approval record](../../reviews/foundation-approval.md). Detailed implementation decisions remain separately gated.
 - Priority meanings: P0 required for launch hypothesis; P1 important; P2 later or validation-dependent
 - Acceptance note: requirements describe expected behavior, not implemented behavior or test evidence.
 - Document owner: Product owner (role; individual assignee not recorded)

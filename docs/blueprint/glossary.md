@@ -18,4 +18,4 @@
 | Planning approval | Owner-delegated acceptance of documented intent and scope; no vendor, security or launch assurance. |
 | Repository closure | Approved planning/evidence recorded through legitimate repository controls, distinct from owner authorization alone. |
 
-See [reader guide](README.md), [state machines](../flows/state-machines.md) and [owner approval](../reviews/phase-00-owner-approval.md).
+See [reader guide](README.md), [state machines](../flows/state-machines.md) and [owner approval](../reviews/foundation-approval.md).

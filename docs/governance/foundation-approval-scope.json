@@ -1,0 +1,563 @@
+{
+  "version": 1,
+  "decisionDate": "2026-10-15",
+  "baselineCommit": "281e3d5551b3be070d26947129fcd84798b9d07b",
+  "initialFoundation": [
+    {
+      "document": "docs/product/charter.md",
+      "sha256": "A3646BDE141853E5246677CB79F020BF44AAA723F55D70534AB68D492642EDC6"
+    },
+    {
+      "document": "docs/product/scope.md",
+      "sha256": "1077DEFE7FF9A2FF0BDE7D602E48E3D1CA16D6B6006B532F7FECE80612B10BFC"
+    },
+    {
+      "document": "docs/product/requirements/functional.md",
+      "sha256": "265917E3AA65B4629DE701BB95B901780814CAFC323657FA5DAD7C1BB8FF15C5"
+    },
+    {
+      "document": "docs/product/requirements/non-functional.md",
+      "sha256": "C9F3F865524F1668EF216DE56FE1764388FF68CD410902035C88EBC4C475CFC3"
+    },
+    {
+      "document": "docs/security/access-control.md",
+      "sha256": "E47AAC784EDB16E72B9DA871D272420B0D5604259D07FDA6A13C6C25BB920C3E"
+    },
+    {
+      "document": "docs/governance/decision-register.md",
+      "sha256": "58F076494E487B9E7EAB21124CB5AA8D351C1F0CF1CB6B22A0B332A9C9AB4D6E"
+    },
+    {
+      "document": "docs/governance/risk-register.md",
+      "sha256": "CAAACF8160C2B03E2476459FA82C8D8F37DD8E50455457DEB2E30B53BA4C4B05"
+    },
+    {
+      "document": "docs/quality/definition-of-done.md",
+      "sha256": "780658C6D497DC063867B59F6D0DAFE7C21E2232F912B0C5BDB38E83CFBE7902"
+    },
+    {
+      "document": "docs/reviews/foundation-review.md",
+      "sha256": "C31DF65A7EF6B5D565F24D92262876CEB6CC0DC04A7923BD9214D9311AA3448A"
+    }
+  ],
+  "conceptualBlueprints": [
+    {
+      "document": "docs/architecture/system-context.md",
+      "sha256": "D69209B2412D51853838398749917044CD8844802A20A359BC2990C27F495998"
+    },
+    {
+      "document": "docs/architecture/platform-overview.md",
+      "sha256": "AFDF5E370BB60503464C0BCE191284A1E6C398C3A1CF66AA1B9F8E14AC03344A"
+    },
+    {
+      "document": "docs/architecture/backend-domains.md",
+      "sha256": "3032976D8B56D0DED8C751BE7A45FFF0237BBC705FD4BB7C86940C1904A03C8E"
+    },
+    {
+      "document": "docs/architecture/data-architecture.md",
+      "sha256": "8C1F5D23217DD3959BEFD5EBB93B37BAAEB1351BAB6875C97DE5E122F7171F09"
+    },
+    {
+      "document": "docs/architecture/security-trust-boundaries.md",
+      "sha256": "EA6FE329650F3B6CBDA31338C9A953509933EA8255ABF84DFB400F3234AACDB3"
+    },
+    {
+      "document": "docs/architecture/deployment-and-integrations.md",
+      "sha256": "FDBF82D617B981E71A48F905BF2E7C9C0FD70D2AA717DB99E25BC70AF4048B1E"
+    },
+    {
+      "document": "docs/flows/service-discovery.md",
+      "sha256": "9003207020052D0D394D9723B47F224A885AD10C687704D109EA581E1E7965A0"
+    },
+    {
+      "document": "docs/flows/service-request.md",
+      "sha256": "A01E4C50CCBB5ED86558C00B2A155DF4C264EFBAD0AEC290541673904747B18F"
+    },
+    {
+      "document": "docs/flows/merchant-eligibility.md",
+      "sha256": "C54039DD4861E039C52157B60D13A536A43DDF378ADB4EC3C304FC986F81A30D"
+    },
+    {
+      "document": "docs/flows/atomic-acceptance.md",
+      "sha256": "F3AD676B1A68783A463A9DDA31025C0A93297118B1C6B91DDFA84D473444DDB6"
+    },
+    {
+      "document": "docs/flows/service-lifecycle.md",
+      "sha256": "773CD8FAF5BE9E4548FB8D8B03252090B3EB4B0D23BD223E38EF0223081A9A1C"
+    },
+    {
+      "document": "docs/flows/cancellation-reassignment.md",
+      "sha256": "991EA9F3FC0B590F59F636042843838F50EF8440A07FF2ED6C140A8FB4698AC3"
+    },
+    {
+      "document": "docs/flows/merchant-verification.md",
+      "sha256": "8A86CEB935128931DBF1AF24CEC6DC6DAA3BCC13D6AAB214A53248207F8EA8A9"
+    },
+    {
+      "document": "docs/flows/notifications-recovery.md",
+      "sha256": "07158626DB855584741E554808C2EF8ED5DAC373E0176151406DB2F957218019"
+    },
+    {
+      "document": "docs/flows/authentication-authorization.md",
+      "sha256": "F4053938DE4B8AE0EDCD0F1F70CE6322E8E8EF95A2796235573B0D829C9F0D4F"
+    },
+    {
+      "document": "docs/flows/support-disputes.md",
+      "sha256": "96E186B184E6897587151499435FBF23DBA17F034DA682500BC5CFB936B0C12F"
+    },
+    {
+      "document": "docs/flows/operations-incidents.md",
+      "sha256": "50D9802D1B77F69619563495BAAF068EE2F979F7ECC5DD85E579A374911FB0A3"
+    },
+    {
+      "document": "docs/flows/privacy-rights.md",
+      "sha256": "89E149CF207270B5F197958C7AA63A41D3E4DAB1879FC3D971CAB29CBC298790"
+    },
+    {
+      "document": "docs/flows/state-machines.md",
+      "sha256": "716198C66326FCCB40728D3B93B207C8D1C04183DB8DD47ED676F6DEA534BA14"
+    },
+    {
+      "document": "docs/flows/cross-channel-continuity.md",
+      "sha256": "069E4D2A605C9E21199F4B2CBC39178597A672C07C05DC7601948103F0247BD8"
+    },
+    {
+      "document": "docs/journeys/customer-journey.md",
+      "sha256": "07AF2E3655F0038E2986A877BFA614627C82E6517D544745173DD9AF886E39A4"
+    },
+    {
+      "document": "docs/journeys/merchant-journey.md",
+      "sha256": "0BDDF7DB165664EE9ABFB5919DB2F5FE9AA1430773319E1E68EB339A87CB1623"
+    },
+    {
+      "document": "docs/journeys/technician-journey.md",
+      "sha256": "F6BF482C9A5BD94E53C72B5D9EF7DA2DC801EE04D704298A2C15BC2B9D2F637A"
+    },
+    {
+      "document": "docs/journeys/operations-journey.md",
+      "sha256": "D5AF8A346248A08BBBC379F521F59FFF07562D0152F98364000B0569C306629B"
+    },
+    {
+      "document": "docs/journeys/super-admin-journey.md",
+      "sha256": "6DBA8A5B6372807A2FF624F7B7A7C3EDF9BF15C2420B19404536A55976F0D9D2"
+    },
+    {
+      "document": "docs/roadmap/workstreams/product-foundation.md",
+      "sha256": "F52394B491C21E6C50EDC2A842E263B4592AF5F81A7D26B51B746C2FDBA19A2C"
+    },
+    {
+      "document": "docs/roadmap/workstreams/market-commercial-feasibility.md",
+      "sha256": "D376D35E1594F25F02DE2910C1CCC24987EF64CDA5EABEFF08300E0243624B63"
+    },
+    {
+      "document": "docs/roadmap/workstreams/product-requirements.md",
+      "sha256": "9C32714E3C6261A4AE40E22EBD7FE9FEF647E4B077C45BA2F8F4266D12EAC653"
+    },
+    {
+      "document": "docs/roadmap/workstreams/system-architecture.md",
+      "sha256": "6A0EDDD9397EBE90942B94BA1D953D96FD63EC96E3F53CF2FDA123C8E7E916F6"
+    },
+    {
+      "document": "docs/roadmap/workstreams/service-journeys.md",
+      "sha256": "3EEE93F892517EA31BD011C781DCF45D3331B791F2BF7C1AEBE4ECA7A7AFF7E1"
+    },
+    {
+      "document": "docs/roadmap/workstreams/brand-design-system.md",
+      "sha256": "CAF648B9773E6F8DD7D3299392385767DBD8C10A7BF3B599807D1A5BC2AC657B"
+    },
+    {
+      "document": "docs/roadmap/workstreams/interface-design.md",
+      "sha256": "261AD636794A9D98857852B6D61C70758C6C4D7C0C1BFEC74B36F50DD272903A"
+    },
+    {
+      "document": "docs/roadmap/workstreams/lovable-implementation.md",
+      "sha256": "7AB7C4FCB229E35C1B67AECAAA4C592FB1DF757C449364B50C5337C4BBA18EF3"
+    },
+    {
+      "document": "docs/roadmap/workstreams/source-portability.md",
+      "sha256": "5939A38B2B819B1AECD7B72693A17064BDF2736927AD215262BA42C4C9E2FE3D"
+    },
+    {
+      "document": "docs/roadmap/workstreams/platform-setup.md",
+      "sha256": "287DEB60D2563E655BC2E4D90EBB54C8CECF191FD93056839181F289E0551D8E"
+    },
+    {
+      "document": "docs/roadmap/workstreams/identity-access-security.md",
+      "sha256": "1EE0826B82F16B996482EA335C599D51EC14A8E189631F6101BA4B0840A29331"
+    },
+    {
+      "document": "docs/roadmap/workstreams/merchant-catalogue.md",
+      "sha256": "8E05D3262C285B3B99B7A411C57DAF1F09BA0276285B61D7F846166F59893DFD"
+    },
+    {
+      "document": "docs/roadmap/workstreams/dispatch-engine.md",
+      "sha256": "C456E5ADBA5F1D49CC58EB3141CD6397E534CF5B0E28230E0B661EDD65583D44"
+    },
+    {
+      "document": "docs/roadmap/workstreams/service-lifecycle.md",
+      "sha256": "8F3E0D00D4C01F15968DF02E8C56FC1F7D336A29EA34C168831FA160E39547CB"
+    },
+    {
+      "document": "docs/roadmap/workstreams/messaging-notifications.md",
+      "sha256": "18CA154A4928B74D191277383A985A341161A0E8268FAE5ED657A056F92C487F"
+    },
+    {
+      "document": "docs/roadmap/workstreams/customer-merchant-clients.md",
+      "sha256": "ED52E3F0212C60E29F08DFEDF460DCBCE509FC08C3E8ACA4339FB544CAF02857"
+    },
+    {
+      "document": "docs/roadmap/workstreams/mobile-applications.md",
+      "sha256": "1B916D266860993EBA6DD30A60787DAECA554D5BAC7B6E2819C68AF8E4B5DFB7"
+    },
+    {
+      "document": "docs/roadmap/workstreams/assurance-operations.md",
+      "sha256": "01B23A10128516E5AAFAAA5930BD72C03763FF220B52176191C1BF98B6BFCE0C"
+    },
+    {
+      "document": "docs/roadmap/workstreams/private-pilot-store-approval.md",
+      "sha256": "E87557E646B42610CE301F6EBD1B1407A220018DCE1C335730F64A3BEE989B57"
+    },
+    {
+      "document": "docs/roadmap/workstreams/coordinated-public-release.md",
+      "sha256": "F77DAEB710226A78DAB7BEE4F6EAF10B995CEEA8BFD801349404DC0529F67CE7"
+    },
+    {
+      "document": "docs/roadmap/workstreams/README.md",
+      "sha256": "8C213C450FE301473EDA857CC6777DD9F65C502F42911D24748B823F33B1D4C3"
+    },
+    {
+      "document": "docs/blueprint/README.md",
+      "sha256": "FFC9CF9453EDA8D9CDE5E8F262E98A5EE512F138722D37CBDA8AEE4E7D4C3505"
+    },
+    {
+      "document": "docs/blueprint/traceability-matrix.md",
+      "sha256": "D287A59E669C40E2AA34A13F313DD9D5A82C04909B01A3689C9B971CE6BD8504"
+    },
+    {
+      "document": "docs/blueprint/open-decisions.md",
+      "sha256": "F8CE9E7FA26C6ECAD22BB4724214D246BD8BA1B2F0B992F5C93A4B80CD5BDC96"
+    },
+    {
+      "document": "docs/blueprint/glossary.md",
+      "sha256": "F631801041DDA23E553878C6E8166677A9B0BF1EE022F051919C9330F87C8A13"
+    }
+  ],
+  "limit": "Owner-delegated planning scope; no personal owner review, implementation evidence or independent GitHub approval. Self and approval record excluded to avoid circular hashes.",
+  "authorizationAmendments": [
+    {
+      "date": "2026-10-15",
+      "authority": "Human-owner Phase01 master prompt; feasibility research/documentation only",
+      "historicalBaseline": "ff6425ac1a4436bbe36aa119df1f95fed9e26592",
+      "evidence": "docs/phases/phase-01-execution/kickoff.md",
+      "scope": "Current-facing authorization/publication status only; original Phase00 conceptual designs, 41 IDs and roadmap unchanged; no detailed architecture or phase-exit approval",
+      "documents": [
+        {
+          "document": "docs/phases/phase-01.md",
+          "priorSha256": "EF116B109C330C07967445D81AD8FCFBF725FEACCDD7F77FB12492EA4C3F2F8D",
+          "currentSha256": "187064D991BD14547AB107A4A9857A45B6CE5D4E43A1588E8F6DD522ADC91380"
+        },
+        {
+          "document": "docs/phases/README.md",
+          "priorSha256": "13A2A1BC224B3E0E1A93792A80B4ED8DBAFA329A4965F91E6029469B59910C4C",
+          "currentSha256": "DD3CCB6D6E8EE75D6D07DBF462E409CC6F384AE8585A3337568CA1780165A1DA"
+        },
+        {
+          "document": "docs/blueprint/README.md",
+          "priorSha256": "4813900F92370050B73800C42B911785D5DCE2E6C4C15EE7980C6ED61298811D",
+          "currentSha256": "F8B864D3CA257C9FBDE62832AD63FEE8787D06F546B0AFB9AD39291E3B846D5A"
+        },
+        {
+          "document": "docs/blueprint/open-decisions.md",
+          "priorSha256": "75F76A8B0427713062E4053DBA29A1542CC0D3872D97F57CDCE6893ACA5DA9E1",
+          "currentSha256": "1D486A6C483745B7CC4116D10F7901E2B2B7DC65EBF5E338649F1497F4E5CEB0"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-16",
+      "authority": "Owner requested domain-oriented naming and line-by-line quality review; reviewed references and clarifications only, no phase or permanent brand approval",
+      "historicalBaseline": "877aea18f6d75fc441b9d9ce9b9fd0c17e5fa91b",
+      "evidence": "docs/governance/document-lineage.json",
+      "historicalReferences": "Previous amendments retain commit-relative historical paths and hashes",
+      "documents": [
+        {
+          "historicalPath": "docs/architecture/platform-overview.md",
+          "currentPath": "docs/architecture/platform-overview.md",
+          "priorSha256": "A71220695CF5FDFDA265A0F338DA1D6845A73A503D3D2967997A931E818FB21A",
+          "currentSha256": "AFDF5E370BB60503464C0BCE191284A1E6C398C3A1CF66AA1B9F8E14AC03344A"
+        },
+        {
+          "historicalPath": "docs/architecture/data-architecture.md",
+          "currentPath": "docs/architecture/data-architecture.md",
+          "priorSha256": "B26999502F395DA3575FC68D85C154640512D374D66A845B63C02265154B989D",
+          "currentSha256": "8C1F5D23217DD3959BEFD5EBB93B37BAAEB1351BAB6875C97DE5E122F7171F09"
+        },
+        {
+          "historicalPath": "docs/architecture/security-trust-boundaries.md",
+          "currentPath": "docs/architecture/security-trust-boundaries.md",
+          "priorSha256": "A0321DC1E376E20F2FD75CD33D92ADF648620EA81539AA92A2A33F1880A02B71",
+          "currentSha256": "EA6FE329650F3B6CBDA31338C9A953509933EA8255ABF84DFB400F3234AACDB3"
+        },
+        {
+          "historicalPath": "docs/architecture/deployment-and-integrations.md",
+          "currentPath": "docs/architecture/deployment-and-integrations.md",
+          "priorSha256": "7089C8C1BD028A325346D688172F84F764BBBC84F2DEA19AD090541DBA43E40B",
+          "currentSha256": "FDBF82D617B981E71A48F905BF2E7C9C0FD70D2AA717DB99E25BC70AF4048B1E"
+        },
+        {
+          "historicalPath": "docs/flows/flow-01-discovery.md",
+          "currentPath": "docs/flows/service-discovery.md",
+          "priorSha256": "B417DA524F0E746EA360B23EDE68FFA51AE2289AD10C99C129705100E8674B38",
+          "currentSha256": "9003207020052D0D394D9723B47F224A885AD10C687704D109EA581E1E7965A0"
+        },
+        {
+          "historicalPath": "docs/flows/flow-02-request.md",
+          "currentPath": "docs/flows/service-request.md",
+          "priorSha256": "118BC7A22B1602AB222061E4876761229E81487EEE6BF43AF304F3E1D07A181B",
+          "currentSha256": "A01E4C50CCBB5ED86558C00B2A155DF4C264EFBAD0AEC290541673904747B18F"
+        },
+        {
+          "historicalPath": "docs/flows/flow-03-eligibility.md",
+          "currentPath": "docs/flows/merchant-eligibility.md",
+          "priorSha256": "418CA8A46D1FBB1BD2D2B8E2B35BE47320273FDB3933F0BA64F711A206D49541",
+          "currentSha256": "C54039DD4861E039C52157B60D13A536A43DDF378ADB4EC3C304FC986F81A30D"
+        },
+        {
+          "historicalPath": "docs/flows/flow-04-atomic-acceptance.md",
+          "currentPath": "docs/flows/atomic-acceptance.md",
+          "priorSha256": "F3AD676B1A68783A463A9DDA31025C0A93297118B1C6B91DDFA84D473444DDB6",
+          "currentSha256": "F3AD676B1A68783A463A9DDA31025C0A93297118B1C6B91DDFA84D473444DDB6"
+        },
+        {
+          "historicalPath": "docs/flows/flow-05-lifecycle.md",
+          "currentPath": "docs/flows/service-lifecycle.md",
+          "priorSha256": "D0E14CAC2CC0459D6913E6686EFFD96D8ADCE54696AB102828AE744E0873B59C",
+          "currentSha256": "773CD8FAF5BE9E4548FB8D8B03252090B3EB4B0D23BD223E38EF0223081A9A1C"
+        },
+        {
+          "historicalPath": "docs/flows/flow-06-cancellation.md",
+          "currentPath": "docs/flows/cancellation-reassignment.md",
+          "priorSha256": "75632536FCA90D47AB2B467710E3745379DE34E41A31E92ED69CF5E93DA36597",
+          "currentSha256": "991EA9F3FC0B590F59F636042843838F50EF8440A07FF2ED6C140A8FB4698AC3"
+        },
+        {
+          "historicalPath": "docs/flows/flow-07-verification.md",
+          "currentPath": "docs/flows/merchant-verification.md",
+          "priorSha256": "BAD22E22A36BF7E07738CF69294ECE5E2C418372F053DA9821E3821C2843862A",
+          "currentSha256": "8A86CEB935128931DBF1AF24CEC6DC6DAA3BCC13D6AAB214A53248207F8EA8A9"
+        },
+        {
+          "historicalPath": "docs/flows/flow-08-notifications.md",
+          "currentPath": "docs/flows/notifications-recovery.md",
+          "priorSha256": "DA1809077F1454B035D96EF9086E8AA0EE7D9FFC28ADDC2AE63538B390B4DD8D",
+          "currentSha256": "07158626DB855584741E554808C2EF8ED5DAC373E0176151406DB2F957218019"
+        },
+        {
+          "historicalPath": "docs/flows/flow-09-authentication.md",
+          "currentPath": "docs/flows/authentication-authorization.md",
+          "priorSha256": "05B0DE30862FD1F8AC78E4AE2FAB98BD6500DC4EBF695796621214C1CF59A445",
+          "currentSha256": "F4053938DE4B8AE0EDCD0F1F70CE6322E8E8EF95A2796235573B0D829C9F0D4F"
+        },
+        {
+          "historicalPath": "docs/flows/flow-10-support.md",
+          "currentPath": "docs/flows/support-disputes.md",
+          "priorSha256": "31C3F22AFD80F03FB545AC89D46A9E2EB1553C19ACEACEF8A4C317DF4E5CF07A",
+          "currentSha256": "96E186B184E6897587151499435FBF23DBA17F034DA682500BC5CFB936B0C12F"
+        },
+        {
+          "historicalPath": "docs/flows/flow-11-operations.md",
+          "currentPath": "docs/flows/operations-incidents.md",
+          "priorSha256": "26C3EAE9C15C6BDECC3A12577C19CA833980C029850BD5B327FBB5DD0D5CEBE1",
+          "currentSha256": "50D9802D1B77F69619563495BAAF068EE2F979F7ECC5DD85E579A374911FB0A3"
+        },
+        {
+          "historicalPath": "docs/flows/flow-12-privacy.md",
+          "currentPath": "docs/flows/privacy-rights.md",
+          "priorSha256": "B18F4391A8A30F5DC2487C9474DBAED8ADE4C76415986470B2DA4CF08CBD4499",
+          "currentSha256": "89E149CF207270B5F197958C7AA63A41D3E4DAB1879FC3D971CAB29CBC298790"
+        },
+        {
+          "historicalPath": "docs/flows/state-machines.md",
+          "currentPath": "docs/flows/state-machines.md",
+          "priorSha256": "5D91647BEE6FF71656E9BA65176585528CF9E7CDE6B676F48062DD4DB183BC30",
+          "currentSha256": "716198C66326FCCB40728D3B93B207C8D1C04183DB8DD47ED676F6DEA534BA14"
+        },
+        {
+          "historicalPath": "docs/flows/cross-channel-continuity.md",
+          "currentPath": "docs/flows/cross-channel-continuity.md",
+          "priorSha256": "6C5967483A66FF77E71A2AA27C4834712A213D153FBC239D90C8BE95887E1858",
+          "currentSha256": "069E4D2A605C9E21199F4B2CBC39178597A672C07C05DC7601948103F0247BD8"
+        },
+        {
+          "historicalPath": "docs/journeys/technician-journey.md",
+          "currentPath": "docs/journeys/technician-journey.md",
+          "priorSha256": "8424DBB7F0D5395CF68F4F1DBD62DE0804A2BF4131749C281E8E8EFD8DFB02B1",
+          "currentSha256": "F6BF482C9A5BD94E53C72B5D9EF7DA2DC801EE04D704298A2C15BC2B9D2F637A"
+        },
+        {
+          "historicalPath": "docs/journeys/operations-journey.md",
+          "currentPath": "docs/journeys/operations-journey.md",
+          "priorSha256": "289A2E30DA681B5F6F043C2F036127F27C2B1B7361FEFC4AB1433787C942ABBC",
+          "currentSha256": "D5AF8A346248A08BBBC379F521F59FFF07562D0152F98364000B0569C306629B"
+        },
+        {
+          "historicalPath": "docs/journeys/super-admin-journey.md",
+          "currentPath": "docs/journeys/super-admin-journey.md",
+          "priorSha256": "AA92725778D543E864BE4E15EC83BCC6EC186D63DEBEF335A9250EB3DBA4714B",
+          "currentSha256": "6DBA8A5B6372807A2FF624F7B7A7C3EDF9BF15C2420B19404536A55976F0D9D2"
+        },
+        {
+          "historicalPath": "docs/phases/phase-00.md",
+          "currentPath": "docs/roadmap/workstreams/product-foundation.md",
+          "priorSha256": "01AF2586569B37914B51A1D98981E9CBAE672D7AB171A8CFC46811779610FE63",
+          "currentSha256": "F52394B491C21E6C50EDC2A842E263B4592AF5F81A7D26B51B746C2FDBA19A2C"
+        },
+        {
+          "historicalPath": "docs/phases/phase-01.md",
+          "currentPath": "docs/roadmap/workstreams/market-commercial-feasibility.md",
+          "priorSha256": "187064D991BD14547AB107A4A9857A45B6CE5D4E43A1588E8F6DD522ADC91380",
+          "currentSha256": "D376D35E1594F25F02DE2910C1CCC24987EF64CDA5EABEFF08300E0243624B63"
+        },
+        {
+          "historicalPath": "docs/phases/phase-02.md",
+          "currentPath": "docs/roadmap/workstreams/product-requirements.md",
+          "priorSha256": "85C74796EA5EE75AC9A968A94F39E9FF27190B89CD9BD813C426B190ABC49B4C",
+          "currentSha256": "9C32714E3C6261A4AE40E22EBD7FE9FEF647E4B077C45BA2F8F4266D12EAC653"
+        },
+        {
+          "historicalPath": "docs/phases/phase-03.md",
+          "currentPath": "docs/roadmap/workstreams/system-architecture.md",
+          "priorSha256": "7F68B700BDBE5D19FB8B2D9EF3B7932AC145B720A03DE59EAACBF9144F66F063",
+          "currentSha256": "6A0EDDD9397EBE90942B94BA1D953D96FD63EC96E3F53CF2FDA123C8E7E916F6"
+        },
+        {
+          "historicalPath": "docs/phases/phase-04.md",
+          "currentPath": "docs/roadmap/workstreams/service-journeys.md",
+          "priorSha256": "21D2FD2478A08793A3BC718322C70D14DD6DC5A53754FBD65001D8DD248330D6",
+          "currentSha256": "3EEE93F892517EA31BD011C781DCF45D3331B791F2BF7C1AEBE4ECA7A7AFF7E1"
+        },
+        {
+          "historicalPath": "docs/phases/phase-05.md",
+          "currentPath": "docs/roadmap/workstreams/brand-design-system.md",
+          "priorSha256": "4903DC5650BBC63F074EF9711E42ED006D2C057E9D96677A7425A7172E29CBBA",
+          "currentSha256": "CAF648B9773E6F8DD7D3299392385767DBD8C10A7BF3B599807D1A5BC2AC657B"
+        },
+        {
+          "historicalPath": "docs/phases/phase-06.md",
+          "currentPath": "docs/roadmap/workstreams/interface-design.md",
+          "priorSha256": "B0D0336C91AC29CF0FE215D1876048F1D8B2DEE0FE8EE47878FEC148BCCBC545",
+          "currentSha256": "261AD636794A9D98857852B6D61C70758C6C4D7C0C1BFEC74B36F50DD272903A"
+        },
+        {
+          "historicalPath": "docs/phases/phase-07.md",
+          "currentPath": "docs/roadmap/workstreams/lovable-implementation.md",
+          "priorSha256": "46F7BBFF9F8E66A2C8DA1D5923E10D5B7E7C1C70C3114722374A23E36692F814",
+          "currentSha256": "7AB7C4FCB229E35C1B67AECAAA4C592FB1DF757C449364B50C5337C4BBA18EF3"
+        },
+        {
+          "historicalPath": "docs/phases/phase-08.md",
+          "currentPath": "docs/roadmap/workstreams/source-portability.md",
+          "priorSha256": "28EBD12635466AE706DBA0094266B782D0F4D6DCE6BB90108A54C4A7700AC6AA",
+          "currentSha256": "5939A38B2B819B1AECD7B72693A17064BDF2736927AD215262BA42C4C9E2FE3D"
+        },
+        {
+          "historicalPath": "docs/phases/phase-09.md",
+          "currentPath": "docs/roadmap/workstreams/platform-setup.md",
+          "priorSha256": "3F9D90DF9741D1E68B3348A824CF69B929126B804942F9A2A6E484E7477C14BD",
+          "currentSha256": "287DEB60D2563E655BC2E4D90EBB54C8CECF191FD93056839181F289E0551D8E"
+        },
+        {
+          "historicalPath": "docs/phases/phase-10.md",
+          "currentPath": "docs/roadmap/workstreams/identity-access-security.md",
+          "priorSha256": "7C05C488B3599907D65D1E355488AEE134AD90082879B6CD22FB6E16F7EF3353",
+          "currentSha256": "1EE0826B82F16B996482EA335C599D51EC14A8E189631F6101BA4B0840A29331"
+        },
+        {
+          "historicalPath": "docs/phases/phase-11.md",
+          "currentPath": "docs/roadmap/workstreams/merchant-catalogue.md",
+          "priorSha256": "89B1927F2DFC75D98914E7CCC9AE1C41AF258DCF8A4AB9BBF463887C18D5544B",
+          "currentSha256": "8E05D3262C285B3B99B7A411C57DAF1F09BA0276285B61D7F846166F59893DFD"
+        },
+        {
+          "historicalPath": "docs/phases/phase-12.md",
+          "currentPath": "docs/roadmap/workstreams/dispatch-engine.md",
+          "priorSha256": "8B0281EF21AE924C96547F9E10173C703B2300233D642F94525E25255FF56D8B",
+          "currentSha256": "C456E5ADBA5F1D49CC58EB3141CD6397E534CF5B0E28230E0B661EDD65583D44"
+        },
+        {
+          "historicalPath": "docs/phases/phase-13.md",
+          "currentPath": "docs/roadmap/workstreams/service-lifecycle.md",
+          "priorSha256": "39D62A87F94715F6E4EE29C02104FA1B0640A395DE91EB118E6C7045C2E7EA92",
+          "currentSha256": "8F3E0D00D4C01F15968DF02E8C56FC1F7D336A29EA34C168831FA160E39547CB"
+        },
+        {
+          "historicalPath": "docs/phases/phase-14.md",
+          "currentPath": "docs/roadmap/workstreams/messaging-notifications.md",
+          "priorSha256": "EED1A8497D83B1BCACD12F388DC6C3BED614B471165C2474D40DEA6C6FEB84BC",
+          "currentSha256": "18CA154A4928B74D191277383A985A341161A0E8268FAE5ED657A056F92C487F"
+        },
+        {
+          "historicalPath": "docs/phases/phase-15.md",
+          "currentPath": "docs/roadmap/workstreams/customer-merchant-clients.md",
+          "priorSha256": "D2054D76CEB64939D99B5BE01B5148FAEC31913CB7D25450F7819CB1E9CC6006",
+          "currentSha256": "ED52E3F0212C60E29F08DFEDF460DCBCE509FC08C3E8ACA4339FB544CAF02857"
+        },
+        {
+          "historicalPath": "docs/phases/phase-16.md",
+          "currentPath": "docs/roadmap/workstreams/mobile-applications.md",
+          "priorSha256": "217CEABF04EE99B2B093A4439EB518E481FE47C19B520E5D8C83C891F3B2B0CC",
+          "currentSha256": "1B916D266860993EBA6DD30A60787DAECA554D5BAC7B6E2819C68AF8E4B5DFB7"
+        },
+        {
+          "historicalPath": "docs/phases/phase-17.md",
+          "currentPath": "docs/roadmap/workstreams/assurance-operations.md",
+          "priorSha256": "110EC5009F4058780E2C20BF84C7B35EC3A221C920DF6B99C65711BFD36E67DA",
+          "currentSha256": "01B23A10128516E5AAFAAA5930BD72C03763FF220B52176191C1BF98B6BFCE0C"
+        },
+        {
+          "historicalPath": "docs/phases/phase-18.md",
+          "currentPath": "docs/roadmap/workstreams/private-pilot-store-approval.md",
+          "priorSha256": "5C5E25520398455A7F7059916FF408113B82BED85A0CDD5B76C4F64BC9FB471D",
+          "currentSha256": "E87557E646B42610CE301F6EBD1B1407A220018DCE1C335730F64A3BEE989B57"
+        },
+        {
+          "historicalPath": "docs/phases/phase-19.md",
+          "currentPath": "docs/roadmap/workstreams/coordinated-public-release.md",
+          "priorSha256": "AE4BCD642ED777A9E00098255C010BA608F6CBF50187570DF483C6358538841F",
+          "currentSha256": "F77DAEB710226A78DAB7BEE4F6EAF10B995CEEA8BFD801349404DC0529F67CE7"
+        },
+        {
+          "historicalPath": "docs/phases/README.md",
+          "currentPath": "docs/roadmap/workstreams/README.md",
+          "priorSha256": "DD3CCB6D6E8EE75D6D07DBF462E409CC6F384AE8585A3337568CA1780165A1DA",
+          "currentSha256": "8C213C450FE301473EDA857CC6777DD9F65C502F42911D24748B823F33B1D4C3"
+        },
+        {
+          "historicalPath": "docs/blueprint/README.md",
+          "currentPath": "docs/blueprint/README.md",
+          "priorSha256": "F8B864D3CA257C9FBDE62832AD63FEE8787D06F546B0AFB9AD39291E3B846D5A",
+          "currentSha256": "FFC9CF9453EDA8D9CDE5E8F262E98A5EE512F138722D37CBDA8AEE4E7D4C3505"
+        },
+        {
+          "historicalPath": "docs/blueprint/traceability-matrix.md",
+          "currentPath": "docs/blueprint/traceability-matrix.md",
+          "priorSha256": "91C08E656125C1A77AC9142A365F196F4E02885A5A9B021C80CA8CEB7FBBEFB5",
+          "currentSha256": "D287A59E669C40E2AA34A13F313DD9D5A82C04909B01A3689C9B971CE6BD8504"
+        },
+        {
+          "historicalPath": "docs/blueprint/open-decisions.md",
+          "currentPath": "docs/blueprint/open-decisions.md",
+          "priorSha256": "1D486A6C483745B7CC4116D10F7901E2B2B7DC65EBF5E338649F1497F4E5CEB0",
+          "currentSha256": "F8CE9E7FA26C6ECAD22BB4724214D246BD8BA1B2F0B992F5C93A4B80CD5BDC96"
+        },
+        {
+          "historicalPath": "docs/blueprint/glossary.md",
+          "currentPath": "docs/blueprint/glossary.md",
+          "priorSha256": "0CC934AB77FEF29F07EC335B50BB54ABFAC3C39A331849303C264222CBD9E698",
+          "currentSha256": "F631801041DDA23E553878C6E8166677A9B0BF1EE022F051919C9330F87C8A13"
+        }
+      ],
+      "scope": "Reference relocation, diagram-specific captions, read versus uncertain-write recovery and requested-window versus confirmed-assignment clarification; conceptual intent and historical hashes retained, not new owner approval"
+    }
+  ]
+}
