@@ -15,7 +15,7 @@ Production readiness intentionally returns `503` while authentication and persis
 - Helmet applies secure HTTP response headers; Express' `X-Powered-By` banner is disabled.
 - CORS allows only exact configured web origins and never enables credentialed CORS. CORS is a browser policy, not authentication or authorization.
 - `express-rate-limit` limits API requests with standard headers and no legacy headers. Its default in-memory store is per-process and is **not** a multi-instance or distributed abuse-control solution. The server does not trust forwarded IP headers; a future reverse proxy requires a narrowly configured trusted-proxy boundary before IP-based limits can be relied on.
-- Pino HTTP logging records a generated request ID, method, route template and response status. Query strings, request bodies, headers, contact fields and exception messages are not logged by these serializers. Logs remain local stdout; there is no retention, alerting, or admin log viewer.
+- Pino HTTP logging records a generated request ID, method, route template and response status. The API returns that ID as `x-request-id` and exposes the header to exact allowed browser origins so a client can include it in a support report. Query strings, request bodies, headers, contact fields and exception messages are not logged by these serializers. Logs remain local stdout; there is no retention, alerting, or admin log viewer.
 - Zod validates route parameters and environment origins. JSON bodies are capped at 32 KiB and malformed/oversized bodies have generic error responses.
 - OpenAPI 3.1 and Swagger UI document only the routes that exist today.
 

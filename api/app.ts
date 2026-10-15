@@ -96,6 +96,7 @@ export function createApiApp(options: ApiAppOptions = {}) {
         return callback(null, false);
       },
       credentials: false,
+      exposedHeaders: ["x-request-id"],
       optionsSuccessStatus: 204,
     }),
   );

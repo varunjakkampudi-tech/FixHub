@@ -47,9 +47,14 @@ describe("Fix Hub demo API foundation", () => {
 
   it("validates path input and emits a safe error envelope", async () => {
     const app = createApiApp({ environment: "test", allowedOrigins: ["http://localhost:5173"] });
-    const result = await request(app).get("/api/v1/demo/prices/not-a-category").expect(400);
+    const result = await request(app)
+      .get("/api/v1/demo/prices/not-a-category")
+      .set("origin", "http://localhost:5173")
+      .expect(400);
     expect(result.body.error.code).toBe("INVALID_INPUT");
     expect(result.body.requestId).toMatch(/^[0-9a-f-]{36}$/i);
+    expect(result.headers["access-control-expose-headers"]).toContain("x-request-id");
+    expect(result.headers["x-request-id"]).toBe(result.body.requestId);
     expect(JSON.stringify(result.body)).not.toContain("Zod");
   });
 
@@ -68,6 +73,7 @@ describe("Fix Hub demo API foundation", () => {
     const app = createApiApp({ environment: "test", allowedOrigins: ["http://localhost:5173"] });
     const allowed = await request(app).get("/health/live").set("origin", "http://localhost:5173").expect(200);
     expect(allowed.headers["access-control-allow-origin"]).toBe("http://localhost:5173");
+    expect(allowed.headers["access-control-expose-headers"]).toContain("x-request-id");
     expect(allowed.headers["access-control-allow-credentials"]).toBeUndefined();
     const rejected = await request(app).get("/health/live").set("origin", "https://attacker.test").expect(200);
     expect(rejected.headers["access-control-allow-origin"]).toBeUndefined();
