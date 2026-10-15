@@ -1,5 +1,9 @@
 # Solo-maintainer governance and delegated technical ownership
 
+## Current work-specific proposal — 2026-10-15
+
+The owner now requests direct-main work toward Phases 01–05, without new branches or PRs. The [dated scope and limited procedure proposal](phase-01-05-work-authorization.md) records the source authority, verified starting main and protection observations. The procedure below remains the historical adopted baseline unless a normal permitted direct-main publication establishes the proposed narrow amendment. Do not fabricate checks, change protections, bypass a rejected push or treat preparation as phase approval. No human exit/brand/sensitive-work assurance is removed.
+
 ## Authority, scope and effective date
 
 Policy amendment date: **2026-10-15 (Asia/Calcutta)**. The human owner authorized preparation/adoption through “FIXHUB — PERMANENT TECHNICAL OWNERSHIP, SOLO-MAINTAINER GOVERNANCE & PHASE 00 CLOSURE”, supplied attachment SHA-256 `317E6B8FC5B4B2DA5DB1A13CAACEB5B3222AE57DB945DC6144B1776DC3044129`. The repository has one observed maintainer, `varunjakkampudi-tech`, who is also PR #2's author; no separate eligible collaborator or submitted review is evidenced. This amendment replaces the project's blanket independent-human approval requirement for qualifying low-risk changes. Its repository publication is pending PR #2's owner review and normal merge.

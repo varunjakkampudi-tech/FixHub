@@ -1,8 +1,8 @@
 # Phase01 execution index
 
-Phase01 IN PROGRESS, authorized2026-10-15 for feasibility research/documentation. [Authorization and verified Phase00 baseline](kickoff.md). Phase02 NOT GRANTED. [Provisional report](final-feasibility-report.md), [12-active-criterion status](definition-of-done.md), [machine inventory](execution-inventory.json).
+Phase01 IN PROGRESS, authorized2026-10-15 for feasibility research/documentation. [Authorization and verified Phase00 baseline](kickoff.md). Formal Phase02 execution awaits Phase01 exit; later-phase draft preparation is separately authorized. [Provisional report](final-feasibility-report.md), [12-active-criterion status](definition-of-done.md), [machine inventory](execution-inventory.json).
 
-The owner removed formal interview completion from active Phase 01 exit criteria (2026-10-15); current score **9/12 PASS = 75.0%**, three remaining CONDITIONAL. Original research instruments and zero-interview evidence remain as optional historical/background documentation, not binding Phase 01 exit deliverables. Their retention is not a claim of completed interviews. No merchant supply, demand, vendor approval, legal clearance or build authorization is established.
+The owner removed formal interview completion from active Phase 01 exit criteria (2026-10-15); current score **10/12 PASS = 83.3%**, two remaining CONDITIONAL. P01-DOD-005 now has a bounded desk-research category recommendation, not launch approval. Original research instruments and zero-interview evidence remain as optional historical/background documentation, not binding Phase 01 exit deliverables. Their retention is not a claim of completed interviews. No merchant supply, demand, vendor approval, legal clearance or build authorization is established. [Current work authority](../../governance/phase-01-05-work-authorization.md) permits later-phase draft preparation, not formal entry or exit while prerequisite gates remain unmet.
 
 Every desk-research deliverable is preserved below for audit and reference.
 

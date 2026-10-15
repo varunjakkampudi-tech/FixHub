@@ -61,7 +61,7 @@
     },
     {
       "id": "P01-DOD-005",
-      "status": "CONDITIONAL",
+      "status": "PASS",
       "evidence": "market/service-category-opportunities.md"
     },
     {
@@ -117,8 +117,8 @@
   "phase02Authorized": false,
   "overallViability": "NOT ASSESSED",
   "counts": {
-    "pass": 9,
-    "conditional": 3,
+    "pass": 10,
+    "conditional": 2,
     "fail": 0,
     "notAssessed": 0,
     "total": 12

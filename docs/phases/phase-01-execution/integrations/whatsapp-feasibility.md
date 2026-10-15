@@ -31,3 +31,7 @@ No unofficial WhatsApp automation. Direct API removes a BSP dependency but adds 
 Backend commit remains authoritative; delayed/duplicate/out-of-order callbacks cannot assign a winner. Persist message IDs, outcomes, retry bounds and freshness; verify callbacks before accepting state and reconcile from backend. Number ownership alone cannot link accounts. Stop business-initiated notifications after opt-out, without erasing bookings. A vendor outage must show pending/unavailable communication and alternate authorized channels, not false delivery.
 
 P01-DOD-008 cannot PASS until official effective access/pricing/technical conditions are verified. Owner-approved provider contact/account inspection is required; no spending or new registration inferred. Single coordinated release remains unchanged.
+
+## Follow-up under Phase 01–05 work authority — 2026-10-15
+
+The official developer pricing endpoint was retried and again returned HTTP 429. The official FAQ remains readable and confirms the October service-message charging/allowance rule; it does not supply the effective numeric India category rate card. No new account-specific eligibility, billing, callback or volume-limit evidence was obtained. P01-DOD-008 remains CONDITIONAL; the offline model is unchanged. Smallest owner action: supply a dated effective official India rate card and authorized account/technical evidence, without publishing credentials or private account identifiers. This is a failed-access record, not a request to create an account or spend money.

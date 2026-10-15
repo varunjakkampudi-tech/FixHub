@@ -30,4 +30,8 @@ This repository currently holds product and governance documentation only. Its c
 
 ## Delegated ownership and review workflow
 
+### Current work authorization — 2026-10-15
+
+The latest owner instruction authorizes work toward Phases 01–05 and clearly labeled later-phase draft preparation while an earlier exit gate remains blocked. See [scope and proposed direct-main procedure](docs/governance/phase-01-05-work-authorization.md). It supersedes earlier work-scope statements, not phase approvals, roadmap gates or enforced GitHub safeguards. Do not create feature branches/PRs for this objective. Direct-main publication is conditional on a normal permitted push; stop publication on rejection, preserve local work and report the exact conflict. No protection weakening, fabricated checks, automatic phase acceptance, permanent brand approval, Phase 06, Lovable or production implementation is authorized.
+
 ChatGPT acts as delegated technical product owner/chief architect/quality lead; Codex implements and verifies approved tasks. Resolve routine internal decisions within authorized scope without repeated confirmation. The human owner retains legal, financial, account and external authority and final merge accountability. Read the solo-maintainer policy before delivery. Do not simulate independent approval, change protections without separate authorization, merge automatically under the current owner-review instruction or start an unapproved phase.

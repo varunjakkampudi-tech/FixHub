@@ -1,6 +1,6 @@
 # FixHub Phase01 provisional feasibility report
 
-As of 2026-10-15. Status: **IN PROGRESS. Active Phase 01 DoD: 9/12 = 75.0% PASS, 3 CONDITIONAL.** The founder removed mandatory formal customer/merchant interview deliverables without representing them as completed. No genuine customer demand, verified merchant supply or mandatory provider access/price evidence exists. Real-world business/build GO remains NOT ASSESSED; Phase 02 NOT AUTHORIZED.
+As of 2026-10-15. Status: **IN PROGRESS. Active Phase 01 DoD: 10/12 = 83.3% PASS, 2 CONDITIONAL.** The founder removed mandatory formal customer/merchant interview deliverables without representing them as completed. No genuine customer demand, verified merchant supply or mandatory provider access/price evidence exists. Real-world business/build GO remains NOT ASSESSED; formal Phase 02 execution awaits Phase 01 exit. [Later-phase draft preparation](../../governance/phase-01-05-work-authorization.md) is authorized but does not pass entry gates.
 
 ## Executive conclusion and market
 
@@ -43,9 +43,9 @@ Support modeled25/36/50hmonthly excludes many duties; BASEnearly fills illustrat
 
 ## Finite evidence and prioritized next actions
 
-[DoD](definition-of-done.md): **9 PASS, 3 CONDITIONAL, 0 NOT ASSESSED, 0 FAIL / 12 active criteria = 75.0% evidenced assessment coverage**, not product completion. The original 14-criterion score is preserved in earlier committed research and the dated review.
+[DoD](definition-of-done.md): **10 PASS, 2 CONDITIONAL, 0 NOT ASSESSED, 0 FAIL / 12 active criteria = 83.3% evidenced assessment coverage**, not product completion. The original 14-criterion score and subsequent 9/12 snapshot are preserved in earlier committed research and the dated review.
 
-Remaining Phase 01 tasks: (005) agree a clearly provisional category research recommendation without pretending demand/supply proof; (008) verify official Meta India pricing, technical/account eligibility and access; (014) produce a truthful owner-reviewed risk and phase-exit decision. Legal/tax applicability and realistic funded operating assumptions remain material residuals. **Future prelaunch gates** retain verified merchant permission/competence/capacity, observed customer demand/service outcomes, safe support and funding. No outreach or purchases are authorized by this change.
+P01-DOD-005 now has a bounded delegated desk recommendation with evidence limitations, safe-scope exclusions, four candidate families and explicit separation from launch approval. Remaining Phase 01 tasks: (008) verify official Meta India pricing, technical/account eligibility and access; (014) produce a truthful owner-reviewed risk and phase-exit decision. Legal/tax applicability and realistic funded operating assumptions remain material residuals. **Future prelaunch gates** retain verified merchant permission/competence/capacity, observed customer demand/service outcomes, safe support and funding. No outreach or purchases are authorized by this change.
 
 Historical interview-screen targets remain only in optional research instruments. No Phase 01 interview requirement remains. Actual market feasibility cannot be marked GO from desk research; any scoped phase-exit acceptance must explicitly carry unresolved proof obligations into the approved future gates without bypassing G0, G4 or G5.
 
