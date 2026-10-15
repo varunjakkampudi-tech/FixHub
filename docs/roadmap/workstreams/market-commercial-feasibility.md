@@ -28,8 +28,8 @@ Research and bounded feasibility evidence, not a production build.
 
 ## Detailed workstreams
 
-1. Plan consented customer/merchant interviews.
-2. measure availability and service demand.
+1. Retain the consent and interview instruments as optional future reference; customer/merchant interviews are removed from the active Phase 01 exit criteria by the owner's 2026-10-15 scope amendment. No recruitment or outreach is authorized by this dossier.
+2. Review dated public/desk evidence for category, demand and supply proxies; actual customer demand and qualified provider availability remain NOT ASSESSED and are future service/pilot gates, not Phase 01 exit deliverables.
 3. model validation versus engineering budgets.
 4. review privacy/liability and store/WhatsApp constraints.
 
@@ -83,7 +83,7 @@ Evidence supports a bounded next-phase scope or explicitly records a no-go.
 
 ## Evidence required
 
-Actual research source/date, consent basis, vendor terms/access and owner feasibility decision. Every result records date, revision, method, failure/skip count and reviewer. Future evidence is PENDING.
+For active desk research, record the public source/date or explicitly record evidence absence and limitations, vendor terms/access status, and owner feasibility disposition. Every result records date, revision, method, failure/skip count and reviewer. Primary interview consent/outcomes are not required for current Phase 01 exit; any future primary research requires separate owner authorization and its own consent procedure. Future evidence is PENDING.
 
 ## Known risks
 

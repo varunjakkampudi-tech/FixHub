@@ -147,7 +147,7 @@
     },
     {
       "document": "docs/roadmap/workstreams/market-commercial-feasibility.md",
-      "sha256": "D376D35E1594F25F02DE2910C1CCC24987EF64CDA5EABEFF08300E0243624B63"
+      "sha256": "13914D08EF51563A630F8713A83B02A2267583A93B04E16B903EB1B1BC07B373"
     },
     {
       "document": "docs/roadmap/workstreams/product-requirements.md",
@@ -609,6 +609,19 @@
           "document": "docs/blueprint/traceability-matrix.md",
           "priorSha256": "D287A59E669C40E2AA34A13F313DD9D5A82C04909B01A3689C9B971CE6BD8504",
           "currentSha256": "DB38994C2FFFBB2AE722773FF28FB789B3456DBDD4D1092737F0070ECE9E5838"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-16",
+      "authority": "Owner-authorized Phase 01–05 quality review and clarification; no new phase or interview activity approved",
+      "historicalBaseline": "95124dc772e710f9a7819919360c29c31341d1ae",
+      "scope": "Clarify the Phase 01 dossier's interview activities as optional future references, align demand/supply statements with the 12-criterion owner-amended DoD, and preserve historical scope without changing criteria or assessment statuses",
+      "documents": [
+        {
+          "document": "docs/roadmap/workstreams/market-commercial-feasibility.md",
+          "priorSha256": "D376D35E1594F25F02DE2910C1CCC24987EF64CDA5EABEFF08300E0243624B63",
+          "currentSha256": "13914D08EF51563A630F8713A83B02A2267583A93B04E16B903EB1B1BC07B373"
         }
       ]
     }
