@@ -4,7 +4,17 @@ This tree contains product foundation and governance documents for Fix Hub, the 
 
 ## Product
 
-Current status: Phase 00 planning publication verified at main `ff6425ac1a4436bbe36aa119df1f95fed9e26592` with successful post-merge CI. Phase 01 feasibility research/documentation is separately authorized and IN PROGRESS; see [execution index](phases/phase-01-execution/README.md), [authorization](phases/phase-01-execution/kickoff.md) and [14-criterion evidence](phases/phase-01-execution/definition-of-done.md). Phase 02 remains NOT GRANTED. Human review/merge follows the [solo-maintainer policy](governance/solo-maintainer-policy.md). Start with the [conceptual blueprint](blueprint/README.md), [all 20 phase plans](phases/README.md) and [approval/evidence record](reviews/phase-00-owner-approval.md). Historical reviews retain their original results.
+Latest [product foundation quality checkpoint](reviews/foundation-quality-review.md) separates verified cleanup, review limitations, local tests and remaining approval gates.
+
+Current preparatory artifact: [Phase 02 requirements draft](product/requirements/product-requirements-draft.md), explicitly unapproved while Phase 01 exit remains open.
+
+Phase 03 preparation: [architecture and integration candidates](architecture/architecture-contracts-draft.md), [candidate API inventory](engineering/contracts/service-api-candidates.json) and [bounded PostgreSQL proof with limitations](reviews/dispatch-proof-review.md). These do not approve Phase 03 entry, detailed architecture or production implementation.
+
+Phase 04 preparation: [behaviour and channel contracts](product/behaviour/behaviour-specification.md), [interaction references](product/behaviour/interaction-catalogue.json), [state candidates](product/behaviour/state-catalogue.json) and [notification candidates](product/behaviour/notification-catalogue.json). Proposed additions and bilingual text require review; product behavior is not implemented or approved.
+
+Phase 05 preparation: [design-system proposal](design/design-system-proposal.md), [candidate tokens](design/design-tokens.json) and [visual concept board](design/concept-board.png). The proposal is ready for owner direction; permanent logo, identity, domain and tagline remain OPEN. No phase closure or G1 approval is implied.
+
+Current status: Phase 00 planning publication verified at main `ff6425ac1a4436bbe36aa119df1f95fed9e26592` with successful post-merge CI. Phase 01 feasibility research/documentation is IN PROGRESS; see [execution index](product/feasibility/README.md), [initial authorization](product/feasibility/research-authority.md) and [12-active-criterion evidence](product/feasibility/exit-criteria.md). The [current Phase 01–05 work authorization](governance/product-foundation-work-authority.md) permits later-phase draft preparation but does not pass sequential entry/exit gates. Existing [solo-maintainer policy](governance/solo-maintainer-policy.md) and GitHub safeguards remain binding; the owner-requested direct-main procedure is a conditional proposal, not a bypass. Start with the [conceptual blueprint](blueprint/README.md), [all 20 phase plans](roadmap/workstreams/README.md) and [approval/evidence record](reviews/foundation-approval.md). Historical reviews retain their original results.
 
 - [Product charter](product/charter.md)
 - [Product scope](product/scope.md)
@@ -22,26 +32,27 @@ Current status: Phase 00 planning publication verified at main `ff6425ac1a4436bb
 
 - [Decision register](governance/decision-register.md)
 - [Risk register and assumptions](governance/risk-register.md)
-- [Document migration record](governance/document-migration.md)
+- [Document provenance and retained source evidence](governance/document-provenance.md)
+- [Document locations and hash lineage](governance/document-lineage.json)
 - [Roadmap checksum provenance](governance/roadmap-provenance.json)
 - [Access control and roles](security/access-control.md)
-- [Definition of done](quality/definition-of-done.md)
+- [Definition of done](quality/foundation-exit-criteria.md)
 - [Foundation review](reviews/foundation-review.md)
-- [Phase review policy](governance/phase-review-policy.md)
+- [Phase review policy](governance/stage-gate-policy.md)
 - [Solo-maintainer governance and owner review checklist](governance/solo-maintainer-policy.md)
-- [Phase review template](reviews/phase-review-template.md)
+- [Phase review template](reviews/stage-review-template.md)
 - [Repository audit remediation findings](reviews/foundation-review.md#current-repository-audit-remediation)
 - [Post-merge governance audit and prepared owner sign-off](reviews/foundation-review.md#post-merge-governance-audit-and-owner-sign-off-preparation)
-- [Owner-delegated approval and current 21-criterion evidence](reviews/phase-00-owner-approval.md)
+- [Owner-delegated approval and current 21-criterion evidence](reviews/foundation-approval.md)
 - [Required blueprint structure](governance/blueprint-inventory.json)
-- [Exact approval revision/hash scope](governance/phase-00-approval-scope.json)
+- [Exact approval revision/hash scope](governance/foundation-approval-scope.json)
 
 ## Roadmap and design
 
 - [Fix Hub Master Execution Roadmap V4.1](roadmap/master-roadmap.md) (APPROVED governing planning roadmap through explicit owner delegation, 2026-10-15; future execution separately gated)
-- Historical V4 source and SHA-256 remain unavailable and unverified; see the [provenance ledger](governance/document-migration.md).
-- `design/` and `engineering/` are reserved documentation domains. No design system, UI, or implementation blueprint was present in the supplied files.
+- Historical V4 source and SHA-256 remain unavailable and unverified; see the [provenance ledger](governance/document-provenance.md).
+- `design/` contains a proposed design system and visual concepts, not approved branding or product UI. `engineering/` contains candidate contracts and bounded local validation evidence, not production implementation.
 
-No application source, infrastructure, or test directories are created by this documentation migration.
+No application source, production infrastructure, or product test directories are created by this documentation restructure.
 
-Repository-level guidance: [contributing](../CONTRIBUTING.md), [security reporting](../SECURITY.md), automated [documentation validation](../scripts/validate-docs.mjs), and its [regression checks](../scripts/test-validate-docs.mjs). These do not represent application security or product tests.
+Repository-level guidance: [contributing](../CONTRIBUTING.md), [security reporting](../SECURITY.md), automated [documentation validation](../scripts/validate-documentation.mjs), and its [regression checks](../scripts/documentation-validator.test.mjs). These do not represent application security or product tests.

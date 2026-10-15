@@ -1,0 +1,47 @@
+{
+  "kind": "bounded-synthetic-postgresql-proof",
+  "date": "2026-10-15",
+  "timezone": "Asia/Calcutta",
+  "serverVersion": "17.11",
+  "isolation": "READ COMMITTED, isolated SCRAM-authenticated loopback cluster",
+  "contenders": 12,
+  "passed": 13,
+  "failed": 0,
+  "skipped": 0,
+  "clusterStopped": true,
+  "schemaSha256": "28ab895f32806f8e530bf96bb9f1b52b0cd64d9167faed9feb83709206225638",
+  "runnerSha256": "307183971475a644f1137bb0e6d65df35d02df7c0fb4a681af4f15500890ee18",
+  "cases": [
+    "overlapping same-request sessions commit exactly one winner",
+    "different requests sharing one technician resource cannot oversell",
+    "same actor/key retry returns saved receipt without extra writes",
+    "same key with different payload is rejected",
+    "concurrent same-key different-request payloads serialize",
+    "wrong merchant tenant is denied",
+    "revoked membership before acceptance denies mutation",
+    "stale generation cannot win",
+    "expired or invalidated offers cannot win",
+    "expiry is rechecked after observed capacity lock wait",
+    "cancellation holding request lock prevents late acceptance",
+    "precommit transaction error rolls back all four effect groups",
+    "discarded committed response reconciles to one saved result"
+  ],
+  "interruptionProbe": {
+    "method": "simulated SIGTERM events after startup and while actual race contenders are blocked; not external OS signal delivery",
+    "probeCount": 2,
+    "expectedProcessExitCode": 1,
+    "observedProcessExitCode": 1,
+    "businessCasesExecuted": 0,
+    "recordedFailureCount": 1,
+    "clusterStopped": true,
+    "status": "PASS"
+  },
+  "limitations": [
+    "synthetic SQL toy, not production dispatch/authentication/RLS",
+    "12 contenders, not 100-session or load evidence",
+    "no scheduled interval allocation or release/reassignment proof",
+    "no process-kill, host-crash, restart or restore proof",
+    "no PostGIS, actual geography, provider or device tests",
+    "not hosted CI, security certification, phase approval or production readiness"
+  ]
+}

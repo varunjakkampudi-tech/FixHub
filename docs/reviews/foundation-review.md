@@ -1,6 +1,8 @@
 # Phase 00 Senior Foundation Review
 
-Current expanded Phase 00 status is recorded in the [owner-delegated approval and 21-criterion checklist](phase-00-owner-approval.md), with the [owner-authorized solo-maintainer review policy](../governance/solo-maintainer-policy.md). The post-merge audit and earlier observations below retain their original review context and are superseded where explicitly amended; no historical independent approval is fabricated.
+Current expanded Phase 00 status is recorded in the [owner-delegated approval and 21-criterion checklist](foundation-approval.md), with the [owner-authorized solo-maintainer review policy](../governance/solo-maintainer-policy.md). The post-merge audit and earlier observations below retain their original review context and are superseded where explicitly amended; no historical independent approval is fabricated.
+
+Reference reconciliation note (2026-10-16): command/link paths displayed in this historical review are current navigation equivalents after the domain-oriented restructure. Exact commands and bytes from the original reports remain in Git checkpoint `877aea18f6d75fc441b9d9ce9b9fd0c17e5fa91b` and its ancestors. Historical runs do not validate renamed or subsequently edited current files; use the [current quality checkpoint](foundation-quality-review.md) for local evidence and limitations. Later publication/authority supersedes historical pending-closure and unauthorized-next-phase observations only to its recorded scope.
 
 ## Document control
 
@@ -21,10 +23,10 @@ The nine mapped foundation documents are present and readable:
 5. [`docs/security/access-control.md`](../security/access-control.md)
 6. [`docs/governance/decision-register.md`](../governance/decision-register.md)
 7. [`docs/governance/risk-register.md`](../governance/risk-register.md)
-8. [`docs/quality/definition-of-done.md`](../quality/definition-of-done.md)
+8. [`docs/quality/foundation-exit-criteria.md`](../quality/foundation-exit-criteria.md)
 9. This review.
 
-Additional governance and planning references: [documentation index](../README.md), [migration/provenance ledger](../governance/document-migration.md), [phase review policy](../governance/phase-review-policy.md), [phase review template](phase-review-template.md), and [proposed roadmap V4.1](../roadmap/master-roadmap.md).
+Additional governance and planning references: [documentation index](../README.md), [migration/provenance ledger](../governance/document-provenance.md), [phase review policy](../governance/stage-gate-policy.md), [phase review template](stage-review-template.md), and [proposed roadmap V4.1](../roadmap/master-roadmap.md).
 
 ## Owner identity and scope constraints
 
@@ -77,7 +79,7 @@ The migration ledger records nine historical original/destination hash pairs and
 
 ## Evidence-based percentages
 
-The [phase review policy](../governance/phase-review-policy.md) defines these as evidence-count ratios, not quality or success scores.
+The [phase review policy](../governance/stage-gate-policy.md) defines these as evidence-count ratios, not quality or success scores.
 
 - Foundation document inventory: **9/9 present and indexed = 100%**.
 - Requirement index: **41/41 IDs enumerated = 100%** (27 FR + 14 NFR).
@@ -175,7 +177,7 @@ Roadmap hashes provide integrity comparison against the manifest, not independen
 
 The current checkout was refreshed from `origin`; the working branch is `docs/audit-settings-evidence`, and the validator/recovery changes described below were audited on PR head `37011be4212f63c6868e7526677bb817f312eab5`. All 25 tracked repository files and all 9 files in PR #1 were enumerated and reviewed. The PR contains documentation, governance, a JSON requirements inventory, a documentation validator, its tests, and a read-only validation workflow; no application code, infrastructure, or implementation trees were introduced. This review addendum is a documentation-only follow-up and its own commit requires the same hosted validation.
 
-On Node `v22.23.2`, `node scripts/validate-docs.mjs` passed: 18 Markdown files, 20 roadmap phases, all 27 FR and 14 NFR IDs present exactly once and indexed, current roadmap checksum matching its manifest, and the single coordinated public-release rule present. The regression suite has 33 scenarios: 32 passed locally with 0 failures, and its symlink-creation scenario was skipped locally because Windows returned `EPERM`. Hosted run [38606517275](https://github.com/varunjakkampudi-tech/FixHub/actions/runs/38606517275) passed validation and all 33 scenarios on Ubuntu, including `PASS Markdown link symlink escape`; no hosted case was skipped.
+On Node `v22.23.2`, `node scripts/validate-documentation.mjs` passed: 18 Markdown files, 20 roadmap phases, all 27 FR and 14 NFR IDs present exactly once and indexed, current roadmap checksum matching its manifest, and the single coordinated public-release rule present. The regression suite has 33 scenarios: 32 passed locally with 0 failures, and its symlink-creation scenario was skipped locally because Windows returned `EPERM`. Hosted run [38606517275](https://github.com/varunjakkampudi-tech/FixHub/actions/runs/38606517275) passed validation and all 33 scenarios on Ubuntu, including `PASS Markdown link symlink escape`; no hosted case was skipped.
 
 The validator now rejects undefined explicit full and collapsed Markdown references, while a regression confirms ordinary bracketed prose and valid references remain accepted. It resolves the canonical repository root once and retains lexical traversal and real-path symlink containment checks. This is a focused Markdown validator, not complete CommonMark support; deeper nested destinations and other unsupported constructs remain documented limitations. No product test, runtime, performance, application-security, or production-readiness evidence is implied.
 
@@ -211,7 +213,7 @@ Secret scanning, push protection, Dependabot security updates and private vulner
 
 ### Phase 00 criterion review
 
-The [phase-review policy](../governance/phase-review-policy.md) and [definition of done](../quality/definition-of-done.md) retain the existing counting basis. A repository merge does not satisfy an owner-only criterion.
+The [phase-review policy](../governance/stage-gate-policy.md) and [definition of done](../quality/foundation-exit-criteria.md) retain the existing counting basis. A repository merge does not satisfy an owner-only criterion.
 
 | Criterion | Result | Direct evidence or required decision |
 |---|---|---|
@@ -257,4 +259,4 @@ Recommendation: **CONDITIONAL — technically validated documentation, ready for
 
 The owner subsequently provided two explicit final master prompts authorizing V4.1 supersession, the initial nine-document/41-ID foundation, accepted historical limitations, temporary no-license posture, known limited metadata exposure, PR #1's historical review gap and limited repository recovery snapshots. The second prompt adds conceptual architecture, all role journeys, flows/state machines, 20 substantive phase dossiers and traceability. It preserves DOD-001 through DOD-018 and adds DOD-019 through DOD-022, with DOD-016 excluded: current denominator 21 applicable criteria. The earlier 14/17 and 0/20 records above are historical.
 
-See [delegated approval](phase-00-owner-approval.md), [blueprint guide](../blueprint/README.md) and the [revision/hash scope](../governance/phase-00-approval-scope.json). These records distinguish owner delegation, assistant review of newly generated concepts, documentation evidence and repository publication. No personal owner review of new diagrams or independent GitHub approval is fabricated. Architecture/UX final approval and implementation evidence remain later-phase responsibilities; feasibility and production readiness remain NOT ASSESSED. Phase 01 execution is NOT GRANTED. Closure publication remains pending legitimate independent review and merge.
+See [delegated approval](foundation-approval.md), [blueprint guide](../blueprint/README.md) and the [revision/hash scope](../governance/foundation-approval-scope.json). These records distinguish owner delegation, assistant review of newly generated concepts, documentation evidence and repository publication. No personal owner review of new diagrams or independent GitHub approval is fabricated. Architecture/UX final approval and implementation evidence remain later-phase responsibilities; feasibility and production readiness remain NOT ASSESSED. Phase 01 execution is NOT GRANTED. Closure publication remains pending legitimate independent review and merge.

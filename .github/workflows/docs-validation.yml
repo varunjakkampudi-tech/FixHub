@@ -22,8 +22,12 @@ jobs:
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Validate documentation
-        run: node scripts/validate-docs.mjs
+        run: node scripts/validate-documentation.mjs
       - name: Test documentation validation safeguards
-        run: node scripts/test-validate-docs.mjs
-      - name: Test offline Phase 01 financial modelling
-        run: node scripts/test-phase-01-model.mjs
+        run: node scripts/documentation-validator.test.mjs
+      - name: Test economic scenario arithmetic
+        run: node scripts/financial-model.test.mjs
+      - name: Validate behaviour contract inventory and safeguards
+        run: node scripts/validate-behaviour-contracts.mjs --self-test
+      - name: Validate candidate design tokens and contrast safeguards
+        run: node scripts/validate-design-tokens.mjs --self-test

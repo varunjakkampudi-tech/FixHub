@@ -1,0 +1,643 @@
+{
+  "artifact": "P04-NOTIFICATION-DRAFT-001",
+  "status": "DRAFT PREPARATION - NOT APPROVED PROVIDER TEMPLATES OR TRANSLATIONS",
+  "date": "2026-10-15",
+  "languageReview": "English and Telugu candidate copy requires product/legal and fluent Telugu review; no send, template approval or translation validation claimed.",
+  "commonEnvelope": [
+    "notificationId",
+    "eventId",
+    "aggregateId",
+    "generation",
+    "aggregateVersion",
+    "recipientReference",
+    "purpose",
+    "language",
+    "templateVersion",
+    "expiresAt",
+    "dedupeKey",
+    "correlationId"
+  ],
+  "rules": [
+    "Only committed state can trigger a factual success notification",
+    "Recheck current object/tenant/recipient permission and purpose/channel consent immediately before send",
+    "TTL and retry budgets are OPEN approved policy inputs; no arbitrary numeric promise",
+    "Drop expired/stale actionable offers; deep links must fetch latest authenticated state",
+    "No raw address, phone, photo, government evidence, access token, complaint narrative or competing provider identity in transport payload",
+    "Provider receipts are delivery facts, never assignment or customer consent",
+    "All listed channels are candidates subject to actual platform/provider approval; staff remains private web",
+    "Identical logical event/recipient/channel/template has one delivery identity; no cross-channel repeated command"
+  ],
+  "notifications": [
+    {
+      "id": "P04-N-001",
+      "event": "request.created",
+      "recipient": "own-customer",
+      "purpose": "status",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "payloadAllowList": [
+        "opaqueEventReference",
+        "messageKey",
+        "language",
+        "safeStatusLabel"
+      ],
+      "copy": {
+        "en": "Your request is recorded. No provider is assigned yet.",
+        "te": "మీ అభ్యర్థన నమోదైంది. ఇంకా సేవా ప్రదాత కేటాయించబడలేదు."
+      },
+      "expiryRule": "Suppress obsolete actionable copy; otherwise approved purpose TTL; secure view supplies current status",
+      "consentRule": "Actual purpose-specific WhatsApp consent/window/template approval required; customer relationship is not assumed consent",
+      "providerClassification": "NOT VERIFIED - current provider terms/template category/account approval required; no automatic utility exemption",
+      "review": "PENDING"
+    },
+    {
+      "id": "P04-N-002",
+      "event": "request.exhausted",
+      "recipient": "own-customer",
+      "purpose": "status",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "payloadAllowList": [
+        "opaqueEventReference",
+        "messageKey",
+        "language",
+        "safeStatusLabel"
+      ],
+      "copy": {
+        "en": "No eligible provider was assigned. Review the current request for options.",
+        "te": "అర్హత కలిగిన సేవా ప్రదాత కేటాయించబడలేదు. అందుబాటులో ఉన్న ఎంపికల కోసం అభ్యర్థనను చూడండి."
+      },
+      "expiryRule": "Suppress obsolete actionable copy; otherwise approved purpose TTL; secure view supplies current status",
+      "consentRule": "Actual purpose-specific WhatsApp consent/window/template approval required; customer relationship is not assumed consent",
+      "providerClassification": "NOT VERIFIED - current provider terms/template category/account approval required; no automatic utility exemption",
+      "review": "PENDING"
+    },
+    {
+      "id": "P04-N-003",
+      "event": "offer.created",
+      "recipient": "eligible-merchant",
+      "purpose": "offer",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "payloadAllowList": [
+        "opaqueEventReference",
+        "messageKey",
+        "language",
+        "safeStatusLabel"
+      ],
+      "copy": {
+        "en": "A service offer is available. Check its current status before accepting.",
+        "te": "ఒక సేవా అవకాశం అందుబాటులో ఉంది. అంగీకరించే ముందు దాని ప్రస్తుత స్థితిని చూడండి."
+      },
+      "expiryRule": "Suppress when offer expired, invalidated, won/lost/declined or generation superseded",
+      "consentRule": "Actual purpose-specific WhatsApp consent/window/template approval required; customer relationship is not assumed consent",
+      "providerClassification": "NOT VERIFIED - current provider terms/template category/account approval required; no automatic utility exemption",
+      "review": "PENDING"
+    },
+    {
+      "id": "P04-N-004",
+      "event": "assignment.committed",
+      "recipient": "own-customer",
+      "purpose": "status",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "payloadAllowList": [
+        "opaqueEventReference",
+        "messageKey",
+        "language",
+        "safeStatusLabel"
+      ],
+      "copy": {
+        "en": "A provider has been assigned. Open the request for current details.",
+        "te": "సేవా ప్రదాత కేటాయించబడ్డారు. ప్రస్తుత వివరాల కోసం అభ్యర్థనను తెరవండి."
+      },
+      "expiryRule": "Suppress obsolete actionable copy; otherwise approved purpose TTL; secure view supplies current status",
+      "consentRule": "Actual purpose-specific WhatsApp consent/window/template approval required; customer relationship is not assumed consent",
+      "providerClassification": "NOT VERIFIED - current provider terms/template category/account approval required; no automatic utility exemption",
+      "review": "PENDING"
+    },
+    {
+      "id": "P04-N-005",
+      "event": "assignment.committed",
+      "recipient": "winning-merchant",
+      "purpose": "status",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "payloadAllowList": [
+        "opaqueEventReference",
+        "messageKey",
+        "language",
+        "safeStatusLabel"
+      ],
+      "copy": {
+        "en": "Your acceptance is confirmed. Open the assigned job.",
+        "te": "మీ అంగీకారం నిర్ధారించబడింది. కేటాయించిన పనిని తెరవండి."
+      },
+      "expiryRule": "Suppress obsolete actionable copy; otherwise approved purpose TTL; secure view supplies current status",
+      "consentRule": "Actual purpose-specific WhatsApp consent/window/template approval required; customer relationship is not assumed consent",
+      "providerClassification": "NOT VERIFIED - current provider terms/template category/account approval required; no automatic utility exemption",
+      "review": "PENDING"
+    },
+    {
+      "id": "P04-N-006",
+      "event": "offer.lost",
+      "recipient": "offer-own-merchant",
+      "purpose": "offer",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "payloadAllowList": [
+        "opaqueEventReference",
+        "messageKey",
+        "language",
+        "safeStatusLabel"
+      ],
+      "copy": {
+        "en": "This offer is no longer available. Check your current offers.",
+        "te": "ఈ సేవా అవకాశం ఇప్పుడు అందుబాటులో లేదు. ప్రస్తుత అవకాశాలను చూడండి."
+      },
+      "expiryRule": "Suppress when offer expired, invalidated, won/lost/declined or generation superseded",
+      "consentRule": "Actual purpose-specific WhatsApp consent/window/template approval required; customer relationship is not assumed consent",
+      "providerClassification": "NOT VERIFIED - current provider terms/template category/account approval required; no automatic utility exemption",
+      "review": "PENDING"
+    },
+    {
+      "id": "P04-N-007",
+      "event": "request.cancelled",
+      "recipient": "affected-authorized-participant",
+      "purpose": "status",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "payloadAllowList": [
+        "opaqueEventReference",
+        "messageKey",
+        "language",
+        "safeStatusLabel"
+      ],
+      "copy": {
+        "en": "The request was cancelled. Review the recorded outcome.",
+        "te": "అభ్యర్థన రద్దు చేయబడింది. నమోదైన వివరాలను చూడండి."
+      },
+      "expiryRule": "Suppress obsolete actionable copy; otherwise approved purpose TTL; secure view supplies current status",
+      "consentRule": "Actual purpose-specific WhatsApp consent/window/template approval required; customer relationship is not assumed consent",
+      "providerClassification": "NOT VERIFIED - current provider terms/template category/account approval required; no automatic utility exemption",
+      "review": "PENDING"
+    },
+    {
+      "id": "P04-N-008",
+      "event": "booking.coordinating",
+      "recipient": "assigned-technician",
+      "purpose": "job",
+      "channels": [
+        "web",
+        "android",
+        "ios"
+      ],
+      "payloadAllowList": [
+        "opaqueEventReference",
+        "messageKey",
+        "language",
+        "safeStatusLabel"
+      ],
+      "copy": {
+        "en": "A job handoff is available. Check your assignment and permissions.",
+        "te": "పని అప్పగింత అందుబాటులో ఉంది. మీ కేటాయింపు మరియు అనుమతులను చూడండి."
+      },
+      "expiryRule": "Suppress obsolete actionable copy; otherwise approved purpose TTL; secure view supplies current status",
+      "consentRule": "Current lawful purpose, recipient scope and channel permission; approved exception policy required for security notices",
+      "providerClassification": "NOT VERIFIED - current provider terms/template category/account approval required; no automatic utility exemption",
+      "review": "PENDING"
+    },
+    {
+      "id": "P04-N-009",
+      "event": "booking.arrived",
+      "recipient": "own-customer",
+      "purpose": "job",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "payloadAllowList": [
+        "opaqueEventReference",
+        "messageKey",
+        "language",
+        "safeStatusLabel"
+      ],
+      "copy": {
+        "en": "Arrival has been reported. Check the request and report any discrepancy.",
+        "te": "వచ్చినట్లు సమాచారం నమోదైంది. అభ్యర్థనను చూసి తేడా ఉంటే తెలియజేయండి."
+      },
+      "expiryRule": "Suppress obsolete actionable copy; otherwise approved purpose TTL; secure view supplies current status",
+      "consentRule": "Actual purpose-specific WhatsApp consent/window/template approval required; customer relationship is not assumed consent",
+      "providerClassification": "NOT VERIFIED - current provider terms/template category/account approval required; no automatic utility exemption",
+      "review": "PENDING"
+    },
+    {
+      "id": "P04-N-010",
+      "event": "quote.pending",
+      "recipient": "own-customer",
+      "purpose": "quote",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "payloadAllowList": [
+        "opaqueEventReference",
+        "messageKey",
+        "language",
+        "safeStatusLabel"
+      ],
+      "copy": {
+        "en": "A quote needs your review. Work must follow the agreed current terms.",
+        "te": "ధర ప్రతిపాదనను సమీక్షించండి. అంగీకరించిన ప్రస్తుత నిబంధనల ప్రకారమే పని జరగాలి."
+      },
+      "expiryRule": "Suppress obsolete actionable copy; otherwise approved purpose TTL; secure view supplies current status",
+      "consentRule": "Actual purpose-specific WhatsApp consent/window/template approval required; customer relationship is not assumed consent",
+      "providerClassification": "NOT VERIFIED - current provider terms/template category/account approval required; no automatic utility exemption",
+      "review": "PENDING"
+    },
+    {
+      "id": "P04-N-011",
+      "event": "quote.consented",
+      "recipient": "assigned-business-and-technician",
+      "purpose": "quote",
+      "channels": [
+        "web",
+        "android",
+        "ios"
+      ],
+      "payloadAllowList": [
+        "opaqueEventReference",
+        "messageKey",
+        "language",
+        "safeStatusLabel"
+      ],
+      "copy": {
+        "en": "The current quote decision is recorded. Check the exact approved terms.",
+        "te": "ప్రస్తుత ధర ప్రతిపాదనపై నిర్ణయం నమోదైంది. అంగీకరించిన ఖచ్చితమైన నిబంధనలను చూడండి."
+      },
+      "expiryRule": "Suppress obsolete actionable copy; otherwise approved purpose TTL; secure view supplies current status",
+      "consentRule": "Current lawful purpose, recipient scope and channel permission; approved exception policy required for security notices",
+      "providerClassification": "NOT VERIFIED - current provider terms/template category/account approval required; no automatic utility exemption",
+      "review": "PENDING"
+    },
+    {
+      "id": "P04-N-012",
+      "event": "booking.started",
+      "recipient": "own-customer",
+      "purpose": "job",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "payloadAllowList": [
+        "opaqueEventReference",
+        "messageKey",
+        "language",
+        "safeStatusLabel"
+      ],
+      "copy": {
+        "en": "Work has been reported as started. View the current job status.",
+        "te": "పని ప్రారంభమైనట్లు సమాచారం నమోదైంది. ప్రస్తుత పని స్థితిని చూడండి."
+      },
+      "expiryRule": "Suppress obsolete actionable copy; otherwise approved purpose TTL; secure view supplies current status",
+      "consentRule": "Actual purpose-specific WhatsApp consent/window/template approval required; customer relationship is not assumed consent",
+      "providerClassification": "NOT VERIFIED - current provider terms/template category/account approval required; no automatic utility exemption",
+      "review": "PENDING"
+    },
+    {
+      "id": "P04-N-013",
+      "event": "booking.completion.pending",
+      "recipient": "own-customer",
+      "purpose": "job",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "payloadAllowList": [
+        "opaqueEventReference",
+        "messageKey",
+        "language",
+        "safeStatusLabel"
+      ],
+      "copy": {
+        "en": "Completion has been reported. Review the actual outcome or raise a concern.",
+        "te": "పని పూర్తయినట్లు సమాచారం నమోదైంది. ఫలితాన్ని సమీక్షించండి లేదా సమస్యను తెలియజేయండి."
+      },
+      "expiryRule": "Suppress obsolete actionable copy; otherwise approved purpose TTL; secure view supplies current status",
+      "consentRule": "Actual purpose-specific WhatsApp consent/window/template approval required; customer relationship is not assumed consent",
+      "providerClassification": "NOT VERIFIED - current provider terms/template category/account approval required; no automatic utility exemption",
+      "review": "PENDING"
+    },
+    {
+      "id": "P04-N-014",
+      "event": "booking.completed",
+      "recipient": "affected-authorized-participant",
+      "purpose": "job",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "payloadAllowList": [
+        "opaqueEventReference",
+        "messageKey",
+        "language",
+        "safeStatusLabel"
+      ],
+      "copy": {
+        "en": "The completion outcome is recorded. View details or contact support.",
+        "te": "పని పూర్తయిన వివరాలు నమోదయ్యాయి. వివరాలను చూడండి లేదా సహాయాన్ని సంప్రదించండి."
+      },
+      "expiryRule": "Suppress obsolete actionable copy; otherwise approved purpose TTL; secure view supplies current status",
+      "consentRule": "Actual purpose-specific WhatsApp consent/window/template approval required; customer relationship is not assumed consent",
+      "providerClassification": "NOT VERIFIED - current provider terms/template category/account approval required; no automatic utility exemption",
+      "review": "PENDING"
+    },
+    {
+      "id": "P04-N-015",
+      "event": "case.created",
+      "recipient": "own-reporter",
+      "purpose": "case",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "payloadAllowList": [
+        "opaqueEventReference",
+        "messageKey",
+        "language",
+        "safeStatusLabel"
+      ],
+      "copy": {
+        "en": "Your support request is recorded. A response time is not yet confirmed.",
+        "te": "మీ సహాయ అభ్యర్థన నమోదైంది. ప్రతిస్పందన సమయం ఇంకా నిర్ధారించబడలేదు."
+      },
+      "expiryRule": "Suppress obsolete actionable copy; otherwise approved purpose TTL; secure view supplies current status",
+      "consentRule": "Actual purpose-specific WhatsApp consent/window/template approval required; customer relationship is not assumed consent",
+      "providerClassification": "NOT VERIFIED - current provider terms/template category/account approval required; no automatic utility exemption",
+      "review": "PENDING"
+    },
+    {
+      "id": "P04-N-016",
+      "event": "case.updated",
+      "recipient": "own-reporter",
+      "purpose": "case",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "payloadAllowList": [
+        "opaqueEventReference",
+        "messageKey",
+        "language",
+        "safeStatusLabel"
+      ],
+      "copy": {
+        "en": "Your support case has an update. Open the secure case view.",
+        "te": "మీ సహాయ కేసులో కొత్త సమాచారం ఉంది. సురక్షితమైన కేసు వివరాలను తెరవండి."
+      },
+      "expiryRule": "Suppress obsolete actionable copy; otherwise approved purpose TTL; secure view supplies current status",
+      "consentRule": "Actual purpose-specific WhatsApp consent/window/template approval required; customer relationship is not assumed consent",
+      "providerClassification": "NOT VERIFIED - current provider terms/template category/account approval required; no automatic utility exemption",
+      "review": "PENDING"
+    },
+    {
+      "id": "P04-N-017",
+      "event": "verification.decision",
+      "recipient": "merchant-owner",
+      "purpose": "verification",
+      "channels": [
+        "web",
+        "android",
+        "ios"
+      ],
+      "payloadAllowList": [
+        "opaqueEventReference",
+        "messageKey",
+        "language",
+        "safeStatusLabel"
+      ],
+      "copy": {
+        "en": "Your verification case has a decision. View its scope and next steps.",
+        "te": "మీ ధృవీకరణ అభ్యర్థనపై నిర్ణయం నమోదైంది. దాని పరిధి మరియు తదుపరి చర్యలను చూడండి."
+      },
+      "expiryRule": "Suppress obsolete actionable copy; otherwise approved purpose TTL; secure view supplies current status",
+      "consentRule": "Current lawful purpose, recipient scope and channel permission; approved exception policy required for security notices",
+      "providerClassification": "NOT VERIFIED - current provider terms/template category/account approval required; no automatic utility exemption",
+      "review": "PENDING"
+    },
+    {
+      "id": "P04-N-018",
+      "event": "verification.suspended",
+      "recipient": "merchant-owner",
+      "purpose": "verification",
+      "channels": [
+        "web",
+        "android",
+        "ios"
+      ],
+      "payloadAllowList": [
+        "opaqueEventReference",
+        "messageKey",
+        "language",
+        "safeStatusLabel"
+      ],
+      "copy": {
+        "en": "Service eligibility has changed. Review the decision and active-work instructions.",
+        "te": "సేవలకు అర్హత మారింది. నిర్ణయం మరియు కొనసాగుతున్న పనికి సంబంధించిన సూచనలను చూడండి."
+      },
+      "expiryRule": "Suppress obsolete actionable copy; otherwise approved purpose TTL; secure view supplies current status",
+      "consentRule": "Current lawful purpose, recipient scope and channel permission; approved exception policy required for security notices",
+      "providerClassification": "NOT VERIFIED - current provider terms/template category/account approval required; no automatic utility exemption",
+      "review": "PENDING"
+    },
+    {
+      "id": "P04-N-019",
+      "event": "privacy.case.created",
+      "recipient": "own-subject",
+      "purpose": "privacy",
+      "channels": [
+        "web",
+        "android",
+        "ios"
+      ],
+      "payloadAllowList": [
+        "opaqueEventReference",
+        "messageKey",
+        "language",
+        "safeStatusLabel"
+      ],
+      "copy": {
+        "en": "Your privacy request is recorded. This is not confirmation of deletion.",
+        "te": "మీ గోప్యతా అభ్యర్థన నమోదైంది. ఇది డేటా తొలగింపుకు నిర్ధారణ కాదు."
+      },
+      "expiryRule": "Suppress obsolete actionable copy; otherwise approved purpose TTL; secure view supplies current status",
+      "consentRule": "Current lawful purpose, recipient scope and channel permission; approved exception policy required for security notices",
+      "providerClassification": "NOT VERIFIED - current provider terms/template category/account approval required; no automatic utility exemption",
+      "review": "PENDING"
+    },
+    {
+      "id": "P04-N-020",
+      "event": "identity.security.alert",
+      "recipient": "own-subject",
+      "purpose": "security",
+      "channels": [
+        "web",
+        "android",
+        "ios"
+      ],
+      "payloadAllowList": [
+        "opaqueEventReference",
+        "messageKey",
+        "language",
+        "safeStatusLabel"
+      ],
+      "copy": {
+        "en": "Review a security-related account update using your trusted entry point.",
+        "te": "మీకు తెలిసిన సురక్షిత ప్రవేశ మార్గం ద్వారా ఖాతా భద్రతకు సంబంధించిన సమాచారాన్ని చూడండి."
+      },
+      "expiryRule": "Suppress obsolete actionable copy; otherwise approved purpose TTL; secure view supplies current status",
+      "consentRule": "Current lawful purpose, recipient scope and channel permission; approved exception policy required for security notices",
+      "providerClassification": "NOT VERIFIED - current provider terms/template category/account approval required; no automatic utility exemption",
+      "review": "PENDING"
+    },
+    {
+      "id": "P04-N-021",
+      "event": "case.escalated",
+      "recipient": "assigned-staff",
+      "purpose": "staff",
+      "channels": [
+        "staff-web"
+      ],
+      "payloadAllowList": [
+        "opaqueEventReference",
+        "messageKey",
+        "language",
+        "safeStatusLabel"
+      ],
+      "copy": {
+        "en": "An assigned case needs attention. Open the private case view.",
+        "te": "కేటాయించిన కేసుపై శ్రద్ధ అవసరం. ప్రైవేట్ కేసు వివరాలను తెరవండి."
+      },
+      "expiryRule": "Suppress obsolete actionable copy; otherwise approved purpose TTL; secure view supplies current status",
+      "consentRule": "Current lawful purpose, recipient scope and channel permission; approved exception policy required for security notices",
+      "providerClassification": "NOT VERIFIED - current provider terms/template category/account approval required; no automatic utility exemption",
+      "review": "PENDING"
+    },
+    {
+      "id": "P04-N-022",
+      "event": "request.scheduled",
+      "recipient": "own-customer",
+      "purpose": "status",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "payloadAllowList": [
+        "opaqueEventReference",
+        "messageKey",
+        "language",
+        "safeStatusLabel"
+      ],
+      "copy": {
+        "en": "Your requested service window is recorded. It is not a confirmed provider reservation.",
+        "te": "మీరు కోరిన సేవా సమయం నమోదైంది. ఇది సేవా ప్రదాత రిజర్వేషన్‌కు నిర్ధారణ కాదు."
+      },
+      "expiryRule": "Suppress obsolete actionable copy; otherwise approved purpose TTL; secure view supplies current status",
+      "consentRule": "Actual purpose-specific WhatsApp consent/window/template approval required; customer relationship is not assumed consent",
+      "providerClassification": "NOT VERIFIED - current provider terms/template category/account approval required; no automatic utility exemption",
+      "review": "PENDING"
+    },
+    {
+      "id": "P04-N-023",
+      "event": "delivery.backlog",
+      "recipient": "authorized-operations",
+      "purpose": "staff",
+      "channels": [
+        "staff-web"
+      ],
+      "payloadAllowList": [
+        "opaqueEventReference",
+        "messageKey",
+        "language",
+        "safeStatusLabel"
+      ],
+      "copy": {
+        "en": "Delivery requires investigation. Booking state has not been changed.",
+        "te": "సమాచార పంపిణీని పరిశీలించాలి. బుకింగ్ స్థితి మార్చబడలేదు."
+      },
+      "expiryRule": "Suppress obsolete actionable copy; otherwise approved purpose TTL; secure view supplies current status",
+      "consentRule": "Current lawful purpose, recipient scope and channel permission; approved exception policy required for security notices",
+      "providerClassification": "NOT VERIFIED - current provider terms/template category/account approval required; no automatic utility exemption",
+      "review": "PENDING"
+    },
+    {
+      "id": "P04-N-024",
+      "event": "upload.rejected",
+      "recipient": "own-uploader",
+      "purpose": "upload",
+      "channels": [
+        "web",
+        "android",
+        "ios"
+      ],
+      "payloadAllowList": [
+        "opaqueEventReference",
+        "messageKey",
+        "language",
+        "safeStatusLabel"
+      ],
+      "copy": {
+        "en": "The upload was not accepted. Review the permitted file requirements.",
+        "te": "ఫైల్ అప్‌లోడ్ అంగీకరించబడలేదు. అనుమతించబడిన ఫైల్ నియమాలను చూడండి."
+      },
+      "expiryRule": "Suppress obsolete actionable copy; otherwise approved purpose TTL; secure view supplies current status",
+      "consentRule": "Current lawful purpose, recipient scope and channel permission; approved exception policy required for security notices",
+      "providerClassification": "NOT VERIFIED - current provider terms/template category/account approval required; no automatic utility exemption",
+      "review": "PENDING"
+    }
+  ]
+}

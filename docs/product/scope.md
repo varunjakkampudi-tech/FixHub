@@ -3,7 +3,7 @@
 ## Document control
 
 - Document ID: P00-SCOPE
-- Status: Owner-delegated planning baseline approved 2026-10-15; see [approval record](../reviews/phase-00-owner-approval.md). Detailed implementation decisions remain separately gated.
+- Status: Owner-delegated planning baseline approved 2026-10-15; see [approval record](../reviews/foundation-approval.md). Detailed implementation decisions remain separately gated.
 - Scope baseline: initial foundation plus owner-authorized conceptual architecture, flows, role journeys and all-phase planning dossiers; see [blueprint guide](../blueprint/README.md).
 - Sequencing reference: approved governing Fix Hub Master Execution Roadmap V4.1. Historical V4 remains unavailable/unverified; its limitation is accepted. No later-phase execution authority is granted.
 

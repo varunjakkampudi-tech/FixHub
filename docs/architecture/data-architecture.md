@@ -40,4 +40,4 @@ Contact details, precise address/location, verification documents, communication
 
 ## Provenance and change control
 
-Booking/audit events record actor, reason, version and correlation without unnecessary personal content. Outbox entries are committed with business transitions; consumer processing is idempotent. Historical roadmap hashes live in the governance manifest, not the application database. See [privacy flow](../flows/flow-12-privacy.md), [security](security-trust-boundaries.md) and [Phase 03](../phases/phase-03.md).
+Booking/audit events record actor, reason, version and correlation without unnecessary personal content. Outbox entries are committed with business transitions; consumer processing is idempotent. Historical roadmap hashes live in the governance manifest, not the application database. See [privacy flow](../flows/privacy-rights.md), [security](security-trust-boundaries.md) and [Phase 03](../roadmap/workstreams/system-architecture.md).

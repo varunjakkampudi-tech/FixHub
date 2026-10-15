@@ -1,0 +1,39 @@
+{
+  "artifact": "P03-API-DRAFT-001",
+  "status": "DRAFT PREPARATION - NOT A DEPLOYED OR APPROVED API",
+  "format": "candidate contract inventory, not a complete OpenAPI document",
+  "version": 1,
+  "transport": "HTTPS JSON",
+  "authentication": "provider/session design OPEN; authenticated subject is never supplied by request JSON",
+  "mutationHeaders": ["Idempotency-Key", "If-Match"],
+  "versionPrecondition": { "source": "If-Match strong ETag for the canonical aggregate version", "appliesTo": "mutations of an existing aggregate", "missing": "428 PRECONDITION_REQUIRED", "mismatch": "409 VERSION_CONFLICT", "bodyVersionField": "forbidden; do not duplicate the version in JSON" },
+  "requestModeRules": ["mode=scheduled requires requestedWindow and an IANA timezone; reject missing, past, ambiguous or nonexistent local windows as INVALID_WINDOW", "mode=instant omits requestedWindow and timezone", "requestedWindow is an explicit local interval interpreted using the declared timezone and stored as UTC instants plus the original timezone"],
+  "readHeaders": ["Authorization"],
+  "successEnvelope": ["resourceId", "state", "generation", "version", "serverTime", "correlationId"],
+  "errorEnvelope": ["code", "messageKey", "correlationId", "retryable"],
+  "errors": {
+    "401": ["AUTH_REQUIRED", "SESSION_EXPIRED"],
+    "403": ["ACTION_DENIED"],
+    "404": ["NOT_FOUND"],
+    "409": ["VERSION_CONFLICT", "GENERATION_CONFLICT", "ALREADY_ASSIGNED", "CAPACITY_UNAVAILABLE", "IDEMPOTENCY_PAYLOAD_CONFLICT", "ILLEGAL_TRANSITION"],
+    "410": ["OFFER_EXPIRED"],
+    "422": ["INVALID_INPUT", "UNSUPPORTED_CATEGORY", "INVALID_WINDOW"],
+    "428": ["PRECONDITION_REQUIRED"],
+    "429": ["RATE_LIMITED"],
+    "503": ["DEPENDENCY_UNAVAILABLE", "COMMIT_OUTCOME_UNKNOWN"]
+  },
+  "operations": [
+    { "id": "P03-API-001", "method": "POST", "path": "/v1/requests", "scope": "customer:own", "input": ["categoryId", "locationReference", "mode", "details", "photoReferences?", "requestedWindow?", "timezone?"], "precondition": "creation has no existing aggregate version; payload-bound Idempotency-Key required; apply requestModeRules", "result": "201 canonical created request; no assignment or scheduled-slot guarantee", "requirement": "FR-C-003" },
+    { "id": "P03-API-002", "method": "GET", "path": "/v1/requests/{requestId}", "scope": "own customer, assigned business/job subset or granted case", "input": [], "precondition": "current object authorization and field masking", "result": "200 authoritative state/version with private role-scoped projection", "requirement": "FR-C-005" },
+    { "id": "P03-API-003", "method": "POST", "path": "/v1/offers/{offerId}/accept", "scope": "active merchant membership and eligible offer", "input": ["requestId", "generation"], "precondition": "If-Match request aggregate version required; request lock, current offer/eligibility and resource reservation; body tenant/actor/version never authoritative", "result": "200 committed winner receipt or deterministic error; no provisional success", "requirement": "FR-M-006" },
+    { "id": "P03-API-004", "method": "POST", "path": "/v1/offers/{offerId}/decline", "scope": "active merchant membership and own current offer", "input": ["generation", "reasonCode?"], "precondition": "If-Match request aggregate version required; current legal offer state and expiry", "result": "200 decline receipt; does not cancel request or another business assignment", "requirement": "FR-M-005" },
+    { "id": "P03-API-005", "method": "POST", "path": "/v1/requests/{requestId}/cancel", "scope": "own customer or authorized support case", "input": ["generation", "reasonCode"], "precondition": "If-Match request aggregate version required; approved stage-specific cancellation/safety policy", "result": "200 cancellation receipt and atomic release once, or conflict", "requirement": "FR-C-007" },
+    { "id": "P03-API-006", "method": "POST", "path": "/v1/bookings/{bookingId}/transitions", "scope": "assigned business/technician and permitted action", "input": ["generation", "transition", "evidenceReferences?"], "precondition": "If-Match booking aggregate version required; legal transition and exact quote consent where required", "result": "200 committed state/version or denied/illegal-state error", "requirement": "FR-M-007" },
+    { "id": "P03-API-007", "method": "POST", "path": "/v1/bookings/{bookingId}/quotes/{quoteId}/consent", "scope": "own customer", "input": ["quoteVersion", "decision"], "precondition": "If-Match booking aggregate version required; quote current, not expired and scope/charges disclosed", "result": "200 exact-version consent/decline receipt, not payment authorization", "requirement": "FR-C-006" },
+    { "id": "P03-API-008", "method": "POST", "path": "/v1/privacy/requests", "scope": "authenticated own subject", "input": ["kind", "requestedScope"], "precondition": "identity/recovery assurance, approved privacy purposes/holds", "result": "202 private case reference, not a claim of immediate deletion", "requirement": "NFR-SEC-002" }
+  ],
+  "eventEnvelope": ["eventId", "eventType", "schemaVersion", "aggregateId", "generation", "aggregateVersion", "committedAt", "recipientReference", "purpose", "correlationId", "causationId"],
+  "eventTypes": ["request.created.v1", "request.cancelled.v1", "assignment.committed.v1", "booking.transitioned.v1", "quote.updated.v1", "quote.consented.v1", "merchant.suspended.v1", "privacy.deletion.requested.v1"],
+  "prohibitedPayloadFields": ["rawCredential", "governmentIdentityDocument", "mediaBinary", "preciseAddressInNotification"],
+  "limitations": ["not complete endpoint coverage", "no authentication implementation", "no schema compiler or OpenAPI validation executed", "no provider signature schema guessed", "no application implementation authorized"]
+}

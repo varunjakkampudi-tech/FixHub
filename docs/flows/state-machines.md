@@ -19,6 +19,8 @@ Verification owns status. Only assigned reviewers/admin can decide; merchant can
 
 ## Service request
 
+Internal Scheduled means a requested future window, not a reserved or confirmed visit. Customer wording must say future window requested. Only a committed eligible provider and resource interval confirm an assignment; a request receipt confirms capture only. Scheduling and commercial timing policies still require approval.
+
 ```mermaid
 stateDiagram-v2
   Created --> Scheduled: Approved future request
@@ -32,7 +34,7 @@ stateDiagram-v2
   Assigned --> Cancelled: Governed booking cancellation
 ```
 
-Request owns canonical identity and generation. Customer/authorized support creates or cancels; system activates approved scheduled windows. A channel retry cannot create a new logical request; an expired previous generation cannot assign. Matching timeout and retry limits remain OPEN. FR-C-003/005, NFR-REL-001. Each arrow names a legal conceptual trigger; all unspecified transitions are forbidden by default. Every command rechecks actor scope and current state/version. A delayed notification cannot rewind the machine. Implementation tests must exercise every edge, deny forbidden edges, and race timeouts with state changes. The text is the accessible reading of the diagram.
+Request owns canonical identity and generation. `Scheduled` means the request is accepted for a future window; it does not mean a merchant, technician, or capacity interval is reserved. Assignment/reservation is a separate backend-committed outcome. Customer/authorized support creates or cancels; system activates approved scheduled windows. A channel retry cannot create a new logical request; an expired previous generation cannot assign. Matching timeout and retry limits remain OPEN. FR-C-003/005, NFR-REL-001. Each arrow names a legal conceptual trigger; all unspecified transitions are forbidden by default. Every command rechecks actor scope and current state/version. A delayed notification cannot rewind the machine. Implementation tests must exercise every edge, deny forbidden edges, and race timeouts with state changes. The text is the accessible reading of the diagram.
 
 ## Dispatch offer
 
@@ -97,4 +99,4 @@ Support owns case status. Reporter submits; case-scoped staff investigates; priv
 
 ## Shared recovery rules
 
-Only committed states are published. Failed transactions reserve nothing. Duplicate/out-of-order events reconcile using canonical ID, generation and version. Cancellation, capacity release and new assignment cannot produce two active reservations. Exact compensations, audit retention and legal holds remain policy decisions. See [atomic acceptance](flow-04-atomic-acceptance.md), [lifecycle](flow-05-lifecycle.md), [support](flow-10-support.md) and [traceability](../blueprint/traceability-matrix.md).
+Only committed states are published. Failed transactions reserve nothing. Duplicate/out-of-order events reconcile using canonical ID, generation and version. Cancellation, capacity release and new assignment cannot produce two active reservations. Exact compensations, audit retention and legal holds remain policy decisions. See [atomic acceptance](atomic-acceptance.md), [lifecycle](service-lifecycle.md), [support](support-disputes.md) and [traceability](../blueprint/traceability-matrix.md).
