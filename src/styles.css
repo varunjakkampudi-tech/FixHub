@@ -689,6 +689,16 @@
 .footer a:hover {
   color: var(--footer-text);
 }
+.footer .locale-control {
+  background: color-mix(in oklch, var(--footer-text) 10%, transparent);
+  color: var(--footer-text);
+}
+.footer .locale-control button {
+  color: var(--footer-text);
+}
+.footer .locale-control button[aria-pressed="true"] {
+  background: color-mix(in oklch, var(--footer-text) 18%, transparent);
+}
 .footer-bottom {
   border-top: 1px solid color-mix(in oklch, var(--footer-muted) 20%, transparent);
   margin-top: 28px;
