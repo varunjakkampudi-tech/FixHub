@@ -17,17 +17,18 @@ Free basic listing preserved. Compare completed-job fee, accepted lead, optional
 | Completed expected jobs |112|663|2,160|
 | GTV |89,600|795,600|3,240,000|
 | Revenue |6,720|79,560|324,000|
-| Contribution/request |−61.84|25.22|80.51|
-| Operating result before exclusions |−45,736|9,267|206,030|
-| Break-even within unchanged cost tier |None|833|441|
+| WhatsApp variable (Meta + assumed Twilio) |2,376|7,128|17,820|
+| Contribution/request |−66.52|20.55|75.84|
+| Operating result before exclusions |−47,606|3,657|192,005|
+| Break-even within unchanged cost tier |None|1,023|469|
 
-These are class 5 assumptions, not forecasts, recalculated with the public Meta India/INR utility/authentication/service list rate of₹0.115 per delivered message and zero service allowance. BASE with 20% lower acceptance yields −₹4,656/month; doubled support/message cost leaves₹1,269. HIGH requires unproved demand, fees and capacity. LOW modeled₹300k operating cash gives6.56 months of runway, excluding build spending. Positive results are not net profit; GST, collection, full personnel and unknown obligations are excluded.
+These are class 5 assumptions, not forecasts. They include public Meta India/INR list rate ₹0.115/message plus Twilio's published USD0.005/message fee converted at assumed FX ₹85/USD, with zero Meta service allowance. Message counts and recipient fan-out remain unverified assumptions. BASE with 20% lower acceptance yields −₹10,266/month; doubled Meta/Twilio message fees and support unit cost leaves −₹9,951. HIGH requires unproved demand, fees and capacity. LOW modeled ₹300k operating cash gives 6.30 months of runway, excluding build spending. Positive results are not net profit; GST, collection, full personnel and unknown obligations are excluded.
 
 The ₹50k validation reference ceiling is NOT spending permission. Bottom-up one-time build/setup bounds of ₹11.4 lakh/₹25.2 lakh/₹50.4 lakh are estimates, not quotes, for unchanged all-channel scope. Monthly fixed costs are ₹21k/₹21k/₹35.5k, plus variable expenses. Legal, distribution and expansion obligations are separate; no capital adequacy is proved. [Finance detail](finance/scenario-analysis.md), [budget](finance/validation-budget.md).
 
 ## Integration, stores and legal
 
-WhatsApp is mandatory, and public India rates are now retrieved, but account eligibility, message classification, callback details and payable all-in terms are not established. Meta's public page and FAQ conflict on service-message free treatment. Modeled variable bills of₹506/₹1,518/₹3,795, plus assumed BSP fixed cost, are sensitivities and cannot establish actual billing. Do not treat free replies as fact or use unofficial automation. [Dependency](integrations/whatsapp-feasibility.md).
+WhatsApp is mandatory, and public Meta India list rates plus Twilio's published per-message fee are now retrieved. Account eligibility, message classification, recipient-level volume, callback configuration, FX and payable all-in terms are not established. Meta's public page and FAQ conflict on service-message free treatment. Modeled combined WhatsApp variable costs of₹2,376/₹7,128/₹17,820, plus assumed BSP fixed cost, are sensitivities and cannot establish actual billing. Do not treat free replies as fact or use unofficial automation. [Dependency](integrations/whatsapp-feasibility.md).
 
 Meta's public India/INR rate selector has now been read (SRC-009/SRC-042), but this is not proof of account eligibility, account-specific payable rate or billable category. The public pricing page's “free service” description conflicts with the FAQ's 2026-10-01 service-charge/1,000-message monthly allowance rule. Do not use either statement alone to characterize a Fix Hub account bill; the provider gate remains CONDITIONAL.
 
@@ -45,7 +46,7 @@ Modeled support of 25/36/50 hours monthly excludes many duties; BASE nearly fill
 
 [DoD](exit-criteria.md): **10 PASS, 2 CONDITIONAL, 0 NOT ASSESSED, 0 FAIL / 12 active criteria = 83.3% evidenced assessment coverage**, not product completion. The original 14-criterion score and subsequent 9/12 snapshot are preserved in earlier committed research and the dated review.
 
-P01-DOD-005 now has a bounded delegated desk recommendation with evidence limitations, safe-scope exclusions, four candidate families and explicit separation from launch approval. Remaining Phase 01 tasks: (008) verify official Meta India pricing, technical/account eligibility and access; (014) produce a truthful owner-reviewed risk and phase-exit decision. Legal/tax applicability and realistic funded operating assumptions remain material residuals. **Future prelaunch gates** retain verified merchant permission/competence/capacity, observed customer demand/service outcomes, safe support and funding. No outreach or purchases are authorized by this change.
+P01-DOD-005 now has a bounded delegated desk recommendation with evidence limitations, safe-scope exclusions, four candidate families and explicit separation from launch approval. Remaining Phase 01 tasks: (008) verify effective Meta/Twilio India pricing, technical/account eligibility and access; (014) produce a truthful owner-reviewed risk and phase-exit decision. Legal/tax applicability and realistic funded operating assumptions remain material residuals. **Future prelaunch gates** retain verified merchant permission/competence/capacity, observed customer demand/service outcomes, safe support and funding. No outreach or purchases are authorized by this change.
 
 Historical interview-screen targets remain only in optional research instruments. No Phase 01 interview requirement remains. Actual market feasibility cannot be marked GO from desk research; any scoped phase-exit acceptance must explicitly carry unresolved proof obligations into the approved future gates without bypassing G0, G4 or G5.
 

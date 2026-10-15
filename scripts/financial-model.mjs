@@ -8,7 +8,7 @@ export function validateScenario(s) {
     'newMerchantsPerRequest', 'merchantAcquisitionCost', 'verificationCostPerNewMerchant',
     'supportCaseShare', 'supportMinutesPerCase', 'supportHourlyCost',
     'disputeReservePerCompletion', 'utilityMessagesPerRequest', 'authenticationMessagesPerRequest',
-    'serviceMessagesPerRequest', 'serviceFreeAllowance', 'messageRate', 'smsPerRequest',
+    'serviceMessagesPerRequest', 'serviceFreeAllowance', 'messageRate', 'twilioFeeUsdPerMessage', 'smsPerRequest',
     'smsRate', 'hostingDatabase', 'storage', 'monitoring', 'bspSubscription', 'fixedOperations', 'maintenance'];
   for (const key of keys) {
     if (!Number.isFinite(s[key]) || s[key] < 0) throw new Error('Invalid nonnegative input: ' + key);
@@ -19,15 +19,20 @@ export function validateScenario(s) {
   if (!Number.isSafeInteger(s.requests)) throw new Error('Requests must be a safe integer');
 }
 
-export function evaluate(s, cash) {
+export function evaluate(s, cash, fxInrPerUsd = 85) {
   validateScenario(s);
   if (!Number.isFinite(cash) || cash < 0) throw new Error('Invalid operating cash');
+  if (!Number.isFinite(fxInrPerUsd) || fxInrPerUsd <= 0) throw new Error('Invalid assumed FX');
   const accepted = s.requests * s.acceptance;
   const completed = accepted * s.completionGivenAcceptance;
   const unaccepted = s.requests - accepted;
   const acceptedNotCompleted = accepted - completed;
   const serviceBillable = Math.max(0, s.requests * s.serviceMessagesPerRequest - s.serviceFreeAllowance);
-  const whatsappCost = (s.requests * (s.utilityMessagesPerRequest + s.authenticationMessagesPerRequest) + serviceBillable) * s.messageRate;
+  const metaBillableMessages = s.requests * (s.utilityMessagesPerRequest + s.authenticationMessagesPerRequest) + serviceBillable;
+  const twilioBillableMessages = s.requests * (s.utilityMessagesPerRequest + s.authenticationMessagesPerRequest + s.serviceMessagesPerRequest);
+  const whatsappMetaCost = metaBillableMessages * s.messageRate;
+  const whatsappTwilioCost = twilioBillableMessages * s.twilioFeeUsdPerMessage * fxInrPerUsd;
+  const whatsappCost = whatsappMetaCost + whatsappTwilioCost;
   const smsCost = s.requests * s.smsPerRequest * s.smsRate;
   const customerAcquisition = s.requests * s.newCustomerShare * s.customerAcquisitionCost;
   const merchantAcquisition = s.requests * s.newMerchantsPerRequest * s.merchantAcquisitionCost;
@@ -44,7 +49,8 @@ export function evaluate(s, cash) {
   const cashBurn = Math.max(0, -operatingResult);
   const result = { requests: s.requests, accepted, completed, unaccepted, acceptedNotCompleted,
     acceptedCancellationRate: 1 - s.completionGivenAcceptance, grossTransactionValue,
-    platformRevenue, whatsappCost, smsCost, customerAcquisition, merchantAcquisition,
+    platformRevenue, whatsappCost, whatsappMetaCost, whatsappTwilioCost,
+    whatsappMessageCount: twilioBillableMessages, smsCost, customerAcquisition, merchantAcquisition,
     verification, supportHours, supportCost, disputeReserve, variableCost, fixedCost,
     contribution, contributionPerRequest: s.requests ? contribution / s.requests : null,
     contributionPerCompletedJob: completed ? contribution / completed : null,
@@ -58,13 +64,13 @@ export function evaluate(s, cash) {
 // Search each linear segment separately: a free-message allowance can create
 // a temporary profitable interval even when the later marginal result is negative.
 // null means no nonnegative operating result within the explicit search bound.
-export function breakEven(s, cash = 0) {
+export function breakEven(s, cash = 0, fxInrPerUsd = 85) {
   validateScenario(s);
   const maxVolume = 10000000;
   const boundary = s.serviceMessagesPerRequest > 0
     ? Math.min(maxVolume, Math.floor(s.serviceFreeAllowance / s.serviceMessagesPerRequest))
     : maxVolume;
-  const result = n => evaluate({ ...s, requests: n }, cash).operatingResult;
+  const result = n => evaluate({ ...s, requests: n }, cash, fxInrPerUsd).operatingResult;
   const segments = [[0, boundary], [boundary + 1, maxVolume]];
   for (const [start, end] of segments) {
     if (start > end) continue;
@@ -88,12 +94,14 @@ export function runModel(config) {
   if (Object.keys(config.scenarios).sort().join(',') !== 'BASE,HIGH,LOW') throw new Error('Expected exact LOW/BASE/HIGH inventory');
   const results = {};
   for (const [name, s] of Object.entries(config.scenarios)) {
-    results[name] = { ...evaluate(s, config.operatingCashInr), breakEvenRequests: breakEven(s),
+    results[name] = { ...evaluate(s, config.operatingCashInr, config.fxInrPerUsd), breakEvenRequests: breakEven(s, 0, config.fxInrPerUsd),
       sensitivities: {
-        lowerAcceptance: evaluate({ ...s, acceptance: s.acceptance * 0.8 }, config.operatingCashInr).operatingResult,
-        noShows: evaluate({ ...s, completionGivenAcceptance: s.completionGivenAcceptance * 0.9 }, config.operatingCashInr).operatingResult,
-        doubleMessagingSupport: evaluate({ ...s, messageRate: s.messageRate * 2, supportHourlyCost: s.supportHourlyCost * 2 }, config.operatingCashInr).operatingResult,
-        noFreeServiceAllowance: evaluate({ ...s, serviceFreeAllowance: 0 }, config.operatingCashInr).operatingResult
+        lowerAcceptance: evaluate({ ...s, acceptance: s.acceptance * 0.8 }, config.operatingCashInr, config.fxInrPerUsd).operatingResult,
+        noShows: evaluate({ ...s, completionGivenAcceptance: s.completionGivenAcceptance * 0.9 }, config.operatingCashInr, config.fxInrPerUsd).operatingResult,
+        doubleMessagingSupport: evaluate({ ...s, messageRate: s.messageRate * 2,
+          twilioFeeUsdPerMessage: s.twilioFeeUsdPerMessage * 2, supportHourlyCost: s.supportHourlyCost * 2 },
+        config.operatingCashInr, config.fxInrPerUsd).operatingResult,
+        noFreeServiceAllowance: evaluate({ ...s, serviceFreeAllowance: 0 }, config.operatingCashInr, config.fxInrPerUsd).operatingResult
       } };
   }
   return results;
