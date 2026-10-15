@@ -448,7 +448,7 @@ export function AddressEditor({ embedded = false }: { embedded?: boolean }) {
           checked={consent}
           onChange={(e) => setConsent(e.target.checked)}
         />
-        <span>{t("consent")}</span>
+        <span>{t(mode === "gps" ? "gpsConsent" : "consent")}</span>
       </label>
       {(error || demo.error) && (
         <p role="alert" className="text-destructive">
@@ -456,7 +456,7 @@ export function AddressEditor({ embedded = false }: { embedded?: boolean }) {
         </p>
       )}
       <Button type="button" disabled={demo.busy || !consent} onClick={save}>
-        {t("save")}
+        {t(mode === "gps" ? "saveGps" : "save")}
       </Button>
     </section>
   );
