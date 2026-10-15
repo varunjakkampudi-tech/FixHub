@@ -6,6 +6,8 @@ This tree contains product foundation and governance documents for Fix Hub, the 
 
 Current preparatory artifact: [Phase 02 requirements draft](phases/phase-02-preparation/requirements-draft.md), explicitly unapproved while Phase 01 exit remains open.
 
+Phase 03 preparation: [architecture and integration candidates](phases/phase-03-preparation/architecture-contracts.md), [candidate API inventory](phases/phase-03-preparation/api-contracts.json) and [bounded PostgreSQL proof with limitations](phases/phase-03-preparation/proof-review.md). These do not approve Phase 03 entry, detailed architecture or production implementation.
+
 Current status: Phase 00 planning publication verified at main `ff6425ac1a4436bbe36aa119df1f95fed9e26592` with successful post-merge CI. Phase 01 feasibility research/documentation is IN PROGRESS; see [execution index](phases/phase-01-execution/README.md), [initial authorization](phases/phase-01-execution/kickoff.md) and [12-active-criterion evidence](phases/phase-01-execution/definition-of-done.md). The [current Phase 01–05 work authorization](governance/phase-01-05-work-authorization.md) permits later-phase draft preparation but does not pass sequential entry/exit gates. Existing [solo-maintainer policy](governance/solo-maintainer-policy.md) and GitHub safeguards remain binding; the owner-requested direct-main procedure is a conditional proposal, not a bypass. Start with the [conceptual blueprint](blueprint/README.md), [all 20 phase plans](phases/README.md) and [approval/evidence record](reviews/phase-00-owner-approval.md). Historical reviews retain their original results.
 
 - [Product charter](product/charter.md)
