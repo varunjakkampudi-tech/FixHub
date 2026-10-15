@@ -277,6 +277,7 @@ export function AppService({ id }: { id: string }) {
           <div><span>{tr("Estimated labour", "అంచనా శ్రమ")}</span><strong>{money(price.labor, locale)}</strong></div>
           <div><span>{tr("Parts allowance", "భాగాల పరిమితి")}</span><strong>{money(price.parts, locale)}</strong></div>
           <div className="total"><span>{tr("Estimated total (DEMO)", "అంచనా మొత్తం (DEMO)")}</span><strong>{money(price.total, locale)}</strong></div>
+          <p>{tr("Planned payment: cash after service completion (COD). DEMO only; no cash is requested or collected.", "ప్రతిపాదిత చెల్లింపు: సేవ పూర్తయ్యాక నగదు (COD). DEMO మాత్రమే; నగదు అడగరు లేదా వసూలు చేయరు.")}</p>
           <p>{tr("Final quote may vary after inspection and needs your approval.", "పరిశీలన తర్వాత తుది కోట్ మారవచ్చు; మీ ఆమోదం అవసరం.")}</p>
         </div>
       </section>
@@ -578,6 +579,7 @@ export function AppBookConfirm({ search }: { search: BookSearch }) {
           <div><span>{tr("Taxes", "పన్నులు")}</span><strong>{price.rates.taxConfigured ? money(price.tax, locale) : tr("At checkout", "చెక్అవుట్‌లో")}</strong></div>
           <div className="total"><span>{tr("Estimated total (DEMO)", "అంచనా మొత్తం (DEMO)")}</span><strong>{money(price.total, locale)}</strong></div>
         </div>
+        <p className="app-note">{tr("Planned payment: cash after service completion (COD). DEMO only; no cash is requested or collected.", "ప్రతిపాదిత చెల్లింపు: సేవ పూర్తయ్యాక నగదు (COD). DEMO మాత్రమే; నగదు అడగరు లేదా వసూలు చేయరు.")}</p>
         <p className="app-note"><ShieldCheck aria-hidden="true" />{tr("A merchant must accept first. Any final price needs your approval.", "ముందు వ్యాపారి అంగీకరించాలి. తుది ధరకు మీ ఆమోదం అవసరం.")}</p>
         {error && <p className="app-error" role="alert">{error}</p>}
       </section>
