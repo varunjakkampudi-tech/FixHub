@@ -13,7 +13,7 @@ npm ci
 npm run dev
 ```
 
-Open `http://localhost:5173/`. The sample personas and records are fictional and stored in browser storage; do not enter real personal or sensitive information. `npm test` runs app tests; `npm run test:docs` runs the repository documentation-validator regressions; `npm run test:all` runs both. `npm run typecheck` and `npm run build` run the remaining local checks. `npm start` serves the most recent build locally; run `npm run build` first.
+Open `http://localhost:5173/`. Development starts the UI and a separate API on port 4000; `/docs` exposes the API's OpenAPI/Swagger reference and `/health/live` reports process liveness. The API is a demo-only foundation: it has no user authentication, persistent booking store, or live provider connection. The sample personas and records are fictional and stored in browser storage; do not enter real personal or sensitive information. `npm test` runs app and API tests; `npm run test:docs` runs repository documentation-validator regressions; `npm run test:all` runs both. `npm run typecheck` and `npm run build` run remaining local checks. `npm start` serves the most recent UI build locally; run `npm run build` first. Set `FIXHUB_WEB_ORIGINS` to an explicit comma-separated origin allowlist when configuring a non-local deployment; do not use `*`.
 
 The remaining proposed engineering directories in the reference architecture are specifications only; this demonstration does not authorize production infrastructure or deployment.
 

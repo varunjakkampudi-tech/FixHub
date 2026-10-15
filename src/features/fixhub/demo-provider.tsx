@@ -14,6 +14,7 @@ import { registrySeed } from "./location-model";
 import { useFixHub } from "./context";
 import { dt, eventLabel, type DemoKey } from "./demo-copy";
 import { ct, type CommKey } from "./communications-copy";
+import { DemoHydration } from "./demo-hydration";
 const key = "fixhub-fictional-demo-v1";
 function read(): DemoState | null {
   try {
@@ -70,24 +71,38 @@ export function DemoProvider({ children }: { children: ReactNode }) {
     channel.current?.postMessage({ revision: s.revision });
   }
   useEffect(() => {
-    const existing = read();
-    const initial = existing ?? seed();
-    apply(initial);
-    if (!existing) localStorage.setItem(key, JSON.stringify(initial));
-    const saved = sessionStorage.getItem("fixhub-demo-persona") ?? "";
-    setPersonaId(saved);
-    if (saved) {
-      try {
-        const savedDraft = sessionStorage.getItem(`fixhub-demo-draft-${saved}`);
-        if (savedDraft) updateDraft(JSON.parse(savedDraft));
-      } catch {
-        /* keep safe defaults */
+    try {
+      const existing = read();
+      const initial = existing ?? seed();
+      apply(initial);
+      if (!existing) localStorage.setItem(key, JSON.stringify(initial));
+      const saved = sessionStorage.getItem("fixhub-demo-persona") ?? "";
+      setPersonaId(saved);
+      personaRef.current = saved;
+      if (saved) {
+        try {
+          const savedDraft = sessionStorage.getItem(`fixhub-demo-draft-${saved}`);
+          if (savedDraft) updateDraft(JSON.parse(savedDraft));
+        } catch {
+          /* keep safe defaults */
+        }
       }
-    }
-    setLastBookingId(sessionStorage.getItem("fixhub-demo-last-booking") ?? "");
-    if (saved) {
-      const preferred = localStorage.getItem(`fixhub-demo-language-${saved}`);
-      if (preferred === "en-IN" || preferred === "te-IN") setLocale(preferred);
+      setLastBookingId(sessionStorage.getItem("fixhub-demo-last-booking") ?? "");
+      if (saved) {
+        const preferred = localStorage.getItem(`fixhub-demo-language-${saved}`);
+        if (preferred === "en-IN" || preferred === "te-IN") setLocale(preferred);
+      }
+    } catch {
+      setPersonaId("");
+      personaRef.current = "";
+      setLastBookingId("");
+      setError(
+        locale === "te-IN"
+          ? "బ్రౌజర్ నిల్వ అందుబాటులో లేదు. ఈ ప్రివ్యూలో మార్పులు నిల్వ కాకపోవచ్చు."
+          : locale === "hi-IN"
+            ? "ब्राउज़र स्टोरेज उपलब्ध नहीं है। इस प्रीव्यू में बदलाव सहेजे नहीं जा सकते।"
+            : "Browser storage is unavailable. Changes may not be saved in this preview.",
+      );
     }
     const sync = () => {
       const next = read();
@@ -302,7 +317,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
         clearError: () => setError(""),
       }}
     >
-      {children}
+      {ready ? children : <DemoHydration locale={locale} />}
     </DemoContext.Provider>
   );
 }
