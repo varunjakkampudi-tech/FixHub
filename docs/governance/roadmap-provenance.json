@@ -2,10 +2,10 @@
   "document": "docs/roadmap/master-roadmap.md",
   "currentRevision": {
     "label": "Owner-requested document references and checksum pointer; phase bodies/order/gates unchanged",
-    "commit": null,
+    "commit": "9e0062b2e32e1257e6749c6eafc8476398920750",
     "baseCommit": "877aea18f6d75fc441b9d9ce9b9fd0c17e5fa91b",
     "sha256": "6949A30A704F23482EC92D37C279E79E8A920F39BA656AE2A03EDE86A3F54840",
-    "status": "LOCAL UNPUBLISHED REFERENCE AMENDMENT; exact creation commit to be recorded after commit"
+    "status": "LOCAL UNPUBLISHED REFERENCE AMENDMENT; creation commit verified"
   },
   "integrityLimit": "SHA-256 detects byte drift against this manifest; it does not independently authenticate the roadmap or manifest. Trust depends on protected main, retained Git history and risk-based assurance under the solo-maintainer policy: exact-head CI, recorded AI audit and human owner self-review for qualifying low-risk work; additional independent assurance for sensitive work before release.",
   "revisions": [
@@ -26,10 +26,10 @@
     },
     {
       "label": "Owner-requested document references and checksum pointer; phase bodies/order/gates unchanged",
-      "commit": null,
+      "commit": "9e0062b2e32e1257e6749c6eafc8476398920750",
       "baseCommit": "877aea18f6d75fc441b9d9ce9b9fd0c17e5fa91b",
       "sha256": "6949A30A704F23482EC92D37C279E79E8A920F39BA656AE2A03EDE86A3F54840",
-      "status": "LOCAL UNPUBLISHED REFERENCE AMENDMENT; exact creation commit to be recorded after commit"
+      "status": "LOCAL UNPUBLISHED REFERENCE AMENDMENT; creation commit verified"
     }
   ]
 }

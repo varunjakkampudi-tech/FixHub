@@ -1097,7 +1097,7 @@
     {
       "path": "docs/governance/roadmap-provenance.json",
       "priorGitSha256": "C19A69158041D124588B53262F7ABA52E3338CA815115289EFF493BB616E2221",
-      "currentSha256": "824BDBEB85D37F752342492FAC15FA064DB7C4EC355C19979AD0B64275A0306A"
+      "currentSha256": "FA5F279AC570F74E4E354E71950F730D45FED262D81D1A4310EBC7FCA94CDD9A"
     },
     {
       "path": "docs/governance/solo-maintainer-policy.md",
