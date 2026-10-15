@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1200" viewBox="0 0 1440 1200" role="img" aria-labelledby="title desc">
+  <title id="title">Fix Hub identity exploration, not an approved identity</title>
+  <desc id="desc">Two original vector concepts, a blue and ink palette, English and Telugu type specimens, and sample state treatments. All decisions await owner approval. This is a design board, not a product screen.</desc>
+  <rect width="1440" height="1200" fill="#F3F6F8"/>
+  <g font-family="Nirmala UI, Segoe UI, sans-serif" fill="#17324D">
+    <text x="56" y="88" font-size="58" font-weight="600">Fix Hub</text>
+    <text x="58" y="128" font-size="22" fill="#4C6276">Under Viswatra · Identity exploration · Owner approval pending</text>
+    <text x="1384" y="80" text-anchor="end" font-size="20" fill="#4C6276">15 October 2026</text>
+    <line x1="56" y1="162" x2="1384" y2="162" stroke="#697B8C"/>
+    <rect x="56" y="196" width="648" height="290" rx="12" fill="#FFFFFF"/>
+    <rect x="736" y="196" width="648" height="290" rx="12" fill="#FFFFFF"/>
+    <g transform="translate(96 244)">
+      <path d="M16 28H76V88H136 M76 28V148H136" fill="none" stroke="#1558A6" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="58" y="70" width="36" height="36" rx="8" fill="#17324D"/>
+      <circle cx="16" cy="28" r="12" fill="#17324D"/><circle cx="136" cy="88" r="12" fill="#17324D"/><circle cx="136" cy="148" r="12" fill="#0B635B"/>
+    </g>
+    <text x="296" y="280" font-size="32" font-weight="600">Connected work</text>
+    <text x="296" y="321" font-size="21" fill="#4C6276">Recommended exploration</text>
+    <text x="296" y="368" font-size="21">One hub, distinct responsibilities.</text>
+    <text x="296" y="402" font-size="21">No shield, guarantee or rating claim.</text>
+    <text x="96" y="456" font-size="18" fill="#4C6276">Concept A · Original vector study, not a permanent logo</text>
+    <g transform="translate(778 246)" fill="none" stroke="#17324D" stroke-width="10" stroke-linecap="square">
+      <path d="M12 144V16H82 M12 76H64 M88 16V144 M88 78H144 M144 16V144"/>
+    </g>
+    <text x="986" y="280" font-size="32" font-weight="600">Wordmark first</text>
+    <text x="986" y="321" font-size="21" fill="#4C6276">Restrained alternative</text>
+    <text x="986" y="368" font-size="21">A functional F/H construction.</text>
+    <text x="986" y="402" font-size="21">Needs distinctiveness review.</text>
+    <text x="776" y="456" font-size="18" fill="#4C6276">Concept B · Monoline study, not trademark clearance</text>
+    <text x="56" y="548" font-size="28" font-weight="600">Clear actions, quiet surfaces</text>
+    <g>
+      <rect x="56" y="578" width="208" height="94" rx="8" fill="#17324D"/>
+      <rect x="280" y="578" width="208" height="94" rx="8" fill="#1558A6"/>
+      <rect x="504" y="578" width="208" height="94" rx="8" fill="#0B635B"/>
+      <rect x="728" y="578" width="208" height="94" rx="8" fill="#8C4A05"/>
+      <rect x="952" y="578" width="208" height="94" rx="8" fill="#FFFFFF" stroke="#697B8C"/>
+      <rect x="1176" y="578" width="208" height="94" rx="8" fill="#F3F6F8" stroke="#697B8C"/>
+      <text x="56" y="706" font-size="20">Ink #17324D</text><text x="280" y="706" font-size="20">Action #1558A6</text><text x="504" y="706" font-size="20">Calm #0B635B</text>
+      <text x="728" y="706" font-size="20">Caution #8C4A05</text><text x="952" y="706" font-size="20">Paper #FFFFFF</text><text x="1176" y="706" font-size="20">Mist #F3F6F8</text>
+    </g>
+    <text x="56" y="784" font-size="28" font-weight="600">English and Telugu, given equal room</text>
+    <text x="56" y="852" font-size="42" font-weight="500">View your request</text>
+    <text x="742" y="852" font-size="38" font-weight="500" lang="te">మీ అభ్యర్థనను చూడండి</text>
+    <text x="56" y="896" font-size="20" fill="#4C6276">Candidate fonts: IBM Plex Sans + Noto Sans Telugu.</text>
+    <text x="56" y="930" font-size="20" fill="#4C6276">This board uses local system fallback. Candidate-font and fluent Telugu review remain pending.</text>
+    <text x="56" y="998" font-size="28" font-weight="600">Status is a statement, not just a colour</text>
+    <rect x="56" y="1024" width="276" height="56" rx="8" fill="#FFFFFF" stroke="#8C4A05" stroke-width="2"/>
+    <circle cx="84" cy="1052" r="8" fill="none" stroke="#8C4A05" stroke-width="2"/>
+    <text x="106" y="1061" font-size="20" fill="#8C4A05">Searching · no provider</text>
+    <rect x="356" y="1024" width="300" height="56" rx="8" fill="#FFFFFF" stroke="#0B635B" stroke-width="2"/>
+    <rect x="378" y="1044" width="16" height="16" fill="#0B635B"/>
+    <text x="408" y="1061" font-size="22" fill="#0B635B">Assigned · after commit</text>
+    <rect x="742" y="1024" width="238" height="56" rx="8" fill="#1558A6"/>
+    <text x="861" y="1061" text-anchor="middle" font-size="23" fill="#FFFFFF">View request</text>
+    <rect x="1010" y="1024" width="374" height="56" rx="8" fill="#FFFFFF" stroke="#697B8C" stroke-width="2"/>
+    <text x="1197" y="1061" text-anchor="middle" font-size="23" lang="te">అభ్యర్థనను చూడండి</text>
+    <line x1="56" y1="1120" x2="1384" y2="1120" stroke="#697B8C"/>
+    <text x="56" y="1160" font-size="19" fill="#4C6276">Proposal only. No approved logo, identity, domain, tagline, product screen or live service is represented.</text>
+  </g>
+</svg>

@@ -1,0 +1,262 @@
+{
+  "artifact": "P05-TOKENS-CANDIDATE-001",
+  "status": "PROPOSED - NO OWNER IDENTITY APPROVAL",
+  "date": "2026-10-15",
+  "direction": "Connected work - recommended exploration only",
+  "colours": {
+    "light": {
+      "canvas": "#F3F6F8",
+      "surface": "#FFFFFF",
+      "ink": "#17324D",
+      "muted": "#4C6276",
+      "action": "#1558A6",
+      "actionHover": "#114887",
+      "calm": "#0B635B",
+      "warning": "#8C4A05",
+      "danger": "#A52A36",
+      "border": "#697B8C",
+      "focus": "#9A4E00",
+      "soft": "#E9EFF4"
+    },
+    "dark": {
+      "canvas": "#102333",
+      "surface": "#193247",
+      "ink": "#F2F6FA",
+      "muted": "#BBC9D6",
+      "action": "#8CC3FF",
+      "actionInk": "#102333",
+      "warning": "#FFD48A",
+      "danger": "#FFB4AB",
+      "calm": "#A8D9BD",
+      "border": "#7C91A5",
+      "focus": "#FFD48A"
+    }
+  },
+  "contrastPairs": [
+    {
+      "id": "light-body",
+      "mode": "light",
+      "foreground": "ink",
+      "background": "surface",
+      "minimum": 4.5
+    },
+    {
+      "id": "light-muted",
+      "mode": "light",
+      "foreground": "muted",
+      "background": "surface",
+      "minimum": 4.5
+    },
+    {
+      "id": "light-action-label",
+      "mode": "light",
+      "foreground": "surface",
+      "background": "action",
+      "minimum": 4.5
+    },
+    {
+      "id": "light-action-hover-label",
+      "mode": "light",
+      "foreground": "surface",
+      "background": "actionHover",
+      "minimum": 4.5
+    },
+    {
+      "id": "light-link",
+      "mode": "light",
+      "foreground": "action",
+      "background": "surface",
+      "minimum": 4.5
+    },
+    {
+      "id": "light-calm-text",
+      "mode": "light",
+      "foreground": "calm",
+      "background": "surface",
+      "minimum": 4.5
+    },
+    {
+      "id": "light-warning-text",
+      "mode": "light",
+      "foreground": "warning",
+      "background": "surface",
+      "minimum": 4.5
+    },
+    {
+      "id": "light-danger-text",
+      "mode": "light",
+      "foreground": "danger",
+      "background": "surface",
+      "minimum": 4.5
+    },
+    {
+      "id": "light-border",
+      "mode": "light",
+      "foreground": "border",
+      "background": "surface",
+      "minimum": 3
+    },
+    {
+      "id": "light-focus",
+      "mode": "light",
+      "foreground": "focus",
+      "background": "surface",
+      "minimum": 3
+    },
+    {
+      "id": "light-canvas-body",
+      "mode": "light",
+      "foreground": "ink",
+      "background": "canvas",
+      "minimum": 4.5
+    },
+    {
+      "id": "dark-body",
+      "mode": "dark",
+      "foreground": "ink",
+      "background": "surface",
+      "minimum": 4.5
+    },
+    {
+      "id": "dark-muted",
+      "mode": "dark",
+      "foreground": "muted",
+      "background": "surface",
+      "minimum": 4.5
+    },
+    {
+      "id": "dark-action-label",
+      "mode": "dark",
+      "foreground": "actionInk",
+      "background": "action",
+      "minimum": 4.5
+    },
+    {
+      "id": "dark-link",
+      "mode": "dark",
+      "foreground": "action",
+      "background": "surface",
+      "minimum": 4.5
+    },
+    {
+      "id": "dark-warning",
+      "mode": "dark",
+      "foreground": "warning",
+      "background": "surface",
+      "minimum": 4.5
+    },
+    {
+      "id": "dark-danger",
+      "mode": "dark",
+      "foreground": "danger",
+      "background": "surface",
+      "minimum": 4.5
+    },
+    {
+      "id": "dark-calm",
+      "mode": "dark",
+      "foreground": "calm",
+      "background": "surface",
+      "minimum": 4.5
+    },
+    {
+      "id": "dark-border",
+      "mode": "dark",
+      "foreground": "border",
+      "background": "surface",
+      "minimum": 3
+    },
+    {
+      "id": "dark-focus",
+      "mode": "dark",
+      "foreground": "focus",
+      "background": "surface",
+      "minimum": 3
+    }
+  ],
+  "typography": {
+    "latinCandidate": "IBM Plex Sans",
+    "teluguCandidate": "Noto Sans Telugu",
+    "fontStatus": "OFL source license verified; no binaries installed, bundled or approved; final rendition/bilingual review pending",
+    "localConceptRendering": "Nirmala UI / Segoe UI system fallback; not a candidate-font rendering proof",
+    "bodyPx": 16,
+    "supportPx": 14,
+    "scalePx": [
+      14,
+      16,
+      18,
+      22,
+      28,
+      36,
+      48
+    ],
+    "lineHeight": {
+      "latin": 1.5,
+      "telugu": 1.65
+    },
+    "weights": [
+      400,
+      500,
+      600
+    ],
+    "letterSpacing": "normal; do not track Telugu glyphs"
+  },
+  "spacePx": [
+    0,
+    4,
+    8,
+    12,
+    16,
+    24,
+    32,
+    48,
+    64
+  ],
+  "radiiPx": {
+    "control": 8,
+    "container": 12,
+    "inlineStatus": 999
+  },
+  "borderPx": {
+    "default": 1,
+    "emphasis": 2,
+    "focus": 3
+  },
+  "elevation": {
+    "flat": "none",
+    "overlay": "0 8px 24px rgba(23,50,77,0.16)"
+  },
+  "breakpointsPx": {
+    "compact": 640,
+    "wide": 960,
+    "expanded": 1280
+  },
+  "contentMaxPx": 1200,
+  "readableMeasure": "60-75 Latin characters; Telugu checked by rendered line length, not Latin character count",
+  "targetSize": {
+    "webCandidateCssPx": 48,
+    "platformStatus": "Native dp/pt target and gesture/safe-area review required; CSS pixels are not native units"
+  },
+  "focus": {
+    "outerToken": "focus",
+    "widthPx": 3,
+    "gapPx": 2,
+    "innerHalo": "surface",
+    "rule": "Focus visible on both light/dark surfaces; do not remove outlines or rely only on changed fill"
+  },
+  "motion": {
+    "shortMs": 120,
+    "standardMs": 180,
+    "reducedMotionMs": 0,
+    "rule": "No essential information by animation; no indefinite shimmer or urgency pulse"
+  },
+  "approval": {
+    "logo": "OPEN",
+    "identity": "OPEN",
+    "colours": "OPEN",
+    "typography": "OPEN",
+    "domain": "OPEN",
+    "tagline": "OPEN",
+    "phase05": "DRAFT PREPARATION - PRIOR EXITS BLOCKED"
+  }
+}

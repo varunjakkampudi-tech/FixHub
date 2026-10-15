@@ -1,0 +1,1843 @@
+{
+  "artifact": "P04-INTERACTION-DRAFT-001",
+  "status": "DRAFT PREPARATION - NOT SCREENS OR IMPLEMENTED JOURNEYS",
+  "sourcePolicy": "Existing conceptual stage identifiers preserved; new P04 interaction IDs are candidate stable cross-reference keys, not approved requirements.",
+  "scenarioRule": "Each entry inherits the six explicitly specified outcomes for its primary flow in behaviour-specification.md. Stage-specific actions/constraints remain in the linked source, not silently replaced by generic outcomes.",
+  "channelRule": "Listed role/channel candidates are maximum scope, not full feature parity or account approval. Detailed channel restrictions in behaviour-specification.md override this list; sensitive setup/evidence uses scoped secure web/native forms, not arbitrary WhatsApp attachments.",
+  "interactions": [
+    {
+      "id": "P04-I-C001",
+      "role": "customer",
+      "source": "docs/journeys/customer-journey.md",
+      "sourceStage": "CJ-01",
+      "primaryFlow": "FLOW-01",
+      "entry": "Public discovery only where allowed; authenticated own subject/request for private actions",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-C002",
+      "role": "customer",
+      "source": "docs/journeys/customer-journey.md",
+      "sourceStage": "CJ-02",
+      "primaryFlow": "FLOW-01",
+      "entry": "Public discovery only where allowed; authenticated own subject/request for private actions",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-C003",
+      "role": "customer",
+      "source": "docs/journeys/customer-journey.md",
+      "sourceStage": "CJ-03",
+      "primaryFlow": "FLOW-09",
+      "entry": "Public discovery only where allowed; authenticated own subject/request for private actions",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-C004",
+      "role": "customer",
+      "source": "docs/journeys/customer-journey.md",
+      "sourceStage": "CJ-04",
+      "primaryFlow": "FLOW-01",
+      "entry": "Public discovery only where allowed; authenticated own subject/request for private actions",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-C005",
+      "role": "customer",
+      "source": "docs/journeys/customer-journey.md",
+      "sourceStage": "CJ-05",
+      "primaryFlow": "FLOW-01",
+      "entry": "Public discovery only where allowed; authenticated own subject/request for private actions",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-C006",
+      "role": "customer",
+      "source": "docs/journeys/customer-journey.md",
+      "sourceStage": "CJ-06",
+      "primaryFlow": "FLOW-01",
+      "entry": "Public discovery only where allowed; authenticated own subject/request for private actions",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-C007",
+      "role": "customer",
+      "source": "docs/journeys/customer-journey.md",
+      "sourceStage": "CJ-07",
+      "primaryFlow": "FLOW-01",
+      "entry": "Public discovery only where allowed; authenticated own subject/request for private actions",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-C008",
+      "role": "customer",
+      "source": "docs/journeys/customer-journey.md",
+      "sourceStage": "CJ-08",
+      "primaryFlow": "FLOW-02",
+      "entry": "Public discovery only where allowed; authenticated own subject/request for private actions",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-C009",
+      "role": "customer",
+      "source": "docs/journeys/customer-journey.md",
+      "sourceStage": "CJ-09",
+      "primaryFlow": "FLOW-02",
+      "entry": "Public discovery only where allowed; authenticated own subject/request for private actions",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-C010",
+      "role": "customer",
+      "source": "docs/journeys/customer-journey.md",
+      "sourceStage": "CJ-10",
+      "primaryFlow": "FLOW-02",
+      "entry": "Public discovery only where allowed; authenticated own subject/request for private actions",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-C011",
+      "role": "customer",
+      "source": "docs/journeys/customer-journey.md",
+      "sourceStage": "CJ-11",
+      "primaryFlow": "FLOW-03",
+      "entry": "Public discovery only where allowed; authenticated own subject/request for private actions",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-C012",
+      "role": "customer",
+      "source": "docs/journeys/customer-journey.md",
+      "sourceStage": "CJ-12",
+      "primaryFlow": "FLOW-04",
+      "entry": "Public discovery only where allowed; authenticated own subject/request for private actions",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-C013",
+      "role": "customer",
+      "source": "docs/journeys/customer-journey.md",
+      "sourceStage": "CJ-13",
+      "primaryFlow": "FLOW-08",
+      "entry": "Public discovery only where allowed; authenticated own subject/request for private actions",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-C014",
+      "role": "customer",
+      "source": "docs/journeys/customer-journey.md",
+      "sourceStage": "CJ-14",
+      "primaryFlow": "FLOW-05",
+      "entry": "Public discovery only where allowed; authenticated own subject/request for private actions",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-C015",
+      "role": "customer",
+      "source": "docs/journeys/customer-journey.md",
+      "sourceStage": "CJ-15",
+      "primaryFlow": "FLOW-08",
+      "entry": "Public discovery only where allowed; authenticated own subject/request for private actions",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-C016",
+      "role": "customer",
+      "source": "docs/journeys/customer-journey.md",
+      "sourceStage": "CJ-16",
+      "primaryFlow": "FLOW-05",
+      "entry": "Public discovery only where allowed; authenticated own subject/request for private actions",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-C017",
+      "role": "customer",
+      "source": "docs/journeys/customer-journey.md",
+      "sourceStage": "CJ-17",
+      "primaryFlow": "FLOW-05",
+      "entry": "Public discovery only where allowed; authenticated own subject/request for private actions",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-C018",
+      "role": "customer",
+      "source": "docs/journeys/customer-journey.md",
+      "sourceStage": "CJ-18",
+      "primaryFlow": "FLOW-05",
+      "entry": "Public discovery only where allowed; authenticated own subject/request for private actions",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-C019",
+      "role": "customer",
+      "source": "docs/journeys/customer-journey.md",
+      "sourceStage": "CJ-19",
+      "primaryFlow": "FLOW-10",
+      "entry": "Public discovery only where allowed; authenticated own subject/request for private actions",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-C020",
+      "role": "customer",
+      "source": "docs/journeys/customer-journey.md",
+      "sourceStage": "CJ-20",
+      "primaryFlow": "FLOW-06",
+      "entry": "Public discovery only where allowed; authenticated own subject/request for private actions",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-C021",
+      "role": "customer",
+      "source": "docs/journeys/customer-journey.md",
+      "sourceStage": "CJ-21",
+      "primaryFlow": "FLOW-10",
+      "entry": "Public discovery only where allowed; authenticated own subject/request for private actions",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-C022",
+      "role": "customer",
+      "source": "docs/journeys/customer-journey.md",
+      "sourceStage": "CJ-22",
+      "primaryFlow": "FLOW-10",
+      "entry": "Public discovery only where allowed; authenticated own subject/request for private actions",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-C023",
+      "role": "customer",
+      "source": "docs/journeys/customer-journey.md",
+      "sourceStage": "CJ-23",
+      "primaryFlow": "FLOW-02",
+      "entry": "Public discovery only where allowed; authenticated own subject/request for private actions",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-C024",
+      "role": "customer",
+      "source": "docs/journeys/customer-journey.md",
+      "sourceStage": "CJ-24",
+      "primaryFlow": "FLOW-12",
+      "entry": "Public discovery only where allowed; authenticated own subject/request for private actions",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M001",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-01",
+      "primaryFlow": "FLOW-07",
+      "entry": "Public discovery of participation terms; no account, existing tenant or membership required; no private evidence access",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M002",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-02",
+      "primaryFlow": "FLOW-07",
+      "entry": "Authenticated applicant with actual representative authority, or separately authorized assisted intake with consent; no existing tenant required; creation establishes pending business scope, not verification",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M003",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-03",
+      "primaryFlow": "FLOW-09",
+      "entry": "Identity enrollment or authentication can begin without active business membership; secure account setup proves applicant identity before private business grants or recovery",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M004",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-04",
+      "primaryFlow": "FLOW-07",
+      "entry": "Active own-business membership and explicit action grant; no implied reviewer/admin privilege",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M005",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-05",
+      "primaryFlow": "FLOW-07",
+      "entry": "Active own-business membership and explicit action grant; no implied reviewer/admin privilege",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M006",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-06",
+      "primaryFlow": "FLOW-07",
+      "entry": "Active own-business membership and explicit action grant; no implied reviewer/admin privilege",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M007",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-07",
+      "primaryFlow": "FLOW-07",
+      "entry": "Active own-business membership and explicit action grant; no implied reviewer/admin privilege",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M008",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-08",
+      "primaryFlow": "FLOW-03",
+      "entry": "Active own-business membership and explicit action grant; no implied reviewer/admin privilege",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M009",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-09",
+      "primaryFlow": "FLOW-03",
+      "entry": "Active own-business membership and explicit action grant; no implied reviewer/admin privilege",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M010",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-10",
+      "primaryFlow": "FLOW-03",
+      "entry": "Active own-business membership and explicit action grant; no implied reviewer/admin privilege",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M011",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-11",
+      "primaryFlow": "FLOW-03",
+      "entry": "Active own-business membership and explicit action grant; no implied reviewer/admin privilege",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M012",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-12",
+      "primaryFlow": "FLOW-03",
+      "entry": "Active own-business membership and explicit action grant; no implied reviewer/admin privilege",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M013",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-13",
+      "primaryFlow": "FLOW-09",
+      "entry": "Active own-business membership and explicit action grant; no implied reviewer/admin privilege",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M014",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-14",
+      "primaryFlow": "FLOW-03",
+      "entry": "Active own-business membership and explicit action grant; no implied reviewer/admin privilege",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M015",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-15",
+      "primaryFlow": "FLOW-03",
+      "entry": "Active own-business membership and explicit action grant; no implied reviewer/admin privilege",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M016",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-16",
+      "primaryFlow": "FLOW-08",
+      "entry": "Active own-business membership and explicit action grant; no implied reviewer/admin privilege",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M017",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-17",
+      "primaryFlow": "FLOW-03",
+      "entry": "Active own-business membership and explicit action grant; no implied reviewer/admin privilege",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M018",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-18",
+      "primaryFlow": "FLOW-04",
+      "entry": "Active own-business membership and explicit action grant; no implied reviewer/admin privilege",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M019",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-19",
+      "primaryFlow": "FLOW-04",
+      "entry": "Active own-business membership and explicit action grant; no implied reviewer/admin privilege",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M020",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-20",
+      "primaryFlow": "FLOW-05",
+      "entry": "Active own-business membership and explicit action grant; no implied reviewer/admin privilege",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M021",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-21",
+      "primaryFlow": "FLOW-05",
+      "entry": "Active own-business membership and explicit action grant; no implied reviewer/admin privilege",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M022",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-22",
+      "primaryFlow": "FLOW-05",
+      "entry": "Active own-business membership and explicit action grant; no implied reviewer/admin privilege",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M023",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-23",
+      "primaryFlow": "FLOW-05",
+      "entry": "Active own-business membership and explicit action grant; no implied reviewer/admin privilege",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M024",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-24",
+      "primaryFlow": "FLOW-05",
+      "entry": "Active own-business membership and explicit action grant; no implied reviewer/admin privilege",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M025",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-25",
+      "primaryFlow": "FLOW-06",
+      "entry": "Active own-business membership and explicit action grant; no implied reviewer/admin privilege",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M026",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-26",
+      "primaryFlow": "FLOW-10",
+      "entry": "Active own-business membership and explicit action grant; no implied reviewer/admin privilege",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M027",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-27",
+      "primaryFlow": "FLOW-10",
+      "entry": "Active own-business membership and explicit action grant; no implied reviewer/admin privilege",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M028",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-28",
+      "primaryFlow": "FLOW-11",
+      "entry": "Active own-business membership and explicit action grant; no implied reviewer/admin privilege",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M029",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-29",
+      "primaryFlow": "FLOW-07",
+      "entry": "Active own-business membership and explicit action grant; no implied reviewer/admin privilege",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-M030",
+      "role": "merchant",
+      "source": "docs/journeys/merchant-journey.md",
+      "sourceStage": "MJ-30",
+      "primaryFlow": "FLOW-12",
+      "entry": "Active own-business membership and explicit action grant; no implied reviewer/admin privilege",
+      "channels": [
+        "web",
+        "android",
+        "ios",
+        "official-whatsapp"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-T001",
+      "role": "technician",
+      "source": "docs/journeys/technician-journey.md",
+      "sourceStage": "stage 01",
+      "primaryFlow": "FLOW-09",
+      "entry": "Identity entry can begin unauthenticated; private assigned-job view requires the resulting authenticated subject, active tenant membership and current assignment; no copied owner login",
+      "channels": [
+        "web",
+        "android",
+        "ios"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-T002",
+      "role": "technician",
+      "source": "docs/journeys/technician-journey.md",
+      "sourceStage": "stage 02",
+      "primaryFlow": "FLOW-05",
+      "entry": "Independent authenticated subject, active tenant membership and current assigned job subset",
+      "channels": [
+        "web",
+        "android",
+        "ios"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-T003",
+      "role": "technician",
+      "source": "docs/journeys/technician-journey.md",
+      "sourceStage": "stage 03",
+      "primaryFlow": "FLOW-05",
+      "entry": "Independent authenticated subject, active tenant membership and current assigned job subset",
+      "channels": [
+        "web",
+        "android",
+        "ios"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-T004",
+      "role": "technician",
+      "source": "docs/journeys/technician-journey.md",
+      "sourceStage": "stage 04",
+      "primaryFlow": "FLOW-05",
+      "entry": "Independent authenticated subject, active tenant membership and current assigned job subset",
+      "channels": [
+        "web",
+        "android",
+        "ios"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-T005",
+      "role": "technician",
+      "source": "docs/journeys/technician-journey.md",
+      "sourceStage": "stage 05",
+      "primaryFlow": "FLOW-05",
+      "entry": "Independent authenticated subject, active tenant membership and current assigned job subset",
+      "channels": [
+        "web",
+        "android",
+        "ios"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-T006",
+      "role": "technician",
+      "source": "docs/journeys/technician-journey.md",
+      "sourceStage": "stage 06",
+      "primaryFlow": "FLOW-05",
+      "entry": "Independent authenticated subject, active tenant membership and current assigned job subset",
+      "channels": [
+        "web",
+        "android",
+        "ios"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-O001",
+      "role": "operations",
+      "source": "docs/journeys/operations-journey.md",
+      "sourceStage": "stage 01",
+      "primaryFlow": "FLOW-09",
+      "entry": "Privileged MFA/session and explicit region/case/runbook grant; no manual winner override by default",
+      "channels": [
+        "staff-web"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-O002",
+      "role": "operations",
+      "source": "docs/journeys/operations-journey.md",
+      "sourceStage": "stage 02",
+      "primaryFlow": "FLOW-11",
+      "entry": "Privileged MFA/session and explicit region/case/runbook grant; no manual winner override by default",
+      "channels": [
+        "staff-web"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-O003",
+      "role": "operations",
+      "source": "docs/journeys/operations-journey.md",
+      "sourceStage": "stage 03",
+      "primaryFlow": "FLOW-06",
+      "entry": "Privileged MFA/session and explicit region/case/runbook grant; no manual winner override by default",
+      "channels": [
+        "staff-web"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-O004",
+      "role": "operations",
+      "source": "docs/journeys/operations-journey.md",
+      "sourceStage": "stage 04",
+      "primaryFlow": "FLOW-10",
+      "entry": "Privileged MFA/session and explicit region/case/runbook grant; no manual winner override by default",
+      "channels": [
+        "staff-web"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-O005",
+      "role": "operations",
+      "source": "docs/journeys/operations-journey.md",
+      "sourceStage": "stage 05",
+      "primaryFlow": "FLOW-11",
+      "entry": "Privileged MFA/session and explicit region/case/runbook grant; no manual winner override by default",
+      "channels": [
+        "staff-web"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-O006",
+      "role": "operations",
+      "source": "docs/journeys/operations-journey.md",
+      "sourceStage": "stage 06",
+      "primaryFlow": "FLOW-11",
+      "entry": "Privileged MFA/session and explicit region/case/runbook grant; no manual winner override by default",
+      "channels": [
+        "staff-web"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-O007",
+      "role": "operations",
+      "source": "docs/journeys/operations-journey.md",
+      "sourceStage": "stage 07",
+      "primaryFlow": "FLOW-10",
+      "entry": "Privileged MFA/session and explicit region/case/runbook grant; no manual winner override by default",
+      "channels": [
+        "staff-web"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-A001",
+      "role": "super-admin",
+      "source": "docs/journeys/super-admin-journey.md",
+      "sourceStage": "stage 01",
+      "primaryFlow": "FLOW-09",
+      "entry": "Privileged MFA, explicit resource/action grant, reason/audit and no self-elevation or assumed break-glass authority",
+      "channels": [
+        "staff-web"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-A002",
+      "role": "super-admin",
+      "source": "docs/journeys/super-admin-journey.md",
+      "sourceStage": "stage 02",
+      "primaryFlow": "FLOW-11",
+      "entry": "Privileged MFA, explicit resource/action grant, reason/audit and no self-elevation or assumed break-glass authority",
+      "channels": [
+        "staff-web"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-A003",
+      "role": "super-admin",
+      "source": "docs/journeys/super-admin-journey.md",
+      "sourceStage": "stage 03",
+      "primaryFlow": "FLOW-12",
+      "entry": "Privileged MFA, explicit resource/action grant, reason/audit and no self-elevation or assumed break-glass authority",
+      "channels": [
+        "staff-web"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-A004",
+      "role": "super-admin",
+      "source": "docs/journeys/super-admin-journey.md",
+      "sourceStage": "stage 04",
+      "primaryFlow": "FLOW-07",
+      "entry": "Privileged MFA, explicit resource/action grant, reason/audit and no self-elevation or assumed break-glass authority",
+      "channels": [
+        "staff-web"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-A005",
+      "role": "super-admin",
+      "source": "docs/journeys/super-admin-journey.md",
+      "sourceStage": "stage 05",
+      "primaryFlow": "FLOW-03",
+      "entry": "Privileged MFA, explicit resource/action grant, reason/audit and no self-elevation or assumed break-glass authority",
+      "channels": [
+        "staff-web"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-A006",
+      "role": "super-admin",
+      "source": "docs/journeys/super-admin-journey.md",
+      "sourceStage": "stage 06",
+      "primaryFlow": "FLOW-03",
+      "entry": "Privileged MFA, explicit resource/action grant, reason/audit and no self-elevation or assumed break-glass authority",
+      "channels": [
+        "staff-web"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-A007",
+      "role": "super-admin",
+      "source": "docs/journeys/super-admin-journey.md",
+      "sourceStage": "stage 07",
+      "primaryFlow": "FLOW-09",
+      "entry": "Privileged MFA, explicit resource/action grant, reason/audit and no self-elevation or assumed break-glass authority",
+      "channels": [
+        "staff-web"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-A008",
+      "role": "super-admin",
+      "source": "docs/journeys/super-admin-journey.md",
+      "sourceStage": "stage 08",
+      "primaryFlow": "FLOW-04",
+      "entry": "Privileged MFA, explicit resource/action grant, reason/audit and no self-elevation or assumed break-glass authority",
+      "channels": [
+        "staff-web"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-A009",
+      "role": "super-admin",
+      "source": "docs/journeys/super-admin-journey.md",
+      "sourceStage": "stage 09",
+      "primaryFlow": "FLOW-08",
+      "entry": "Privileged MFA, explicit resource/action grant, reason/audit and no self-elevation or assumed break-glass authority",
+      "channels": [
+        "staff-web"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-A010",
+      "role": "super-admin",
+      "source": "docs/journeys/super-admin-journey.md",
+      "sourceStage": "stage 10",
+      "primaryFlow": "FLOW-10",
+      "entry": "Privileged MFA, explicit resource/action grant, reason/audit and no self-elevation or assumed break-glass authority",
+      "channels": [
+        "staff-web"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-A011",
+      "role": "super-admin",
+      "source": "docs/journeys/super-admin-journey.md",
+      "sourceStage": "stage 11",
+      "primaryFlow": "FLOW-11",
+      "entry": "Privileged MFA, explicit resource/action grant, reason/audit and no self-elevation or assumed break-glass authority",
+      "channels": [
+        "staff-web"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-A012",
+      "role": "super-admin",
+      "source": "docs/journeys/super-admin-journey.md",
+      "sourceStage": "stage 12",
+      "primaryFlow": "FLOW-11",
+      "entry": "Privileged MFA, explicit resource/action grant, reason/audit and no self-elevation or assumed break-glass authority",
+      "channels": [
+        "staff-web"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-A013",
+      "role": "super-admin",
+      "source": "docs/journeys/super-admin-journey.md",
+      "sourceStage": "stage 13",
+      "primaryFlow": "FLOW-11",
+      "entry": "Privileged MFA, explicit resource/action grant, reason/audit and no self-elevation or assumed break-glass authority",
+      "channels": [
+        "staff-web"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-A014",
+      "role": "super-admin",
+      "source": "docs/journeys/super-admin-journey.md",
+      "sourceStage": "stage 14",
+      "primaryFlow": "FLOW-11",
+      "entry": "Privileged MFA, explicit resource/action grant, reason/audit and no self-elevation or assumed break-glass authority",
+      "channels": [
+        "staff-web"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-A015",
+      "role": "super-admin",
+      "source": "docs/journeys/super-admin-journey.md",
+      "sourceStage": "stage 15",
+      "primaryFlow": "FLOW-11",
+      "entry": "Privileged MFA, explicit resource/action grant, reason/audit and no self-elevation or assumed break-glass authority",
+      "channels": [
+        "staff-web"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    },
+    {
+      "id": "P04-I-A016",
+      "role": "super-admin",
+      "source": "docs/journeys/super-admin-journey.md",
+      "sourceStage": "stage 16",
+      "primaryFlow": "FLOW-11",
+      "entry": "Privileged MFA, explicit resource/action grant, reason/audit and no self-elevation or assumed break-glass authority",
+      "channels": [
+        "staff-web"
+      ],
+      "outcomes": [
+        "success",
+        "failure",
+        "timeout",
+        "cancellation",
+        "unauthorized",
+        "recovery"
+      ],
+      "status": "DRAFT"
+    }
+  ]
+}

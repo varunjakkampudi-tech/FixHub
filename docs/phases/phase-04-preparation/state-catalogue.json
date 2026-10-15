@@ -1,0 +1,613 @@
+{
+  "artifact": "P04-STATE-DRAFT-001",
+  "status": "DRAFT PREPARATION - NOT APPROVED STATE POLICY",
+  "date": "2026-10-15",
+  "baseline": "docs/flows/state-machines.md",
+  "sharedGuards": [
+    "Current authenticated subject or narrowly authorized machine identity",
+    "Tenant, own-request, assigned-job or case scope as applicable",
+    "Expected aggregate version and current request generation; quote version separately where applicable",
+    "Payload-bound idempotency and transaction/audit/outbox consistency",
+    "Affected product/safety/retention policy approved before enabling the transition"
+  ],
+  "defaultRule": "Every unlisted state pair is forbidden. Same-key receipt replay is not a transition. Same-state edits need separately authorized field commands; they are not generic state transitions.",
+  "machines": [
+    {
+      "id": "verification",
+      "sourceHeading": "Merchant verification",
+      "owner": "Verification",
+      "states": [
+        "Draft",
+        "Submitted",
+        "UnderReview",
+        "Approved",
+        "Rejected",
+        "Suspended"
+      ],
+      "transitions": [
+        {
+          "id": "P04-ST-001",
+          "from": "Draft",
+          "to": "Submitted",
+          "actor": "merchant-owner",
+          "guard": "Own tenant; private evidence and representative authority; no auto-verification",
+          "event": "verification.submitted",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-002",
+          "from": "Submitted",
+          "to": "UnderReview",
+          "actor": "assigned-reviewer",
+          "guard": "Assigned conflict-free reviewer; required scope",
+          "event": "verification.review.started",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-003",
+          "from": "UnderReview",
+          "to": "Approved",
+          "actor": "assigned-reviewer",
+          "guard": "Task-specific competence, identity and lawful evidence; recorded reason",
+          "event": "verification.approved",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-004",
+          "from": "UnderReview",
+          "to": "Rejected",
+          "actor": "assigned-reviewer",
+          "guard": "Reasoned evidence decision; permitted appeal route",
+          "event": "verification.rejected",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-005",
+          "from": "Rejected",
+          "to": "Submitted",
+          "actor": "merchant-owner",
+          "guard": "Allowed resubmission with new evidence version",
+          "event": "verification.resubmitted",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-006",
+          "from": "Approved",
+          "to": "Suspended",
+          "actor": "authorized-reviewer",
+          "guard": "Reason/evidence; concurrent eligibility invalidation and active-work safety handling",
+          "event": "verification.suspended",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-007",
+          "from": "Suspended",
+          "to": "UnderReview",
+          "actor": "assigned-reviewer",
+          "guard": "Approved reverification/appeal policy; never restore automatically",
+          "event": "verification.reverification",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        }
+      ]
+    },
+    {
+      "id": "request",
+      "sourceHeading": "Service request",
+      "owner": "Request",
+      "states": [
+        "Created",
+        "Scheduled",
+        "Searching",
+        "Assigned",
+        "Exhausted",
+        "Cancelled"
+      ],
+      "transitions": [
+        {
+          "id": "P04-ST-008",
+          "from": "Created",
+          "to": "Scheduled",
+          "actor": "request-service",
+          "guard": "Future requested window valid; this does not confirm provider or capacity",
+          "event": "request.scheduled",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-009",
+          "from": "Created",
+          "to": "Searching",
+          "actor": "request-service",
+          "guard": "Valid instant request; enabled category/zone; configured matching policy",
+          "event": "request.searching",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-010",
+          "from": "Scheduled",
+          "to": "Searching",
+          "actor": "dispatch-worker",
+          "guard": "Approved activation policy and backend-clock window; fresh eligibility",
+          "event": "request.searching",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-011",
+          "from": "Searching",
+          "to": "Assigned",
+          "actor": "dispatch-service",
+          "guard": "One valid acceptance, reservation, assignment, command result and outbox commit",
+          "event": "assignment.committed",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-012",
+          "from": "Searching",
+          "to": "Exhausted",
+          "actor": "dispatch-worker",
+          "guard": "Approved search deadline/fanout exhausted; no committed winner",
+          "event": "request.exhausted",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-013",
+          "from": "Searching",
+          "to": "Cancelled",
+          "actor": "customer",
+          "guard": "Own request or authorized support on-behalf; serialize cancellation with acceptance",
+          "event": "request.cancelled",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-014",
+          "from": "Scheduled",
+          "to": "Cancelled",
+          "actor": "customer",
+          "guard": "Own request; release any actual reservation only under current policy",
+          "event": "request.cancelled",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-015",
+          "from": "Exhausted",
+          "to": "Searching",
+          "actor": "customer",
+          "guard": "Explicit permitted retry; new generation and fresh search policy",
+          "event": "request.searching",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-016",
+          "from": "Assigned",
+          "to": "Cancelled",
+          "actor": "customer",
+          "guard": "Approved booking-stage cancellation; atomic release once; safety exception blocks unsafe cancellation",
+          "event": "request.cancelled",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-017",
+          "from": "Created",
+          "to": "Cancelled",
+          "actor": "customer",
+          "guard": "DRAFT ADDITION: own submitted-but-not-searching request; serialize with activation",
+          "event": "request.cancelled",
+          "classification": "DRAFT ADDITION - OWNER/POLICY REVIEW REQUIRED"
+        },
+        {
+          "id": "P04-ST-018",
+          "from": "Exhausted",
+          "to": "Cancelled",
+          "actor": "customer",
+          "guard": "DRAFT ADDITION: end no-supply request without pretending job existed",
+          "event": "request.cancelled",
+          "classification": "DRAFT ADDITION - OWNER/POLICY REVIEW REQUIRED"
+        },
+        {
+          "id": "P04-ST-019",
+          "from": "Assigned",
+          "to": "Searching",
+          "actor": "dispatch-service",
+          "guard": "DRAFT ADDITION: approved reassignment consent; release prior live assignment before fresh generation atomically",
+          "event": "request.reassignment.started",
+          "classification": "DRAFT ADDITION - OWNER/POLICY REVIEW REQUIRED"
+        }
+      ]
+    },
+    {
+      "id": "offer",
+      "sourceHeading": "Dispatch offer",
+      "owner": "Dispatch",
+      "states": [
+        "Created",
+        "Offered",
+        "Won",
+        "Lost",
+        "Declined",
+        "Expired",
+        "Invalidated"
+      ],
+      "transitions": [
+        {
+          "id": "P04-ST-020",
+          "from": "Created",
+          "to": "Offered",
+          "actor": "dispatch-worker",
+          "guard": "Fresh minimized eligibility; persisted generation and database expiry",
+          "event": "offer.created",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-021",
+          "from": "Offered",
+          "to": "Won",
+          "actor": "merchant-owner",
+          "guard": "Authorized tenant; live generation; eligibility/capacity checked at locked decision and commit succeeds",
+          "event": "assignment.committed",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-022",
+          "from": "Offered",
+          "to": "Lost",
+          "actor": "dispatch-service",
+          "guard": "A different valid assignment committed; never disclose competing private data",
+          "event": "offer.lost",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-023",
+          "from": "Offered",
+          "to": "Declined",
+          "actor": "merchant-owner",
+          "guard": "Current own offer; same-key safe replay; does not cancel whole request",
+          "event": "offer.declined",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-024",
+          "from": "Offered",
+          "to": "Expired",
+          "actor": "dispatch-worker",
+          "guard": "DB deadline reached; serialize with acceptance; strict commit-deadline semantics remain OPEN",
+          "event": "offer.expired",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-025",
+          "from": "Offered",
+          "to": "Invalidated",
+          "actor": "dispatch-service",
+          "guard": "Eligibility revoked or generation superseded under same serialization discipline",
+          "event": "offer.invalidated",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        }
+      ]
+    },
+    {
+      "id": "assignment",
+      "sourceHeading": "Assignment",
+      "owner": "Dispatch",
+      "states": [
+        "Reserved",
+        "Active",
+        "Released",
+        "Completed",
+        "Archived"
+      ],
+      "transitions": [
+        {
+          "id": "P04-ST-026",
+          "from": "Reserved",
+          "to": "Active",
+          "actor": "dispatch-service",
+          "guard": "Transaction-internal reservation and assignment commit together; never publish Reserved success",
+          "event": "assignment.committed",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-027",
+          "from": "Active",
+          "to": "Released",
+          "actor": "dispatch-service",
+          "guard": "Approved cancellation/reassignment; release correct reservation exactly once",
+          "event": "assignment.released",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-028",
+          "from": "Active",
+          "to": "Completed",
+          "actor": "booking-service",
+          "guard": "Approved completion rule satisfied; finalize resource once, preserve history",
+          "event": "booking.completed",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-029",
+          "from": "Released",
+          "to": "Archived",
+          "actor": "retention-worker",
+          "guard": "Approved retention/holds; archival is not unrestricted deletion",
+          "event": "assignment.archived",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-030",
+          "from": "Completed",
+          "to": "Archived",
+          "actor": "retention-worker",
+          "guard": "Approved retention/holds; no erasure of required evidence",
+          "event": "assignment.archived",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        }
+      ]
+    },
+    {
+      "id": "booking",
+      "sourceHeading": "Booking lifecycle",
+      "owner": "Booking",
+      "states": [
+        "Assigned",
+        "Coordinating",
+        "Arrived",
+        "QuotePending",
+        "InProgress",
+        "CompletionPending",
+        "Completed",
+        "Cancelled",
+        "Exception"
+      ],
+      "transitions": [
+        {
+          "id": "P04-ST-031",
+          "from": "Assigned",
+          "to": "Coordinating",
+          "actor": "merchant-owner",
+          "guard": "Eligible tenant technician allocated; private handoff; no second merchant acceptance",
+          "event": "booking.coordinating",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-032",
+          "from": "Coordinating",
+          "to": "Arrived",
+          "actor": "assigned-technician",
+          "guard": "Current job grant; truthful reported arrival not GPS/ETA inference",
+          "event": "booking.arrived",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-033",
+          "from": "Arrived",
+          "to": "QuotePending",
+          "actor": "merchant-owner",
+          "guard": "Approved quote policy requires exact scope and inspection/labour/parts/travel disclosure",
+          "event": "quote.pending",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-034",
+          "from": "QuotePending",
+          "to": "InProgress",
+          "actor": "assigned-technician",
+          "guard": "Actual authorized work-start report referencing exact current unexpired customer quote consent; consent itself is a field command, not proof of work starting",
+          "event": "booking.started",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-035",
+          "from": "Arrived",
+          "to": "InProgress",
+          "actor": "assigned-technician",
+          "guard": "Approved no-new-quote policy; agreed existing terms, no implied unknown-price consent",
+          "event": "booking.started",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-036",
+          "from": "InProgress",
+          "to": "CompletionPending",
+          "actor": "assigned-technician",
+          "guard": "Actual reported work outcome, safe scoped evidence and audit",
+          "event": "booking.completion.pending",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-037",
+          "from": "CompletionPending",
+          "to": "Completed",
+          "actor": "booking-service",
+          "guard": "Actual approved confirmation rule; silence/timeout alone never implies consent",
+          "event": "booking.completed",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-038",
+          "from": "Coordinating",
+          "to": "Cancelled",
+          "actor": "customer",
+          "guard": "Approved cancellation/no-show disposition, factual reason, release once",
+          "event": "booking.cancelled",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-039",
+          "from": "QuotePending",
+          "to": "Cancelled",
+          "actor": "customer",
+          "guard": "Decline quote under approved cancellation/inspection terms; no invented fee/refund",
+          "event": "booking.cancelled",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-040",
+          "from": "InProgress",
+          "to": "Exception",
+          "actor": "assigned-technician",
+          "guard": "Safety/service issue report, preserve work/reservation and accountable escalation",
+          "event": "booking.exception",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-041",
+          "from": "Exception",
+          "to": "Coordinating",
+          "actor": "case-handler",
+          "guard": "Approved safe recovery, preserved history/current consent, not unattended reset",
+          "event": "booking.recovery",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-042",
+          "from": "Assigned",
+          "to": "Cancelled",
+          "actor": "customer",
+          "guard": "DRAFT ADDITION: approved before-handoff cancellation and reservation release",
+          "event": "booking.cancelled",
+          "classification": "DRAFT ADDITION - OWNER/POLICY REVIEW REQUIRED"
+        },
+        {
+          "id": "P04-ST-043",
+          "from": "Arrived",
+          "to": "Cancelled",
+          "actor": "customer",
+          "guard": "DRAFT ADDITION: approved post-arrival safety/inspection terms, no automatic charge",
+          "event": "booking.cancelled",
+          "classification": "DRAFT ADDITION - OWNER/POLICY REVIEW REQUIRED"
+        },
+        {
+          "id": "P04-ST-044",
+          "from": "Coordinating",
+          "to": "Exception",
+          "actor": "case-handler",
+          "guard": "DRAFT ADDITION: reported no-show/safety concern; allegation not proven misconduct",
+          "event": "booking.exception",
+          "classification": "DRAFT ADDITION - OWNER/POLICY REVIEW REQUIRED"
+        },
+        {
+          "id": "P04-ST-045",
+          "from": "Arrived",
+          "to": "Exception",
+          "actor": "assigned-technician",
+          "guard": "DRAFT ADDITION: unsafe/unserviceable conditions; no work or false completion",
+          "event": "booking.exception",
+          "classification": "DRAFT ADDITION - OWNER/POLICY REVIEW REQUIRED"
+        },
+        {
+          "id": "P04-ST-046",
+          "from": "QuotePending",
+          "to": "Exception",
+          "actor": "case-handler",
+          "guard": "DRAFT ADDITION: quote/safety dispute; do not force consent or erase quote history",
+          "event": "booking.exception",
+          "classification": "DRAFT ADDITION - OWNER/POLICY REVIEW REQUIRED"
+        },
+        {
+          "id": "P04-ST-047",
+          "from": "CompletionPending",
+          "to": "Exception",
+          "actor": "customer",
+          "guard": "DRAFT ADDITION: disputed completion; preserve evidence and capacity reconciliation",
+          "event": "booking.exception",
+          "classification": "DRAFT ADDITION - OWNER/POLICY REVIEW REQUIRED"
+        },
+        {
+          "id": "P04-ST-048",
+          "from": "Exception",
+          "to": "InProgress",
+          "actor": "assigned-technician",
+          "guard": "DRAFT ADDITION: approved resume with current customer terms, competence and safe availability",
+          "event": "booking.resumed",
+          "classification": "DRAFT ADDITION - OWNER/POLICY REVIEW REQUIRED"
+        },
+        {
+          "id": "P04-ST-049",
+          "from": "Exception",
+          "to": "Cancelled",
+          "actor": "case-handler",
+          "guard": "DRAFT ADDITION: approved safe termination and release; no unilateral unstaffed guarantee",
+          "event": "booking.cancelled",
+          "classification": "DRAFT ADDITION - OWNER/POLICY REVIEW REQUIRED"
+        }
+      ]
+    },
+    {
+      "id": "dispute",
+      "sourceHeading": "Complaint and dispute",
+      "owner": "Support",
+      "states": [
+        "Open",
+        "Triaged",
+        "Investigating",
+        "Escalated",
+        "Resolved",
+        "Closed"
+      ],
+      "transitions": [
+        {
+          "id": "P04-ST-050",
+          "from": "Open",
+          "to": "Triaged",
+          "actor": "case-handler",
+          "guard": "Case-scoped severity classification; immediate safety route not an invented SLA",
+          "event": "case.triaged",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-051",
+          "from": "Triaged",
+          "to": "Investigating",
+          "actor": "case-handler",
+          "guard": "Assigned non-conflicted handler, minimum necessary evidence",
+          "event": "case.investigating",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-052",
+          "from": "Investigating",
+          "to": "Escalated",
+          "actor": "case-handler",
+          "guard": "Safety/authority threshold; actual available accountable recipient",
+          "event": "case.escalated",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-053",
+          "from": "Escalated",
+          "to": "Investigating",
+          "actor": "case-handler",
+          "guard": "Appropriate authorized handler accepts; do not downgrade severity by delivery receipt",
+          "event": "case.investigating",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-054",
+          "from": "Investigating",
+          "to": "Resolved",
+          "actor": "case-handler",
+          "guard": "Evidence-based permitted disposition; no unapproved compensation promise",
+          "event": "case.resolved",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-055",
+          "from": "Resolved",
+          "to": "Closed",
+          "actor": "case-handler",
+          "guard": "Communicate allowed outcome; lawful retention and explicit appeal route",
+          "event": "case.closed",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        },
+        {
+          "id": "P04-ST-056",
+          "from": "Closed",
+          "to": "Open",
+          "actor": "case-handler",
+          "guard": "Policy-permitted appeal with reason/evidence; preserve previous disposition",
+          "event": "case.reopened",
+          "classification": "PHASE 00 CONCEPTUAL EDGE REFINED"
+        }
+      ]
+    }
+  ]
+}

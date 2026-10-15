@@ -1,0 +1,16 @@
+{
+  "artifact": "P05-ASSET-PROVENANCE-001",
+  "date": "2026-10-15",
+  "status": "PROPOSAL ONLY - OWNER APPROVAL PENDING",
+  "assets": [
+    { "file": "concept-board.svg", "sha256": "881c99dc9710f656d73ea54b6d4814202a34ad7fac3d76473ba0bac316f4ee7c", "origin": "Locally authored vector paths, text and shapes; no third-party imagery or icon library", "permanentLogo": false, "rightsLimitation": "Trademark similarity, registrability and legal clearance NOT VERIFIED" },
+    { "file": "concept-board.png", "sha256": "045de09e3ff75f77860d6b0e608df2fcee2370eead685075e08b7dbdcdc46f5a", "origin": "Rendered locally from the linked SVG using existing bundled Sharp", "width": 1440, "height": 1200, "requestedFallbackStack": "Nirmala UI, Segoe UI, sans-serif", "candidateFontRenderingVerified": false, "limitation": "Exact font file/version not pinned; raster bytes are this run's evidence, not a cross-machine reproducibility guarantee" },
+    { "file": "design-tokens.json", "sha256": "6fefd04b5090ead23c48c0d376c1bf1cc3a236a726c755ea3e741817ecf6a9c0", "origin": "Candidate values and approval metadata authored for this proposal", "approval": "OPEN" }
+  ],
+  "fontCandidates": [
+    { "family": "IBM Plex Sans", "licenseSource": "https://raw.githubusercontent.com/google/fonts/main/ofl/ibmplexsans/OFL.txt", "publishedLicense": "SIL OFL 1.1, reserved font name Plex", "sourceStatus": "VERIFIED 2026-10-15", "fontBinaryBundled": false, "approved": false },
+    { "family": "Noto Sans Telugu", "licenseSource": "https://raw.githubusercontent.com/google/fonts/main/ofl/notosanstelugu/OFL.txt", "publishedLicense": "SIL OFL 1.1", "sourceStatus": "VERIFIED 2026-10-15", "fontBinaryBundled": false, "approved": false }
+  ],
+  "ownerDecisions": { "logo": "OPEN", "identity": "OPEN", "colours": "OPEN", "typography": "OPEN", "domain": "OPEN", "tagline": "OPEN" },
+  "noClaims": ["not a final brand", "not trademark clearance", "not domain ownership", "not a font package", "not production UI", "not Phase 05 approval"]
+}
