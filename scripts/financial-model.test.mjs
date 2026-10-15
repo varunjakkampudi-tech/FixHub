@@ -9,14 +9,16 @@ function test(name, fn) { fn(); passed++; console.log('PASS ' + name); }
 const near = (a, b) => assert.ok(Math.abs(a - b) < 1e-7, a + ' differs from ' + b);
 test('exact scenario inventory', () => assert.deepEqual(Object.keys(results).sort(), ['BASE', 'HIGH', 'LOW']));
 for (const [name, expected] of Object.entries({
-  LOW: [112, 89600, 6720, 31456, 21000, -45736, 506, null],
-  BASE: [663, 795600, 79560, 49293, 21000, 9267, 1518, 833],
-  HIGH: [2160, 3240000, 324000, 82470, 35500, 206030, 3795, 441]
+  LOW: [112, 89600, 6720, 33326, 21000, -47606, 2376, null],
+  BASE: [663, 795600, 79560, 54903, 21000, 3657, 7128, 1023],
+  HIGH: [2160, 3240000, 324000, 96495, 35500, 192005, 17820, 469]
 })) {
   test(name + ' financial baseline and conservation', () => {
     const r = results[name];
     for (const [i, key] of ['completed', 'grossTransactionValue', 'platformRevenue', 'variableCost', 'fixedCost', 'operatingResult', 'whatsappCost'].entries()) near(r[key], expected[i]);
     assert.equal(r.breakEvenRequests, expected[7]);
+    near(r.whatsappMetaCost, r.whatsappMessageCount * 0.115);
+    near(r.whatsappTwilioCost, r.whatsappMessageCount * 0.005 * config.fxInrPerUsd);
     near(r.completed + r.acceptedNotCompleted + r.unaccepted, r.requests);
     near(r.contribution - r.fixedCost, r.operatingResult);
     assert.notEqual(r.grossTransactionValue, r.platformRevenue);
@@ -44,9 +46,10 @@ test('zero completion does not fabricate realized fees', () => {
 });
 test('service free-allowance boundary and no-allowance stress', () => {
   const s = { ...config.scenarios.BASE, utilityMessagesPerRequest: 0, authenticationMessagesPerRequest: 0, serviceMessagesPerRequest: 1, serviceFreeAllowance: 1000 };
-  near(evaluate({ ...s, requests: 999 }, 0).whatsappCost, 0);
-  near(evaluate({ ...s, requests: 1000 }, 0).whatsappCost, 0);
-  near(evaluate({ ...s, requests: 1001 }, 0).whatsappCost, 0.115);
+  near(evaluate({ ...s, requests: 999 }, 0).whatsappMetaCost, 0);
+  near(evaluate({ ...s, requests: 1000 }, 0).whatsappMetaCost, 0);
+  near(evaluate({ ...s, requests: 1001 }, 0).whatsappMetaCost, 0.115);
+  near(evaluate({ ...s, requests: 1000 }, 0).whatsappTwilioCost, 425);
   near(results.BASE.sensitivities.noFreeServiceAllowance, results.BASE.operatingResult);
 });
 test('unprofitable LOW has no manufactured break-even', () => assert.equal(breakEven(config.scenarios.LOW), null));
@@ -55,7 +58,7 @@ test('temporary profit before allowance ends is not missed', () => {
     platformFeePerCompletion: 1, newCustomerShare: 0, newMerchantsPerRequest: 0,
     supportCaseShare: 0, disputeReservePerCompletion: 0, utilityMessagesPerRequest: 0,
     authenticationMessagesPerRequest: 0, serviceMessagesPerRequest: 1, serviceFreeAllowance: 100,
-    messageRate: 10, smsPerRequest: 0, hostingDatabase: 50, storage: 0, monitoring: 0,
+    messageRate: 10, twilioFeeUsdPerMessage: 0, smsPerRequest: 0, hostingDatabase: 50, storage: 0, monitoring: 0,
     bspSubscription: 0, fixedOperations: 0, maintenance: 0 };
   assert.equal(breakEven(s), 50);
   assert.ok(evaluate({ ...s, requests: 200 }, 0).operatingResult < 0);
@@ -64,12 +67,12 @@ test('conversion and cost sensitivities are adverse', () => {
   for (const r of Object.values(results)) {
     for (const v of Object.values(r.sensitivities)) assert.ok(v <= r.operatingResult + 1e-7);
   }
-  near(results.BASE.sensitivities.lowerAcceptance, -4656);
-  near(results.BASE.sensitivities.noShows, 2305.5);
-  near(results.BASE.sensitivities.doubleMessagingSupport, 1269);
+  near(results.BASE.sensitivities.lowerAcceptance, -10266);
+  near(results.BASE.sensitivities.noShows, -3304.5);
+  near(results.BASE.sensitivities.doubleMessagingSupport, -9951);
 });
 test('runway is not infinite for profitable scenarios', () => {
-  near(results.LOW.runwayMonths, 300000 / 45736);
+  near(results.LOW.runwayMonths, 300000 / 47606);
   assert.equal(results.BASE.runwayMonths, null);
   assert.equal(results.HIGH.runwayMonths, null);
 });
