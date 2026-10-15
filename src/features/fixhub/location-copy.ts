@@ -25,9 +25,14 @@ export const locationCopy = {
   state: ["State · Andhra Pradesh", "రాష్ట్రం · ఆంధ్రప్రదేశ్"],
   gps: ["Use my current location", "ప్రస్తుత స్థానాన్ని ఉపయోగించండి"],
   gpsNotice: [
-    "GPS is approximate. Do not save a real home address in this public demo. Confirm coordinates and reconcile the city manually.",
-    "జీపీఎస్ స్థానం సుమారుగా ఉంటుంది. ఈ పబ్లిక్ డెమోలో నిజమైన ఇంటి చిరునామా భద్రపరచవద్దు. నిర్దేశాంకాలను, నగరాన్ని స్వయంగా నిర్ధారించండి.",
+    "GPS is approximate. Saving it stores the coordinates in this browser's demo data. Use a test location only; do not save a real home address here.",
+    "జీపీఎస్ స్థానం సుమారుగా ఉంటుంది. సేవ్ చేస్తే నిర్దేశాంకాలు ఈ బ్రౌజర్ డెమో సమాచారంలో నిల్వ అవుతాయి. పరీక్ష స్థానం మాత్రమే వాడండి; నిజమైన ఇంటి చిరునామాను సేవ్ చేయవద్దు.",
   ],
+  gpsConsent: [
+    "I understand these GPS coordinates and address details will be saved in this browser's demo data. I am using a test location only.",
+    "ఈ జీపీఎస్ నిర్దేశాంకాలు, చిరునామా వివరాలు ఈ బ్రౌజర్ డెమో సమాచారంలో నిల్వ అవుతాయని నాకు తెలుసు. నేను పరీక్ష స్థానం మాత్రమే వాడుతున్నాను.",
+  ],
+  saveGps: ["Save GPS location in demo", "డెమోలో GPS స్థానాన్ని సేవ్ చేయండి"],
   denied: [
     "Location permission denied. Enter a sample address manually.",
     "స్థాన అనుమతి నిరాకరించబడింది. నమూనా చిరునామా స్వయంగా నమోదు చేయండి.",
