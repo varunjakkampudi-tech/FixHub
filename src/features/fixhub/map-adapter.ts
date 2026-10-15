@@ -1,8 +1,51 @@
+import type { Booking, Persona, Status } from "./demo-model";
+
 export type Pin = { lat: number; lng: number; accuracy?: number };
 export interface LocationAdapter {
   mode: "demo" | "live";
   currentLocation(): Promise<Pin>;
   search(query: string, cityId: string): Promise<never[]>;
+}
+const activeAssignmentStatuses: ReadonlySet<Status> = new Set([
+  "accepted",
+  "scheduled",
+  "travel",
+  "arrived",
+  "inspection",
+  "awaiting_quote",
+  "approved",
+  "in_progress",
+]);
+
+export function canOpenAssignedDirections(
+  booking: Pick<Booking, "location" | "merchantId" | "technicianId" | "status">,
+  actor: Pick<Persona, "id" | "role" | "merchantId"> | null,
+): boolean {
+  if (!actor || !booking.location || !booking.merchantId || !activeAssignmentStatuses.has(booking.status)) {
+    return false;
+  }
+  if (actor.role === "merchant") return actor.merchantId === booking.merchantId;
+  if (actor.role === "technician") return actor.id === booking.technicianId;
+  return false;
+}
+
+export function googleMapsDirectionsUrl(destination: Pick<Pin, "lat" | "lng">): string {
+  if (
+    !Number.isFinite(destination.lat) ||
+    !Number.isFinite(destination.lng) ||
+    destination.lat < -90 ||
+    destination.lat > 90 ||
+    destination.lng < -180 ||
+    destination.lng > 180
+  ) {
+    throw new RangeError("Directions require valid destination coordinates");
+  }
+  const query = new URLSearchParams({
+    api: "1",
+    destination: `${destination.lat},${destination.lng}`,
+    travelmode: "driving",
+  });
+  return `https://www.google.com/maps/dir/?${query.toString()}`;
 }
 // No geographic network requests in the unapproved demo. Browser GPS is deliberate and local.
 export class MockMapAdapter implements LocationAdapter {

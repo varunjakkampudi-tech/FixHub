@@ -21,6 +21,10 @@ Production readiness intentionally returns `503` while authentication and persis
 
 These controls have focused local tests; they are not a completed threat assessment and do not prove application security.
 
+## Location and directions boundary
+
+The customer address editor requests browser geolocation only after the user selects its location button; the browser permission prompt remains user-controlled. For an active booking assigned to the signed-in demo merchant or technician, the booking detail page offers an explicit external Google Maps directions link to the saved job coordinates. Opening that link sends the destination to Google Maps. The link uses Google's keyless Maps URL handoff, not the paid Maps Platform API; it does not geocode addresses, search places, share location in the background, or provide FixHub-side live tracking. The demo screen's SAMPLE data must not be used as a real dispatch destination.
+
 ## Explicitly not implemented
 
 - Authentication, account recovery, role/tenant authorization, persistent PostgreSQL access, booking creation, merchant dispatch, durable notification outbox, or real-time cross-device updates.
