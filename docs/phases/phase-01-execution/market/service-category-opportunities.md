@@ -9,10 +9,10 @@ Status: CONDITIONAL research prioritization, not launch-category approval. Evide
 | 2 | AC repair | Public listings, potentially higher ticket | Seasonality unmeasured; refrigerant/warranty/specialist work | Observed local demand, trained supply, parts/return economics |
 | 3 | Appliance repair | Plausible household category | Device/OEM variety, diagnosis cost and warranty exclusions | Evidence by appliance type; avoid treating all repair as one SKU |
 
-No numerical opportunity score or category elimination is justified. Public listing presence cannot rank demand. Research quotas cover all four; electrician/plumber priority means which hypotheses to test first, not which services to launch.
+No numerical opportunity score or category elimination is justified. Public directory results do not prove demand or supplier competence. The owner removed formal interview quotas from the active Phase 01 checklist; electrician/plumber are provisional desk-research priorities only.
 
-## Precommitted promotion thresholds
+## Mandatory private-pilot and prelaunch evidence (not Phase 01 interview criteria)
 
-Before seeing responses: at least8 analyzed recent customer cases in each proposed initial category across at least3 zones; at least3 independently verified willing service businesses per initial category across those zones; capacity model survives one unavailable provider per zone. These are delegated research screens, not statistically representative validation or final product requirements.
+Before offering actual services, verify independent willing merchants and competence per category/zone, realistic technician capacity, coverage, transparent service prices and credible real customer demand or pilot outcomes. Test resilience when one provider is unavailable. The previous interview-number screens remain historical optional research material, not Phase 01 completion requirements.
 
-Compare price/inspection clarity, reliable arrival, acceptable coverage, technician safety and contribution under conservative assumptions. Do not add categories merely to make an A–Z name promise. Final initial-market/category decision remains conditional until primary evidence, legal exclusions and owner acceptance.
+Compare price/inspection clarity, reliable arrival, acceptable coverage, technician safety and contribution under conservative assumptions. Do not add categories merely to make an A–Z name promise. Final launch category selection remains conditional on actual safe supply/market evidence, legal exclusions and explicit owner approval.

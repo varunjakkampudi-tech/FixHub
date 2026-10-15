@@ -374,14 +374,14 @@ try {
 
   await expectFailure('duplicate Phase01 criterion', async () => {
     const file = path.join(fixtureRoot, 'docs/phases/phase-01-execution/execution-inventory.json'); const v = JSON.parse(await readFile(file, 'utf8')); v.criteria[1] = v.criteria[0]; await writeFile(file, JSON.stringify(v));
-  }, /exact 14 unique ordered exit criteria/);
+  }, /exact 12 unique ordered exit criteria/);
 
   await expectFailure('Phase01 status mismatch', async () => {
     const file = path.join(fixtureRoot, 'docs/phases/phase-01-execution/definition-of-done.md'); const v = await readFile(file, 'utf8'); await writeFile(file, v.replace('| PASS |', '| CONDITIONAL |'));
   }, /Markdown\/JSON status mismatch/);
 
   await expectFailure('Phase01 completion inflation', async () => {
-    const file = path.join(fixtureRoot, 'docs/phases/phase-01-execution/execution-inventory.json'); const v = JSON.parse(await readFile(file, 'utf8')); v.counts.pass = 14; await writeFile(file, JSON.stringify(v));
+    const file = path.join(fixtureRoot, 'docs/phases/phase-01-execution/execution-inventory.json'); const v = JSON.parse(await readFile(file, 'utf8')); v.counts.pass = 12; await writeFile(file, JSON.stringify(v));
   }, /evidenced count mismatch/);
 
   await expectFailure('Phase01 primary interviews cannot be fabricated', async () => {
@@ -393,7 +393,7 @@ try {
   }, /authority or provisional conclusion changed/);
 
   await expectFailure('Phase01 final report percentage consistency', async () => {
-    const file = path.join(fixtureRoot, 'docs/phases/phase-01-execution/final-feasibility-report.md'); const v = await readFile(file, 'utf8'); await writeFile(file, v.replace('64.3%', '100%'));
+    const file = path.join(fixtureRoot, 'docs/phases/phase-01-execution/final-feasibility-report.md'); const v = await readFile(file, 'utf8'); await writeFile(file, v.replaceAll('75.0%', '100%'));
   }, /completion percentage mismatch/);
 
   await expectFailure('Phase01 evidence must resolve to approved inventory', async () => {

@@ -1,12 +1,12 @@
 # FixHub Phase01 provisional feasibility report
 
-As of2026-10-15. Status: IN PROGRESS. Proposed build/next-phase conclusion: **NOT ASSESSED**, because necessary customer/merchant and mandatory provider evidence is unavailable. Continue only already-authorized desk research; this is not GO for Phase02. No definitive NO-GO is established either.
+As of 2026-10-15. Status: **IN PROGRESS. Active Phase 01 DoD: 9/12 = 75.0% PASS, 3 CONDITIONAL.** The founder removed mandatory formal customer/merchant interview deliverables without representing them as completed. No genuine customer demand, verified merchant supply or mandatory provider access/price evidence exists. Real-world business/build GO remains NOT ASSESSED; Phase 02 NOT AUTHORIZED.
 
 ## Executive conclusion and market
 
 Tanuku remains the research geography. Historical municipal tables supply2011households/population but conflicting labels and missing current data prevent numeric current TAM/SAM/SOM. National connectivity is only a proxy. Public directories show discovery activity, not willing verified supply. Urban Company Tanuku availability and Google profile comparison remain unverified. [Market evidence](market/tanuku-market.md), [competitors](market/competitor-analysis.md).
 
-Primary evidence: customers0/25–30target; merchants0/15–20target, verified supply0 and commitments0. Research methods, voluntary consent, negative cases and thresholds fixed before data. No outreach or private data collected. Electrician/plumber jointly first research priority, ACsecond, appliance third; no launch-category approval.
+Real-world validation: 0 customer interviews; 0 merchant interviews; 0 verified willing merchants; 0 registration commitments. The former interview targets are historical research instruments, not active Phase 01 criteria. Electrician/plumber remain desk-research candidates; no category/serviceability promise. Actual supply, safety and customer outcome evidence must be obtained before any public launch, including through the separately gated private pilot.
 
 ## Commercial and capital assessment
 
@@ -43,12 +43,12 @@ Support modeled25/36/50hmonthly excludes many duties; BASEnearly fills illustrat
 
 ## Finite evidence and prioritized next actions
 
-[DoD](definition-of-done.md):9PASS,3CONDITIONAL,2NOT ASSESSED,0FAIL out of14 = **64.3% evidenced criteria**, not product completion. [All deliverables](README.md) and [machine inventory](execution-inventory.json) are discovery/validation records, not14passes. Source register41entries preserves official, stale, proxy, conflicting and unavailable evidence; every scenario input explicitly modelled.
+[DoD](definition-of-done.md): **9 PASS, 3 CONDITIONAL, 0 NOT ASSESSED, 0 FAIL / 12 active criteria = 75.0% evidenced assessment coverage**, not product completion. The original 14-criterion score is preserved in earlier committed research and the dated review.
 
-Priority1: human-authorized consent-safe interviews and actual provider verification/capacity evidence. Priority2: effective official Meta rate/access; privately supplied legal entity/account identity and qualified legal/tax consultation. Priority3: observed fee/CAC/support calibration, quotes, funded coverage and narrowly authorized technical proof. See [decision/blocker matrix](evidence/blockers.md) for owners and exact evidence.
+Remaining Phase 01 tasks: (005) agree a clearly provisional category research recommendation without pretending demand/supply proof; (008) verify official Meta India pricing, technical/account eligibility and access; (014) produce a truthful owner-reviewed risk and phase-exit decision. Legal/tax applicability and realistic funded operating assumptions remain material residuals. **Future prelaunch gates** retain verified merchant permission/competence/capacity, observed customer demand/service outcomes, safe support and funding. No outreach or purchases are authorized by this change.
 
-Precommitted screens are in research/category plans. GO requires sufficient actual evidence and no unresolved mandatory blocker; CONDITIONAL GO would name bounded remaining scope only; NO-GO requires contradicting evidence, not merely absence. Current necessary evidence missing => NOT ASSESSED. If findings contradict a single complete coordinated public release, propose an explicit human roadmap decision; do not rewrite release policy.
+Historical interview-screen targets remain only in optional research instruments. No Phase 01 interview requirement remains. Actual market feasibility cannot be marked GO from desk research; any scoped phase-exit acceptance must explicitly carry unresolved proof obligations into the approved future gates without bypassing G0, G4 or G5.
 
 ## Governance and closure
 
-Phase00 remains closed planning1/20; historical limitations retained. Phase01 not approved/closed; owner sign-off pending. No Phase02 authorization. Delivery requires protected-main PR, exact-head hosted validation/model regressions, recorded AI review and actual human OWNER SELF-REVIEW/merge. No protection changes or automatic merge. Final publication evidence is reported separately from this immutable research snapshot.
+Phase 00 remains closed planning 1/20; Phase 01 not closed or signed off; Phase 02 not authorized. The active denominator is changed under owner direction, without retroactively rewriting the original evidence snapshot.
