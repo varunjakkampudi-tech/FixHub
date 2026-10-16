@@ -470,13 +470,39 @@ export function Notice({
   warning?: boolean;
   error?: boolean;
 }) {
+  const { locale } = useFixHub();
+  const [referenceCopyState, setReferenceCopyState] = useState<"idle" | "copied" | "unavailable">("idle");
+  const supportReference = error && typeof children === "string"
+    ? children.match(/\(Reference: ([\da-f]{8}-(?:[\da-f]{4}-){3}[\da-f]{12})\)/i)?.[1]
+    : undefined;
+
+  async function copySupportReference() {
+    if (!supportReference) return;
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error("Clipboard unavailable");
+      await navigator.clipboard.writeText(supportReference);
+      setReferenceCopyState("copied");
+    } catch {
+      setReferenceCopyState("unavailable");
+    }
+  }
+
   return (
     <div
       className={`notice ${warning ? "warning" : ""} ${error ? "error" : ""}`}
       role={error ? "alert" : undefined}
     >
       <ShieldCheck aria-hidden="true" />
-      <div>{children}</div>
+      <div>
+        {children}
+        {supportReference && <button type="button" className="mt-2 min-h-11 rounded-md px-2 text-sm font-semibold text-primary underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" onClick={() => void copySupportReference()}>
+          {referenceCopyState === "copied"
+            ? (locale === "te-IN" ? "సూచన సంఖ్య కాపీ అయింది" : "Reference copied")
+            : referenceCopyState === "unavailable"
+              ? (locale === "te-IN" ? "కాపీ చేయలేకపోయాం — పై సూచన సంఖ్యను ఎంచుకోండి" : "Copy unavailable — select the reference above")
+              : (locale === "te-IN" ? "సహాయ సూచన సంఖ్యను కాపీ చేయండి" : "Copy support reference")}
+        </button>}
+      </div>
     </div>
   );
 }
