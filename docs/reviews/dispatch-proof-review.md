@@ -81,3 +81,15 @@ Final normal run: **17 PASS, 0 FAIL, 0 SKIP; cluster stopped**. Evidence covers 
 Source review identified a NULL-comparison scope bypass in the toy release function and a potentially vacuous pre-termination setup assertion. Both were fixed. One intermediate strengthened assertion run failed because a mutating call and effect reads shared one SQL expression. The final runner assigns/verifies the receipt in a separate statement before reading effects; only that final matching source hash is recorded as successful. No intermediate failed run is silently promoted to PASS. A separate native AI source reviewer examined the changes; runtime results are implementing-agent evidence, not independent human assurance.
 
 Limits: resource identity and buffers are synthetic supplied inputs, not actual shared-staff verification or route time. Successful reserve receipt replay is modeled, not durable caching of every terminal denial. A normal restart is not host-crash/off-device recovery; backend termination is not a host power-loss test. Full request-generation reassignment, production auth/RLS, actual providers, geography, device lifecycle, load and deployment remain unproven. This additional partial mechanism evidence does not retrospectively pass the original complete future experiment or approve architecture/phase exit.
+
+## Notification outbox PostgreSQL proof — 2026-10-16
+
+Implementation baseline: `c253ddf361338846079f1c44f71b6b9a63fc067e`. Reproducible runner: [`scripts/notification-outbox-postgres-proof.mjs`](../../scripts/notification-outbox-postgres-proof.mjs), SHA-256 `7CD4D458683D3FCEE15A42974F3CE9CF3C88950CC38576EEA92024F0166157E6` (exact source revision executed below). Command used with the existing local PostgreSQL 17 binaries:
+
+```text
+node --import tsx scripts/notification-outbox-postgres-proof.mjs --pg-bin "C:\Program Files\PostgreSQL\17\bin"
+```
+
+Observed result: **PostgreSQL 17.11; all 7 migrations applied; 0 migrations on idempotent rerun; provider-attempt column and `uncertain` state present; 2 fake-sender sends (customer request receipt and eligible merchant offer); 1 stale customer event suppressed; actual updater session observed waiting on the booking row lock during the send.** All records used synthetic identities/contacts and the temporary loopback-only cluster was stopped and removed after the successful run. No Twilio request, account credential, existing database, or customer/merchant data was used.
+
+Limits: one bounded real-database lock case does not prove all state races, provider delivery or exactly-once behavior. The sender was a fake; no webhook, Twilio account, production deployment, failure injection, database restore, application security review, or legal/consent basis was validated. This evidence strengthens the outbox mechanism only; it does not approve architecture or phase exit. The Phase 01 statuses and owner decisions are unchanged.
