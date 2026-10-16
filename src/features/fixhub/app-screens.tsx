@@ -33,7 +33,7 @@ import {
   type Category,
   type Price,
 } from "./demo-model";
-import { demoBillLines } from "./demo-bill";
+import { demoBillLines, demoServiceRecordFile } from "./demo-bill";
 import { enabledServices, formattedAddress, ratesFor, placeLabel } from "./location-model";
 import { servicePhoto } from "./service-photos";
 import { Brand, CategoryIcon, LocaleControl } from "./shared";
@@ -692,6 +692,7 @@ export function AppComplete({ id }: { id: string }) {
   const [sent, setSent] = useState(false);
   const final = b?.approvedQuote ?? b?.estimate;
   const bill = b?.status === "complete" && b.approvedQuote ? b.approvedQuote : null;
+  const recordFile = bill && b ? demoServiceRecordFile(b.id, b.category, bill, locale) : null;
   return (
     <AppShell nav={false}>
       <Top />
@@ -729,6 +730,11 @@ export function AppComplete({ id }: { id: string }) {
             </dl>
             <p className="app-note">{tr("Cash collection is outside this demo. No payment was processed or recorded; this is not proof of payment or a tax invoice.", "నగదు చెల్లింపు ఈ డెమో వెలుపల ఉంటుంది. చెల్లింపు ప్రాసెస్ లేదా రికార్డ్ చేయలేదు; ఇది చెల్లింపు రుజువు లేదా పన్ను ఇన్వాయిస్ కాదు.")}</p>
             <div className="app-bill-actions">
+              {recordFile && <Button asChild variant="outline" className="app-cta">
+                <a href={recordFile.href} download={recordFile.filename}>
+                  {tr("Download service record (.txt)", "సేవా రికార్డు డౌన్‌లోడ్ చేయండి (.txt)")}
+                </a>
+              </Button>}
               <Button type="button" className="app-cta" onClick={() => window.print()}>
                 {tr("Print / save bill as PDF", "బిల్లును ప్రింట్ / PDFగా సేవ్ చేయండి")}
               </Button>
