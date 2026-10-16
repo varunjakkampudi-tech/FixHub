@@ -13,10 +13,19 @@ export function RealAuth({ mode = "sign-in" }: { mode?: string }) {
   const [code, setCode] = useState("");
   const [stage, setStage] = useState<"email" | "code">("email");
   const [busy, setBusy] = useState(false);
+  const [resending, setResending] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const te = locale === "te-IN";
   const registering = mode.includes("register");
+
+  async function requestEmailCode() {
+    const result = await apiRequest<{ message: string }>("/api/v1/auth/code", {
+      method: "POST",
+      body: JSON.stringify({ email }),
+    });
+    setMessage(result.message);
+  }
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -26,11 +35,7 @@ export function RealAuth({ mode = "sign-in" }: { mode?: string }) {
     setMessage("");
     try {
       if (stage === "email") {
-        const result = await apiRequest<{ message: string }>("/api/v1/auth/code", {
-          method: "POST",
-          body: JSON.stringify({ email }),
-        });
-        setMessage(result.message);
+        await requestEmailCode();
         setStage("code");
       } else {
         const session = await apiRequest<{ roles?: string[] }>("/api/v1/auth/verify", {
@@ -45,6 +50,22 @@ export function RealAuth({ mode = "sign-in" }: { mode?: string }) {
     } catch (cause) {
       setError(cause instanceof ApiError ? cause.message : (te ? "అభ్యర్థన పూర్తి కాలేదు. మళ్లీ ప్రయత్నించండి." : "We could not complete that request. Please try again."));
     } finally {
+      setBusy(false);
+    }
+  }
+
+  async function resendCode() {
+    if (busy || stage !== "code") return;
+    setBusy(true);
+    setResending(true);
+    setError("");
+    setMessage("");
+    try {
+      await requestEmailCode();
+    } catch (cause) {
+      setError(cause instanceof ApiError ? cause.message : (te ? "కోడ్‌ను మళ్లీ పంపలేకపోయాం. కొద్దిసేపటి తర్వాత ప్రయత్నించండి." : "We could not resend the code. Please try again shortly."));
+    } finally {
+      setResending(false);
       setBusy(false);
     }
   }
@@ -108,9 +129,14 @@ export function RealAuth({ mode = "sign-in" }: { mode?: string }) {
               {busy ? (te ? "దయచేసి వేచి ఉండండి…" : "Please wait…") : stage === "email" ? (te ? "కోడ్ పంపండి" : "Send sign-in code") : (te ? "ధృవీకరించి కొనసాగండి" : "Verify and continue")}
             </Button>
             {stage === "code" && (
-              <Button type="button" variant="ghost" className="mt-2 w-full" disabled={busy} onClick={() => { setStage("email"); setCode(""); setMessage(""); }}>
-                {te ? "ఇమెయిల్ మార్చండి" : "Use a different email"}
-              </Button>
+              <div className="mt-2 grid gap-1">
+                <Button type="button" variant="ghost" className="w-full" disabled={busy} onClick={() => void resendCode()}>
+                  {resending ? (te ? "పంపిస్తోంది…" : "Sending…") : (te ? "కోడ్‌ను మళ్లీ పంపండి" : "Resend code")}
+                </Button>
+                <Button type="button" variant="ghost" className="w-full" disabled={busy} onClick={() => { setStage("email"); setCode(""); setMessage(""); }}>
+                  {te ? "ఇమెయిల్ మార్చండి" : "Use a different email"}
+                </Button>
+              </div>
             )}
           </form>
           <p className="mt-5 text-xs text-muted-foreground">
