@@ -10,6 +10,7 @@ import {
   type Command,
   type DemoState,
 } from "@/features/fixhub/demo-model";
+import { messages } from "@/features/fixhub/locales";
 const now = Date.parse("2026-10-15T19:00:00Z");
 function command(
   s: DemoState,
@@ -43,6 +44,16 @@ function create(s = seed(now)) {
   });
 }
 describe("demo pricing", () => {
+  it("clearly distinguishes illustrative estimates from fixed quotes in both supported languages", () => {
+    expect(messages.quoteNote[0]).toContain("illustrative estimate, not a fixed quote");
+    expect(messages.quoteNote[0]).toContain("No payment is collected in this demo");
+    expect(messages.quoteNote[1]).toContain("అంచనా మాత్రమే");
+    expect(messages.quoteNote[1]).toContain("ఖరారు చేసిన కోట్ కాదు");
+    expect(messages.quoteNote[1]).toContain("చెల్లింపు తీసుకోబడదు");
+    expect(messages.faq1A[0]).toContain("illustrative category estimates");
+    expect(messages.faq1A[1]).toContain("సూచనాత్మక అంచనాలు");
+  });
+
   it("has five reproducible examples with separate customer and merchant totals", () => {
     expect(Object.values(initialPolicy).map((r) => calculate(r).total)).toEqual([
       799, 649, 1199, 999,

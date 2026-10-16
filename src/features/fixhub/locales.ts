@@ -159,8 +159,8 @@ export const messages = {
   summary: ["Your request summary", "మీ అభ్యర్థన సారాంశం"],
   review: ["Review your request", "మీ అభ్యర్థనను సమీక్షించండి"],
   quoteNote: [
-    "No fixed price is shown in this preview. Inspection charges, materials and work scope need your approval. No payment is collected.",
-    "ఈ ప్రివ్యూలో స్థిర ధర లేదు. తనిఖీ రుసుము, సామగ్రి, పని వివరాలకు మీ ఆమోదం అవసరం. చెల్లింపు తీసుకోబడదు.",
+    "Any amount shown is an illustrative estimate, not a fixed quote. The provider must confirm inspection charges, materials and work scope. Approve the final quote before work begins. No payment is collected in this demo.",
+    "ఇక్కడ చూపే మొత్తం సూచన కోసం ఇచ్చిన అంచనా మాత్రమే; ఇది ఖరారు చేసిన కోట్ కాదు. నిపుణుడు తనిఖీ రుసుము, సామగ్రి, పని పరిధిని నిర్ధారించాలి. పని ప్రారంభించే ముందు తుది కోట్‌ను ఆమోదించండి. ఈ నమూనాలో చెల్లింపు తీసుకోబడదు.",
   ],
   consent: [
     "I understand this is a demonstration and no professional will be dispatched.",
@@ -346,8 +346,8 @@ export const messages = {
   faq: ["Frequently asked questions", "తరచుగా అడిగే ప్రశ్నలు"],
   faq1: ["How are service prices decided?", "సేవల ధరలు ఎలా నిర్ణయిస్తారు?"],
   faq1A: [
-    "The provider confirms scope, inspection charges and any materials. You approve the quote before work. This preview has no fixed prices.",
-    "నిపుణుడు పని వివరాలు, తనిఖీ రుసుము, సామగ్రి ధరలను తెలియజేస్తారు. పని ముందు మీరు ధరను ఆమోదించాలి. ఈ ప్రివ్యూలో స్థిర ధరలు లేవు.",
+    "This preview may show illustrative category estimates, not fixed prices or local market quotes. The provider confirms scope, inspection charges and materials; you approve the final quote before work.",
+    "ఈ ప్రివ్యూలో సేవా వర్గానికి సూచనాత్మక అంచనాలు కనిపించవచ్చు; అవి ఖరారు చేసిన ధరలు లేదా స్థానిక మార్కెట్ కోట్లు కావు. నిపుణుడు పని పరిధి, తనిఖీ రుసుము, సామగ్రి ధరలను నిర్ధారిస్తారు; పని ముందు మీరు తుది కోట్‌ను ఆమోదిస్తారు.",
   ],
   faq2: ["Is a booking confirmed immediately?", "బుకింగ్ వెంటనే నిర్ధారణ అవుతుందా?"],
   faq2A: [
