@@ -42,7 +42,7 @@ describe("merchant incoming-offer refresh", () => {
 
     await act(async () => { await vi.advanceTimersByTimeAsync(30_000); });
     expect(mocks.request).toHaveBeenCalledTimes(2);
-    expect(screen.getByText(/checks every 30 seconds while this page is open/i)).toBeInTheDocument();
+    expect(screen.getByText(/checks every 30 seconds while this page is open/i)).toHaveAttribute("aria-live", "off");
     expect(screen.getByText(/no notification is sent when the browser is closed/i)).toBeInTheDocument();
   });
 
@@ -91,5 +91,19 @@ describe("merchant incoming-offer refresh", () => {
 
     await act(async () => { await vi.advanceTimersByTimeAsync(30_000); });
     expect(mocks.request).toHaveBeenCalledTimes(1);
+  });
+
+  it("refreshes incoming offers immediately when the tab becomes visible", async () => {
+    vi.useFakeTimers();
+    let visible = false;
+    vi.spyOn(document, "visibilityState", "get").mockImplementation(() => visible ? "visible" : "hidden");
+    mocks.request.mockResolvedValue({ items: [] });
+
+    render(<RealMerchantPage page="requests" />);
+    await act(async () => { await Promise.resolve(); });
+    expect(mocks.request).toHaveBeenCalledTimes(1);
+    visible = true;
+    await act(async () => { document.dispatchEvent(new Event("visibilitychange")); await Promise.resolve(); });
+    expect(mocks.request).toHaveBeenCalledTimes(2);
   });
 });

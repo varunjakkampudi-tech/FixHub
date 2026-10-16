@@ -106,10 +106,17 @@ export function RealMerchantPage({ page }: { page: "requests" | "jobs" }) {
   useEffect(() => {
     void loadRef.current(true);
     if (page !== "requests") return;
+    const refreshWhenVisible = () => {
+      if (document.visibilityState === "visible") void loadRef.current();
+    };
+    document.addEventListener("visibilitychange", refreshWhenVisible);
     const timer = window.setInterval(() => {
       if (document.visibilityState === "visible") void loadRef.current();
     }, 30_000);
-    return () => window.clearInterval(timer);
+    return () => {
+      document.removeEventListener("visibilitychange", refreshWhenVisible);
+      window.clearInterval(timer);
+    };
   }, [page]);
 
   async function respond(offerId: string, decision: "accept" | "decline") {
@@ -167,7 +174,7 @@ export function RealMerchantPage({ page }: { page: "requests" | "jobs" }) {
           {refreshing ? (te ? "తాజా సమాచారం…" : "Refreshing…") : (te ? "తాజా సమాచారం పొందండి" : "Refresh")}
         </Button>
       </div>
-      {page === "requests" && lastUpdated && <p className="text-right text-xs text-muted-foreground" role="status">
+      {page === "requests" && lastUpdated && <p className="text-right text-xs text-muted-foreground" aria-live="off">
         {te
           ? `చివరిగా నవీకరించిన సమయం ${new Intl.DateTimeFormat(locale, { timeStyle: "short" }).format(lastUpdated)} · ఈ పేజీ తెరిచి ఉన్నప్పుడు 30 సెకన్లకు ఒకసారి తనిఖీ చేస్తుంది`
           : `Updated ${new Intl.DateTimeFormat(locale, { timeStyle: "short" }).format(lastUpdated)} · checks every 30 seconds while this page is open`}

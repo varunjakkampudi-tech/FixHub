@@ -110,6 +110,20 @@ describe("completed booking service record", () => {
     expect(mocks.request).toHaveBeenCalledTimes(1);
   });
 
+  it("refreshes the active customer booking as soon as a hidden tab becomes visible", async () => {
+    vi.useFakeTimers();
+    let visible = false;
+    vi.spyOn(document, "visibilityState", "get").mockImplementation(() => visible ? "visible" : "hidden");
+    mocks.request.mockResolvedValue({ booking: { ...completedBooking, status: "offered" } });
+    render(<FixHubProvider><RealBookingHistory detail /></FixHubProvider>);
+
+    await act(async () => { await Promise.resolve(); await Promise.resolve(); });
+    expect(mocks.request).toHaveBeenCalledTimes(1);
+    visible = true;
+    await act(async () => { document.dispatchEvent(new Event("visibilitychange")); await Promise.resolve(); await Promise.resolve(); });
+    expect(mocks.request).toHaveBeenCalledTimes(2);
+  });
+
   it("ignores a slow refresh response after navigating to another booking", async () => {
     vi.useFakeTimers();
     vi.spyOn(document, "visibilityState", "get").mockReturnValue("visible");
