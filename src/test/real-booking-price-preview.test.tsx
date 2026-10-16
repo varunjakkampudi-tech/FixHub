@@ -27,8 +27,9 @@ const serviceId = "10000000-0000-4000-8000-000000000001";
 const addressId = "20000000-0000-4000-8000-000000000001";
 
 function setupPricePreview(available: boolean) {
-  mocks.request.mockImplementation(async (path: string) => {
+  mocks.request.mockImplementation(async (path: string, options?: RequestInit) => {
     if (path === "/api/v1/services") return { items: [{ id: serviceId, name: "Electrical repair", category: "electrician", description: "Electrical repairs" }] };
+    if (path === "/api/v1/customer/addresses" && options?.method === "POST") return { item: { id: "30000000-0000-4000-8000-000000000001", ...JSON.parse(String(options.body)) } };
     if (path === "/api/v1/customer/addresses") return { items: [{ id: addressId, label: "Home", address: "Private address", locality: "Tanuku", latitude: 16.75, longitude: 81.68 }] };
     if (path.startsWith("/api/v1/customer/pricing-preview?")) return {
       available,
@@ -83,14 +84,46 @@ describe("customer booking price preview", () => {
       expect(savedAddress).toHaveValue(addressId);
 
       fireEvent.click(screen.getByRole("button", { name: "Use my current location" }));
-      expect(await screen.findByText("Location shared for this service request")).toBeInTheDocument();
+      expect(await screen.findByText("Location pin set for this service request")).toBeInTheDocument();
       expect(savedAddress).toHaveValue("");
       expect(screen.getByRole("button", { name: "Find eligible providers" })).toBeDisabled();
 
       fireEvent.change(screen.getByLabelText("Full address"), { target: { value: "A different service address" } });
-      expect(screen.queryByText("Location shared for this service request")).not.toBeInTheDocument();
+      expect(screen.queryByText("Location pin set for this service request")).not.toBeInTheDocument();
       expect(await screen.findByText(/Address changed\. Share its location again/i)).toBeInTheDocument();
       expect(screen.getByRole("button", { name: "Find eligible providers" })).toBeDisabled();
+    } finally {
+      if (originalGeolocation) Object.defineProperty(navigator, "geolocation", originalGeolocation);
+      else Reflect.deleteProperty(navigator, "geolocation");
+    }
+  });
+
+  it("allows a manually entered coordinate pair when geolocation permission is denied", async () => {
+    const originalGeolocation = Object.getOwnPropertyDescriptor(navigator, "geolocation");
+    Object.defineProperty(navigator, "geolocation", {
+      configurable: true,
+      value: { getCurrentPosition: (_success: PositionCallback, failure: PositionErrorCallback) => failure({ code: 1, message: "denied", PERMISSION_DENIED: 1, POSITION_UNAVAILABLE: 2, TIMEOUT: 3 } as GeolocationPositionError) },
+    });
+
+    try {
+      setupPricePreview(true);
+      const savedAddress = await screen.findByLabelText("Saved addresses");
+      fireEvent.change(screen.getByLabelText("Full address"), { target: { value: "12 Test Street" } });
+      fireEvent.click(screen.getByRole("button", { name: "Use my current location" }));
+      expect(await screen.findByText(/Location permission was not granted/i)).toBeInTheDocument();
+
+      const saveButton = screen.getByRole("button", { name: "Save address and location" });
+      expect(saveButton).toBeDisabled();
+      fireEvent.change(screen.getByLabelText("Latitude"), { target: { value: "16.75" } });
+      fireEvent.change(screen.getByLabelText("Longitude"), { target: { value: "81.68" } });
+      expect(saveButton).toBeEnabled();
+      fireEvent.click(saveButton);
+
+      await waitFor(() => expect(mocks.request).toHaveBeenCalledWith("/api/v1/customer/addresses", expect.objectContaining({
+        method: "POST",
+        body: JSON.stringify({ label: "Home", address: "12 Test Street", locality: "Tanuku", latitude: 16.75, longitude: 81.68 }),
+      })));
+      await waitFor(() => expect(savedAddress).toHaveValue("30000000-0000-4000-8000-000000000001"));
     } finally {
       if (originalGeolocation) Object.defineProperty(navigator, "geolocation", originalGeolocation);
       else Reflect.deleteProperty(navigator, "geolocation");

@@ -85,6 +85,8 @@ export function RealBookingPage() {
   const [locality, setLocality] = useState("Tanuku");
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
+  const [latitudeInput, setLatitudeInput] = useState("");
+  const [longitudeInput, setLongitudeInput] = useState("");
   const [locationMessage, setLocationMessage] = useState("");
   const [note, setNote] = useState("");
   const [scheduledAt, setScheduledAt] = useState("");
@@ -94,6 +96,9 @@ export function RealBookingPage() {
   const [idempotencyKey, setIdempotencyKey] = useState("");
   const [pricePreview, setPricePreview] = useState<PricePreview | null>(null);
   const [pricePreviewStatus, setPricePreviewStatus] = useState<"idle" | "loading" | "ready" | "unavailable">("idle");
+  const validCoordinates = latitude !== null && longitude !== null
+    && Number.isFinite(latitude) && latitude >= -90 && latitude <= 90
+    && Number.isFinite(longitude) && longitude >= -180 && longitude <= 180;
 
   useEffect(() => {
     let active = true;
@@ -147,9 +152,11 @@ export function RealBookingPage() {
         setIdempotencyKey("");
         setLatitude(position.coords.latitude);
         setLongitude(position.coords.longitude);
+        setLatitudeInput(String(position.coords.latitude));
+        setLongitudeInput(String(position.coords.longitude));
         setLocationMessage(te ? "మీరు ఎంచుకున్న స్థానాన్ని ఫారమ్‌కు జోడించాం." : "Your chosen location was added to this address.");
       },
-      () => setLocationMessage(te ? "స్థాన అనుమతి లభించలేదు. చిరునామా నమోదు చేసి, సేవా పరిధిని తనిఖీ చేయడానికి స్థానాన్ని పంచుకోండి." : "Location was not shared. Enter the address, then share its location so provider coverage can be checked."),
+      () => setLocationMessage(te ? "స్థాన అనుమతి లభించలేదు. చిరునామాతో సరిపోలే పిన్ అక్షాంశం, రేఖాంశాన్ని చేతితో నమోదు చేయండి." : "Location permission was not granted. Enter the address-matching pin coordinates manually below."),
       { enableHighAccuracy: false, timeout: 8000, maximumAge: 60_000 },
     );
   }
@@ -160,6 +167,8 @@ export function RealBookingPage() {
     setSavedAddress(false);
     setLatitude(null);
     setLongitude(null);
+    setLatitudeInput("");
+    setLongitudeInput("");
     setIdempotencyKey("");
     setLocationMessage(te ? "చిరునామా మారింది. ఈ చిరునామాకు సరైన స్థానాన్ని మళ్లీ పంచుకోండి." : "Address changed. Share its location again so the map pin cannot point to a different place.");
   }
@@ -170,19 +179,40 @@ export function RealBookingPage() {
     setSavedAddress(false);
     setLatitude(null);
     setLongitude(null);
+    setLatitudeInput("");
+    setLongitudeInput("");
     setIdempotencyKey("");
     setLocationMessage(te ? "ప్రాంతం మారింది. ఈ చిరునామాకు సరైన స్థానాన్ని మళ్లీ పంచుకోండి." : "Locality changed. Share its location again so the map pin cannot point to a different place.");
   }
 
+  function editCoordinate(axis: "latitude" | "longitude", value: string) {
+    const parsed = value.trim() === "" ? null : Number(value);
+    if (axis === "latitude") {
+      setLatitudeInput(value);
+      setLatitude(parsed !== null && Number.isFinite(parsed) ? parsed : null);
+    } else {
+      setLongitudeInput(value);
+      setLongitude(parsed !== null && Number.isFinite(parsed) ? parsed : null);
+    }
+    setAddressId("");
+    setSavedAddress(false);
+    setIdempotencyKey("");
+    setLocationMessage(te ? "పిన్ చిరునామాతో సరిపోలుతుందో తనిఖీ చేయండి." : "Check that the map pin matches the address before saving.");
+  }
+
   async function saveAddress() {
     if (busy) return;
+    if (!validCoordinates) {
+      setError(te ? "చిరునామాను సేవ్ చేయడానికి సరైన అక్షాంశం, రేఖాంశం అవసరం." : "Enter a valid latitude and longitude before saving this service address.");
+      return;
+    }
     setBusy(true);
     setError("");
     setSavedAddress(false);
     try {
       const result = await apiRequest<{ item: Address }>("/api/v1/customer/addresses", {
         method: "POST",
-        body: JSON.stringify({ label, address: addressText, locality, ...(latitude === null ? {} : { latitude, longitude }) }),
+        body: JSON.stringify({ label, address: addressText, locality, ...(validCoordinates ? { latitude, longitude } : {}) }),
       });
       setAddresses((current) => [result.item, ...current]);
       setAddressId(result.item.id);
@@ -268,11 +298,22 @@ export function RealBookingPage() {
               <Button type="button" variant="outline" className="mt-3" onClick={useCurrentLocation} disabled={busy}>
                 {te ? "నా ప్రస్తుత స్థానాన్ని ఉపయోగించండి" : "Use my current location"}
               </Button>
-              {latitude !== null && longitude !== null && <p className="mt-2 text-xs text-muted-foreground">{te ? "స్థానం ఎంచుకోబడింది" : "Location shared for this service request"}</p>}
+              <p className="mt-3 text-sm">{te ? "అనుమతి ఇవ్వలేకపోతే, మీకు నచ్చిన మ్యాప్ యాప్‌లో చిరునామాకు సరిపోయే పిన్ అక్షాంశం, రేఖాంశాన్ని నమోదు చేయండి." : "If you cannot grant location permission, enter the matching pin's latitude and longitude from a map app of your choice."}</p>
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                <div className="form-group">
+                  <label className="form-label" htmlFor="address-latitude">{te ? "అక్షాంశం" : "Latitude"}</label>
+                  <input id="address-latitude" className="form-input" type="number" inputMode="decimal" min={-90} max={90} step="any" value={latitudeInput} onChange={(event) => editCoordinate("latitude", event.target.value)} disabled={busy} />
+                </div>
+                <div className="form-group">
+                  <label className="form-label" htmlFor="address-longitude">{te ? "రేఖాంశం" : "Longitude"}</label>
+                  <input id="address-longitude" className="form-input" type="number" inputMode="decimal" min={-180} max={180} step="any" value={longitudeInput} onChange={(event) => editCoordinate("longitude", event.target.value)} disabled={busy} />
+                </div>
+              </div>
+              {validCoordinates && <p className="mt-2 text-xs text-muted-foreground">{te ? "స్థానం ఎంచుకోబడింది" : "Location pin set for this service request"}</p>}
               <p className="mt-2 text-xs text-muted-foreground">{te ? "సేవా పరిధిని తనిఖీ చేయడానికి ఖచ్చితమైన స్థానం అవసరం. కేటాయించిన ప్రదాతకే పూర్తి దిశలు చూపబడతాయి." : "An exact location is needed to check service coverage. Full directions are shown only to an assigned provider."}</p>
               {locationMessage && <p role="status" className="mt-2 text-sm">{locationMessage}</p>}
-              <Button type="button" variant="outline" className="mt-3 block" onClick={saveAddress} disabled={busy || !addressText.trim() || !locality.trim()}>
-                {savedAddress ? (te ? "చిరునామా సేవ్ అయింది" : "Address saved") : (te ? "చిరునామాను సేవ్ చేయండి" : "Save this address")}
+              <Button type="button" variant="outline" className="mt-3 block" onClick={saveAddress} disabled={busy || !addressText.trim() || !locality.trim() || !validCoordinates}>
+                {savedAddress ? (te ? "చిరునామా సేవ్ అయింది" : "Address saved") : (te ? "చిరునామా, స్థానాన్ని సేవ్ చేయండి" : "Save address and location")}
               </Button>
             </section>
 
