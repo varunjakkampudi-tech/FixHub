@@ -1,5 +1,6 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
+import { LoaderCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -159,7 +160,18 @@ export function RealBookingPage() {
       setServices(serviceResult.items);
       setAddresses(addressResult.items);
       setServiceId(serviceResult.items[0]?.id ?? "");
-      setAddressId(addressResult.items[0]?.id ?? "");
+      const firstAddress = addressResult.items[0];
+      setAddressId(firstAddress?.id ?? "");
+      if (firstAddress) {
+        setLabel(firstAddress.label);
+        setAddressText(firstAddress.address);
+        setLocality(firstAddress.locality);
+        setLatitude(firstAddress.latitude);
+        setLongitude(firstAddress.longitude);
+        setLatitudeInput(firstAddress.latitude === null ? "" : String(firstAddress.latitude));
+        setLongitudeInput(firstAddress.longitude === null ? "" : String(firstAddress.longitude));
+        setSavedAddress(true);
+      }
     }).catch((cause: unknown) => {
       if (active) setError(cause instanceof Error ? cause.message : (te ? "సేవలను లోడ్ చేయలేకపోయాం." : "Could not load services and saved addresses."));
     }).finally(() => {
@@ -251,6 +263,21 @@ export function RealBookingPage() {
     setLocationMessage(te ? "పిన్ చిరునామాతో సరిపోలుతుందో తనిఖీ చేయండి." : "Check that the map pin matches the address before saving.");
   }
 
+  function chooseSavedAddress(id: string) {
+    const selected = addresses.find((item) => item.id === id);
+    setAddressId(selected?.id ?? "");
+    setLabel(selected?.label ?? "Home");
+    setAddressText(selected?.address ?? "");
+    setLocality(selected?.locality ?? "Tanuku");
+    setLatitude(selected?.latitude ?? null);
+    setLongitude(selected?.longitude ?? null);
+    setLatitudeInput(selected?.latitude == null ? "" : String(selected.latitude));
+    setLongitudeInput(selected?.longitude == null ? "" : String(selected.longitude));
+    setSavedAddress(Boolean(selected));
+    setIdempotencyKey("");
+    setLocationMessage("");
+  }
+
   async function saveAddress() {
     if (busy) return;
     if (!validCoordinates) {
@@ -309,8 +336,11 @@ export function RealBookingPage() {
       <main id="main" className="wrap pb-10">
         <PageTop title={te ? "సేవను బుక్ చేయండి" : "Request a home service"} desc={te ? "ధరలు మరియు అందుబాటు సేవా ప్రదాతల ఆధారంగా చూపబడతాయి." : "Only verified providers accepting work in your service area can receive your request."} />
         {error && <div role="alert" className="mb-5"><Notice error>{error}</Notice></div>}
+        {busy && <p className="mb-4 text-sm text-muted-foreground" role="status" aria-live="polite">
+          {te ? "మీ అభ్యర్థనను పంపుతున్నాం. దయచేసి వేచి ఉండండి." : "Sending your request. Please wait."}
+        </p>}
         <div className="content-grid">
-          <form className="space-y-5" onSubmit={createBooking}>
+          <form className="space-y-5" onSubmit={createBooking} aria-busy={busy}>
             <section className="summary-panel">
               <h2 className="text-lg font-semibold">{te ? "సేవను ఎంచుకోండి" : "Choose a service"}</h2>
               {initialDataLoading ? (
@@ -344,7 +374,7 @@ export function RealBookingPage() {
                   {addresses.length > 0 && (
                     <div className="form-group mt-4">
                       <label className="form-label" htmlFor="saved-address">{te ? "సేవ్ చేసిన చిరునామాలు" : "Saved addresses"}</label>
-                      <select id="saved-address" className="form-input" value={addressId} onChange={(event) => setAddressId(event.target.value)}>
+                      <select id="saved-address" className="form-input" value={addressId} onChange={(event) => chooseSavedAddress(event.target.value)}>
                         <option value="">{te ? "చిరునామాను ఎంచుకోండి" : "Choose an address"}</option>
                         {addresses.map((item) => <option key={item.id} value={item.id}>{item.label} · {item.locality}</option>)}
                       </select>
@@ -379,7 +409,7 @@ export function RealBookingPage() {
                   {validCoordinates && <p className="mt-2 text-xs text-muted-foreground">{te ? "స్థానం ఎంచుకోబడింది" : "Location pin set for this service request"}</p>}
                   <p className="mt-2 text-xs text-muted-foreground">{te ? "సేవా పరిధిని తనిఖీ చేయడానికి ఖచ్చితమైన స్థానం అవసరం. కేటాయించిన ప్రదాతకే పూర్తి దిశలు చూపబడతాయి." : "An exact location is needed to check service coverage. Full directions are shown only to an assigned provider."}</p>
                   {locationMessage && <p role="status" className="mt-2 text-sm">{locationMessage}</p>}
-                  <Button type="button" variant="outline" className="mt-3 block" onClick={saveAddress} disabled={busy || !addressText.trim() || !locality.trim() || !validCoordinates}>
+                  <Button type="button" variant="outline" className="mt-3 block" onClick={saveAddress} disabled={busy || Boolean(addressId) || !addressText.trim() || !locality.trim() || !validCoordinates}>
                     {savedAddress ? (te ? "చిరునామా సేవ్ అయింది" : "Address saved") : (te ? "చిరునామా, స్థానాన్ని సేవ్ చేయండి" : "Save address and location")}
                   </Button>
                 </>
@@ -415,8 +445,15 @@ export function RealBookingPage() {
                 <textarea id="job-note" className="form-input min-h-24" maxLength={2000} value={note} onChange={(event) => { setNote(event.target.value); setIdempotencyKey(""); }} />
               </div>
             </section>
-            <Button type="submit" disabled={busy || !serviceId || !addressId}>
-              {busy ? (te ? "అభ్యర్థన పంపుతోంది…" : "Submitting request…") : (te ? "ధృవీకరించిన సేవా ప్రదాతలను వెతకండి" : "Find eligible providers")}
+            <Button
+              type="submit"
+              disabled={busy || !serviceId || !addressId}
+              aria-label={busy ? (te ? "అభ్యర్థన పంపుతోంది" : "Request in progress") : undefined}
+            >
+              {busy && <LoaderCircle aria-hidden="true" className="animate-spin motion-reduce:animate-none" />}
+              <span aria-hidden={busy || undefined}>
+                {busy ? (te ? "అభ్యర్థన పంపుతోంది…" : "Sending request…") : (te ? "ధృవీకరించిన సేవా ప్రదాతలను వెతకండి" : "Find eligible providers")}
+              </span>
             </Button>
           </form>
           <aside className="summary-panel h-fit">

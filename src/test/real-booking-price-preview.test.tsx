@@ -25,6 +25,7 @@ import { FixHubProvider } from "@/features/fixhub/context";
 
 const serviceId = "10000000-0000-4000-8000-000000000001";
 const addressId = "20000000-0000-4000-8000-000000000001";
+const alternateAddressId = "20000000-0000-4000-8000-000000000002";
 
 function setupPricePreview(available: boolean) {
   mocks.request.mockImplementation(async (path: string, options?: RequestInit) => {
@@ -93,6 +94,47 @@ describe("customer booking price preview", () => {
 
     expect(await screen.findByText(/No current in-area provider price is available/i)).toBeInTheDocument();
     expect(document.body.textContent).not.toContain("₹400 – ₹550");
+  });
+
+  it("submits a selected saved address and announces a reduced-motion-aware pending state", async () => {
+    let resolveBooking!: (value: { booking: { id: string } }) => void;
+    mocks.request.mockImplementation((path: string, options?: RequestInit) => {
+      if (path === "/api/v1/services") return Promise.resolve({ items: [{ id: serviceId, name: "Electrical repair", category: "electrician", description: "Electrical repairs" }] });
+      if (path === "/api/v1/customer/addresses") return Promise.resolve({ items: [
+        { id: addressId, label: "Home", address: "Private address", locality: "Tanuku", latitude: 16.75, longitude: 81.68 },
+        { id: alternateAddressId, label: "Work", address: "Second private address", locality: "Velpur", latitude: 16.72, longitude: 81.69 },
+      ] });
+      if (path.startsWith("/api/v1/customer/pricing-preview?")) return Promise.resolve({ available: true, currency: "INR", paymentMethod: "cash_on_completion", minTotalPaise: 40000, maxTotalPaise: 55000, partsIncluded: false });
+      if (path === "/api/v1/customer/bookings" && options?.method === "POST") return new Promise((resolve) => { resolveBooking = resolve; });
+      throw new Error(`Unexpected request: ${path}`);
+    });
+
+    render(<FixHubProvider><RealBookingPage /></FixHubProvider>);
+    const submit = await screen.findByRole("button", { name: "Find eligible providers" });
+    expect(screen.getByLabelText("Full address")).toHaveValue("Private address");
+    expect(screen.getByLabelText("Locality / town")).toHaveValue("Tanuku");
+    expect(screen.getByLabelText("Latitude")).toHaveValue(16.75);
+    fireEvent.change(screen.getByLabelText("Saved addresses"), { target: { value: alternateAddressId } });
+    expect(screen.getByLabelText("Full address")).toHaveValue("Second private address");
+    expect(screen.getByLabelText("Locality / town")).toHaveValue("Velpur");
+    expect(screen.getByLabelText("Longitude")).toHaveValue(81.69);
+    expect(screen.getByRole("button", { name: "Address saved" })).toBeDisabled();
+    fireEvent.click(submit);
+
+    const progress = await screen.findByRole("status");
+    expect(progress).toHaveTextContent("Sending your request. Please wait.");
+    expect(submit).toBeDisabled();
+    expect(submit).toHaveAttribute("aria-label", "Request in progress");
+    expect(submit.querySelector("svg")).toHaveClass("animate-spin", "motion-reduce:animate-none");
+    expect(submit.closest("form")).toHaveAttribute("aria-busy", "true");
+    expect(mocks.request).toHaveBeenCalledWith("/api/v1/customer/bookings", expect.objectContaining({
+      method: "POST",
+      body: JSON.stringify({ serviceId, addressId: alternateAddressId, note: "" }),
+    }));
+
+    await act(async () => { resolveBooking({ booking: { id: "30000000-0000-4000-8000-000000000001" } }); });
+    await waitFor(() => expect(submit.closest("form")).toHaveAttribute("aria-busy", "false"));
+    expect(screen.queryByText("Sending your request. Please wait.")).not.toBeInTheDocument();
   });
 
   it("clears the selected destination and prior pin when the address is edited", async () => {
