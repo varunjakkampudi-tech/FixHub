@@ -1,5 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { ApiError, apiRequest } from "./api-client";
@@ -23,6 +23,8 @@ type Booking = {
   address_text?: string;
   locality: string;
   business_name?: string | null;
+  customer_rating?: number | null;
+  customer_review?: string | null;
 };
 
 function rupees(paise: number, locale: string) {
@@ -225,6 +227,14 @@ export function RealBookingHistory({ detail = false }: { detail?: boolean; mode?
   const [booking, setBooking] = useState<Booking | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [confirmComplete, setConfirmComplete] = useState(false);
+  const [rating, setRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState("");
+  const [actionBusy, setActionBusy] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [actionMessage, setActionMessage] = useState("");
+  const [actionError, setActionError] = useState("");
+  const actionKeys = useRef(new Map<string, string>());
   const te = locale === "te-IN";
 
   useEffect(() => {
@@ -242,11 +252,69 @@ export function RealBookingHistory({ detail = false }: { detail?: boolean; mode?
     return () => { active = false; };
   }, [detail, id, te]);
 
+  async function refreshBooking() {
+    if (!detail || !id || refreshing) return;
+    setRefreshing(true);
+    setError("");
+    try {
+      const result = await apiRequest<{ booking: Booking }>(`/api/v1/customer/bookings/${encodeURIComponent(id)}`);
+      setBooking(result.booking);
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : (te ? "స్థితిని తాజా చేయలేకపోయాం." : "We could not refresh this booking."));
+    } finally { setRefreshing(false); }
+  }
+
+  async function completeBooking() {
+    if (!booking || actionBusy || !confirmComplete) return;
+    const key = actionKeys.current.get("complete") ?? crypto.randomUUID();
+    actionKeys.current.set("complete", key);
+    setActionBusy(true);
+    setActionError("");
+    setActionMessage("");
+    try {
+      await apiRequest(`/api/v1/customer/bookings/${encodeURIComponent(booking.id)}/complete`, {
+        method: "POST",
+        headers: { "Idempotency-Key": key },
+        body: JSON.stringify({ confirm: true }),
+      });
+      actionKeys.current.delete("complete");
+      setBooking({ ...booking, status: "completed" });
+      setActionMessage(te ? "సేవ పూర్తయినట్లు నిర్ధారించబడింది. ఇప్పుడు మీ సమీక్షను ఇవ్వవచ్చు." : "Completion confirmed. You can now rate the service.");
+      setConfirmComplete(false);
+    } catch (cause) {
+      setActionError(cause instanceof Error ? cause.message : (te ? "పూర్తి నిర్ధారణను సేవ్ చేయలేకపోయాం." : "Completion could not be saved. Please retry."));
+    } finally { setActionBusy(false); }
+  }
+
+  async function submitReview() {
+    if (!booking || actionBusy || booking.customer_rating != null) return;
+    const key = actionKeys.current.get("review") ?? crypto.randomUUID();
+    actionKeys.current.set("review", key);
+    setActionBusy(true);
+    setActionError("");
+    setActionMessage("");
+    try {
+      const result = await apiRequest<{ review: { rating: number; comment: string } }>(`/api/v1/customer/bookings/${encodeURIComponent(booking.id)}/review`, {
+        method: "POST",
+        headers: { "Idempotency-Key": key },
+        body: JSON.stringify({ rating, comment: reviewComment }),
+      });
+      actionKeys.current.delete("review");
+      setBooking({ ...booking, customer_rating: result.review.rating, customer_review: result.review.comment });
+      setActionMessage(te ? "ధన్యవాదాలు. మీ సమీక్ష నమోదు అయింది." : "Thank you. Your rating has been recorded.");
+    } catch (cause) {
+      setActionError(cause instanceof Error ? cause.message : (te ? "సమీక్షను సేవ్ చేయలేకపోయాం." : "Your rating could not be saved. Please retry."));
+    } finally { setActionBusy(false); }
+  }
+
   return (
     <PageShell role="customer" functionalPreview authState="signed-in">
       <main id="main" className="wrap pb-10">
         <PageTop title={te ? "నా బుకింగ్‌లు" : "My bookings"} />
         {error && <div role="alert" className="mb-4"><Notice error>{error}</Notice></div>}
+        {actionError && <div role="alert" className="mb-4"><Notice error>{actionError}</Notice></div>}
+        {actionMessage && <div role="status" className="mb-4"><Notice>{actionMessage}</Notice></div>}
+        {detail && !loading && <div className="mb-4"><Button variant="outline" disabled={refreshing} onClick={() => void refreshBooking()}>{refreshing ? (te ? "తాజా స్థితి…" : "Refreshing status…") : (te ? "స్థితిని తాజా చేయి" : "Refresh status")}</Button></div>}
         {loading ? <p role="status">{te ? "లోడ్ అవుతోంది…" : "Loading…"}</p> : detail ? booking ? (
           <article className="summary-panel">
             <h2 className="text-xl font-semibold">{booking.service_name}</h2>
@@ -261,6 +329,22 @@ export function RealBookingHistory({ detail = false }: { detail?: boolean; mode?
               <div><dt className="inline">{te ? "భాగాలు" : "Parts"}: </dt><dd className="inline">{booking.parts_estimate_paise === null ? (te ? "అవసరమైతే తనిఖీ తర్వాత కోట్" : "Quoted after inspection if needed") : rupees(booking.parts_estimate_paise, locale)}</dd></div>
             </dl>
             <Notice>{te ? "ధర అంచనా మాత్రమే; పని ప్రారంభించే ముందు తుది ధరను మీరు అంగీకరించాలి. నగదు చెల్లింపు మాత్రమే." : "Indicative estimate only. Accept the final provider price before work begins. Cash on completion only; no online payment is collected."}</Notice>
+            {booking.status === "in_progress" && <section className="mt-5 space-y-3 rounded-xl border p-4" aria-labelledby="completion-confirmation-title">
+              <h3 id="completion-confirmation-title" className="font-semibold">{te ? "పని పూర్తయిందా?" : "Has the service been completed?"}</h3>
+              <label className="flex items-start gap-3 text-sm"><input type="checkbox" checked={confirmComplete} onChange={(event) => setConfirmComplete(event.target.checked)} /><span>{te ? "పని పూర్తయిందని నేను నిర్ధారిస్తున్నాను." : "I confirm that the service work is complete."}</span></label>
+              <Button disabled={!confirmComplete || actionBusy} onClick={() => void completeBooking()}>{actionBusy ? (te ? "సేవ్ అవుతోంది…" : "Saving…") : (te ? "పూర్తి నిర్ధారించు" : "Confirm completion")}</Button>
+              <p className="text-xs text-muted-foreground">{te ? "ఇది పని పూర్తి నిర్ధారణ మాత్రమే; చెల్లింపు లేదా పన్ను బిల్లు ధృవీకరణ కాదు." : "This confirms service completion only. It does not verify payment or create a tax invoice."}</p>
+            </section>}
+            {booking.status === "completed" && booking.customer_rating == null && <section className="mt-5 space-y-3 rounded-xl border p-4" aria-labelledby="rating-title">
+              <h3 id="rating-title" className="font-semibold">{te ? "మీ అనుభవాన్ని రేట్ చేయండి" : "Rate your experience"}</h3>
+              <label className="block text-sm" htmlFor="service-rating">{te ? "రేటింగ్ (1–5)" : "Rating (1–5)"}</label>
+              <select id="service-rating" className="min-h-11 rounded-md border bg-background px-3" value={rating} onChange={(event) => setRating(Number(event.target.value))}>{[5, 4, 3, 2, 1].map((value) => <option key={value} value={value}>{value} / 5</option>)}</select>
+              <label className="block text-sm" htmlFor="service-review">{te ? "వ్యాఖ్య (ఐచ్ఛికం)" : "Comment (optional)"}</label>
+              <textarea id="service-review" className="min-h-24 w-full rounded-md border bg-background p-3" maxLength={1000} value={reviewComment} onChange={(event) => setReviewComment(event.target.value)} />
+              <Button disabled={actionBusy} onClick={() => void submitReview()}>{actionBusy ? (te ? "సేవ్ అవుతోంది…" : "Saving…") : (te ? "సమీక్ష పంపు" : "Submit rating")}</Button>
+              <p className="text-xs text-muted-foreground">{te ? "ఈ సమీక్ష ప్రస్తుతం మీ ఖాతాలో మాత్రమే కనిపిస్తుంది." : "Your review is stored privately; public display and moderation are not yet available."}</p>
+            </section>}
+            {booking.customer_rating != null && <div className="mt-5 rounded-xl border p-4"><h3 className="font-semibold">{te ? "మీ సమీక్ష" : "Your review"}: {booking.customer_rating}/5</h3>{booking.customer_review && <p className="mt-2 whitespace-pre-wrap">{booking.customer_review}</p>}</div>}
             <div className="mt-4 flex gap-3"><Button asChild variant="outline"><Link to="/contact">{te ? "మద్దతును సంప్రదించండి" : "Contact support"}</Link></Button><Button asChild><Link to="/customer/book/new">{te ? "మరొక సేవను అభ్యర్థించండి" : "Request another service"}</Link></Button></div>
           </article>
         ) : <Notice>{te ? "ఈ బుకింగ్ దొరకలేదు." : "This booking was not found."}</Notice> : (

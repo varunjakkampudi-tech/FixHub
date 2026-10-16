@@ -63,7 +63,7 @@ CREATE TABLE service_booking (
   customer_note text NOT NULL DEFAULT '' CHECK (length(customer_note) <= 2000),
   visit_price_paise integer NOT NULL CHECK (visit_price_paise BETWEEN 0 AND 100000000),
   labor_estimate_paise integer NOT NULL CHECK (labor_estimate_paise BETWEEN 0 AND 100000000),
-  parts_estimate_paise integer CHECK (parts_estimate_paise BETWEEN 0 AND 100000000),
+  parts_estimate_paise integer NOT NULL DEFAULT 0 CHECK (parts_estimate_paise BETWEEN 0 AND 100000000),
   currency char(3) NOT NULL DEFAULT 'INR' CHECK (currency = 'INR'),
   payment_method text NOT NULL DEFAULT 'cash_on_completion' CHECK (payment_method = 'cash_on_completion'),
   version integer NOT NULL DEFAULT 1 CHECK (version > 0),

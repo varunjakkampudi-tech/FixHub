@@ -192,5 +192,73 @@ export function createMerchantHandlers(pool: Pick<Pool, "connect">) {
     } finally { client.release(); }
   }
 
-  return { listOffers, respondToOffer, listJobs };
+  async function startJob(request: Request, response: Response) {
+    const merchantId = subjectId(response);
+    if (!merchantId) return response.status(401).json({ error: { code: "AUTH_REQUIRED", message: "Sign in to continue." } });
+    const bookingId = z.string().uuid().safeParse(request.params.id);
+    if (!bookingId.success) return response.status(400).json({ error: { code: "INVALID_INPUT", message: "The job id is invalid." } });
+    const key = request.get("Idempotency-Key");
+    if (!key || !/^[A-Za-z0-9._:-]{16,128}$/.test(key)) {
+      return response.status(400).json({ error: { code: "IDEMPOTENCY_KEY_REQUIRED", message: "Provide a valid Idempotency-Key header." } });
+    }
+    const routeKey = `POST:/api/v1/merchant/jobs/${bookingId.data}/start`;
+    const requestHash = createHash("sha256").update("start").digest();
+    const result = await inTransaction(pool, async (client) => {
+      const reservation = await client.query(
+        `INSERT INTO request_idempotency (subject_id, route_key, idempotency_key, request_hash)
+         VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING RETURNING idempotency_key`,
+        [merchantId, routeKey, key, requestHash],
+      );
+      if (!reservation.rows.length) {
+        const prior = await client.query<{ request_hash: Buffer; response_body: QueryResultRow }>(
+          `SELECT request_hash, response_body FROM request_idempotency
+           WHERE subject_id = $1 AND route_key = $2 AND idempotency_key = $3 FOR UPDATE`,
+          [merchantId, routeKey, key],
+        );
+        if (!prior.rows.length || !prior.rows[0].request_hash.equals(requestHash)) {
+          return { status: 409, body: { error: { code: "IDEMPOTENCY_KEY_REUSED", message: "Use a new key for a different action." } } };
+        }
+        if (prior.rows[0].response_body) return { status: 200, body: prior.rows[0].response_body };
+        return { status: 409, body: { error: { code: "REQUEST_IN_PROGRESS", message: "This action is still being processed." } } };
+      }
+
+      const job = await client.query<{ status: string }>(
+        "SELECT status FROM service_booking WHERE id = $1 AND merchant_id = $2 FOR UPDATE",
+        [bookingId.data, merchantId],
+      );
+      if (!job.rows.length) {
+        await client.query("DELETE FROM request_idempotency WHERE subject_id = $1 AND route_key = $2 AND idempotency_key = $3", [merchantId, routeKey, key]);
+        return { status: 404, body: { error: { code: "JOB_NOT_FOUND", message: "This assigned job was not found." } } };
+      }
+      const profile = await client.query<{ verification_status: string }>(
+        "SELECT verification_status FROM merchant_profile WHERE subject_id = $1 FOR UPDATE",
+        [merchantId],
+      );
+      if (profile.rows[0]?.verification_status !== "verified") {
+        await client.query("DELETE FROM request_idempotency WHERE subject_id = $1 AND route_key = $2 AND idempotency_key = $3", [merchantId, routeKey, key]);
+        return { status: 403, body: { error: { code: "MERCHANT_NOT_ELIGIBLE", message: "A verified merchant account is required." } } };
+      }
+      if (job.rows[0].status !== "accepted" && job.rows[0].status !== "in_progress") {
+        await client.query("DELETE FROM request_idempotency WHERE subject_id = $1 AND route_key = $2 AND idempotency_key = $3", [merchantId, routeKey, key]);
+        return { status: 409, body: { error: { code: "JOB_STATE_CONFLICT", message: "Only an accepted job can be started." } } };
+      }
+      if (job.rows[0].status === "accepted") {
+        await client.query(
+          "UPDATE service_booking SET status = 'in_progress', updated_at = clock_timestamp(), version = version + 1 WHERE id = $1 AND merchant_id = $2 AND status = 'accepted'",
+          [bookingId.data, merchantId],
+        );
+      }
+      await client.query(
+        `INSERT INTO transactional_outbox (id, event_type, aggregate_id, payload, idempotency_key)
+         VALUES ($1, 'customer.booking_in_progress', $2, $3::jsonb, $4) ON CONFLICT (idempotency_key) DO NOTHING`,
+        [randomUUID(), bookingId.data, JSON.stringify({ bookingId: bookingId.data }), `booking-in-progress:${bookingId.data}`],
+      );
+      const body = { job: { id: bookingId.data, status: "in_progress" } };
+      await client.query("UPDATE request_idempotency SET response_body = $4 WHERE subject_id = $1 AND route_key = $2 AND idempotency_key = $3", [merchantId, routeKey, key, JSON.stringify(body)]);
+      return { status: 200, body };
+    });
+    return response.status(result.status).json(result.body);
+  }
+
+  return { listOffers, respondToOffer, listJobs, startJob };
 }

@@ -24,7 +24,7 @@ import { PageShell, PageTop, Notice, Empty, Modal, LocaleControl } from "./share
 import { FAQ } from "./public";
 import { RegistryAdmin } from "./registry-admin";
 import { DemoRolePage } from "./demo-pages";
-import { resolveApiSessionMode, type ApiSessionMode } from "./api-client";
+import { resolveApiSession, type ApiSessionMode } from "./api-client";
 import { RealMerchantPage } from "./real-merchant";
 const merchantNav: [string, MessageKey, typeof LayoutDashboard][] = [
   ["/merchant", "overview", LayoutDashboard],
@@ -95,14 +95,16 @@ function Workspace({ role, children, functionalPreview = false }: { role: string
 }
 export function MerchantPage({ page = "overview" }: { page?: string }) {
   const [mode, setMode] = useState<"checking" | ApiSessionMode>("checking");
+  const [roles, setRoles] = useState<string[]>([]);
   useEffect(() => {
     let active = true;
-    void resolveApiSessionMode().then((value) => { if (active) setMode(value); });
+    void resolveApiSession().then((value) => { if (active) { setMode(value.mode); setRoles(value.roles); } });
     return () => { active = false; };
   }, []);
   if (mode === "checking") return <PageShell functionalPreview><main id="main" className="wrap"><p role="status" className="animate-pulse motion-reduce:animate-none">Checking merchant access…</p></main></PageShell>;
   if (mode === "demo") return <DemoRolePage role="merchant" page={page} />;
   if (mode !== "authenticated") return <PageShell functionalPreview><main id="main" className="wrap"><Notice warning>{mode === "unauthenticated" ? <Link to="/sign-in">Sign in with a provisioned merchant account</Link> : "Merchant services are temporarily unavailable."}</Notice></main></PageShell>;
+  if (!roles.includes("merchant")) return <PageShell functionalPreview><main id="main" className="wrap"><Notice error>This account is not authorized for the merchant workspace.</Notice></main></PageShell>;
   if (page === "requests" || page === "jobs") {
     return <Workspace role="merchant" functionalPreview><RealMerchantPage page={page} /></Workspace>;
   }

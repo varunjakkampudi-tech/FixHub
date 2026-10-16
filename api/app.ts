@@ -174,10 +174,13 @@ export function createApiApp(options: ApiAppOptions = {}) {
       app.get("/api/v1/customer/bookings", auth.requireSession, customerRole, marketplace.listBookings);
       app.post("/api/v1/customer/bookings", auth.requireSession, customerRole, marketplace.createBooking);
       app.get("/api/v1/customer/bookings/:id", auth.requireSession, customerRole, marketplace.getBooking);
+      app.post("/api/v1/customer/bookings/:id/complete", auth.requireSession, customerRole, marketplace.confirmCompletion);
+      app.post("/api/v1/customer/bookings/:id/review", auth.requireSession, customerRole, marketplace.createReview);
       const merchant = createMerchantHandlers(options.marketplacePool);
       app.get("/api/v1/merchant/offers", auth.requireSession, merchantRole, merchant.listOffers);
       app.post("/api/v1/merchant/offers/:id/response", auth.requireSession, merchantRole, merchant.respondToOffer);
       app.get("/api/v1/merchant/jobs", auth.requireSession, merchantRole, merchant.listJobs);
+      app.post("/api/v1/merchant/jobs/:id/start", auth.requireSession, merchantRole, merchant.startJob);
     }
   }
 
