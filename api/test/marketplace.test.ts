@@ -35,8 +35,47 @@ describe("marketplace boundaries", () => {
     const outboxRows: { eventType: string; values: unknown[]; sql: string }[] = [];
     const outboxStatements: string[] = [];
     const createdBookingIds: string[] = [];
+    const transactionStatements: string[] = [];
+    let offerInsertCount = 0;
+    let failOfferInsertAt: number | null = null;
+    let transactionSnapshot: {
+      idempotency: [string, { hash: Buffer; body?: unknown }][];
+      offerRows: unknown[][];
+      outboxRows: { eventType: string; values: unknown[]; sql: string }[];
+      outboxStatements: string[];
+      createdBookingIds: string[];
+    } | null = null;
     let providersAvailable = true;
     const query = vi.fn(async (sql: string, values: unknown[] = []) => {
+      if (sql === "BEGIN") {
+        transactionStatements.push(sql);
+        transactionSnapshot = {
+          idempotency: [...idempotency.entries()].map(([key, value]) => [key, { hash: Buffer.from(value.hash), body: value.body }]),
+          offerRows: offerRows.map((row) => [...row]),
+          outboxRows: outboxRows.map((row) => ({ ...row, values: [...row.values] })),
+          outboxStatements: [...outboxStatements],
+          createdBookingIds: [...createdBookingIds],
+        };
+        return { rows: [] };
+      }
+      if (sql === "COMMIT") {
+        transactionStatements.push(sql);
+        transactionSnapshot = null;
+        return { rows: [] };
+      }
+      if (sql === "ROLLBACK") {
+        transactionStatements.push(sql);
+        if (transactionSnapshot) {
+          idempotency.clear();
+          for (const [key, value] of transactionSnapshot.idempotency) idempotency.set(key, value);
+          offerRows.splice(0, offerRows.length, ...transactionSnapshot.offerRows);
+          outboxRows.splice(0, outboxRows.length, ...transactionSnapshot.outboxRows);
+          outboxStatements.splice(0, outboxStatements.length, ...transactionSnapshot.outboxStatements);
+          createdBookingIds.splice(0, createdBookingIds.length, ...transactionSnapshot.createdBookingIds);
+          transactionSnapshot = null;
+        }
+        return { rows: [] };
+      }
       if (sql.includes("INSERT INTO email_login_challenge")) { challengeId = String(values[0]); challengeHash = values[2] as Buffer; }
       if (sql.includes("SELECT count(*)::text AS count FROM email_login_challenge")) return { rows: [{ count: "0" }] };
       if (sql.includes("SELECT id, code_hmac, attempt_count FROM email_login_challenge")) return { rows: challengeHash ? [{ id: challengeId, code_hmac: challengeHash, attempt_count: 0 }] : [] };
@@ -69,7 +108,11 @@ describe("marketplace boundaries", () => {
         { merchant_id: distantMerchantId, business_name: "Distant Electrician", latitude: "18.75", longitude: "83.68", service_radius_km: "5", visit_price_paise: "10000", labor_from_paise: "10000" },
       ] : [] };
       if (sql.includes("INSERT INTO service_booking")) createdBookingIds.push(String(values[0]));
-      if (sql.includes("INSERT INTO booking_offer")) offerRows.push(values);
+      if (sql.includes("INSERT INTO booking_offer")) {
+        offerInsertCount += 1;
+        if (offerInsertCount === failOfferInsertAt) throw new Error("injected second eligible offer write failure");
+        offerRows.push(values);
+      }
       if (sql.includes("INSERT INTO transactional_outbox")) {
         outboxRows.push({ eventType: sql.match(/VALUES \(\$1, '([^']+)'/)?.[1] ?? "unknown", values, sql });
         outboxStatements.push(sql);
@@ -174,5 +217,25 @@ describe("marketplace boundaries", () => {
       .expect(409);
     expect(conflict.body.error.code).toBe("IDEMPOTENCY_KEY_REUSED");
     expect(offerRows).toHaveLength(4);
+
+    const offersBeforeFailure = offerRows.length;
+    const outboxBeforeFailure = outboxRows.length;
+    const bookingsBeforeFailure = createdBookingIds.length;
+    const rollbackKey = "offer-write-failure-0001";
+    failOfferInsertAt = offerInsertCount + 2;
+    transactionStatements.length = 0;
+    const failedFanout = await requestWithAuth("post", "/api/v1/customer/bookings")
+      .set("Idempotency-Key", rollbackKey)
+      .send({ ...body, note: "Rollback when an eligible offer write fails" })
+      .expect(500);
+    expect(failedFanout.body).toMatchObject({
+      error: { code: "INTERNAL_ERROR", message: "The request could not be completed." },
+      requestId: expect.any(String),
+    });
+    expect(transactionStatements).toEqual(["BEGIN", "ROLLBACK"]);
+    expect(offerRows).toHaveLength(offersBeforeFailure);
+    expect(outboxRows).toHaveLength(outboxBeforeFailure);
+    expect(createdBookingIds).toHaveLength(bookingsBeforeFailure);
+    expect(idempotency.has(`${subjectId}:POST:/api/v1/customer/bookings:${rollbackKey}`)).toBe(false);
   });
 });
