@@ -22,7 +22,8 @@ function migrationPool(seed: Record<string, string> = {}) {
     }
     if (normalized.startsWith("CREATE TABLE identity_subject")) executed.push("001_identity.sql");
     if (normalized.startsWith("CREATE TABLE identity_role")) executed.push("002_marketplace.sql");
-    if (normalized.startsWith("ALTER TABLE service_booking")) executed.push("003_nullable_parts_estimate.sql");
+    if (normalized.startsWith("ALTER TABLE service_booking") && normalized.includes("DROP NOT NULL")) executed.push("003_nullable_parts_estimate.sql");
+    if (normalized.startsWith("ALTER TABLE service_booking") && normalized.includes("ADD COLUMN customer_quote_accepted_at")) executed.push("004_customer_quote_consent.sql");
     return { rows: [] };
   });
   const client = { query, release: vi.fn() } as unknown as PoolClient;
@@ -33,11 +34,11 @@ function migrationPool(seed: Record<string, string> = {}) {
 describe("database migrations", () => {
   it("applies migrations in order and records them idempotently", async () => {
     const fixture = migrationPool();
-    expect(await applyMigrations(fixture.pool)).toEqual(["001_identity.sql", "002_marketplace.sql", "003_nullable_parts_estimate.sql"]);
-    expect(fixture.executed).toEqual(["001_identity.sql", "002_marketplace.sql", "003_nullable_parts_estimate.sql"]);
-    expect(fixture.rows.size).toBe(3);
+    expect(await applyMigrations(fixture.pool)).toEqual(["001_identity.sql", "002_marketplace.sql", "003_nullable_parts_estimate.sql", "004_customer_quote_consent.sql"]);
+    expect(fixture.executed).toEqual(["001_identity.sql", "002_marketplace.sql", "003_nullable_parts_estimate.sql", "004_customer_quote_consent.sql"]);
+    expect(fixture.rows.size).toBe(4);
     expect(await applyMigrations(fixture.pool)).toEqual([]);
-    expect(fixture.executed).toHaveLength(3);
+    expect(fixture.executed).toHaveLength(4);
   });
 
   it("fails closed when the source migration set omits a recorded migration", async () => {
@@ -62,8 +63,8 @@ describe("database migrations", () => {
     expect(createHash("sha256").update(currentMarketplaceSql.replace(/\r\n/g, "\n")).digest("hex")).toBe(originalMarketplaceChecksum);
     const previous = { "001_identity.sql": identityChecksum, "002_marketplace.sql": originalMarketplaceChecksum };
     const fixture = migrationPool(previous);
-    expect(await applyMigrations(fixture.pool)).toEqual(["003_nullable_parts_estimate.sql"]);
-    expect(fixture.executed).toEqual(["003_nullable_parts_estimate.sql"]);
+    expect(await applyMigrations(fixture.pool)).toEqual(["003_nullable_parts_estimate.sql", "004_customer_quote_consent.sql"]);
+    expect(fixture.executed).toEqual(["003_nullable_parts_estimate.sql", "004_customer_quote_consent.sql"]);
   });
 
   it("recovers databases that recorded the exact accidental PR 17 marketplace checksum", async () => {
@@ -73,7 +74,7 @@ describe("database migrations", () => {
       "001_identity.sql": identityChecksum,
       "002_marketplace.sql": "f474bbedece28a7503b92fc24d82e84114c3ed585ed58aa2adfa9fcdc41f4e35",
     });
-    expect(await applyMigrations(fixture.pool)).toEqual(["003_nullable_parts_estimate.sql"]);
-    expect(fixture.executed).toEqual(["003_nullable_parts_estimate.sql"]);
+    expect(await applyMigrations(fixture.pool)).toEqual(["003_nullable_parts_estimate.sql", "004_customer_quote_consent.sql"]);
+    expect(fixture.executed).toEqual(["003_nullable_parts_estimate.sql", "004_customer_quote_consent.sql"]);
   });
 });

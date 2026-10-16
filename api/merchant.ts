@@ -4,6 +4,7 @@ import type { Pool, QueryResultRow } from "pg";
 import { z } from "zod";
 
 import { inTransaction } from "./database";
+import { bookingQuoteHash } from "./quote";
 
 function subjectId(response: Response): string | undefined {
   const auth = response.locals.auth as { subjectId?: unknown } | undefined;
@@ -179,7 +180,8 @@ export function createMerchantHandlers(pool: Pick<Pool, "connect">) {
     try {
       const result = await client.query(
         `SELECT b.id, b.status, b.scheduled_at, b.visit_price_paise, b.labor_estimate_paise,
-                b.parts_estimate_paise, b.currency, b.payment_method, b.created_at, s.name AS service_name,
+                b.parts_estimate_paise, b.currency, b.payment_method, b.created_at, b.customer_quote_accepted_at,
+                b.customer_accepted_quote_hash, s.name AS service_name,
                 a.label AS address_label, a.address_text, a.locality, a.latitude, a.longitude
          FROM service_booking b JOIN service_catalog s ON s.id = b.service_id
          JOIN customer_address a ON a.id = b.address_id AND a.customer_id = b.customer_id
@@ -188,7 +190,15 @@ export function createMerchantHandlers(pool: Pick<Pool, "connect">) {
          ORDER BY b.created_at DESC LIMIT 100`,
         [merchantId],
       );
-      return response.status(200).json({ items: result.rows });
+      const items = result.rows.map((row) => {
+        const currentQuoteHash = bookingQuoteHash(row as Parameters<typeof bookingQuoteHash>[0]);
+        const { customer_accepted_quote_hash: _acceptedQuoteHash, ...publicJob } = row;
+        return {
+          ...publicJob,
+          customer_quote_accepted: Boolean(row.customer_quote_accepted_at && (row.customer_accepted_quote_hash as Buffer | null)?.equals(currentQuoteHash)),
+        };
+      });
+      return response.status(200).json({ items });
     } finally { client.release(); }
   }
 
@@ -222,8 +232,19 @@ export function createMerchantHandlers(pool: Pick<Pool, "connect">) {
         return { status: 409, body: { error: { code: "REQUEST_IN_PROGRESS", message: "This action is still being processed." } } };
       }
 
-      const job = await client.query<{ status: string }>(
-        "SELECT status FROM service_booking WHERE id = $1 AND merchant_id = $2 FOR UPDATE",
+      const job = await client.query<{
+        status: string;
+        visit_price_paise: number | string;
+        labor_estimate_paise: number | string;
+        parts_estimate_paise: number | string | null;
+        currency: string;
+        payment_method: string;
+        customer_quote_accepted_at: Date | null;
+        customer_accepted_quote_hash: Buffer | null;
+      }>(
+        `SELECT status, visit_price_paise, labor_estimate_paise, parts_estimate_paise,
+                currency, payment_method, customer_quote_accepted_at, customer_accepted_quote_hash
+         FROM service_booking WHERE id = $1 AND merchant_id = $2 FOR UPDATE`,
         [bookingId.data, merchantId],
       );
       if (!job.rows.length) {
@@ -237,6 +258,13 @@ export function createMerchantHandlers(pool: Pick<Pool, "connect">) {
       if (profile.rows[0]?.verification_status !== "verified") {
         await client.query("DELETE FROM request_idempotency WHERE subject_id = $1 AND route_key = $2 AND idempotency_key = $3", [merchantId, routeKey, key]);
         return { status: 403, body: { error: { code: "MERCHANT_NOT_ELIGIBLE", message: "A verified merchant account is required." } } };
+      }
+      if (job.rows[0].status === "accepted" && (
+        !job.rows[0].customer_quote_accepted_at
+        || !job.rows[0].customer_accepted_quote_hash?.equals(bookingQuoteHash(job.rows[0]))
+      )) {
+        await client.query("DELETE FROM request_idempotency WHERE subject_id = $1 AND route_key = $2 AND idempotency_key = $3", [merchantId, routeKey, key]);
+        return { status: 409, body: { error: { code: "CUSTOMER_QUOTE_NOT_APPROVED", message: "Wait for the customer to approve the current quote before starting this job." } } };
       }
       if (job.rows[0].status !== "accepted" && job.rows[0].status !== "in_progress") {
         await client.query("DELETE FROM request_idempotency WHERE subject_id = $1 AND route_key = $2 AND idempotency_key = $3", [merchantId, routeKey, key]);

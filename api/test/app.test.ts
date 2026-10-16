@@ -21,6 +21,7 @@ describe("Fix Hub demo API foundation", () => {
     expect(docs.body.paths["/api/v1/demo/prices/{category}"]).toBeDefined();
     for (const [path, verb] of [
       ["/api/v1/customer/bookings/{id}/complete", "post"],
+      ["/api/v1/customer/bookings/{id}/quote-approval", "post"],
       ["/api/v1/customer/bookings/{id}/review", "post"],
       ["/api/v1/merchant/jobs/{id}/start", "post"],
     ]) {

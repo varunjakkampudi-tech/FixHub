@@ -4,6 +4,7 @@ import type { Pool, QueryResultRow } from "pg";
 import { z } from "zod";
 
 import { inTransaction } from "./database";
+import { bookingQuoteHash } from "./quote";
 
 const addressInput = z.object({
   label: z.string().trim().min(1).max(40),
@@ -257,6 +258,7 @@ export function createMarketplaceHandlers(pool: Pick<Pool, "connect">) {
         `SELECT b.id, b.status, b.scheduled_at, b.customer_note, b.visit_price_paise, b.labor_estimate_paise,
                 b.parts_estimate_paise, b.currency, b.payment_method, b.created_at, s.name AS service_name,
                 a.label AS address_label, a.address_text, a.locality, a.latitude, a.longitude, m.business_name,
+                b.customer_quote_accepted_at, b.customer_accepted_quote_hash,
                 r.rating AS customer_rating, r.comment AS customer_review
          FROM service_booking b
          JOIN service_catalog s ON s.id = b.service_id
@@ -267,8 +269,100 @@ export function createMarketplaceHandlers(pool: Pick<Pool, "connect">) {
         [id.data, customerId],
       );
       if (!result.rows.length) return response.status(404).json({ error: { code: "BOOKING_NOT_FOUND", message: "The booking was not found." } });
-      return response.status(200).json({ booking: result.rows[0] });
+      const row = result.rows[0] as typeof result.rows[number] & { customer_accepted_quote_hash?: Buffer | null; customer_quote_accepted_at?: Date | null };
+      const currentQuoteHash = bookingQuoteHash(row);
+      const { customer_accepted_quote_hash: _acceptedQuoteHash, ...publicBooking } = row;
+      return response.status(200).json({ booking: {
+        ...publicBooking,
+        quote_version: currentQuoteHash.toString("base64url"),
+        customer_quote_accepted: Boolean(row.customer_quote_accepted_at && row.customer_accepted_quote_hash?.equals(currentQuoteHash)),
+      } });
     } finally { client.release(); }
+  }
+
+  async function approveQuote(request: Request, response: Response) {
+    const customerId = authSubject(response);
+    if (!customerId) return response.status(401).json({ error: { code: "AUTH_REQUIRED", message: "Sign in to continue." } });
+    const id = z.string().uuid().safeParse(request.params.id);
+    const input = z.object({ confirm: z.literal(true), quoteVersion: z.string().regex(/^[A-Za-z0-9_-]{43}$/) }).strict().safeParse(request.body);
+    if (!id.success || !input.success) return invalidInput(response, []);
+    const key = request.get("Idempotency-Key");
+    if (!key || !/^[A-Za-z0-9._:-]{16,128}$/.test(key)) return response.status(400).json({ error: { code: "IDEMPOTENCY_KEY_REQUIRED", message: "Provide a valid Idempotency-Key header." } });
+    const routeKey = `POST:/api/v1/customer/bookings/${id.data}/quote-approval`;
+    const requestHash = createHash("sha256").update(JSON.stringify(input.data)).digest();
+    const result = await inTransaction(pool, async (client) => {
+      const reservation = await client.query(
+        `INSERT INTO request_idempotency (subject_id, route_key, idempotency_key, request_hash)
+         VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING RETURNING idempotency_key`,
+        [customerId, routeKey, key, requestHash],
+      );
+      if (!reservation.rows.length) {
+        const prior = await client.query<{ request_hash: Buffer; response_body: QueryResultRow }>(
+          `SELECT request_hash, response_body FROM request_idempotency
+           WHERE subject_id = $1 AND route_key = $2 AND idempotency_key = $3 FOR UPDATE`,
+          [customerId, routeKey, key],
+        );
+        if (!prior.rows.length || !prior.rows[0].request_hash.equals(requestHash)) return { status: 409, body: { error: { code: "IDEMPOTENCY_KEY_REUSED", message: "Use a new key for a different quote approval." } } };
+        if (prior.rows[0].response_body) return { status: 200, body: prior.rows[0].response_body };
+        return { status: 409, body: { error: { code: "REQUEST_IN_PROGRESS", message: "This quote approval is still being processed." } } };
+      }
+      const booking = await client.query<{
+        id: string;
+        status: string;
+        merchant_id: string | null;
+        visit_price_paise: number | string;
+        labor_estimate_paise: number | string;
+        parts_estimate_paise: number | string | null;
+        currency: string;
+        payment_method: string;
+        customer_quote_accepted_at: Date | null;
+        customer_accepted_quote_hash: Buffer | null;
+      }>(
+        `SELECT id, status, merchant_id, visit_price_paise, labor_estimate_paise, parts_estimate_paise,
+                currency, payment_method, customer_quote_accepted_at, customer_accepted_quote_hash
+         FROM service_booking WHERE id = $1 AND customer_id = $2 FOR UPDATE`,
+        [id.data, customerId],
+      );
+      if (!booking.rows.length) {
+        await client.query("DELETE FROM request_idempotency WHERE subject_id = $1 AND route_key = $2 AND idempotency_key = $3", [customerId, routeKey, key]);
+        return { status: 404, body: { error: { code: "BOOKING_NOT_FOUND", message: "The booking was not found." } } };
+      }
+      const current = booking.rows[0];
+      if (current.status !== "accepted" || !current.merchant_id) {
+        await client.query("DELETE FROM request_idempotency WHERE subject_id = $1 AND route_key = $2 AND idempotency_key = $3", [customerId, routeKey, key]);
+        return { status: 409, body: { error: { code: "QUOTE_NOT_AVAILABLE", message: "A merchant must accept the request before you can approve its quote." } } };
+      }
+      const quoteHash = bookingQuoteHash(current);
+      const presentedQuoteHash = Buffer.from(input.data.quoteVersion, "base64url");
+      if (presentedQuoteHash.length !== 32 || presentedQuoteHash.toString("base64url") !== input.data.quoteVersion || !presentedQuoteHash.equals(quoteHash)) {
+        await client.query("DELETE FROM request_idempotency WHERE subject_id = $1 AND route_key = $2 AND idempotency_key = $3", [customerId, routeKey, key]);
+        return { status: 409, body: { error: { code: "QUOTE_CHANGED", message: "The quote changed after it was displayed. Refresh and review the current price before approving." } } };
+      }
+      const alreadyAccepted = Boolean(current.customer_quote_accepted_at && current.customer_accepted_quote_hash?.equals(quoteHash));
+      if (!alreadyAccepted) {
+        await client.query(
+          `UPDATE service_booking
+           SET customer_quote_accepted_at = clock_timestamp(), customer_accepted_quote_hash = $2,
+               updated_at = clock_timestamp(), version = version + 1
+           WHERE id = $1 AND customer_id = $3 AND status = 'accepted'`,
+          [id.data, quoteHash, customerId],
+        );
+      }
+      const body = {
+        quote: {
+          bookingId: id.data,
+          visitPricePaise: Number(current.visit_price_paise),
+          laborEstimatePaise: Number(current.labor_estimate_paise),
+          partsEstimatePaise: current.parts_estimate_paise === null ? null : Number(current.parts_estimate_paise),
+          currency: current.currency,
+          paymentMethod: current.payment_method,
+          accepted: true,
+        },
+      };
+      await client.query("UPDATE request_idempotency SET response_body = $4 WHERE subject_id = $1 AND route_key = $2 AND idempotency_key = $3", [customerId, routeKey, key, JSON.stringify(body)]);
+      return { status: 200, body };
+    });
+    return response.status(result.status).json(result.body);
   }
 
   async function confirmCompletion(request: Request, response: Response) {
@@ -378,5 +472,5 @@ export function createMarketplaceHandlers(pool: Pick<Pool, "connect">) {
     return response.status(result.status).json(result.body);
   }
 
-  return { listServices, listAddresses, createAddress, createBooking, listBookings, getBooking, confirmCompletion, createReview };
+  return { listServices, listAddresses, createAddress, createBooking, listBookings, getBooking, approveQuote, confirmCompletion, createReview };
 }

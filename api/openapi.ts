@@ -119,6 +119,18 @@ export const openApiDocument = {
         responses: { "200": { description: "Customer-confirmed completion." }, "400": { description: "Invalid booking id, confirmation or idempotency key." }, "401": { description: "Authentication required." }, "403": { description: "Customer role required." }, "404": { description: "Booking not found." }, "409": { description: "Booking is not in progress or the idempotency key conflicts." } },
       },
     },
+    "/api/v1/customer/bookings/{id}/quote-approval": {
+      post: {
+        summary: "Approve the exact current cash quote before work starts",
+        description: "Only the owning customer may approve a quote after a verified merchant accepts the request. Consent is bound to the current itemized price, currency and cash-on-completion method; merchant start is denied if those terms differ. Parts shown as separate or unknown are not included in this approval and require separate approval before parts work. This endpoint does not collect or verify payment.",
+        parameters: [
+          { name: "id", in: "path", required: true, schema: { type: "string", format: "uuid" } },
+          { name: "Idempotency-Key", in: "header", required: true, schema: { type: "string", pattern: "^[A-Za-z0-9._:-]{16,128}$", minLength: 16, maxLength: 128 } },
+        ],
+        requestBody: { required: true, content: { "application/json": { schema: { type: "object", required: ["confirm", "quoteVersion"], additionalProperties: false, properties: { confirm: { const: true }, quoteVersion: { type: "string", pattern: "^[A-Za-z0-9_-]{43}$" } } } } } },
+        responses: { "200": { description: "The current quote was approved or the prior approval replayed." }, "400": { description: "Invalid booking id, quote version, confirmation or idempotency key." }, "401": { description: "Authentication required." }, "403": { description: "Customer role required." }, "404": { description: "Booking not found." }, "409": { description: "No accepted merchant, stale quote or idempotency conflict." } },
+      },
+    },
     "/api/v1/customer/bookings/{id}/review": {
       post: {
         summary: "Submit one rating for a completed booking",
@@ -137,7 +149,7 @@ export const openApiDocument = {
     "/api/v1/merchant/offers/{id}/response": {
       post: {
         summary: "Accept or decline a merchant offer",
-        description: "Requires an authenticated merchant role and verified accepting profile. Accept uses a conditional booking update; only one merchant can claim an unassigned offered booking. Identical retries replay their result.",
+        description: "Requires an authenticated merchant role and verified accepting profile. Accept uses a conditional booking update; only one merchant can claim an unassigned offered booking. The customer must approve the exact assigned cash quote before the merchant may start work. Identical retries replay their result.",
         parameters: [
           { name: "id", in: "path", required: true, schema: { type: "string", format: "uuid" } },
           { name: "Idempotency-Key", in: "header", required: true, schema: { type: "string", pattern: "^[A-Za-z0-9._:-]{16,128}$", minLength: 16, maxLength: 128 } },
@@ -164,7 +176,7 @@ export const openApiDocument = {
     "/api/v1/merchant/jobs/{id}/start": {
       post: {
         summary: "Mark an accepted job as in progress",
-        description: "Only the assigned verified merchant can start its accepted booking. The update is idempotent and emits an outbox event for future customer notification; no notification is dispatched in this increment.",
+        description: "Only the assigned verified merchant can start its accepted booking after the customer has approved the exact current quote. Quote integrity is checked again at start. The update is idempotent and emits an outbox event for future customer notification; no notification is dispatched in this increment.",
         parameters: [
           { name: "id", in: "path", required: true, schema: { type: "string", format: "uuid" } },
           { name: "Idempotency-Key", in: "header", required: true, schema: { type: "string", pattern: "^[A-Za-z0-9._:-]{16,128}$", minLength: 16, maxLength: 128 } },

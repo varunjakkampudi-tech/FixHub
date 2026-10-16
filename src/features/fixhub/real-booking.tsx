@@ -23,6 +23,8 @@ type Booking = {
   address_text?: string;
   locality: string;
   business_name?: string | null;
+  quote_version?: string;
+  customer_quote_accepted?: boolean;
   customer_rating?: number | null;
   customer_review?: string | null;
 };
@@ -228,6 +230,7 @@ export function RealBookingHistory({ detail = false }: { detail?: boolean; mode?
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [confirmComplete, setConfirmComplete] = useState(false);
+  const [confirmQuote, setConfirmQuote] = useState(false);
   const [rating, setRating] = useState(5);
   const [reviewComment, setReviewComment] = useState("");
   const [actionBusy, setActionBusy] = useState(false);
@@ -286,6 +289,28 @@ export function RealBookingHistory({ detail = false }: { detail?: boolean; mode?
     } finally { setActionBusy(false); }
   }
 
+  async function approveQuote() {
+    if (!booking || !booking.quote_version || actionBusy || !confirmQuote) return;
+    const key = actionKeys.current.get("quote") ?? crypto.randomUUID();
+    actionKeys.current.set("quote", key);
+    setActionBusy(true);
+    setActionError("");
+    setActionMessage("");
+    try {
+      await apiRequest(`/api/v1/customer/bookings/${encodeURIComponent(booking.id)}/quote-approval`, {
+        method: "POST",
+        headers: { "Idempotency-Key": key },
+        body: JSON.stringify({ confirm: true, quoteVersion: booking.quote_version }),
+      });
+      actionKeys.current.delete("quote");
+      setBooking({ ...booking, customer_quote_accepted: true });
+      setActionMessage(te ? "ప్రదర్శించిన నగదు ధరను మీరు ఆమోదించారు." : "You approved the displayed cash price.");
+      setConfirmQuote(false);
+    } catch (cause) {
+      setActionError(cause instanceof Error ? cause.message : (te ? "ధర ఆమోదాన్ని సేవ్ చేయలేకపోయాం." : "Quote approval could not be saved. Please retry."));
+    } finally { setActionBusy(false); }
+  }
+
   async function submitReview() {
     if (!booking || actionBusy || booking.customer_rating != null) return;
     const key = actionKeys.current.get("review") ?? crypto.randomUUID();
@@ -327,8 +352,16 @@ export function RealBookingHistory({ detail = false }: { detail?: boolean; mode?
               <div><dt className="inline">{te ? "పరిశీలన ఛార్జీ" : "Visit charge"}: </dt><dd className="inline">{rupees(booking.visit_price_paise, locale)}</dd></div>
               <div><dt className="inline">{te ? "శ్రమ అంచనా" : "Labour estimate"}: </dt><dd className="inline">{rupees(booking.labor_estimate_paise, locale)}</dd></div>
               <div><dt className="inline">{te ? "భాగాలు" : "Parts"}: </dt><dd className="inline">{booking.parts_estimate_paise === null ? (te ? "అవసరమైతే తనిఖీ తర్వాత కోట్" : "Quoted after inspection if needed") : rupees(booking.parts_estimate_paise, locale)}</dd></div>
+              <div className="border-t pt-2 font-semibold"><dt className="inline">{te ? "ప్రదర్శించిన మొత్తం అంచనా" : "Displayed estimate"}: </dt><dd className="inline">{rupees(booking.visit_price_paise + booking.labor_estimate_paise + (booking.parts_estimate_paise ?? 0), locale)}{booking.parts_estimate_paise === null && <span className="ml-1 text-xs font-normal text-muted-foreground">{te ? "· భాగాలు అదనం కావచ్చు" : "· parts may be additional"}</span>}</dd></div>
             </dl>
             <Notice>{te ? "ధర అంచనా మాత్రమే; పని ప్రారంభించే ముందు తుది ధరను మీరు అంగీకరించాలి. నగదు చెల్లింపు మాత్రమే." : "Indicative estimate only. Accept the final provider price before work begins. Cash on completion only; no online payment is collected."}</Notice>
+            {booking.status === "accepted" && !booking.customer_quote_accepted && <section className="mt-5 space-y-3 rounded-xl border p-4" aria-labelledby="quote-approval-title">
+              <h3 id="quote-approval-title" className="font-semibold">{te ? "సేవకు ముందు ధరను ఆమోదించండి" : "Approve the price before work starts"}</h3>
+              <p className="text-sm">{te ? "ఇది ప్రదర్శించిన ధరలకు మీ అంగీకారం. అవసరమైన భాగాల ధర ఇక్కడ లేకపోతే, ఆ పని ముందు వేరే కోట్ ఇచ్చి మీ అనుమతి తీసుకోవాలి." : "This approves the displayed price. If a parts price is not shown above, the provider must quote it separately and get your approval before doing that work."}</p>
+              <label className="flex items-start gap-3 text-sm"><input type="checkbox" checked={confirmQuote} onChange={(event) => setConfirmQuote(event.target.checked)} /><span>{te ? "ప్రదర్శించిన నగదు ధరను నేను ఆమోదిస్తున్నాను." : "I approve the displayed price for cash payment directly to the provider on completion."}</span></label>
+              <Button disabled={!confirmQuote || actionBusy} onClick={() => void approveQuote()}>{actionBusy ? (te ? "సేవ్ అవుతోంది…" : "Saving…") : (te ? "ధరను ఆమోదించు" : "Approve price")}</Button>
+            </section>}
+            {booking.status === "accepted" && booking.customer_quote_accepted && <Notice>{te ? "మీరు ప్రదర్శించిన నగదు ధరను ఆమోదించారు. భాగాల ధర ఇక్కడ లేకపోతే, ఆ పని ముందు మీ అనుమతి అవసరం." : "You approved the displayed cash price. If a parts price is not shown above, your approval is still required before that work begins."}</Notice>}
             {booking.status === "in_progress" && <section className="mt-5 space-y-3 rounded-xl border p-4" aria-labelledby="completion-confirmation-title">
               <h3 id="completion-confirmation-title" className="font-semibold">{te ? "పని పూర్తయిందా?" : "Has the service been completed?"}</h3>
               <label className="flex items-start gap-3 text-sm"><input type="checkbox" checked={confirmComplete} onChange={(event) => setConfirmComplete(event.target.checked)} /><span>{te ? "పని పూర్తయిందని నేను నిర్ధారిస్తున్నాను." : "I confirm that the service work is complete."}</span></label>

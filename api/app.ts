@@ -174,6 +174,7 @@ export function createApiApp(options: ApiAppOptions = {}) {
       app.get("/api/v1/customer/bookings", auth.requireSession, customerRole, marketplace.listBookings);
       app.post("/api/v1/customer/bookings", auth.requireSession, customerRole, marketplace.createBooking);
       app.get("/api/v1/customer/bookings/:id", auth.requireSession, customerRole, marketplace.getBooking);
+      app.post("/api/v1/customer/bookings/:id/quote-approval", auth.requireSession, customerRole, marketplace.approveQuote);
       app.post("/api/v1/customer/bookings/:id/complete", auth.requireSession, customerRole, marketplace.confirmCompletion);
       app.post("/api/v1/customer/bookings/:id/review", auth.requireSession, customerRole, marketplace.createReview);
       const merchant = createMerchantHandlers(options.marketplacePool);
