@@ -113,10 +113,27 @@ describe("Fix Hub demo API foundation", () => {
     await request(app)
       .get("/api/v1/demo/prices/electrician?email=private@example.test&token=sample-secret")
       .expect(200);
+    await request(app)
+      .post("/api/v1/demo/prices/electrician?email=body@example.test&token=body-secret")
+      .send({
+        email: "body@example.test",
+        phone: "+919876543210",
+        address: "1 Synthetic Road",
+        password: "body-password",
+        token: "body-secret",
+        message: "Synthetic private support note",
+      })
+      .expect(404);
     await new Promise((resolve) => setTimeout(resolve, 10));
     const output = lines.join("");
     expect(output).toContain("requestId");
     expect(output).not.toContain("private@example.test");
     expect(output).not.toContain("sample-secret");
+    expect(output).not.toContain("body@example.test");
+    expect(output).not.toContain("+919876543210");
+    expect(output).not.toContain("Synthetic Road");
+    expect(output).not.toContain("body-password");
+    expect(output).not.toContain("body-secret");
+    expect(output).not.toContain("Synthetic private support note");
   });
 });
