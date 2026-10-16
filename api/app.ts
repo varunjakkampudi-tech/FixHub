@@ -13,6 +13,7 @@ import { openApiDocument } from "./openapi";
 import { createAuthHandlers, type AuthConfig, type EmailSender } from "./auth";
 import { createMarketplaceHandlers } from "./marketplace";
 import { createMerchantHandlers } from "./merchant";
+import { createWhatsAppContactHandlers, type SendWhatsAppVerification, type WhatsAppContactConfig } from "./whatsapp-contact";
 import type { Pool } from "pg";
 
 const categories = ["electrician", "plumbing", "ac", "appliance"] as const;
@@ -34,6 +35,7 @@ export type ApiAppOptions = {
   marketplacePool?: Pick<Pool, "connect">;
   authConfig?: AuthConfig;
   sendAuthEmail?: EmailSender;
+  whatsappContact?: { config: WhatsAppContactConfig; sendVerification: SendWhatsAppVerification };
   runtimeDependenciesReady?: boolean | (() => Promise<boolean>);
   productionApproval?: boolean;
 };
@@ -164,7 +166,17 @@ export function createApiApp(options: ApiAppOptions = {}) {
     app.post("/api/v1/auth/logout", auth.requireSession, auth.logout);
     const customerRole = auth.requireAnyRole("customer");
     const merchantRole = auth.requireAnyRole("merchant");
+    const customerOrMerchantRole = auth.requireAnyRole("customer", "merchant");
     app.post("/api/v1/customer/account-deletion", auth.requireSession, customerRole, auth.requestAccountDeletion);
+
+    if (options.marketplacePool && options.whatsappContact) {
+      const contact = createWhatsAppContactHandlers(options.marketplacePool, options.whatsappContact.config, options.whatsappContact.sendVerification);
+      const verificationLimiter = rateLimit({ windowMs: 15 * 60_000, limit: 5, standardHeaders: "draft-8", legacyHeaders: false });
+      app.get("/api/v1/account/whatsapp", auth.requireSession, customerOrMerchantRole, contact.getContact);
+      app.post("/api/v1/account/whatsapp/verification", auth.requireSession, customerOrMerchantRole, verificationLimiter, contact.requestVerification);
+      app.post("/api/v1/account/whatsapp/verify", auth.requireSession, customerOrMerchantRole, verificationLimiter, contact.verifyContact);
+      app.post("/api/v1/account/whatsapp/consent/revoke", auth.requireSession, customerOrMerchantRole, contact.revokeConsent);
+    }
 
     if (options.marketplacePool) {
       const marketplace = createMarketplaceHandlers(options.marketplacePool);

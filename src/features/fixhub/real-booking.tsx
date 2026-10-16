@@ -299,10 +299,17 @@ export function RealBookingHistory({ detail = false }: { detail?: boolean; mode?
 
   useEffect(() => {
     if (!detail || !booking || booking.status === "completed" || booking.status === "cancelled") return;
+    const refreshWhenVisible = () => {
+      if (document.visibilityState === "visible") void refreshRef.current();
+    };
+    document.addEventListener("visibilitychange", refreshWhenVisible);
     const timer = window.setInterval(() => {
       if (document.visibilityState === "visible") void refreshRef.current();
     }, 30_000);
-    return () => window.clearInterval(timer);
+    return () => {
+      document.removeEventListener("visibilitychange", refreshWhenVisible);
+      window.clearInterval(timer);
+    };
   }, [detail, id, booking?.status]);
 
   async function completeBooking() {

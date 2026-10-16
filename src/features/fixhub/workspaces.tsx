@@ -26,6 +26,7 @@ import { RegistryAdmin } from "./registry-admin";
 import { DemoRolePage } from "./demo-pages";
 import { resolveApiSession, type ApiSessionMode } from "./api-client";
 import { RealMerchantPage } from "./real-merchant";
+import { WhatsAppPreferencesGate } from "./account";
 const merchantNav: [string, MessageKey, typeof LayoutDashboard][] = [
   ["/merchant", "overview", LayoutDashboard],
   ["/merchant/requests", "incoming", ClipboardList],
@@ -108,6 +109,7 @@ export function MerchantPage({ page = "overview" }: { page?: string }) {
   if (page === "requests" || page === "jobs") {
     return <Workspace role="merchant" functionalPreview><RealMerchantPage page={page} /></Workspace>;
   }
+  if (page === "notifications") return <WhatsAppPreferencesGate role="merchant" />;
   return <Workspace role="merchant" functionalPreview><PageTop title={page === "overview" ? "Merchant workspace" : "Merchant settings"} /><Notice warning>This merchant workspace section is not connected to live account settings yet.</Notice></Workspace>;
 }
 export function TechnicianPage({ page = "overview" }: { page?: string }) {
