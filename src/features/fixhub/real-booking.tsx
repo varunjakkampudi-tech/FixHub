@@ -34,6 +34,39 @@ function rupees(paise: number, locale: string) {
   return new Intl.NumberFormat(locale, { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(paise / 100);
 }
 
+function serviceRecordDownload(booking: Booking, locale: string) {
+  const te = locale === "te-IN";
+  const safeLine = (value: string) => value.replace(/[\r\n\u0000-\u001f\u007f]/g, " ").slice(0, 160);
+  const reference = safeLine(booking.id).trim() || "record";
+  const lines = [
+    te ? "ఫిక్స్ హబ్ — సేవా రికార్డు · స్థానిక డెమో" : "FIX HUB — SERVICE RECORD · LOCAL DEMO",
+    te ? "ఇది పన్ను ఇన్వాయిస్ లేదా చెల్లింపు రసీదు కాదు." : "This is not a tax invoice or payment receipt.",
+    `${te ? "బుకింగ్ సూచన" : "Booking reference"}: ${reference}`,
+    `${te ? "సేవ" : "Service"}: ${safeLine(booking.service_name)}`,
+    ...(booking.business_name ? [`${te ? "సేవా ప్రదాత" : "Provider"}: ${safeLine(booking.business_name)}`] : []),
+    `${te ? "సేవా ప్రాంతం" : "Service locality"}: ${safeLine(booking.locality)}`,
+    "",
+    `${te ? "పరిశీలన ఛార్జీ" : "Visit charge"}: ${rupees(booking.visit_price_paise, locale)}`,
+    `${te ? "శ్రమ అంచనా" : "Labour estimate"}: ${rupees(booking.labor_estimate_paise, locale)}`,
+    `${te ? "భాగాలు" : "Parts"}: ${booking.parts_estimate_paise === null
+      ? (te ? "వేరే కోట్ అవసరం; మొత్తంలో చేర్చలేదు" : "Separate quote required; not included in displayed total")
+      : rupees(booking.parts_estimate_paise, locale)}`,
+    `${te ? "ప్రదర్శించిన కోట్ మొత్తం" : "Displayed quote total"}: ${rupees(booking.visit_price_paise + booking.labor_estimate_paise + (booking.parts_estimate_paise ?? 0), locale)}`,
+    `${te ? "వసూలు విధానం" : "Collection method"}: ${te ? "పని పూర్తయ్యాక నగదు" : "Cash on completion"}`,
+    `${te ? "చెల్లింపు స్థితి" : "Payment status"}: ${te ? "నమోదు చేయలేదు" : "Not recorded"}`,
+    `${te ? "పన్ను" : "Tax"}: ${te ? "ఈ స్థానిక డెమో రికార్డులో చేర్చలేదు" : "Not included in this local demo record"}`,
+    "",
+    te
+      ? "నగదు వసూలు స్థితి ధృవీకరించలేదు. ఇది చెల్లింపు రుజువు లేదా పన్ను ఇన్వాయిస్ కాదు."
+      : "Cash collection status is not verified. This is not proof of payment or a tax invoice.",
+  ].join("\r\n");
+  const filenameReference = reference.replace(/[^a-zA-Z0-9_-]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 80) || "record";
+  return {
+    filename: `fixhub-service-record-${filenameReference}.txt`,
+    href: `data:text/plain;charset=utf-8,${encodeURIComponent(lines)}`,
+  };
+}
+
 function errorMessage(error: unknown, fallback: string, noProvider: string) {
   return error instanceof ApiError && error.code === "NO_ELIGIBLE_PROVIDER" ? noProvider : error instanceof Error ? error.message : fallback;
 }
@@ -246,6 +279,9 @@ export function RealBookingHistory({ detail = false }: { detail?: boolean; mode?
   const refreshRef = useRef<() => Promise<void>>(async () => {});
   const actionKeys = useRef(new Map<string, string>());
   const te = locale === "te-IN";
+  const recordFile = booking?.status === "completed" && booking.customer_quote_accepted
+    ? serviceRecordDownload(booking, locale)
+    : null;
 
   useEffect(() => {
     let active = true;
@@ -448,6 +484,7 @@ export function RealBookingHistory({ detail = false }: { detail?: boolean; mode?
               </dl>
               <p id="service-record-limit" className="app-note">{te ? "ఇది Fix Hub సేవా రికార్డు మాత్రమే; పన్ను ఇన్వాయిస్ లేదా చెల్లింపు రసీదు కాదు. నగదు చెల్లింపు స్థితి నమోదు చేయలేదు. భాగాల ధర వేరుగా ఉంటే ఇందులో లేదు." : "This is a Fix Hub service record only—not a tax invoice or payment receipt. Cash payment status is not recorded. Any separately quoted parts are not included."}</p>
               <div className="app-bill-actions">
+                {recordFile && <Button asChild variant="outline" className="app-cta"><a href={recordFile.href} download={recordFile.filename}>{te ? "సేవా రికార్డు డౌన్‌లోడ్ చేయండి (.txt)" : "Download service record (.txt)"}</a></Button>}
                 <Button type="button" variant="outline" className="app-cta" onClick={() => window.print()}>{te ? "ప్రింట్ / PDFగా సేవ్ చేయి" : "Print / save as PDF"}</Button>
                 <p className="app-small">{te ? "బ్రౌజర్ ప్రింట్ డైలాగ్‌లో PDFగా సేవ్ చేయండి ఎంచుకోండి." : "Choose “Save as PDF” in your browser’s print dialog to download a copy."}</p>
               </div>

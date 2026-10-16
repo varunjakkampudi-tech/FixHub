@@ -73,6 +73,17 @@ describe("completed booking service record", () => {
     const record = screen.getByRole("heading", { name: "Service record" }).closest("section");
     expect(record).not.toBeNull();
     expect(within(record!).queryByText(/Private street address must not appear/)).not.toBeInTheDocument();
+    const download = within(record!).getByRole("link", { name: "Download service record (.txt)" });
+    expect(download).toHaveAttribute("download", "fixhub-service-record-00000000-0000-4000-8000-000000000001.txt");
+    const fileContents = decodeURIComponent(download.getAttribute("href")!.split(",").slice(1).join(","));
+    expect(fileContents).toContain("Service: Electrical repair");
+    expect(fileContents).toContain("Provider: Example Electrician");
+    expect(fileContents).toContain("Visit charge: ₹400");
+    expect(fileContents).toContain("Labour estimate: ₹450");
+    expect(fileContents).toContain("Displayed quote total: ₹850");
+    expect(fileContents).toContain("Payment status: Not recorded");
+    expect(fileContents).toContain("not a tax invoice or payment receipt");
+    expect(fileContents).not.toContain("Private street address must not appear");
     fireEvent.click(screen.getByRole("button", { name: "Print / save as PDF" }));
     expect(print).toHaveBeenCalledTimes(1);
   });
@@ -81,6 +92,7 @@ describe("completed booking service record", () => {
     renderBooking(false);
     expect(await screen.findByText("Electrical repair")).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Service record" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Download service record (.txt)" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Print / save as PDF" })).not.toBeInTheDocument();
   });
 
