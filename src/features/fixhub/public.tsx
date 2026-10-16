@@ -1,4 +1,6 @@
 import { Link } from "@tanstack/react-router";
+import { DemoAuth } from "./demo-pages";
+import { RealAuth } from "./real-auth";
 import { useState } from "react";
 import { ArrowRight, CircleHelp } from "lucide-react";
 import * as Accordion from "@radix-ui/react-accordion";
@@ -257,7 +259,10 @@ export function PublicPage({ page }: { page: string }) {
     </PageShell>
   );
 }
-export { DemoAuth as AuthPage } from "./demo-pages";
+export function AuthPage({ mode = "sign-in" }: { mode?: string }) {
+  if (mode === "sign-in" || mode.includes("register")) return <RealAuth mode={mode} />;
+  return <DemoAuth mode={mode} />;
+}
 function LegacyAuthPage({ mode = "sign-in" }: { mode?: string }) {
   const { t } = useFixHub();
   const [input, setInput] = useState("");

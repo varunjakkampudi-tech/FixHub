@@ -1,6 +1,7 @@
+import { createHash } from "node:crypto";
 import cors from "cors";
 import express, { type ErrorRequestHandler, type RequestHandler } from "express";
-import { rateLimit } from "express-rate-limit";
+import { ipKeyGenerator, rateLimit } from "express-rate-limit";
 import helmet from "helmet";
 import pino, { type Logger } from "pino";
 import pinoHttp from "pino-http";
@@ -9,6 +10,9 @@ import { z } from "zod";
 
 import { calculate, initialPolicy } from "../src/features/fixhub/demo-model";
 import { openApiDocument } from "./openapi";
+import { createAuthHandlers, type AuthConfig, type EmailSender } from "./auth";
+import { createMarketplaceHandlers } from "./marketplace";
+import type { Pool } from "pg";
 
 const categories = ["electrician", "plumbing", "ac", "appliance"] as const;
 const categoryParams = z.object({ category: z.enum(categories) }).strict();
@@ -25,6 +29,12 @@ export type ApiAppOptions = {
   logger?: Logger;
   rateLimit?: { windowMs: number; limit: number };
   environment?: "development" | "test" | "production";
+  databasePool?: Pick<Pool, "connect">;
+  marketplacePool?: Pick<Pool, "connect">;
+  authConfig?: AuthConfig;
+  sendAuthEmail?: EmailSender;
+  runtimeDependenciesReady?: boolean | (() => Promise<boolean>);
+  productionApproval?: boolean;
 };
 
 function configuredOrigins(): string[] {
@@ -95,16 +105,20 @@ export function createApiApp(options: ApiAppOptions = {}) {
         if (origin === undefined || origins.includes(origin)) return callback(null, true);
         return callback(null, false);
       },
-      credentials: false,
+      credentials: true,
       exposedHeaders: ["x-request-id"],
       optionsSuccessStatus: 204,
     }),
   );
 
   app.get("/health/live", (_req, res) => res.status(200).json({ status: "alive", mode: "local-demo" }));
-  app.get("/health/ready", (_req, res) => {
-    if (environment === "production") {
-      return res.status(503).json({ status: "not_ready", reason: "production_auth_and_storage_not_configured" });
+  app.get("/health/ready", async (_req, res) => {
+    let ready = options.runtimeDependenciesReady === true;
+    if (typeof options.runtimeDependenciesReady === "function") {
+      try { ready = await options.runtimeDependenciesReady(); } catch { ready = false; }
+    }
+    if (environment === "production" && (!ready || options.productionApproval !== true)) {
+      return res.status(503).json({ status: "not_ready", reason: "production_release_gates_unverified" });
     }
     return res.status(200).json({ status: "ready", mode: "local-demo" });
   });
@@ -125,6 +139,40 @@ export function createApiApp(options: ApiAppOptions = {}) {
   });
   app.use("/api/v1", apiLimiter);
   app.use(express.json({ limit: "32kb", strict: true }));
+
+  if (options.databasePool && options.authConfig && options.sendAuthEmail) {
+    const auth = createAuthHandlers(options.databasePool, options.authConfig, options.sendAuthEmail);
+    const authLimiter = (limit: number) => rateLimit({
+      windowMs: 15 * 60_000,
+      limit,
+      standardHeaders: "draft-8",
+      legacyHeaders: false,
+      keyGenerator(req) {
+        const email = typeof req.body?.email === "string" ? req.body.email.trim().toLowerCase() : "invalid";
+        return `${ipKeyGenerator(req.ip ?? "unknown")}:${createHash("sha256").update(email).digest("hex")}`;
+      },
+      handler(req, res) {
+        res.status(429).json({ error: { code: "RATE_LIMITED", message: "Too many sign-in attempts. Please try again later." }, requestId: req.id });
+      },
+    });
+    app.post("/api/v1/auth/code", authLimiter(5), auth.requestCode);
+    app.post("/api/v1/auth/verify", authLimiter(10), auth.verifyCode);
+    app.get("/api/v1/auth/me", auth.requireSession, (_req, res) =>
+      res.status(200).json({ authenticated: true, ...res.locals.auth }),
+    );
+    app.post("/api/v1/auth/logout", auth.requireSession, auth.logout);
+    app.post("/api/v1/customer/account-deletion", auth.requireSession, auth.requestAccountDeletion);
+
+    if (options.marketplacePool) {
+      const marketplace = createMarketplaceHandlers(options.marketplacePool);
+      app.get("/api/v1/services", marketplace.listServices);
+      app.get("/api/v1/customer/addresses", auth.requireSession, marketplace.listAddresses);
+      app.post("/api/v1/customer/addresses", auth.requireSession, marketplace.createAddress);
+      app.get("/api/v1/customer/bookings", auth.requireSession, marketplace.listBookings);
+      app.post("/api/v1/customer/bookings", auth.requireSession, marketplace.createBooking);
+      app.get("/api/v1/customer/bookings/:id", auth.requireSession, marketplace.getBooking);
+    }
+  }
 
   app.get("/api/v1/demo/prices/:category", (req, res) => {
     const parsed = categoryParams.safeParse(req.params);
