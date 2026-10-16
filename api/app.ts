@@ -13,6 +13,7 @@ import { openApiDocument } from "./openapi";
 import { createAuthHandlers, type AuthConfig, type EmailSender } from "./auth";
 import { createMarketplaceHandlers } from "./marketplace";
 import { createMerchantHandlers } from "./merchant";
+import { createSupportHandlers } from "./support";
 import { createWhatsAppContactHandlers, type SendWhatsAppVerification, type WhatsAppContactConfig } from "./whatsapp-contact";
 import type { Pool } from "pg";
 
@@ -179,6 +180,17 @@ export function createApiApp(options: ApiAppOptions = {}) {
     }
 
     if (options.marketplacePool) {
+      const support = createSupportHandlers(options.marketplacePool);
+      app.use("/api/v1/support", (_req, res, next) => { res.setHeader("Cache-Control", "no-store"); next(); });
+      const supportStaff = auth.requireAnyRole("support", "admin");
+      const supportLimiter = rateLimit({ windowMs: 15 * 60_000, limit: 5, standardHeaders: "draft-8", legacyHeaders: false,
+        keyGenerator: (_req, res) => String(res.locals.auth.subjectId),
+        handler: (req, res) => { res.status(429).json({ error: { code: "RATE_LIMITED", message: "Please wait before submitting more support requests." }, requestId: req.id }); },
+      });
+      app.get("/api/v1/support/requests", auth.requireSession, customerOrMerchantRole, support.listMine);
+      app.post("/api/v1/support/requests", auth.requireSession, customerOrMerchantRole, supportLimiter, support.create);
+      app.get("/api/v1/support/inbox", auth.requireSession, supportStaff, support.listInbox);
+      app.post("/api/v1/support/requests/:id/response", auth.requireSession, supportStaff, support.respond);
       const marketplace = createMarketplaceHandlers(options.marketplacePool);
       app.get("/api/v1/services", marketplace.listServices);
       app.get("/api/v1/customer/addresses", auth.requireSession, customerRole, marketplace.listAddresses);

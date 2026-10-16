@@ -8,6 +8,38 @@ export const openApiDocument = {
   },
   servers: [{ url: "http://127.0.0.1:4000", description: "Local development API" }],
   paths: {
+    "/api/v1/support/requests": {
+      get: {
+        summary: "List the customer's or merchant's own private support requests",
+        description: "Newest first; up to 25 per page. Pass nextCursor as cursor to continue. Responses are not cached.",
+        parameters: [{ name: "cursor", in: "query", schema: { type: "string", maxLength: 180 } }],
+        responses: { "200": { description: "Private request page", content: { "application/json": { schema: { $ref: "#/components/schemas/SupportPage" } } } }, "400": { description: "Invalid cursor." }, "401": { description: "Authentication required." }, "403": { description: "Customer or merchant role required." } },
+      },
+      post: {
+        summary: "Record a private support request",
+        description: "Requires a session, CSRF header and Idempotency-Key. An optional booking must belong to the customer or assigned merchant. Records a request; does not guarantee a response time or send an email.",
+        parameters: [{ name: "Idempotency-Key", in: "header", required: true, schema: { type: "string", minLength: 16, maxLength: 128, pattern: "^[A-Za-z0-9._:-]+$" } }],
+        requestBody: { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/SupportRequestInput" } } } },
+        responses: { "201": { description: "Request recorded." }, "200": { description: "Identical retry; same request returned." }, "400": { description: "Invalid fields or retry key." }, "401": { description: "Authentication/CSRF required." }, "403": { description: "Role or account unavailable." }, "404": { description: "Booking not available to this account." }, "409": { description: "Retry key belongs to different input." }, "429": { description: "Submission limit reached." } },
+      },
+    },
+    "/api/v1/support/inbox": {
+      get: {
+        summary: "Read the authorized support/admin inbox",
+        description: "Active requests by default; view=all includes resolved requests. Private content; no browser caching.",
+        parameters: [{ name: "view", in: "query", schema: { type: "string", enum: ["active", "all"] } }, { name: "cursor", in: "query", schema: { type: "string", maxLength: 180 } }],
+        responses: { "200": { description: "Support inbox page", content: { "application/json": { schema: { $ref: "#/components/schemas/SupportPage" } } } }, "400": { description: "Invalid query." }, "401": { description: "Authentication required." }, "403": { description: "Support/admin role required." } },
+      },
+    },
+    "/api/v1/support/requests/{id}/response": {
+      post: {
+        summary: "Save a requester-visible staff reply and status",
+        description: "Support/admin only, with CSRF. expectedVersion prevents lost updates. Previous replies are retained transactionally; requester pages show the latest reply.",
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "string", format: "uuid" } }],
+        requestBody: { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/SupportReplyInput" } } } },
+        responses: { "200": { description: "Reply and status saved." }, "400": { description: "Invalid input." }, "401": { description: "Authentication/CSRF required." }, "403": { description: "Support/admin role required." }, "409": { description: "Version changed or request unavailable; refresh before replying." } },
+      },
+    },
     "/health/live": {
       get: {
         summary: "Process liveness",
@@ -244,6 +276,26 @@ export const openApiDocument = {
   },
   components: {
     schemas: {
+      SupportRequestInput: {
+        type: "object", additionalProperties: false, required: ["subject", "message"],
+        properties: { subject: { type: "string", minLength: 3, maxLength: 120 }, message: { type: "string", minLength: 10, maxLength: 2000 }, bookingId: { type: "string", format: "uuid" } },
+      },
+      SupportReplyInput: {
+        type: "object", additionalProperties: false, required: ["response", "status", "expectedVersion"],
+        properties: { response: { type: "string", minLength: 5, maxLength: 2000 }, status: { type: "string", enum: ["open", "in_review", "resolved"] }, expectedVersion: { type: "integer", minimum: 0, maximum: 2147483646 } },
+      },
+      SupportTicket: {
+        type: "object", additionalProperties: false, required: ["id", "booking_id", "subject", "description", "status", "response_text", "version", "created_at", "updated_at"],
+        properties: {
+          id: { type: "string", format: "uuid" }, booking_id: { type: ["string", "null"], format: "uuid" }, subject: { type: "string" }, description: { type: "string" },
+          status: { type: "string", enum: ["open", "in_review", "resolved"] }, response_text: { type: ["string", "null"] }, version: { type: "integer", minimum: 0 },
+          created_at: { type: "string", format: "date-time" }, updated_at: { type: "string", format: "date-time" },
+        },
+      },
+      SupportPage: {
+        type: "object", required: ["items", "nextCursor"],
+        properties: { items: { type: "array", maxItems: 25, items: { $ref: "#/components/schemas/SupportTicket" } }, nextCursor: { type: ["string", "null"] } },
+      },
       DemoPrice: {
         type: "object",
         required: ["demoOnly", "currency", "category", "items", "total", "collectionMethod"],

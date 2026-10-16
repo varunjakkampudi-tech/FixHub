@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Safe, isolated PostgreSQL proof for the migration runner and notification outbox.
+// Safe, isolated PostgreSQL proof for migrations, the notification outbox and private support routes.
 // Usage: node scripts/notification-outbox-postgres-proof.mjs --pg-bin <existing PostgreSQL bin directory>
 // Uses a new loopback-only temporary cluster, synthetic records, and a fake sender.
 
@@ -16,6 +16,7 @@ import { Pool } from "pg";
 import { applyMigrations } from "../api/migrations.ts";
 import { createNotificationOutboxDispatcher } from "../api/notification-outbox.ts";
 import { encryptPhone, phoneLookupHmac, transactionalWhatsappPolicyVersion } from "../api/whatsapp-contact.ts";
+import { verifySupportRequests } from "./support-postgres-cases.mjs";
 
 const args = process.argv.slice(2);
 assert.equal(args.length, 2, "Usage: node scripts/notification-outbox-postgres-proof.mjs --pg-bin <existing PostgreSQL bin directory>");
@@ -112,7 +113,7 @@ try {
   });
 
   const applied = await applyMigrations(pool);
-  assert.equal(applied.length, 7, "A fresh cluster must apply all seven migrations");
+  assert.equal(applied.length, 8, "A fresh cluster must apply all eight migrations");
   assert.deepEqual(await applyMigrations(pool), [], "A second migration run must be idempotent");
   const providerAttemptColumn = await pool.query(
     "SELECT count(*)::int AS count FROM information_schema.columns WHERE table_name = $1 AND column_name = $2",
@@ -313,6 +314,7 @@ try {
     "SELECT status, count(*)::int AS count FROM transactional_outbox GROUP BY status ORDER BY status",
   )).rows;
   assert.deepEqual(outcomes, [{ status: "sent", count: 3 }, { status: "suppressed", count: 2 }]);
+  const supportProof = await verifySupportRequests(pool, bookingId);
   console.log(JSON.stringify({
     server: (await pool.query("SHOW server_version")).rows[0].server_version,
     migrationsApplied: applied.length,
@@ -322,6 +324,7 @@ try {
     foreignCustomerAddressNotificationSuppressed: foreignAddressResult.suppressed,
     realPostgresBookingLockHeldThroughSend: lockObserved,
     syntheticRecipientLastFour: sent.map(({ phone }) => phone.slice(-4)),
+    supportProof,
   }));
 } finally {
   await pool?.end();
