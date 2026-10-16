@@ -103,6 +103,7 @@ export const openApiDocument = {
     "/api/v1/customer/bookings/{id}": {
       get: {
         summary: "Read a booking owned by the signed-in customer",
+        description: "Returns the current quote_version for the displayed price terms and a derived customer_quote_accepted flag. The internal stored quote digest is not returned.",
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "string", format: "uuid" } }],
         responses: { "200": { description: "Booking details." }, "401": { description: "Authentication required." }, "404": { description: "Booking not found." } },
       },

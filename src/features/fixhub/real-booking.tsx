@@ -11,6 +11,7 @@ type Address = { id: string; label: string; address: string; locality: string; l
 type Booking = {
   id: string;
   status: string;
+  created_at?: string;
   scheduled_at: string | null;
   customer_note?: string;
   visit_price_paise: number;
@@ -378,6 +379,30 @@ export function RealBookingHistory({ detail = false }: { detail?: boolean; mode?
               <p className="text-xs text-muted-foreground">{te ? "ఈ సమీక్ష ప్రస్తుతం మీ ఖాతాలో మాత్రమే కనిపిస్తుంది." : "Your review is stored privately; public display and moderation are not yet available."}</p>
             </section>}
             {booking.customer_rating != null && <div className="mt-5 rounded-xl border p-4"><h3 className="font-semibold">{te ? "మీ సమీక్ష" : "Your review"}: {booking.customer_rating}/5</h3>{booking.customer_review && <p className="mt-2 whitespace-pre-wrap">{booking.customer_review}</p>}</div>}
+            {booking.status === "completed" && booking.customer_quote_accepted && <section className="app-bill mt-5 text-left" aria-labelledby="service-record-title" aria-describedby="service-record-limit">
+              <div className="app-bill-heading">
+                <div>
+                  <h3 id="service-record-title" className="app-h2">{te ? "సేవా రికార్డు" : "Service record"}</h3>
+                  <p className="app-muted">{te ? "బుకింగ్ సూచన" : "Booking reference"}: {booking.id}</p>
+                </div>
+                <span className="app-demo-badge">{te ? "రికార్డు" : "RECORD"}</span>
+              </div>
+              <p className="app-muted">{te ? "సేవ" : "Service"}: {booking.service_name}</p>
+              {booking.business_name && <p className="app-muted">{te ? "సేవా ప్రదాత" : "Provider"}: {booking.business_name}</p>}
+              <p className="app-muted">{te ? "స్థలం" : "Locality"}: {booking.address_label} · {booking.locality}</p>
+              {booking.created_at && <p className="app-muted">{te ? "బుకింగ్ తేదీ" : "Booking date"}: {new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(new Date(booking.created_at))}</p>}
+              <dl className="app-bill-lines">
+                <div><dt>{te ? "పరిశీలన ఛార్జీ" : "Visit charge"}</dt><dd>{rupees(booking.visit_price_paise, locale)}</dd></div>
+                <div><dt>{te ? "శ్రమ అంచనా" : "Labour estimate"}</dt><dd>{rupees(booking.labor_estimate_paise, locale)}</dd></div>
+                <div><dt>{te ? "భాగాలు" : "Parts"}</dt><dd>{booking.parts_estimate_paise === null ? (te ? "వేరే కోట్ అవసరం" : "Separate quote required") : rupees(booking.parts_estimate_paise, locale)}</dd></div>
+                <div className="app-bill-total"><dt>{te ? "ప్రదర్శించిన కోట్ మొత్తం" : "Displayed quote total"}</dt><dd>{rupees(booking.visit_price_paise + booking.labor_estimate_paise + (booking.parts_estimate_paise ?? 0), locale)}</dd></div>
+              </dl>
+              <p id="service-record-limit" className="app-note">{te ? "ఇది Fix Hub సేవా రికార్డు మాత్రమే; పన్ను ఇన్వాయిస్ లేదా చెల్లింపు రసీదు కాదు. నగదు చెల్లింపు స్థితి నమోదు చేయలేదు. భాగాల ధర వేరుగా ఉంటే ఇందులో లేదు." : "This is a Fix Hub service record only—not a tax invoice or payment receipt. Cash payment status is not recorded. Any separately quoted parts are not included."}</p>
+              <div className="app-bill-actions">
+                <Button type="button" variant="outline" className="app-cta" onClick={() => window.print()}>{te ? "ప్రింట్ / PDFగా సేవ్ చేయి" : "Print / save as PDF"}</Button>
+                <p className="app-small">{te ? "బ్రౌజర్ ప్రింట్ డైలాగ్‌లో PDFగా సేవ్ చేయండి ఎంచుకోండి." : "Choose “Save as PDF” in your browser’s print dialog to download a copy."}</p>
+              </div>
+            </section>}
             <div className="mt-4 flex gap-3"><Button asChild variant="outline"><Link to="/contact">{te ? "మద్దతును సంప్రదించండి" : "Contact support"}</Link></Button><Button asChild><Link to="/customer/book/new">{te ? "మరొక సేవను అభ్యర్థించండి" : "Request another service"}</Link></Button></div>
           </article>
         ) : <Notice>{te ? "ఈ బుకింగ్ దొరకలేదు." : "This booking was not found."}</Notice> : (
