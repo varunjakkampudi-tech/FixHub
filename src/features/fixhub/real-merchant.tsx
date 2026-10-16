@@ -40,6 +40,13 @@ export function googleMapsDirectionsUrl(latitude: number, longitude: number): st
   return `https://www.google.com/maps/dir/?${query.toString()}`;
 }
 
+export function googleMapsAddressDirectionsUrl(address: string, locality: string): string {
+  const destination = [address.trim(), locality.trim()].filter(Boolean).join(", ");
+  if (!destination) throw new Error("A service address is required for directions.");
+  const query = new URLSearchParams({ api: "1", destination });
+  return `https://www.google.com/maps/dir/?${query.toString()}`;
+}
+
 function money(paise: number, locale: string) {
   return new Intl.NumberFormat(locale, { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(paise / 100);
 }
@@ -218,7 +225,9 @@ export function RealMerchantPage({ page }: { page: "requests" | "jobs" }) {
           <p className="text-sm">{job.address_text}</p>
           <p className="text-sm text-muted-foreground">{dateLabel(job.scheduled_at, locale, te ? "సమయం నిర్ధారణ కాలేదు" : "Time not confirmed")}</p>
           <p className="text-sm">{te ? "ప్రదర్శించిన అంచనా" : "Displayed estimate"}: {money(job.visit_price_paise + job.labor_estimate_paise + (job.parts_estimate_paise ?? 0), locale)} · {job.parts_estimate_paise === null ? (te ? "భాగాలు అదనం కావచ్చు" : "parts may be additional") : (te ? "భాగాలు సహా" : "including parts")}</p>
-          {job.latitude !== null && job.longitude !== null && <a className="inline-flex min-h-11 items-center rounded-md border px-4 font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" href={googleMapsDirectionsUrl(Number(job.latitude), Number(job.longitude))} target="_blank" rel="noopener noreferrer">{te ? "Google Mapsలో దిశలు తెరవండి" : "Open directions in Google Maps"}</a>}
+          {job.latitude !== null && job.longitude !== null
+            ? <a className="inline-flex min-h-11 items-center rounded-md border px-4 font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" href={googleMapsDirectionsUrl(Number(job.latitude), Number(job.longitude))} target="_blank" rel="noopener noreferrer">{te ? "Google Mapsలో దిశలు తెరవండి" : "Open directions in Google Maps"}</a>
+            : (job.address_text.trim() || job.locality.trim()) && <a className="inline-flex min-h-11 items-center rounded-md border px-4 font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" href={googleMapsAddressDirectionsUrl(job.address_text, job.locality)} target="_blank" rel="noopener noreferrer">{te ? "చిరునామాను Google Mapsలో తెరవండి" : "Open address in Google Maps"}</a>}
           {job.status === "accepted" && !job.customer_quote_accepted && <p className="text-sm text-muted-foreground">{te ? "కస్టమర్ ప్రదర్శించిన ధరను ఆమోదించిన తర్వాత పని ప్రారంభించండి." : "Wait for the customer to approve the displayed price before starting work."}</p>}
           {job.status === "accepted" && job.customer_quote_accepted && <Button disabled={pendingJob !== null} onClick={() => void startJob(job.id)}>{pendingJob === job.id ? (te ? "సేవ్ అవుతోంది…" : "Saving…") : (te ? "పని ప్రారంభించు" : "Start job")}</Button>}
           {job.status === "in_progress" && <p className="text-sm text-muted-foreground">{te ? "పని పూర్తయ్యాక కస్టమర్ పూర్తి చేసినట్లు నిర్ధారిస్తారు." : "The customer will confirm completion after the work is finished."}</p>}
