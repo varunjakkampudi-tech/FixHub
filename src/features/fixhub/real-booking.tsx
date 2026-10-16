@@ -559,7 +559,7 @@ export function RealBookingHistory({ detail = false }: { detail?: boolean; mode?
           <article className="summary-panel">
             <h2 className="text-xl font-semibold">{booking.service_name}</h2>
             <p className="mt-2">{te ? "స్థితి" : "Status"}: {booking.status}</p>
-            {(booking.status === "requested" || booking.status === "offered") && <Notice warning>{te ? "అభ్యర్థన సేవ్ అయింది; ఈ విడుదలలో సేవా ప్రదాతలకు ఇంకా సందేశాలు పంపడం లేదా కేటాయింపు చేయడం లేదు." : "Your request is saved and visible to eligible merchants, but they have not been notified or assigned in this build."}</Notice>}
+            {(booking.status === "requested" || booking.status === "offered") && <Notice warning>{te ? "మీ అభ్యర్థన సేవ్ అయింది. అర్హత గల ప్రదాతలకు సందేశాలు ఆలస్యంగా చేరవచ్చు లేదా చేరకపోవచ్చు; ఒకరు అంగీకరించే వరకు ఎవరూ కేటాయించబడరు. ప్రస్తుత స్థితి కోసం ఈ పేజీని చూడండి." : "Your request is saved. Notifications to eligible providers may be delayed or unavailable; no provider is assigned until one accepts. Check this page for current status."}</Notice>}
             <p>{booking.address_label} · {booking.locality}</p>
             {booking.address_text && <p className="mt-1">{booking.address_text}</p>}
             {booking.business_name && <p>{booking.business_name}</p>}

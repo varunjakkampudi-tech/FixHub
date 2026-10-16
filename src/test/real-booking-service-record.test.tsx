@@ -96,6 +96,15 @@ describe("completed booking service record", () => {
     expect(screen.queryByRole("button", { name: "Print / save as PDF" })).not.toBeInTheDocument();
   });
 
+  it("explains that booking status is authoritative while provider notifications are best-effort", async () => {
+    mocks.request.mockResolvedValue({ booking: { ...completedBooking, status: "offered" } });
+    render(<FixHubProvider><RealBookingHistory detail /></FixHubProvider>);
+
+    expect(await screen.findByText(/notifications to eligible providers may be delayed or unavailable/i)).toBeInTheDocument();
+    expect(screen.getByText(/no provider is assigned until one accepts/i)).toBeInTheDocument();
+    expect(screen.queryByText(/they have not been notified/i)).not.toBeInTheDocument();
+  });
+
   it("refreshes an active customer booking while the detail page is visible", async () => {
     vi.useFakeTimers();
     vi.spyOn(document, "visibilityState", "get").mockReturnValue("visible");
