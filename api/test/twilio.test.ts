@@ -22,6 +22,14 @@ describe("Twilio WhatsApp adapter", () => {
       TWILIO_WHATSAPP_FROM: config.from,
       TWILIO_WHATSAPP_CONTENT_SID: config.contentSid,
     })).toEqual(config);
+    expect(twilioConfigFromEnvironment({
+      TWILIO_ACCOUNT_SID: config.accountSid,
+      TWILIO_API_KEY_SID: config.apiKey,
+      TWILIO_API_KEY_SECRET: config.apiSecret,
+      TWILIO_WHATSAPP_FROM: config.from,
+      TWILIO_WHATSAPP_CONTENT_SID: "",
+      TWILIO_WHATSAPP_VERIFICATION_CONTENT_SID: config.contentSid,
+    })).toEqual(config);
   });
 
   it("sends a mocked approved-template request using Twilio's form API and Basic auth", async () => {
@@ -39,6 +47,16 @@ describe("Twilio WhatsApp adapter", () => {
     expect(form.get("ContentSid")).toBe(config.contentSid);
     expect(JSON.parse(form.get("ContentVariables") ?? "{}")).toEqual({ "1": "REF-123", "2": "Tanuku" });
     expect(JSON.stringify(options)).not.toContain(config.apiSecret);
+  });
+
+  it("allows the verification flow to use its dedicated approved template", async () => {
+    const verificationSid = `HX${"f".repeat(32)}`;
+    const fetch = vi.fn().mockResolvedValue(new Response(JSON.stringify({ sid: `SM${"e".repeat(32)}`, status: "queued" }), { status: 201 }));
+    const send = createTwilioWhatsAppSender(config, fetch as unknown as typeof globalThis.fetch, verificationSid);
+    await send({ toE164: "+919876543210", variables: { "1": "123456" } });
+    const [, options] = fetch.mock.calls[0] as [URL, RequestInit];
+    expect(new URLSearchParams(String(options.body)).get("ContentSid")).toBe(verificationSid);
+    expect(new URLSearchParams(String(options.body)).get("ContentSid")).not.toBe(config.contentSid);
   });
 
   it("rejects invalid recipients and never exposes provider rejection details", async () => {

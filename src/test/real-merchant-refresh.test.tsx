@@ -43,7 +43,7 @@ describe("merchant incoming-offer refresh", () => {
     await act(async () => { await vi.advanceTimersByTimeAsync(30_000); });
     expect(mocks.request).toHaveBeenCalledTimes(2);
     expect(screen.getByText(/checks every 30 seconds while this page is open/i)).toHaveAttribute("aria-live", "off");
-    expect(screen.getByText(/no notification is sent when the browser is closed/i)).toBeInTheDocument();
+    expect(screen.getByText(/delivery is not guaranteed when the browser is closed/i)).toBeInTheDocument();
   });
 
   it("does not poll the assigned-jobs page", async () => {

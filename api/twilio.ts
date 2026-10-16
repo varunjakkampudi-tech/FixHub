@@ -4,7 +4,7 @@ const accountSidPattern = /^AC[0-9a-fA-F]{32}$/;
 const apiKeyPattern = /^SK[0-9a-fA-F]{32}$/;
 const contentSidPattern = /^HX[0-9a-fA-F]{32}$/;
 const e164Pattern = /^\+[1-9]\d{7,14}$/;
-const twilioMessage = z.object({ sid: z.string().regex(/^SM[0-9a-fA-F]{32}$/), status: z.string().min(1) }).passthrough();
+const twilioMessage = z.object({ sid: z.string().regex(/^SM[0-9a-fA-F]{32}$/), status: z.string().min(1).max(32) }).passthrough();
 
 export type TwilioWhatsAppConfig = {
   accountSid: string;
@@ -24,17 +24,17 @@ export function twilioConfigFromEnvironment(environment: NodeJS.ProcessEnv): Twi
   const apiKey = environment.TWILIO_API_KEY_SID;
   const apiSecret = environment.TWILIO_API_KEY_SECRET;
   const from = environment.TWILIO_WHATSAPP_FROM;
-  const contentSid = environment.TWILIO_WHATSAPP_CONTENT_SID;
-  if (![accountSid, apiKey, apiSecret, from, contentSid].some(Boolean)) return null;
+  const contentSid = environment.TWILIO_WHATSAPP_CONTENT_SID || environment.TWILIO_WHATSAPP_VERIFICATION_CONTENT_SID || environment.TWILIO_WHATSAPP_SERVICE_CONTENT_SID;
+  if (![accountSid, apiKey, apiSecret, from, contentSid, environment.TWILIO_WHATSAPP_VERIFICATION_CONTENT_SID, environment.TWILIO_WHATSAPP_SERVICE_CONTENT_SID].some(Boolean)) return null;
   if (!accountSid || !apiKey || !apiSecret || !from || !contentSid) throw new Error("Twilio WhatsApp credentials, sender and approved content template must be configured together");
   if (!accountSidPattern.test(accountSid) || !apiKeyPattern.test(apiKey) || apiSecret.length < 32) throw new Error("Twilio credentials are malformed");
   if (!/^whatsapp:\+[1-9]\d{7,14}$/.test(from) || !contentSidPattern.test(contentSid)) throw new Error("Twilio WhatsApp sender or Content SID is malformed");
   return { accountSid, apiKey, apiSecret, from, contentSid };
 }
 
-export function createTwilioWhatsAppSender(config: TwilioWhatsAppConfig, fetchImpl: typeof fetch = fetch) {
+export function createTwilioWhatsAppSender(config: TwilioWhatsAppConfig, fetchImpl: typeof fetch = fetch, contentSid = config.contentSid) {
   if (!accountSidPattern.test(config.accountSid) || !apiKeyPattern.test(config.apiKey) || config.apiSecret.length < 32 ||
-      !/^whatsapp:\+[1-9]\d{7,14}$/.test(config.from) || !contentSidPattern.test(config.contentSid)) {
+      !/^whatsapp:\+[1-9]\d{7,14}$/.test(config.from) || !contentSidPattern.test(contentSid)) {
     throw new Error("Twilio WhatsApp configuration is invalid");
   }
   const endpoint = new URL(`https://api.twilio.com/2010-04-01/Accounts/${config.accountSid}/Messages.json`);
@@ -50,7 +50,7 @@ export function createTwilioWhatsAppSender(config: TwilioWhatsAppConfig, fetchIm
       const form = new URLSearchParams({
         From: config.from,
         To: `whatsapp:${toE164}`,
-        ContentSid: config.contentSid,
+        ContentSid: contentSid,
         ContentVariables: JSON.stringify(variables),
       });
       const authorization = Buffer.from(`${config.apiKey}:${config.apiSecret}`).toString("base64");

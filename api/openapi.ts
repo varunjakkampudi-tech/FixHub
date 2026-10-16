@@ -4,7 +4,7 @@ export const openApiDocument = {
     title: "Fix Hub local demonstration API",
     version: "0.1.0",
     description:
-      "Local demonstration endpoints only. This is not the approved production API and does not create bookings, send messages, or process payments.",
+      "Local demonstration endpoints only. This is not the approved production API. Booking notifications and payment collection are not active. Optional WhatsApp contact verification is disabled by default and requires explicit operator configuration.",
   },
   servers: [{ url: "http://127.0.0.1:4000", description: "Local development API" }],
   paths: {
@@ -90,11 +90,32 @@ export const openApiDocument = {
         responses: { "202": { description: "Deletion request recorded; account access disabled." }, "400": { description: "Explicit confirmation is required." }, "401": { description: "Authentication required." }, "403": { description: "This account must use the appropriate privacy-support process." } },
       },
     },
+    "/api/v1/account/whatsapp": {
+      get: { summary: "Read the authenticated account's masked WhatsApp contact and consent state", responses: { "200": { description: "Masked contact only; full contact details are never returned." }, "401": { description: "Authentication required." }, "403": { description: "Customer or merchant role required." } } },
+    },
+    "/api/v1/account/whatsapp/verification": {
+      post: {
+        summary: "Record explicit WhatsApp consent and request contact verification",
+        description: "Requires the caller to explicitly submit consent=true and an E.164 number. This route is absent unless WhatsApp verification is explicitly enabled with a dedicated approved verification template and contact-protection keys. Booking notifications are not dispatched by this endpoint.",
+        requestBody: { required: true, content: { "application/json": { schema: { type: "object", required: ["phoneE164", "consent"], additionalProperties: false, properties: { phoneE164: { type: "string", pattern: "^\\+[1-9][0-9]{7,14}$" }, consent: { const: true } } } } } },
+        responses: { "202": { description: "Verification was requested." }, "400": { description: "Invalid contact or missing explicit consent." }, "401": { description: "Authentication required." }, "403": { description: "Active customer or merchant account required." }, "429": { description: "Verification rate limit reached." }, "503": { description: "Verification delivery is unavailable." } },
+      },
+    },
+    "/api/v1/account/whatsapp/verify": {
+      post: {
+        summary: "Verify the consented WhatsApp contact",
+        requestBody: { required: true, content: { "application/json": { schema: { type: "object", required: ["code"], additionalProperties: false, properties: { code: { type: "string", pattern: "^[0-9]{6}$" } } } } } },
+        responses: { "200": { description: "Contact verified." }, "400": { description: "Invalid verification code format." }, "401": { description: "Code is invalid, expired or no longer applicable." }, "429": { description: "Verification rate limit reached." } },
+      },
+    },
+    "/api/v1/account/whatsapp/consent/revoke": {
+      post: { summary: "Revoke WhatsApp messaging consent", requestBody: { required: true, content: { "application/json": { schema: { type: "object", required: ["confirm"], additionalProperties: false, properties: { confirm: { const: true } } } } } }, responses: { "200": { description: "Consent revoked; any pending verification challenge invalidated." }, "401": { description: "Authentication required." }, "403": { description: "Active customer or merchant account required." } } },
+    },
     "/api/v1/customer/bookings": {
       get: { summary: "List the signed-in customer's bookings", responses: { "200": { description: "Bookings owned by the authenticated customer." }, "401": { description: "Authentication required." } } },
       post: {
         summary: "Request an in-area service booking",
-        description: "Requires a verified, accepting merchant with an active matching service within its configured radius. A customer request, intended-offer records and outbox events are written atomically; this release has no dispatcher, so it does not contact or assign a provider. Payment metadata is cash on completion only; this endpoint does not collect money.",
+        description: "Requires a verified, accepting merchant with an active matching service within its configured radius. A customer request, intended-offer records and outbox events are written atomically. An optional best-effort WhatsApp dispatcher runs only when FIXHUB_WHATSAPP_NOTIFICATIONS_ENABLED=true and required credentials/templates are configured; delivery never assigns a provider. Payment metadata is cash on completion only; this endpoint does not collect money.",
         parameters: [{ name: "Idempotency-Key", in: "header", required: true, schema: { type: "string", pattern: "^[A-Za-z0-9._:-]{16,128}$", minLength: 16, maxLength: 128 } }],
         requestBody: { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/CustomerBookingInput" } } } },
         responses: { "201": { description: "Booking and eligible offers created." }, "400": { description: "Invalid input or missing idempotency key." }, "401": { description: "Authentication required." }, "409": { description: "No eligible provider or idempotency conflict." } },
@@ -177,7 +198,7 @@ export const openApiDocument = {
     "/api/v1/merchant/jobs/{id}/start": {
       post: {
         summary: "Mark an accepted job as in progress",
-        description: "Only the assigned verified merchant can start its accepted booking after the customer has approved the exact current quote. Quote integrity is checked again at start. The update is idempotent and emits an outbox event for future customer notification; no notification is dispatched in this increment.",
+        description: "Only the assigned verified merchant can start its accepted booking after the customer has approved the exact current quote. Quote integrity is checked again at start. The update is idempotent and emits an outbox event. If the optional consent-aware WhatsApp dispatcher is enabled, it attempts a best-effort customer update; account state remains authoritative.",
         parameters: [
           { name: "id", in: "path", required: true, schema: { type: "string", format: "uuid" } },
           { name: "Idempotency-Key", in: "header", required: true, schema: { type: "string", pattern: "^[A-Za-z0-9._:-]{16,128}$", minLength: 16, maxLength: 128 } },

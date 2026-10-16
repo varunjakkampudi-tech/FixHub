@@ -191,7 +191,7 @@ export function Header({ functionalPreview = false, authState = "signed-out" }: 
         </div>}
       </header>
       {functionalPreview ? (
-        <div className="preview-strip">{locale === "te-IN" ? "ఫంక్షనల్ ప్రివ్యూ · సేవా ప్రదాతల సందేశాలు, కేటాయింపు, ఆన్‌లైన్ చెల్లింపులు ఇంకా సక్రియంగా లేవు" : "Functional preview · Provider notifications, assignment, and online payments are not active"}</div>
+        <div className="preview-strip">{locale === "te-IN" ? "ఫంక్షనల్ ప్రివ్యూ · స్వయంచాలక కేటాయింపు, ఆన్‌లైన్ చెల్లింపులు సక్రియంగా లేవు. WhatsApp సందేశాలు సక్రియం చేసినా అవి ఉత్తమ ప్రయత్నంతో మాత్రమే అందుతాయి." : "Functional preview · Automated assignment and online payments are not active. WhatsApp messages, if enabled, are best-effort."}</div>
       ) : (
         <>
           <div className="preview-strip">{t("preview")}</div>
