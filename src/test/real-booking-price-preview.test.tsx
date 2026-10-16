@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({ request: vi.fn() }));
@@ -51,6 +51,31 @@ afterEach(() => {
 });
 
 describe("customer booking price preview", () => {
+  it("shows accessible loading placeholders until services and saved addresses are ready", async () => {
+    let resolveServices!: (value: { items: { id: string; name: string; category: string; description: string }[] }) => void;
+    let resolveAddresses!: (value: { items: { id: string; label: string; address: string; locality: string; latitude: number; longitude: number }[] }) => void;
+    mocks.request.mockImplementation((path: string) => {
+      if (path === "/api/v1/services") return new Promise((resolve) => { resolveServices = resolve; });
+      if (path === "/api/v1/customer/addresses") return new Promise((resolve) => { resolveAddresses = resolve; });
+      if (path.startsWith("/api/v1/customer/pricing-preview?")) return Promise.resolve({ available: false, currency: "INR", paymentMethod: "cash_on_completion", minTotalPaise: null, maxTotalPaise: null, partsIncluded: false });
+      throw new Error(`Unexpected request: ${path}`);
+    });
+
+    render(<FixHubProvider><RealBookingPage /></FixHubProvider>);
+    expect(screen.getByRole("status", { name: "Loading services" })).toHaveAttribute("aria-busy", "true");
+    expect(screen.getByRole("status", { name: "Loading saved addresses" })).toHaveAttribute("aria-busy", "true");
+    expect(screen.queryByRole("combobox", { name: "Service" })).not.toBeInTheDocument();
+
+    await act(async () => {
+      resolveServices({ items: [{ id: serviceId, name: "Electrical repair", category: "electrician", description: "Electrical repairs" }] });
+      resolveAddresses({ items: [{ id: addressId, label: "Home", address: "Private address", locality: "Tanuku", latitude: 16.75, longitude: 81.68 }] });
+    });
+
+    expect(await screen.findByRole("combobox", { name: "Service" })).toBeInTheDocument();
+    expect(screen.queryByRole("status", { name: "Loading services" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("status", { name: "Loading saved addresses" })).not.toBeInTheDocument();
+  });
+
   it("shows an in-area indicative price range and keeps payment cash-only", async () => {
     setupPricePreview(true);
 
@@ -114,8 +139,10 @@ describe("customer booking price preview", () => {
 
       const saveButton = screen.getByRole("button", { name: "Save address and location" });
       expect(saveButton).toBeDisabled();
-      fireEvent.change(screen.getByLabelText("Latitude"), { target: { value: "16.75" } });
+      fireEvent.change(screen.getByLabelText("Latitude"), { target: { value: "91" } });
       fireEvent.change(screen.getByLabelText("Longitude"), { target: { value: "81.68" } });
+      expect(saveButton).toBeDisabled();
+      fireEvent.change(screen.getByLabelText("Latitude"), { target: { value: "16.75" } });
       expect(saveButton).toBeEnabled();
       fireEvent.click(saveButton);
 

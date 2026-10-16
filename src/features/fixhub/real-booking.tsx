@@ -78,6 +78,7 @@ export function RealBookingPage() {
   const te = locale === "te-IN";
   const [services, setServices] = useState<Service[]>([]);
   const [addresses, setAddresses] = useState<Address[]>([]);
+  const [initialDataLoading, setInitialDataLoading] = useState(true);
   const [serviceId, setServiceId] = useState("");
   const [addressId, setAddressId] = useState("");
   const [label, setLabel] = useState("Home");
@@ -102,6 +103,7 @@ export function RealBookingPage() {
 
   useEffect(() => {
     let active = true;
+    setInitialDataLoading(true);
     Promise.all([
       apiRequest<{ items: Service[] }>("/api/v1/services"),
       apiRequest<{ items: Address[] }>("/api/v1/customer/addresses"),
@@ -113,6 +115,8 @@ export function RealBookingPage() {
       setAddressId(addressResult.items[0]?.id ?? "");
     }).catch((cause: unknown) => {
       if (active) setError(cause instanceof Error ? cause.message : (te ? "సేవలను లోడ్ చేయలేకపోయాం." : "Could not load services and saved addresses."));
+    }).finally(() => {
+      if (active) setInitialDataLoading(false);
     });
     return () => { active = false; };
   }, [te]);
@@ -262,59 +266,77 @@ export function RealBookingPage() {
           <form className="space-y-5" onSubmit={createBooking}>
             <section className="summary-panel">
               <h2 className="text-lg font-semibold">{te ? "సేవను ఎంచుకోండి" : "Choose a service"}</h2>
-              <div className="form-group mt-4">
-                <label className="form-label" htmlFor="live-service">{te ? "సేవ" : "Service"}</label>
-                <select id="live-service" className="form-input" required value={serviceId} onChange={(event) => { setServiceId(event.target.value); setIdempotencyKey(""); }}>
-                  <option value="">{te ? "సేవను ఎంచుకోండి" : "Select a service"}</option>
-                  {services.map((service) => <option key={service.id} value={service.id}>{service.name}</option>)}
-                </select>
-              </div>
+              {initialDataLoading ? (
+                <div className="mt-4" role="status" aria-busy="true" aria-label={te ? "సేవలు లోడ్ అవుతున్నాయి" : "Loading services"}>
+                  <p className="sr-only">{te ? "సేవలు లోడ్ అవుతున్నాయి…" : "Loading services…"}</p>
+                  <div aria-hidden="true" className="h-11 animate-pulse motion-reduce:animate-none rounded-md border bg-muted/40" />
+                </div>
+              ) : (
+                <div className="form-group mt-4">
+                  <label className="form-label" htmlFor="live-service">{te ? "సేవ" : "Service"}</label>
+                  <select id="live-service" className="form-input" required value={serviceId} onChange={(event) => { setServiceId(event.target.value); setIdempotencyKey(""); }}>
+                    <option value="">{te ? "సేవను ఎంచుకోండి" : "Select a service"}</option>
+                    {services.map((service) => <option key={service.id} value={service.id}>{service.name}</option>)}
+                  </select>
+                </div>
+              )}
               <p className="text-sm text-muted-foreground">{te ? "చివరి ఖర్చు పని తనిఖీ మరియు ధర అంగీకారానికి లోబడి ఉంటుంది." : "A provider confirms the inspection and final price before any work. Unknown costs are not treated as zero."}</p>
             </section>
 
             <section className="summary-panel">
               <h2 className="text-lg font-semibold">{te ? "సేవా చిరునామా" : "Service address"}</h2>
-              {addresses.length > 0 && (
-                <div className="form-group mt-4">
-                  <label className="form-label" htmlFor="saved-address">{te ? "సేవ్ చేసిన చిరునామాలు" : "Saved addresses"}</label>
-                  <select id="saved-address" className="form-input" value={addressId} onChange={(event) => setAddressId(event.target.value)}>
-                    <option value="">{te ? "చిరునామాను ఎంచుకోండి" : "Choose an address"}</option>
-                    {addresses.map((item) => <option key={item.id} value={item.id}>{item.label} · {item.locality}</option>)}
-                  </select>
+              {initialDataLoading ? (
+                <div className="mt-4 space-y-3" role="status" aria-busy="true" aria-label={te ? "చిరునామాలు లోడ్ అవుతున్నాయి" : "Loading saved addresses"}>
+                  <p className="sr-only">{te ? "చిరునామాలు లోడ్ అవుతున్నాయి…" : "Loading saved addresses…"}</p>
+                  <div aria-hidden="true" className="h-11 animate-pulse motion-reduce:animate-none rounded-md border bg-muted/40" />
+                  <div aria-hidden="true" className="h-24 animate-pulse motion-reduce:animate-none rounded-md border bg-muted/40" />
+                  <div aria-hidden="true" className="h-11 animate-pulse motion-reduce:animate-none rounded-md border bg-muted/40" />
                 </div>
+              ) : (
+                <>
+                  {addresses.length > 0 && (
+                    <div className="form-group mt-4">
+                      <label className="form-label" htmlFor="saved-address">{te ? "సేవ్ చేసిన చిరునామాలు" : "Saved addresses"}</label>
+                      <select id="saved-address" className="form-input" value={addressId} onChange={(event) => setAddressId(event.target.value)}>
+                        <option value="">{te ? "చిరునామాను ఎంచుకోండి" : "Choose an address"}</option>
+                        {addresses.map((item) => <option key={item.id} value={item.id}>{item.label} · {item.locality}</option>)}
+                      </select>
+                    </div>
+                  )}
+                  <div className="form-group mt-4">
+                    <label className="form-label" htmlFor="address-label">{te ? "చిరునామా పేరు" : "Address label"}</label>
+                    <input id="address-label" className="form-input" maxLength={40} value={label} onChange={(event) => setLabel(event.target.value)} />
+                  </div>
+                  <div className="form-group mt-4">
+                    <label className="form-label" htmlFor="address-text">{te ? "పూర్తి చిరునామా" : "Full address"}</label>
+                    <textarea id="address-text" className="form-input min-h-24" maxLength={500} required value={addressText} onChange={(event) => editServiceAddress(event.target.value)} />
+                  </div>
+                  <div className="form-group mt-4">
+                    <label className="form-label" htmlFor="address-locality">{te ? "ప్రాంతం / పట్టణం" : "Locality / town"}</label>
+                    <input id="address-locality" className="form-input" maxLength={120} required value={locality} onChange={(event) => editServiceLocality(event.target.value)} />
+                  </div>
+                  <Button type="button" variant="outline" className="mt-3" onClick={useCurrentLocation} disabled={busy}>
+                    {te ? "నా ప్రస్తుత స్థానాన్ని ఉపయోగించండి" : "Use my current location"}
+                  </Button>
+                  <p className="mt-3 text-sm">{te ? "అనుమతి ఇవ్వలేకపోతే, మీకు నచ్చిన మ్యాప్ యాప్‌లో చిరునామాకు సరిపోయే పిన్ అక్షాంశం, రేఖాంశాన్ని నమోదు చేయండి." : "If you cannot grant location permission, enter the matching pin's latitude and longitude from a map app of your choice."}</p>
+                  <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                    <div className="form-group">
+                      <label className="form-label" htmlFor="address-latitude">{te ? "అక్షాంశం" : "Latitude"}</label>
+                      <input id="address-latitude" className="form-input" type="number" inputMode="decimal" min={-90} max={90} step="any" value={latitudeInput} onChange={(event) => editCoordinate("latitude", event.target.value)} disabled={busy} />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label" htmlFor="address-longitude">{te ? "రేఖాంశం" : "Longitude"}</label>
+                      <input id="address-longitude" className="form-input" type="number" inputMode="decimal" min={-180} max={180} step="any" value={longitudeInput} onChange={(event) => editCoordinate("longitude", event.target.value)} disabled={busy} />
+                    </div>
+                  </div>
+                  {validCoordinates && <p className="mt-2 text-xs text-muted-foreground">{te ? "స్థానం ఎంచుకోబడింది" : "Location pin set for this service request"}</p>}
+                  <p className="mt-2 text-xs text-muted-foreground">{te ? "సేవా పరిధిని తనిఖీ చేయడానికి ఖచ్చితమైన స్థానం అవసరం. కేటాయించిన ప్రదాతకే పూర్తి దిశలు చూపబడతాయి." : "An exact location is needed to check service coverage. Full directions are shown only to an assigned provider."}</p>
+                  {locationMessage && <p role="status" className="mt-2 text-sm">{locationMessage}</p>}
+                  <Button type="button" variant="outline" className="mt-3 block" onClick={saveAddress} disabled={busy || !addressText.trim() || !locality.trim() || !validCoordinates}>
+                    {savedAddress ? (te ? "చిరునామా సేవ్ అయింది" : "Address saved") : (te ? "చిరునామా, స్థానాన్ని సేవ్ చేయండి" : "Save address and location")}
+                  </Button>
+                </>
               )}
-              <div className="form-group mt-4">
-                <label className="form-label" htmlFor="address-label">{te ? "చిరునామా పేరు" : "Address label"}</label>
-                <input id="address-label" className="form-input" maxLength={40} value={label} onChange={(event) => setLabel(event.target.value)} />
-              </div>
-              <div className="form-group mt-4">
-                <label className="form-label" htmlFor="address-text">{te ? "పూర్తి చిరునామా" : "Full address"}</label>
-                <textarea id="address-text" className="form-input min-h-24" maxLength={500} required value={addressText} onChange={(event) => editServiceAddress(event.target.value)} />
-              </div>
-              <div className="form-group mt-4">
-                <label className="form-label" htmlFor="address-locality">{te ? "ప్రాంతం / పట్టణం" : "Locality / town"}</label>
-                <input id="address-locality" className="form-input" maxLength={120} required value={locality} onChange={(event) => editServiceLocality(event.target.value)} />
-              </div>
-              <Button type="button" variant="outline" className="mt-3" onClick={useCurrentLocation} disabled={busy}>
-                {te ? "నా ప్రస్తుత స్థానాన్ని ఉపయోగించండి" : "Use my current location"}
-              </Button>
-              <p className="mt-3 text-sm">{te ? "అనుమతి ఇవ్వలేకపోతే, మీకు నచ్చిన మ్యాప్ యాప్‌లో చిరునామాకు సరిపోయే పిన్ అక్షాంశం, రేఖాంశాన్ని నమోదు చేయండి." : "If you cannot grant location permission, enter the matching pin's latitude and longitude from a map app of your choice."}</p>
-              <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                <div className="form-group">
-                  <label className="form-label" htmlFor="address-latitude">{te ? "అక్షాంశం" : "Latitude"}</label>
-                  <input id="address-latitude" className="form-input" type="number" inputMode="decimal" min={-90} max={90} step="any" value={latitudeInput} onChange={(event) => editCoordinate("latitude", event.target.value)} disabled={busy} />
-                </div>
-                <div className="form-group">
-                  <label className="form-label" htmlFor="address-longitude">{te ? "రేఖాంశం" : "Longitude"}</label>
-                  <input id="address-longitude" className="form-input" type="number" inputMode="decimal" min={-180} max={180} step="any" value={longitudeInput} onChange={(event) => editCoordinate("longitude", event.target.value)} disabled={busy} />
-                </div>
-              </div>
-              {validCoordinates && <p className="mt-2 text-xs text-muted-foreground">{te ? "స్థానం ఎంచుకోబడింది" : "Location pin set for this service request"}</p>}
-              <p className="mt-2 text-xs text-muted-foreground">{te ? "సేవా పరిధిని తనిఖీ చేయడానికి ఖచ్చితమైన స్థానం అవసరం. కేటాయించిన ప్రదాతకే పూర్తి దిశలు చూపబడతాయి." : "An exact location is needed to check service coverage. Full directions are shown only to an assigned provider."}</p>
-              {locationMessage && <p role="status" className="mt-2 text-sm">{locationMessage}</p>}
-              <Button type="button" variant="outline" className="mt-3 block" onClick={saveAddress} disabled={busy || !addressText.trim() || !locality.trim() || !validCoordinates}>
-                {savedAddress ? (te ? "చిరునామా సేవ్ అయింది" : "Address saved") : (te ? "చిరునామా, స్థానాన్ని సేవ్ చేయండి" : "Save address and location")}
-              </Button>
             </section>
 
             <section className="summary-panel" aria-labelledby="price-preview-title" aria-busy={pricePreviewStatus === "loading"}>
