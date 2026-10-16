@@ -101,7 +101,7 @@ describe("marketplace boundaries", () => {
         record.body = JSON.parse(String(values[3]));
       }
       if (sql.includes("SELECT latitude, longitude FROM customer_address")) return { rows: [{ latitude: "16.75", longitude: "81.68" }] };
-      if (sql.includes("SELECT id, name FROM service_catalog")) return { rows: [{ id: serviceId, name: "General electrical service" }] };
+      if (sql.includes("SELECT id, name FROM service_catalog") || sql.includes("SELECT id FROM service_catalog")) return { rows: [{ id: serviceId, name: "General electrical service" }] };
       if (sql.includes("SELECT m.subject_id AS merchant_id")) return { rows: providersAvailable ? [
         { merchant_id: localMerchantId, business_name: "Local Electrician", latitude: "16.75", longitude: "81.68", service_radius_km: "5", visit_price_paise: "25000", labor_from_paise: "30000" },
         { merchant_id: nearbyMerchantId, business_name: "Nearby Electrician", latitude: "16.76", longitude: "81.69", service_radius_km: "5", visit_price_paise: "30000", labor_from_paise: "10000" },
@@ -140,10 +140,27 @@ describe("marketplace boundaries", () => {
       .set("Cookie", `${sessionCookie.split(";", 1)[0]}; ${csrfCookie.split(";", 1)[0]}`)
       .set("x-csrf-token", csrf);
 
+    await request(app).get("/api/v1/customer/pricing-preview").query({ serviceId, addressId }).expect(401);
     await requestWithAuth("post", "/api/v1/customer/addresses")
       .send({ label: "Home", address: "12 Main Street", locality: "Tanuku", latitude: 16.75, longitude: 81.68 })
       .expect(201);
+    const pricePreview = await requestWithAuth("get", "/api/v1/customer/pricing-preview")
+      .query({ serviceId, addressId })
+      .expect(200);
+    expect(pricePreview.body).toEqual({
+      available: true,
+      currency: "INR",
+      paymentMethod: "cash_on_completion",
+      minTotalPaise: 40000,
+      maxTotalPaise: 55000,
+      partsIncluded: false,
+    });
+    expect(JSON.stringify(pricePreview.body)).not.toContain("Local Electrician");
     providersAvailable = false;
+    const unavailablePreview = await requestWithAuth("get", "/api/v1/customer/pricing-preview")
+      .query({ serviceId, addressId })
+      .expect(200);
+    expect(unavailablePreview.body).toMatchObject({ available: false, minTotalPaise: null, maxTotalPaise: null });
     const retryKey = "provider-retry-000001";
     await requestWithAuth("post", "/api/v1/customer/bookings")
       .set("Idempotency-Key", retryKey)

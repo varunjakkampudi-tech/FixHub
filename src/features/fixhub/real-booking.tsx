@@ -8,6 +8,7 @@ import { Notice, PageShell, PageTop } from "./shared";
 
 type Service = { id: string; name: string; category: string; description: string };
 type Address = { id: string; label: string; address: string; locality: string; latitude: number | null; longitude: number | null };
+type PricePreview = { available: boolean; currency: "INR"; paymentMethod: "cash_on_completion"; minTotalPaise: number | null; maxTotalPaise: number | null; partsIncluded: false };
 type Booking = {
   id: string;
   status: string;
@@ -91,6 +92,8 @@ export function RealBookingPage() {
   const [error, setError] = useState("");
   const [savedAddress, setSavedAddress] = useState(false);
   const [idempotencyKey, setIdempotencyKey] = useState("");
+  const [pricePreview, setPricePreview] = useState<PricePreview | null>(null);
+  const [pricePreviewStatus, setPricePreviewStatus] = useState<"idle" | "loading" | "ready" | "unavailable">("idle");
 
   useEffect(() => {
     let active = true;
@@ -108,6 +111,28 @@ export function RealBookingPage() {
     });
     return () => { active = false; };
   }, [te]);
+
+  useEffect(() => {
+    if (!serviceId || !addressId) {
+      setPricePreview(null);
+      setPricePreviewStatus("idle");
+      return;
+    }
+    let active = true;
+    const params = new URLSearchParams({ serviceId, addressId });
+    setPricePreview(null);
+    setPricePreviewStatus("loading");
+    apiRequest<PricePreview>(`/api/v1/customer/pricing-preview?${params.toString()}`)
+      .then((preview) => {
+        if (!active) return;
+        setPricePreview(preview);
+        setPricePreviewStatus("ready");
+      })
+      .catch(() => {
+        if (active) setPricePreviewStatus("unavailable");
+      });
+    return () => { active = false; };
+  }, [serviceId, addressId]);
 
   function useCurrentLocation() {
     setLocationMessage("");
@@ -227,6 +252,23 @@ export function RealBookingPage() {
               </Button>
             </section>
 
+            <section className="summary-panel" aria-labelledby="price-preview-title" aria-busy={pricePreviewStatus === "loading"}>
+              <h2 id="price-preview-title" className="text-lg font-semibold">{te ? "మీ ప్రాంతంలో సూచనాత్మక ధర" : "Indicative price in your area"}</h2>
+              {pricePreviewStatus === "loading" && <p className="mt-3 animate-pulse text-sm text-muted-foreground motion-reduce:animate-none" role="status">{te ? "ధరలను తనిఖీ చేస్తున్నాం…" : "Checking current provider prices…"}</p>}
+              {pricePreviewStatus === "idle" && <p className="mt-3 text-sm text-muted-foreground">{te ? "ప్రాంతపు ధరలను చూడటానికి సేవను ఎంచుకుని, చిరునామాను సేవ్ చేయండి." : "Choose a service and save a service address to see in-area prices."}</p>}
+              {pricePreviewStatus === "ready" && pricePreview?.available && pricePreview.minTotalPaise !== null && pricePreview.maxTotalPaise !== null && <>
+                <p className="mt-3 text-2xl font-semibold tabular-nums">
+                  {pricePreview.minTotalPaise === pricePreview.maxTotalPaise
+                    ? rupees(pricePreview.minTotalPaise, locale)
+                    : `${rupees(pricePreview.minTotalPaise, locale)} – ${rupees(pricePreview.maxTotalPaise, locale)}`}
+                </p>
+                <p className="mt-2 text-sm text-muted-foreground">{te ? "ఇది మీ సేవా ప్రాంతాన్ని కవర్ చేసే ధృవీకరించిన ప్రదాతల ప్రస్తుత ధరల పరిధి మాత్రమే. తుది ధరను ప్రదాత నిర్ధారిస్తారు; పని ప్రారంభానికి ముందు మీ ఆమోదం అవసరం." : "This is an indicative range from verified providers currently covering your saved service address—not a guaranteed quote. The accepting provider confirms the final price, and you approve it before work starts."}</p>
+                <p className="mt-2 text-xs text-muted-foreground">{te ? "భాగాల ధర వేరుగా కోట్ చేయవచ్చు. సేవ పూర్తయ్యాక ప్రదాతకు నగదు చెల్లించాలి; ఆన్‌లైన్ చెల్లింపు లేదు." : "Parts may be quoted separately. Pay the provider in cash after service completion; no online payment is collected."}</p>
+              </>}
+              {pricePreviewStatus === "ready" && pricePreview && !pricePreview.available && <p className="mt-3 text-sm text-muted-foreground" role="status">{te ? "ఈ చిరునామా మరియు సేవకు ప్రస్తుతం ధర చూపించలేం. ప్రదాత లభ్యతను అభ్యర్థన సమయంలో మళ్లీ తనిఖీ చేస్తాం." : "No current in-area provider price is available for this service and saved address. Availability will be checked again when you request service."}</p>}
+              {pricePreviewStatus === "unavailable" && <p className="mt-3 text-sm text-muted-foreground" role="status">{te ? "ధర ప్రివ్యూ తాత్కాలికంగా అందుబాటులో లేదు. అభ్యర్థనకు ముందు ప్రదాత తుది ధరను నిర్ధారించి, మీ ఆమోదం తీసుకుంటారు." : "Price preview is temporarily unavailable. The provider must confirm the final price and get your approval before work begins."}</p>}
+            </section>
+
             <section className="summary-panel">
               <h2 className="text-lg font-semibold">{te ? "సమయం మరియు పని వివరాలు" : "Timing and job details"}</h2>
               <div className="form-group mt-4">
@@ -244,7 +286,7 @@ export function RealBookingPage() {
             </Button>
           </form>
           <aside className="summary-panel h-fit">
-            <h2 className="text-lg font-semibold">{te ? "చెల్లింపు" : "Payment"}</h2>
+            <h2 className="text-lg font-semibold">{te ? "పని పూర్తయ్యాక నగదు" : "Cash on completion"}</h2>
             <p className="mt-2">{te ? "సేవ పూర్తయిన తర్వాత నగదు." : "Cash paid directly to the provider after service completion."}</p>
             <p className="mt-2 text-sm text-muted-foreground">{te ? "ఇది ఆన్‌లైన్ చెల్లింపు కాదు. తుది ధరను ముందుగా మీరు అంగీకరించాలి." : "No online payment is collected. You must see and accept the final price before work begins."}</p>
             <p className="mt-4 text-sm"><Link className="underline" to="/terms">{te ? "సేవా నిబంధనలు" : "Service terms"}</Link> · <Link className="underline" to="/privacy">{te ? "గోప్యత" : "Privacy"}</Link></p>

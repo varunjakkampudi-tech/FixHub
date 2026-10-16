@@ -25,6 +25,11 @@ const bookingInput = z.object({
   return instant >= Date.now() + 10 * 60_000 && instant <= Date.now() + 90 * 24 * 60 * 60_000;
 }, "Choose a time at least ten minutes from now and within ninety days");
 
+const pricingPreviewInput = z.object({
+  serviceId: z.string().uuid(),
+  addressId: z.string().uuid(),
+}).strict();
+
 type Candidate = {
   merchant_id: string;
   business_name: string;
@@ -86,6 +91,52 @@ export function createMarketplaceHandlers(pool: Pick<Pool, "connect">) {
         [customerId],
       );
       return response.status(200).json({ items: result.rows });
+    } finally { client.release(); }
+  }
+
+  async function previewPrice(request: Request, response: Response) {
+    const customerId = authSubject(response);
+    if (!customerId) return response.status(401).json({ error: { code: "AUTH_REQUIRED", message: "Sign in to continue." } });
+    const parsed = pricingPreviewInput.safeParse(request.query);
+    if (!parsed.success) return invalidInput(response, parsed.error.issues.map(({ path, code }) => ({ path, code })));
+
+    const client = await pool.connect();
+    try {
+      const address = await client.query<{ latitude: number | string | null; longitude: number | string | null }>(
+        "SELECT latitude, longitude FROM customer_address WHERE id = $1 AND customer_id = $2",
+        [parsed.data.addressId, customerId],
+      );
+      if (!address.rows.length) return response.status(404).json({ error: { code: "ADDRESS_NOT_FOUND", message: "Choose one of your saved addresses." } });
+
+      const service = await client.query<{ id: string }>(
+        "SELECT id FROM service_catalog WHERE id = $1 AND active = true",
+        [parsed.data.serviceId],
+      );
+      if (!service.rows.length) return response.status(404).json({ error: { code: "SERVICE_NOT_FOUND", message: "Choose an active service." } });
+
+      const candidates = await client.query<Candidate>(
+        `SELECT m.subject_id AS merchant_id, m.business_name, m.latitude, m.longitude, m.service_radius_km,
+                ms.visit_price_paise, ms.labor_from_paise
+         FROM merchant_profile m
+         JOIN merchant_service ms ON ms.merchant_id = m.subject_id AND ms.active = true
+         WHERE ms.service_id = $1 AND m.verification_status = 'verified' AND m.accepting_jobs = true
+         ORDER BY m.business_name LIMIT 500`,
+        [parsed.data.serviceId],
+      );
+      const location = address.rows[0].latitude !== null && address.rows[0].longitude !== null
+        ? { latitude: Number(address.rows[0].latitude), longitude: Number(address.rows[0].longitude) }
+        : null;
+      const eligible = eligibleCandidates(candidates.rows, location);
+      const totals = eligible.map((candidate) => Number(candidate.visit_price_paise) + Number(candidate.labor_from_paise));
+      const available = totals.length > 0;
+      return response.status(200).json({
+        available,
+        currency: "INR",
+        paymentMethod: "cash_on_completion",
+        minTotalPaise: available ? Math.min(...totals) : null,
+        maxTotalPaise: available ? Math.max(...totals) : null,
+        partsIncluded: false,
+      });
     } finally { client.release(); }
   }
 
@@ -478,5 +529,5 @@ export function createMarketplaceHandlers(pool: Pick<Pool, "connect">) {
     return response.status(result.status).json(result.body);
   }
 
-  return { listServices, listAddresses, createAddress, createBooking, listBookings, getBooking, approveQuote, confirmCompletion, createReview };
+  return { listServices, listAddresses, previewPrice, createAddress, createBooking, listBookings, getBooking, approveQuote, confirmCompletion, createReview };
 }

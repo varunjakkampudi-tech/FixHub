@@ -19,6 +19,8 @@ describe("Fix Hub demo API foundation", () => {
     const docs = await request(app).get("/openapi.json").expect(200);
     expect(docs.body.openapi).toBe("3.1.0");
     expect(docs.body.paths["/api/v1/demo/prices/{category}"]).toBeDefined();
+    expect(docs.body.paths["/api/v1/customer/pricing-preview"].get.parameters.map((parameter: { name: string }) => parameter.name))
+      .toEqual(["serviceId", "addressId"]);
     for (const [path, verb] of [
       ["/api/v1/customer/bookings/{id}/complete", "post"],
       ["/api/v1/customer/bookings/{id}/quote-approval", "post"],

@@ -182,6 +182,7 @@ export function createApiApp(options: ApiAppOptions = {}) {
       const marketplace = createMarketplaceHandlers(options.marketplacePool);
       app.get("/api/v1/services", marketplace.listServices);
       app.get("/api/v1/customer/addresses", auth.requireSession, customerRole, marketplace.listAddresses);
+      app.get("/api/v1/customer/pricing-preview", auth.requireSession, customerRole, marketplace.previewPrice);
       app.post("/api/v1/customer/addresses", auth.requireSession, customerRole, marketplace.createAddress);
       app.get("/api/v1/customer/bookings", auth.requireSession, customerRole, marketplace.listBookings);
       app.post("/api/v1/customer/bookings", auth.requireSession, customerRole, marketplace.createBooking);

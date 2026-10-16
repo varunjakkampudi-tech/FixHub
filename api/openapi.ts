@@ -82,6 +82,17 @@ export const openApiDocument = {
         responses: { "201": { description: "Address saved." }, "400": { description: "Invalid input." }, "401": { description: "Authentication required." } },
       },
     },
+    "/api/v1/customer/pricing-preview": {
+      get: {
+        summary: "Preview an indicative service price range for the customer's saved address",
+        description: "Returns only the minimum/maximum displayed total among currently verified, accepting providers whose service area covers the customer's own saved coordinates. Does not identify providers, reserve availability or create a booking. Prices may change before a request is accepted; parts requiring a separate quote are not included. Payment is cash on service completion only; no online payment is collected.",
+        parameters: [
+          { name: "serviceId", in: "query", required: true, schema: { type: "string", format: "uuid" } },
+          { name: "addressId", in: "query", required: true, schema: { type: "string", format: "uuid" } },
+        ],
+        responses: { "200": { description: "Price range, or available=false when no in-area verified provider price is available." }, "400": { description: "Invalid service or address identifier." }, "401": { description: "Authentication required." }, "404": { description: "Service is inactive or address is not owned by the customer." } },
+      },
+    },
     "/api/v1/customer/account-deletion": {
       post: {
         summary: "Request customer account deletion",
