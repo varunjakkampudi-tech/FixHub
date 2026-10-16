@@ -33,11 +33,14 @@ export function RealAuth({ mode = "sign-in" }: { mode?: string }) {
         setMessage(result.message);
         setStage("code");
       } else {
-        await apiRequest("/api/v1/auth/verify", {
+        const session = await apiRequest<{ roles?: string[] }>("/api/v1/auth/verify", {
           method: "POST",
           body: JSON.stringify({ email, code }),
         });
-        await navigate({ to: "/customer/bookings" });
+        if (session.roles?.includes("admin")) await navigate({ to: "/admin" });
+        else if (session.roles?.includes("merchant")) await navigate({ to: "/merchant/requests" });
+        else if (session.roles?.includes("technician")) await navigate({ to: "/technician/jobs" });
+        else await navigate({ to: "/customer/bookings" });
       }
     } catch (cause) {
       setError(cause instanceof ApiError ? cause.message : (te ? "అభ్యర్థన పూర్తి కాలేదు. మళ్లీ ప్రయత్నించండి." : "We could not complete that request. Please try again."));

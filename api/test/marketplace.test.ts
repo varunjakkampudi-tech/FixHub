@@ -109,7 +109,7 @@ describe("marketplace boundaries", () => {
       .expect(201);
     expect(first.body.booking).toMatchObject({
       serviceId,
-      status: "requested",
+      status: "offered",
       paymentMethod: "cash_on_completion",
       eligibleProviderCandidates: 1,
       notificationStatus: "not_dispatched",

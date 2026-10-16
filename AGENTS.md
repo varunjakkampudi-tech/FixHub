@@ -1,6 +1,6 @@
 # Workspace guidance
 
-This repository currently holds product and governance documentation only. Its canonical GitHub repository is `varunjakkampudi-tech/FixHub`, with `main` as the default branch. Read relevant documents and this file before changing project material.
+This repository holds product/governance documentation and a local-only Fix Hub demonstration UI/API. It is not a production service. Its canonical GitHub repository is `varunjakkampudi-tech/FixHub`, with `main` as the default branch. Read relevant documents and this file before changing project material.
 
 ## Product and brand constraints
 

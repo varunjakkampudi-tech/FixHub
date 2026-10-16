@@ -186,15 +186,15 @@ export function createMarketplaceHandlers(pool: Pick<Pool, "connect">) {
       await client.query(
         `INSERT INTO service_booking
           (id, customer_id, service_id, address_id, status, scheduled_at, customer_note, visit_price_paise, labor_estimate_paise)
-         VALUES ($1, $2, $3, $4, 'requested', $5, $6, $7, $8)`,
+         VALUES ($1, $2, $3, $4, 'offered', $5, $6, $7, $8)`,
         [bookingId, customerId, payload.serviceId, payload.addressId, payload.scheduledAt ?? null, payload.note, Number(cheapest.visit_price_paise), Number(cheapest.labor_from_paise)],
       );
       for (const candidate of eligible) {
         const offerId = randomUUID();
         const eventId = randomUUID();
         await client.query(
-          `INSERT INTO booking_offer (id, booking_id, merchant_id, visit_price_paise, labor_price_paise)
-           VALUES ($1, $2, $3, $4, $5)`,
+          `INSERT INTO booking_offer (id, booking_id, merchant_id, visit_price_paise, labor_price_paise, expires_at)
+           VALUES ($1, $2, $3, $4, $5, clock_timestamp() + interval '15 minutes')`,
           [offerId, bookingId, candidate.merchant_id, Number(candidate.visit_price_paise), Number(candidate.labor_from_paise)],
         );
         await client.query(
@@ -208,13 +208,13 @@ export function createMarketplaceHandlers(pool: Pick<Pool, "connect">) {
           id: bookingId,
           serviceId: payload.serviceId,
           serviceName: service.rows[0].name,
-          status: "requested",
+          status: "offered",
           paymentMethod: "cash_on_completion",
           currency: "INR",
           estimate: { visitPaise: Number(cheapest.visit_price_paise), laborFromPaise: Number(cheapest.labor_from_paise), totalFromPaise: serviceTotal(cheapest) },
           eligibleProviderCandidates: eligible.length,
           notificationStatus: "not_dispatched",
-          notice: "The request was saved; providers have not been contacted in this release.",
+          notice: "The request was saved and matching offers are visible to eligible merchants. Notifications are not active in this build.",
           createdAt: new Date().toISOString(),
         },
       };
