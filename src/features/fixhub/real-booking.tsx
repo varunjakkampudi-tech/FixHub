@@ -2,6 +2,7 @@ import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ApiError, apiRequest } from "./api-client";
 import { useFixHub } from "./context";
 import { Notice, PageShell, PageTop } from "./shared";
@@ -33,6 +34,38 @@ type Booking = {
 
 function rupees(paise: number, locale: string) {
   return new Intl.NumberFormat(locale, { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(paise / 100);
+}
+
+function BookingLoadingState({ detail, locale }: { detail: boolean; locale: string }) {
+  const te = locale === "te-IN";
+  return (
+    <div role="status" aria-busy="true" className="space-y-4">
+      <span className="sr-only">{detail ? (te ? "బుకింగ్ వివరాలు లోడ్ అవుతున్నాయి" : "Loading booking details…") : (te ? "బుకింగ్‌లు లోడ్ అవుతున్నాయి" : "Loading your bookings…")}</span>
+      <div aria-hidden="true">
+        {detail ? (
+          <article className="summary-panel space-y-4">
+            <Skeleton className="h-7 w-2/3" />
+            <Skeleton className="h-4 w-1/3" />
+            <Skeleton className="h-4 w-5/6" />
+            <div className="space-y-3 rounded-xl border p-4">
+              <Skeleton className="h-4 w-1/2" />
+              <Skeleton className="h-4 w-2/3" />
+              <Skeleton className="h-4 w-1/2" />
+              <Skeleton className="h-11 w-44" />
+            </div>
+          </article>
+        ) : (
+          <div className="grid gap-4 md:grid-cols-2">
+            {[0, 1].map((index) => <article key={index} className="summary-panel space-y-4">
+              <Skeleton className="h-6 w-2/3" />
+              <Skeleton className="h-4 w-1/2" />
+              <Skeleton className="h-4 w-3/4" />
+            </article>)}
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 function serviceRecordDownload(booking: Booking, locale: string) {
@@ -555,7 +588,7 @@ export function RealBookingHistory({ detail = false }: { detail?: boolean; mode?
             ? `చివరిగా నవీకరించిన సమయం ${new Intl.DateTimeFormat(locale, { timeStyle: "short" }).format(lastUpdated)} · ఈ పేజీ తెరిచి ఉన్నప్పుడు స్థితి 30 సెకన్లకు ఒకసారి తనిఖీ అవుతుంది`
             : `Updated ${new Intl.DateTimeFormat(locale, { timeStyle: "short" }).format(lastUpdated)} · status checks every 30 seconds while this page is open`}</p>}
         </div>}
-        {loading ? <p role="status">{te ? "లోడ్ అవుతోంది…" : "Loading…"}</p> : detail ? booking ? (
+        {loading ? <BookingLoadingState detail={detail} locale={locale} /> : detail ? booking ? (
           <article className="summary-panel">
             <h2 className="text-xl font-semibold">{booking.service_name}</h2>
             <p className="mt-2">{te ? "స్థితి" : "Status"}: {booking.status}</p>

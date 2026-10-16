@@ -105,6 +105,23 @@ describe("completed booking service record", () => {
     expect(screen.queryByText(/they have not been notified/i)).not.toBeInTheDocument();
   });
 
+  it("shows an accessible booking-shaped skeleton until detail data arrives", async () => {
+    let resolveBooking!: (value: { booking: typeof completedBooking }) => void;
+    mocks.request.mockReturnValue(new Promise((resolve) => { resolveBooking = resolve; }));
+    render(<FixHubProvider><RealBookingHistory detail /></FixHubProvider>);
+
+    const loading = screen.getByRole("status");
+    expect(loading).toHaveAttribute("aria-busy", "true");
+    expect(screen.getByText("Loading booking details…")).toBeInTheDocument();
+    expect(loading.querySelectorAll('[aria-hidden="true"] .animate-pulse').length).toBeGreaterThan(0);
+
+    await act(async () => {
+      resolveBooking({ booking: { ...completedBooking, status: "offered" } });
+      await Promise.resolve();
+    });
+    expect(await screen.findByText("Electrical repair")).toBeInTheDocument();
+  });
+
   it("refreshes an active customer booking while the detail page is visible", async () => {
     vi.useFakeTimers();
     vi.spyOn(document, "visibilityState", "get").mockReturnValue("visible");
