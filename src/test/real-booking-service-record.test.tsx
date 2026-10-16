@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
@@ -53,6 +53,8 @@ function renderBooking(accepted: boolean) {
 
 afterEach(() => {
   cleanup();
+  vi.useRealTimers();
+  mocks.routerPath = "/customer/bookings/00000000-0000-4000-8000-000000000001";
   mocks.request.mockReset();
   vi.restoreAllMocks();
   localStorage.clear();
@@ -80,5 +82,68 @@ describe("completed booking service record", () => {
     expect(await screen.findByText("Electrical repair")).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Service record" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Print / save as PDF" })).not.toBeInTheDocument();
+  });
+
+  it("refreshes an active customer booking while the detail page is visible", async () => {
+    vi.useFakeTimers();
+    vi.spyOn(document, "visibilityState", "get").mockReturnValue("visible");
+    mocks.request.mockResolvedValue({ booking: { ...completedBooking, status: "offered" } });
+    render(<FixHubProvider><RealBookingHistory detail /></FixHubProvider>);
+
+    await act(async () => { await Promise.resolve(); await Promise.resolve(); });
+    expect(mocks.request).toHaveBeenCalledTimes(1);
+    expect(screen.getByText(/status checks every 30 seconds while this page is open/i)).toBeInTheDocument();
+
+    await act(async () => { await vi.advanceTimersByTimeAsync(30_000); });
+    expect(mocks.request).toHaveBeenCalledTimes(2);
+  });
+
+  it("does not poll customer bookings in a hidden tab or after completion", async () => {
+    vi.useFakeTimers();
+    vi.spyOn(document, "visibilityState", "get").mockReturnValue("hidden");
+    mocks.request.mockResolvedValue({ booking: { ...completedBooking, status: "completed" } });
+    render(<FixHubProvider><RealBookingHistory detail /></FixHubProvider>);
+
+    await act(async () => { await Promise.resolve(); await Promise.resolve(); });
+    expect(mocks.request).toHaveBeenCalledTimes(1);
+    await act(async () => { await vi.advanceTimersByTimeAsync(60_000); });
+    expect(mocks.request).toHaveBeenCalledTimes(1);
+  });
+
+  it("ignores a slow refresh response after navigating to another booking", async () => {
+    vi.useFakeTimers();
+    vi.spyOn(document, "visibilityState", "get").mockReturnValue("visible");
+    const bookingAId = "00000000-0000-4000-8000-000000000001";
+    const bookingBId = "00000000-0000-4000-8000-000000000002";
+    let resolveRefreshA!: (value: { booking: typeof completedBooking }) => void;
+    mocks.routerPath = `/customer/bookings/${bookingAId}`;
+    mocks.request
+      .mockResolvedValueOnce({ booking: { ...completedBooking, id: bookingAId, service_name: "Service A", status: "offered" } })
+      .mockImplementationOnce(() => new Promise((resolve) => { resolveRefreshA = resolve; }))
+      .mockResolvedValueOnce({ booking: { ...completedBooking, id: bookingBId, service_name: "Service B", status: "offered" } });
+    const view = render(<FixHubProvider><RealBookingHistory detail /></FixHubProvider>);
+
+    await act(async () => { await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); });
+    expect(screen.getByText("Service A")).toBeInTheDocument();
+    await act(async () => { await vi.advanceTimersByTimeAsync(30_000); });
+    expect(mocks.request).toHaveBeenCalledTimes(2);
+
+    await act(async () => {
+      mocks.routerPath = `/customer/bookings/${bookingBId}`;
+      view.rerender(<FixHubProvider><RealBookingHistory detail /></FixHubProvider>);
+      await Promise.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(screen.getByText("Service B")).toBeInTheDocument();
+
+    await act(async () => {
+      resolveRefreshA({ booking: { ...completedBooking, id: bookingAId, service_name: "Service A stale", status: "offered" } });
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(screen.getByText("Service B")).toBeInTheDocument();
+    expect(screen.queryByText("Service A stale")).not.toBeInTheDocument();
   });
 });

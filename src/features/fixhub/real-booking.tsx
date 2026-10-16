@@ -226,6 +226,8 @@ export function RealBookingHistory({ detail = false }: { detail?: boolean; mode?
   const { locale } = useFixHub();
   const path = useRouterState({ select: (state) => state.location.pathname });
   const id = path.split("/")[3] ?? "";
+  const currentBookingId = useRef(id);
+  currentBookingId.current = id;
   const [items, setItems] = useState<Booking[]>([]);
   const [booking, setBooking] = useState<Booking | null>(null);
   const [error, setError] = useState("");
@@ -236,8 +238,12 @@ export function RealBookingHistory({ detail = false }: { detail?: boolean; mode?
   const [reviewComment, setReviewComment] = useState("");
   const [actionBusy, setActionBusy] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [actionMessage, setActionMessage] = useState("");
   const [actionError, setActionError] = useState("");
+  const refreshInFlight = useRef(false);
+  const refreshQueued = useRef(false);
+  const refreshRef = useRef<() => Promise<void>>(async () => {});
   const actionKeys = useRef(new Map<string, string>());
   const te = locale === "te-IN";
 
@@ -249,7 +255,10 @@ export function RealBookingHistory({ detail = false }: { detail?: boolean; mode?
       : apiRequest<{ items: Booking[] }>("/api/v1/customer/bookings");
     request.then((result) => {
       if (!active) return;
-      if (detail) setBooking((result as { booking: Booking }).booking);
+      if (detail) {
+        setBooking((result as { booking: Booking }).booking);
+        setLastUpdated(new Date());
+      }
       else setItems((result as { items: Booking[] }).items);
     }).catch((cause: unknown) => { if (active) setError(cause instanceof Error ? cause.message : (te ? "బుకింగ్‌లను లోడ్ చేయలేకపోయాం." : "Could not load bookings.")); })
       .finally(() => { if (active) setLoading(false); });
@@ -257,16 +266,44 @@ export function RealBookingHistory({ detail = false }: { detail?: boolean; mode?
   }, [detail, id, te]);
 
   async function refreshBooking() {
-    if (!detail || !id || refreshing) return;
+    if (!detail || !id) return;
+    const requestedId = id;
+    if (refreshInFlight.current) {
+      refreshQueued.current = true;
+      return;
+    }
+    refreshInFlight.current = true;
     setRefreshing(true);
     setError("");
     try {
-      const result = await apiRequest<{ booking: Booking }>(`/api/v1/customer/bookings/${encodeURIComponent(id)}`);
-      setBooking(result.booking);
+      const result = await apiRequest<{ booking: Booking }>(`/api/v1/customer/bookings/${encodeURIComponent(requestedId)}`);
+      if (currentBookingId.current === requestedId) {
+        setBooking(result.booking);
+        setLastUpdated(new Date());
+      }
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : (te ? "స్థితిని తాజా చేయలేకపోయాం." : "We could not refresh this booking."));
-    } finally { setRefreshing(false); }
+      if (currentBookingId.current === requestedId) {
+        setError(cause instanceof Error ? cause.message : (te ? "స్థితిని తాజా చేయలేకపోయాం." : "We could not refresh this booking."));
+      }
+    } finally {
+      setRefreshing(false);
+      refreshInFlight.current = false;
+      if (refreshQueued.current) {
+        refreshQueued.current = false;
+        void refreshRef.current();
+      }
+    }
   }
+
+  refreshRef.current = refreshBooking;
+
+  useEffect(() => {
+    if (!detail || !booking || booking.status === "completed" || booking.status === "cancelled") return;
+    const timer = window.setInterval(() => {
+      if (document.visibilityState === "visible") void refreshRef.current();
+    }, 30_000);
+    return () => window.clearInterval(timer);
+  }, [detail, id, booking?.status]);
 
   async function completeBooking() {
     if (!booking || actionBusy || !confirmComplete) return;
@@ -340,7 +377,12 @@ export function RealBookingHistory({ detail = false }: { detail?: boolean; mode?
         {error && <div role="alert" className="mb-4"><Notice error>{error}</Notice></div>}
         {actionError && <div role="alert" className="mb-4"><Notice error>{actionError}</Notice></div>}
         {actionMessage && <div role="status" className="mb-4"><Notice>{actionMessage}</Notice></div>}
-        {detail && !loading && <div className="mb-4"><Button variant="outline" disabled={refreshing} onClick={() => void refreshBooking()}>{refreshing ? (te ? "తాజా స్థితి…" : "Refreshing status…") : (te ? "స్థితిని తాజా చేయి" : "Refresh status")}</Button></div>}
+        {detail && !loading && <div className="mb-4">
+          <Button variant="outline" disabled={refreshing} onClick={() => void refreshBooking()}>{refreshing ? (te ? "తాజా స్థితి…" : "Refreshing status…") : (te ? "స్థితిని తాజా చేయి" : "Refresh status")}</Button>
+          {lastUpdated && <p className="mt-2 text-xs text-muted-foreground">{te
+            ? `చివరిగా నవీకరించిన సమయం ${new Intl.DateTimeFormat(locale, { timeStyle: "short" }).format(lastUpdated)} · ఈ పేజీ తెరిచి ఉన్నప్పుడు స్థితి 30 సెకన్లకు ఒకసారి తనిఖీ అవుతుంది`
+            : `Updated ${new Intl.DateTimeFormat(locale, { timeStyle: "short" }).format(lastUpdated)} · status checks every 30 seconds while this page is open`}</p>}
+        </div>}
         {loading ? <p role="status">{te ? "లోడ్ అవుతోంది…" : "Loading…"}</p> : detail ? booking ? (
           <article className="summary-panel">
             <h2 className="text-xl font-semibold">{booking.service_name}</h2>
