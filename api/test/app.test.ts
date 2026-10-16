@@ -69,12 +69,12 @@ describe("Fix Hub demo API foundation", () => {
     expect(tooLarge.body.error.code).toBe("PAYLOAD_TOO_LARGE");
   });
 
-  it("allows exact configured CORS origins only and never enables credentialed CORS", async () => {
+  it("allows credentialed CORS only for exact configured origins", async () => {
     const app = createApiApp({ environment: "test", allowedOrigins: ["http://localhost:5173"] });
     const allowed = await request(app).get("/health/live").set("origin", "http://localhost:5173").expect(200);
     expect(allowed.headers["access-control-allow-origin"]).toBe("http://localhost:5173");
     expect(allowed.headers["access-control-expose-headers"]).toContain("x-request-id");
-    expect(allowed.headers["access-control-allow-credentials"]).toBeUndefined();
+    expect(allowed.headers["access-control-allow-credentials"]).toBe("true");
     const rejected = await request(app).get("/health/live").set("origin", "https://attacker.test").expect(200);
     expect(rejected.headers["access-control-allow-origin"]).toBeUndefined();
   });
