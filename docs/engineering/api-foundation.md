@@ -21,6 +21,22 @@ Production readiness intentionally returns `503` while authentication and persis
 
 These controls have focused local tests; they are not a completed threat assessment and do not prove application security.
 
+## Bounded local runtime verification — 2026-10-16
+
+The local API was started on loopback (`127.0.0.1:4400`) from checkout `b78b5f82a8f837d3dc28091d32172e96f1a86308`; the API implementation is unchanged from its parent/current `main` baseline. This was an offline demo check, not a deployment or security certification.
+
+Observed in the running process:
+
+- `/health/live` returned 200 with Helmet headers, no `X-Powered-By`, and a UUID `x-request-id`.
+- Exact configured web origin received CORS access and exposed `x-request-id`; an unrelated origin received no CORS grant.
+- The read-only plumbing price endpoint returned the fictional ₹649 estimate, explicitly marked demo-only and COD-only for the demo; it created no booking or payment.
+- An unknown category returned a bounded 400 `INVALID_INPUT` response with a request ID matching the response header; malformed and oversized JSON returned bounded 400/413 envelopes.
+- `/openapi.json` returned OpenAPI 3.1.0 and `/docs/` served Swagger UI.
+- A 121-request loop against the default in-memory limiter returned 200 for requests 1–120 and 429 for request 121, with the draft-8 `RateLimit` header and no legacy `X-RateLimit-*` header.
+- A local logging probe confirmed Pino output included request ID, method, route template, status and response time without query values, authorization, cookie or contact data.
+
+Limits: one local Node process and loopback client only; no distributed/multi-instance limit, trusted-proxy boundary, authentication, persistent storage, live provider, production logging/retention, admin log viewer, performance target, or formal threat/security review was tested. These observations do not change the demo-only readiness status above.
+
 ## Location and directions boundary
 
 The customer address editor requests browser geolocation only after the user selects its location button; the browser permission prompt remains user-controlled. For an active booking assigned to the signed-in demo merchant or technician, the booking detail page offers an explicit external Google Maps directions link to the saved job coordinates. Opening that link sends the destination to Google Maps. The link uses Google's keyless Maps URL handoff, not the paid Maps Platform API; it does not geocode addresses, search places, share location in the background, or provide FixHub-side live tracking. The demo screen's SAMPLE data must not be used as a real dispatch destination.
