@@ -129,6 +129,7 @@ export function createAuthHandlers(pool: Pick<Pool, "connect">, config: AuthConf
     let released = false;
     let token: string | undefined;
     let csrf: string | undefined;
+    let roles: string[] = [];
     try {
       await client.query("BEGIN");
       await client.query("SELECT pg_advisory_xact_lock(hashtext($1))", [`fixhub-login:${email}`]);
@@ -175,10 +176,19 @@ export function createAuthHandlers(pool: Pick<Pool, "connect">, config: AuthConf
         await client.query("ROLLBACK");
         return response.status(403).json({ error: { code: "ACCOUNT_UNAVAILABLE", message: "This account cannot sign in." } });
       }
-      await client.query(
-        "INSERT INTO identity_role (subject_id, role) VALUES ($1, 'customer') ON CONFLICT DO NOTHING",
+      const existingRoles = await client.query<{ role: string }>(
+        "SELECT role FROM identity_role WHERE subject_id = $1 ORDER BY role",
         [subject.rows[0].id],
       );
+      roles = existingRoles.rows.length
+        ? existingRoles.rows.map(({ role }) => role)
+        : ["customer"];
+      if (!existingRoles.rows.length) {
+        await client.query(
+          "INSERT INTO identity_role (subject_id, role) VALUES ($1, 'customer') ON CONFLICT DO NOTHING",
+          [subject.rows[0].id],
+        );
+      }
 
       token = randomBytes(32).toString("base64url");
       csrf = randomBytes(32).toString("base64url");
@@ -196,7 +206,7 @@ export function createAuthHandlers(pool: Pick<Pool, "connect">, config: AuthConf
     }
 
     setAuthCookies(response, token!, csrf!, config.production);
-    return response.status(200).json({ authenticated: true, role: "customer" });
+    return response.status(200).json({ authenticated: true, roles });
   }
 
   const requireSession: RequestHandler = async (request, response, next) => {
@@ -229,6 +239,13 @@ export function createAuthHandlers(pool: Pick<Pool, "connect">, config: AuthConf
       next();
     } catch (error) { next(error); }
     finally { client.release(); }
+  };
+
+  const requireAnyRole = (...allowedRoles: string[]): RequestHandler => (_request, response, next) => {
+    const auth = response.locals.auth as { roles?: unknown } | undefined;
+    const roles = Array.isArray(auth?.roles) ? auth.roles : [];
+    if (allowedRoles.some((role) => roles.includes(role))) return next();
+    return response.status(403).json({ error: { code: "ROLE_REQUIRED", message: "This account is not authorized for that workspace." } });
   };
 
   async function logout(request: Request, response: Response) {
@@ -274,5 +291,5 @@ export function createAuthHandlers(pool: Pick<Pool, "connect">, config: AuthConf
     });
   }
 
-  return { requestCode, verifyCode, requireSession, logout, requestAccountDeletion };
+  return { requestCode, verifyCode, requireSession, requireAnyRole, logout, requestAccountDeletion };
 }

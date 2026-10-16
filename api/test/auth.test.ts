@@ -62,7 +62,7 @@ describe("email-code authentication", () => {
       .post("/api/v1/auth/verify")
       .send({ email: "customer@example.test", code: fixture.getSentCode() })
       .expect(200);
-    expect(verified.body).toEqual({ authenticated: true, role: "customer" });
+    expect(verified.body).toEqual({ authenticated: true, roles: ["customer"] });
     const cookieHeader = verified.headers["set-cookie"];
     const cookies = Array.isArray(cookieHeader) ? cookieHeader : [cookieHeader];
     expect(cookies).toHaveLength(2);

@@ -15,7 +15,7 @@ type Booking = {
   customer_note?: string;
   visit_price_paise: number;
   labor_estimate_paise: number;
-  parts_estimate_paise: number;
+  parts_estimate_paise: number | null;
   currency: string;
   payment_method: string;
   service_name: string;
@@ -251,14 +251,14 @@ export function RealBookingHistory({ detail = false }: { detail?: boolean; mode?
           <article className="summary-panel">
             <h2 className="text-xl font-semibold">{booking.service_name}</h2>
             <p className="mt-2">{te ? "స్థితి" : "Status"}: {booking.status}</p>
-            {booking.status === "requested" && <Notice warning>{te ? "అభ్యర్థన సేవ్ అయింది; ఈ విడుదలలో సేవా ప్రదాతలకు ఇంకా సందేశాలు పంపడం లేదా కేటాయింపు చేయడం లేదు." : "Your request is saved, but providers have not been notified or assigned in this build."}</Notice>}
+            {(booking.status === "requested" || booking.status === "offered") && <Notice warning>{te ? "అభ్యర్థన సేవ్ అయింది; ఈ విడుదలలో సేవా ప్రదాతలకు ఇంకా సందేశాలు పంపడం లేదా కేటాయింపు చేయడం లేదు." : "Your request is saved and visible to eligible merchants, but they have not been notified or assigned in this build."}</Notice>}
             <p>{booking.address_label} · {booking.locality}</p>
             {booking.address_text && <p className="mt-1">{booking.address_text}</p>}
             {booking.business_name && <p>{booking.business_name}</p>}
             <dl className="mt-5 space-y-2">
               <div><dt className="inline">{te ? "పరిశీలన ఛార్జీ" : "Visit charge"}: </dt><dd className="inline">{rupees(booking.visit_price_paise, locale)}</dd></div>
               <div><dt className="inline">{te ? "శ్రమ అంచనా" : "Labour estimate"}: </dt><dd className="inline">{rupees(booking.labor_estimate_paise, locale)}</dd></div>
-              <div><dt className="inline">{te ? "భాగాల అంచనా" : "Parts estimate"}: </dt><dd className="inline">{rupees(booking.parts_estimate_paise, locale)}</dd></div>
+              <div><dt className="inline">{te ? "భాగాలు" : "Parts"}: </dt><dd className="inline">{booking.parts_estimate_paise === null ? (te ? "అవసరమైతే తనిఖీ తర్వాత కోట్" : "Quoted after inspection if needed") : rupees(booking.parts_estimate_paise, locale)}</dd></div>
             </dl>
             <Notice>{te ? "ధర అంచనా మాత్రమే; పని ప్రారంభించే ముందు తుది ధరను మీరు అంగీకరించాలి. నగదు చెల్లింపు మాత్రమే." : "Indicative estimate only. Accept the final provider price before work begins. Cash on completion only; no online payment is collected."}</Notice>
             <div className="mt-4 flex gap-3"><Button asChild variant="outline"><Link to="/contact">{te ? "మద్దతును సంప్రదించండి" : "Contact support"}</Link></Button><Button asChild><Link to="/customer/book/new">{te ? "మరొక సేవను అభ్యర్థించండి" : "Request another service"}</Link></Button></div>
@@ -270,7 +270,7 @@ export function RealBookingHistory({ detail = false }: { detail?: boolean; mode?
               <Link key={item.id} className="summary-panel block" to="/customer/bookings/$id" params={{ id: item.id }}>
                 <h2 className="font-semibold">{item.service_name}</h2>
                 <p>{item.status} · {item.address_label}, {item.locality}</p>
-                <p>{rupees(item.visit_price_paise + item.labor_estimate_paise + item.parts_estimate_paise, locale)} · {te ? "నగదు" : "Cash on completion"}</p>
+                <p>{rupees(item.visit_price_paise + item.labor_estimate_paise, locale)} · {te ? "భాగాలు అవసరమైతే అదనం; నగదు" : "Parts quoted separately if needed · Cash"}</p>
               </Link>
             ))}</div>}
           </>

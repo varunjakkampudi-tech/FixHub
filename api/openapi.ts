@@ -59,9 +59,9 @@ export const openApiDocument = {
     "/api/v1/auth/verify": {
       post: {
         summary: "Verify an email sign-in code",
-        description: "Creates a customer-only session using HttpOnly cookies and a CSRF token cookie. This endpoint does not grant merchant, technician, support, or administrator roles.",
+        description: "Creates a session using HttpOnly cookies and a CSRF token cookie. New identities receive only the customer role; pre-provisioned identities retain their previously granted roles. This endpoint cannot self-assign merchant, technician, support, or administrator roles.",
         requestBody: { required: true, content: { "application/json": { schema: { type: "object", required: ["email", "code"], properties: { email: { type: "string", format: "email" }, code: { type: "string", pattern: "^[0-9]{6}$" } }, additionalProperties: false } } } },
-        responses: { "200": { description: "Authenticated customer session." }, "400": { description: "Invalid input." }, "401": { description: "Invalid or expired code." }, "429": { description: "Rate limit reached." } },
+        responses: { "200": { description: "Authenticated session with the identity's existing roles, or customer role for a new identity." }, "400": { description: "Invalid input." }, "401": { description: "Invalid or expired code." }, "429": { description: "Rate limit reached." } },
       },
     },
     "/api/v1/auth/me": {
@@ -107,6 +107,36 @@ export const openApiDocument = {
         responses: { "200": { description: "Booking details." }, "401": { description: "Authentication required." }, "404": { description: "Booking not found." } },
       },
     },
+    "/api/v1/merchant/offers": {
+      get: { summary: "List pending offers for the authenticated merchant", description: "Requires a provisioned merchant role and a verified merchant profile accepting work. Only locality and service details are shown before assignment; the customer address is not exposed on this list.", responses: { "200": { description: "The merchant's eligible pending offers." }, "401": { description: "Authentication required." }, "403": { description: "Merchant role required." } } },
+    },
+    "/api/v1/merchant/offers/{id}/response": {
+      post: {
+        summary: "Accept or decline a merchant offer",
+        description: "Requires an authenticated merchant role and verified accepting profile. Accept uses a conditional booking update; only one merchant can claim an unassigned offered booking. Identical retries replay their result.",
+        parameters: [
+          { name: "id", in: "path", required: true, schema: { type: "string", format: "uuid" } },
+          { name: "Idempotency-Key", in: "header", required: true, schema: { type: "string", minLength: 16, maxLength: 128 } },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["decision"],
+                additionalProperties: false,
+                properties: { decision: { type: "string", enum: ["accept", "decline"] } },
+              },
+            },
+          },
+        },
+        responses: { "200": { description: "Offer accepted or declined." }, "400": { description: "Invalid response or idempotency key." }, "401": { description: "Authentication required." }, "403": { description: "Verified accepting merchant required." }, "404": { description: "Offer not available to this merchant." }, "409": { description: "Offer expired, already assigned or idempotency conflict." } },
+      },
+    },
+    "/api/v1/merchant/jobs": {
+      get: { summary: "List jobs assigned to the authenticated merchant", description: "Returns full service-address details only for bookings assigned to the signed-in verified merchant.", responses: { "200": { description: "The merchant's assigned jobs." }, "401": { description: "Authentication required." }, "403": { description: "Merchant role required." } } },
+    },
   },
   components: {
     schemas: {
@@ -133,7 +163,7 @@ export const openApiDocument = {
       AuthenticatedSession: {
         type: "object",
         required: ["authenticated", "subjectId", "roles"],
-        properties: { authenticated: { const: true }, subjectId: { type: "string", format: "uuid" }, roles: { type: "array", items: { type: "string", enum: ["customer"] } } },
+        properties: { authenticated: { const: true }, subjectId: { type: "string", format: "uuid" }, roles: { type: "array", items: { type: "string", enum: ["customer", "merchant", "technician", "support", "admin"] } } },
       },
       CustomerAddressInput: {
         type: "object",

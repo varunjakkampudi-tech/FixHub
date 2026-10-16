@@ -316,7 +316,7 @@ export function Footer({ functionalPreview = false }: { functionalPreview?: bool
 export function BottomNav({ role = "customer", functionalPreview = false }: { role?: string; functionalPreview?: boolean }) {
   const { t } = useFixHub();
   const path = useRouterState({ select: (s) => s.location.pathname });
-  const items = functionalPreview
+  const items = functionalPreview && role === "customer"
     ? [
         [Home, "/", "home"],
         [Grid2X2, "/services", "services"],

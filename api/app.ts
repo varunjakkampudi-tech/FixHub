@@ -12,6 +12,7 @@ import { calculate, initialPolicy } from "../src/features/fixhub/demo-model";
 import { openApiDocument } from "./openapi";
 import { createAuthHandlers, type AuthConfig, type EmailSender } from "./auth";
 import { createMarketplaceHandlers } from "./marketplace";
+import { createMerchantHandlers } from "./merchant";
 import type { Pool } from "pg";
 
 const categories = ["electrician", "plumbing", "ac", "appliance"] as const;
@@ -161,16 +162,22 @@ export function createApiApp(options: ApiAppOptions = {}) {
       res.status(200).json({ authenticated: true, ...res.locals.auth }),
     );
     app.post("/api/v1/auth/logout", auth.requireSession, auth.logout);
-    app.post("/api/v1/customer/account-deletion", auth.requireSession, auth.requestAccountDeletion);
+    const customerRole = auth.requireAnyRole("customer");
+    const merchantRole = auth.requireAnyRole("merchant");
+    app.post("/api/v1/customer/account-deletion", auth.requireSession, customerRole, auth.requestAccountDeletion);
 
     if (options.marketplacePool) {
       const marketplace = createMarketplaceHandlers(options.marketplacePool);
       app.get("/api/v1/services", marketplace.listServices);
-      app.get("/api/v1/customer/addresses", auth.requireSession, marketplace.listAddresses);
-      app.post("/api/v1/customer/addresses", auth.requireSession, marketplace.createAddress);
-      app.get("/api/v1/customer/bookings", auth.requireSession, marketplace.listBookings);
-      app.post("/api/v1/customer/bookings", auth.requireSession, marketplace.createBooking);
-      app.get("/api/v1/customer/bookings/:id", auth.requireSession, marketplace.getBooking);
+      app.get("/api/v1/customer/addresses", auth.requireSession, customerRole, marketplace.listAddresses);
+      app.post("/api/v1/customer/addresses", auth.requireSession, customerRole, marketplace.createAddress);
+      app.get("/api/v1/customer/bookings", auth.requireSession, customerRole, marketplace.listBookings);
+      app.post("/api/v1/customer/bookings", auth.requireSession, customerRole, marketplace.createBooking);
+      app.get("/api/v1/customer/bookings/:id", auth.requireSession, customerRole, marketplace.getBooking);
+      const merchant = createMerchantHandlers(options.marketplacePool);
+      app.get("/api/v1/merchant/offers", auth.requireSession, merchantRole, merchant.listOffers);
+      app.post("/api/v1/merchant/offers/:id/response", auth.requireSession, merchantRole, merchant.respondToOffer);
+      app.get("/api/v1/merchant/jobs", auth.requireSession, merchantRole, merchant.listJobs);
     }
   }
 
