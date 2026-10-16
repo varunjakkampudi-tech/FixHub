@@ -35,6 +35,7 @@ import {
 } from "./demo-model";
 import { demoBillLines, demoServiceRecordFile } from "./demo-bill";
 import { enabledServices, formattedAddress, ratesFor, placeLabel } from "./location-model";
+import { eligibleMerchants } from "./provider-availability";
 import { servicePhoto } from "./service-photos";
 import { Brand, CategoryIcon, LocaleControl } from "./shared";
 
@@ -323,33 +324,6 @@ export function AppService({ id }: { id: string }) {
 }
 
 /* ---------- 5. Providers ---------- */
-export function eligibleMerchants(
-  state: ReturnType<typeof useDemo>["state"],
-  cityId: string,
-  category: Category,
-  date: string,
-) {
-  const dateValue = new Date(`${date}T12:00:00`);
-  const weekday = dateValue.getDay();
-  if (!Number.isFinite(dateValue.getTime())) return [];
-  const activeByMerchant = new Map<string, number>();
-  for (const booking of state.bookings) {
-    if (
-      !booking.merchantId ||
-      ["complete", "cancelled", "expired", "disputed"].includes(booking.status)
-    ) continue;
-    activeByMerchant.set(booking.merchantId, (activeByMerchant.get(booking.merchantId) ?? 0) + 1);
-  }
-  return state.merchants.filter(
-    (m) => m.skills.includes(category)
-      && (m.cityIds ?? ["tanuku"]).includes(cityId)
-      && m.status === "active"
-      && (m.verification ?? "approved") === "approved"
-      && m.capacity > (activeByMerchant.get(m.id) ?? 0)
-      && (m.workDays ?? [0, 1, 2, 3, 4, 5, 6]).includes(weekday)
-      && !(m.blackouts ?? []).includes(date),
-  );
-}
 function initials(name: string) {
   return name.replace(/SAMPLE|DEMO/g, "").trim().split(/\s+/).map((w) => w[0]).slice(0, 2).join("");
 }
