@@ -1,4 +1,4 @@
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({ request: vi.fn() }));
@@ -67,5 +67,33 @@ describe("customer booking price preview", () => {
 
     expect(await screen.findByText(/No current in-area provider price is available/i)).toBeInTheDocument();
     expect(document.body.textContent).not.toContain("₹400 – ₹550");
+  });
+
+  it("clears the selected destination and prior pin when the address is edited", async () => {
+    const originalGeolocation = Object.getOwnPropertyDescriptor(navigator, "geolocation");
+    const position = { coords: { latitude: 16.75, longitude: 81.68 } } as GeolocationPosition;
+    Object.defineProperty(navigator, "geolocation", {
+      configurable: true,
+      value: { getCurrentPosition: (success: PositionCallback) => success(position) },
+    });
+
+    try {
+      setupPricePreview(true);
+      const savedAddress = await screen.findByLabelText("Saved addresses");
+      expect(savedAddress).toHaveValue(addressId);
+
+      fireEvent.click(screen.getByRole("button", { name: "Use my current location" }));
+      expect(await screen.findByText("Location shared for this service request")).toBeInTheDocument();
+      expect(savedAddress).toHaveValue("");
+      expect(screen.getByRole("button", { name: "Find eligible providers" })).toBeDisabled();
+
+      fireEvent.change(screen.getByLabelText("Full address"), { target: { value: "A different service address" } });
+      expect(screen.queryByText("Location shared for this service request")).not.toBeInTheDocument();
+      expect(await screen.findByText(/Address changed\. Share its location again/i)).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "Find eligible providers" })).toBeDisabled();
+    } finally {
+      if (originalGeolocation) Object.defineProperty(navigator, "geolocation", originalGeolocation);
+      else Reflect.deleteProperty(navigator, "geolocation");
+    }
   });
 });

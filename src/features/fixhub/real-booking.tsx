@@ -142,13 +142,36 @@ export function RealBookingPage() {
     }
     navigator.geolocation.getCurrentPosition(
       (position) => {
+        setAddressId("");
+        setSavedAddress(false);
+        setIdempotencyKey("");
         setLatitude(position.coords.latitude);
         setLongitude(position.coords.longitude);
         setLocationMessage(te ? "మీరు ఎంచుకున్న స్థానాన్ని ఫారమ్‌కు జోడించాం." : "Your chosen location was added to this address.");
       },
-      () => setLocationMessage(te ? "స్థాన అనుమతి లభించలేదు. చిరునామా వివరాలు నమోదు చేయండి." : "Location was not shared. Enter the address details manually."),
+      () => setLocationMessage(te ? "స్థాన అనుమతి లభించలేదు. చిరునామా నమోదు చేసి, సేవా పరిధిని తనిఖీ చేయడానికి స్థానాన్ని పంచుకోండి." : "Location was not shared. Enter the address, then share its location so provider coverage can be checked."),
       { enableHighAccuracy: false, timeout: 8000, maximumAge: 60_000 },
     );
+  }
+
+  function editServiceAddress(value: string) {
+    setAddressText(value);
+    setAddressId("");
+    setSavedAddress(false);
+    setLatitude(null);
+    setLongitude(null);
+    setIdempotencyKey("");
+    setLocationMessage(te ? "చిరునామా మారింది. ఈ చిరునామాకు సరైన స్థానాన్ని మళ్లీ పంచుకోండి." : "Address changed. Share its location again so the map pin cannot point to a different place.");
+  }
+
+  function editServiceLocality(value: string) {
+    setLocality(value);
+    setAddressId("");
+    setSavedAddress(false);
+    setLatitude(null);
+    setLongitude(null);
+    setIdempotencyKey("");
+    setLocationMessage(te ? "ప్రాంతం మారింది. ఈ చిరునామాకు సరైన స్థానాన్ని మళ్లీ పంచుకోండి." : "Locality changed. Share its location again so the map pin cannot point to a different place.");
   }
 
   async function saveAddress() {
@@ -236,16 +259,17 @@ export function RealBookingPage() {
               </div>
               <div className="form-group mt-4">
                 <label className="form-label" htmlFor="address-text">{te ? "పూర్తి చిరునామా" : "Full address"}</label>
-                <textarea id="address-text" className="form-input min-h-24" maxLength={500} required value={addressText} onChange={(event) => setAddressText(event.target.value)} />
+                <textarea id="address-text" className="form-input min-h-24" maxLength={500} required value={addressText} onChange={(event) => editServiceAddress(event.target.value)} />
               </div>
               <div className="form-group mt-4">
                 <label className="form-label" htmlFor="address-locality">{te ? "ప్రాంతం / పట్టణం" : "Locality / town"}</label>
-                <input id="address-locality" className="form-input" maxLength={120} required value={locality} onChange={(event) => setLocality(event.target.value)} />
+                <input id="address-locality" className="form-input" maxLength={120} required value={locality} onChange={(event) => editServiceLocality(event.target.value)} />
               </div>
               <Button type="button" variant="outline" className="mt-3" onClick={useCurrentLocation} disabled={busy}>
                 {te ? "నా ప్రస్తుత స్థానాన్ని ఉపయోగించండి" : "Use my current location"}
               </Button>
               {latitude !== null && longitude !== null && <p className="mt-2 text-xs text-muted-foreground">{te ? "స్థానం ఎంచుకోబడింది" : "Location shared for this service request"}</p>}
+              <p className="mt-2 text-xs text-muted-foreground">{te ? "సేవా పరిధిని తనిఖీ చేయడానికి ఖచ్చితమైన స్థానం అవసరం. కేటాయించిన ప్రదాతకే పూర్తి దిశలు చూపబడతాయి." : "An exact location is needed to check service coverage. Full directions are shown only to an assigned provider."}</p>
               {locationMessage && <p role="status" className="mt-2 text-sm">{locationMessage}</p>}
               <Button type="button" variant="outline" className="mt-3 block" onClick={saveAddress} disabled={busy || !addressText.trim() || !locality.trim()}>
                 {savedAddress ? (te ? "చిరునామా సేవ్ అయింది" : "Address saved") : (te ? "చిరునామాను సేవ్ చేయండి" : "Save this address")}
