@@ -25,7 +25,8 @@ function migrationPool(seed: Record<string, string> = {}) {
     if (normalized.startsWith("ALTER TABLE service_booking") && normalized.includes("DROP NOT NULL")) executed.push("003_nullable_parts_estimate.sql");
     if (normalized.startsWith("ALTER TABLE service_booking") && normalized.includes("ADD COLUMN customer_quote_accepted_at")) executed.push("004_customer_quote_consent.sql");
     if (normalized.startsWith("CREATE TABLE whatsapp_contact")) executed.push("005_whatsapp_contact.sql");
-    if (normalized.startsWith("ALTER TABLE transactional_outbox")) executed.push("006_notification_outbox_leases.sql");
+    if (normalized.startsWith("ALTER TABLE transactional_outbox") && normalized.includes("ADD COLUMN claimed_at")) executed.push("006_notification_outbox_leases.sql");
+    if (normalized.startsWith("ALTER TABLE transactional_outbox") && normalized.includes("ADD COLUMN provider_attempt_started_at")) executed.push("007_notification_provider_attempts.sql");
     return { rows: [] };
   });
   const client = { query, release: vi.fn() } as unknown as PoolClient;
@@ -36,11 +37,11 @@ function migrationPool(seed: Record<string, string> = {}) {
 describe("database migrations", () => {
   it("applies migrations in order and records them idempotently", async () => {
     const fixture = migrationPool();
-    expect(await applyMigrations(fixture.pool)).toEqual(["001_identity.sql", "002_marketplace.sql", "003_nullable_parts_estimate.sql", "004_customer_quote_consent.sql", "005_whatsapp_contact.sql", "006_notification_outbox_leases.sql"]);
-    expect(fixture.executed).toEqual(["001_identity.sql", "002_marketplace.sql", "003_nullable_parts_estimate.sql", "004_customer_quote_consent.sql", "005_whatsapp_contact.sql", "006_notification_outbox_leases.sql"]);
-    expect(fixture.rows.size).toBe(6);
+    expect(await applyMigrations(fixture.pool)).toEqual(["001_identity.sql", "002_marketplace.sql", "003_nullable_parts_estimate.sql", "004_customer_quote_consent.sql", "005_whatsapp_contact.sql", "006_notification_outbox_leases.sql", "007_notification_provider_attempts.sql"]);
+    expect(fixture.executed).toEqual(["001_identity.sql", "002_marketplace.sql", "003_nullable_parts_estimate.sql", "004_customer_quote_consent.sql", "005_whatsapp_contact.sql", "006_notification_outbox_leases.sql", "007_notification_provider_attempts.sql"]);
+    expect(fixture.rows.size).toBe(7);
     expect(await applyMigrations(fixture.pool)).toEqual([]);
-    expect(fixture.executed).toHaveLength(6);
+    expect(fixture.executed).toHaveLength(7);
   });
 
   it("fails closed when the source migration set omits a recorded migration", async () => {
@@ -65,8 +66,8 @@ describe("database migrations", () => {
     expect(createHash("sha256").update(currentMarketplaceSql.replace(/\r\n/g, "\n")).digest("hex")).toBe(originalMarketplaceChecksum);
     const previous = { "001_identity.sql": identityChecksum, "002_marketplace.sql": originalMarketplaceChecksum };
     const fixture = migrationPool(previous);
-    expect(await applyMigrations(fixture.pool)).toEqual(["003_nullable_parts_estimate.sql", "004_customer_quote_consent.sql", "005_whatsapp_contact.sql", "006_notification_outbox_leases.sql"]);
-    expect(fixture.executed).toEqual(["003_nullable_parts_estimate.sql", "004_customer_quote_consent.sql", "005_whatsapp_contact.sql", "006_notification_outbox_leases.sql"]);
+    expect(await applyMigrations(fixture.pool)).toEqual(["003_nullable_parts_estimate.sql", "004_customer_quote_consent.sql", "005_whatsapp_contact.sql", "006_notification_outbox_leases.sql", "007_notification_provider_attempts.sql"]);
+    expect(fixture.executed).toEqual(["003_nullable_parts_estimate.sql", "004_customer_quote_consent.sql", "005_whatsapp_contact.sql", "006_notification_outbox_leases.sql", "007_notification_provider_attempts.sql"]);
   });
 
   it("recovers databases that recorded the exact accidental PR 17 marketplace checksum", async () => {
@@ -76,7 +77,7 @@ describe("database migrations", () => {
       "001_identity.sql": identityChecksum,
       "002_marketplace.sql": "f474bbedece28a7503b92fc24d82e84114c3ed585ed58aa2adfa9fcdc41f4e35",
     });
-    expect(await applyMigrations(fixture.pool)).toEqual(["003_nullable_parts_estimate.sql", "004_customer_quote_consent.sql", "005_whatsapp_contact.sql", "006_notification_outbox_leases.sql"]);
-    expect(fixture.executed).toEqual(["003_nullable_parts_estimate.sql", "004_customer_quote_consent.sql", "005_whatsapp_contact.sql", "006_notification_outbox_leases.sql"]);
+    expect(await applyMigrations(fixture.pool)).toEqual(["003_nullable_parts_estimate.sql", "004_customer_quote_consent.sql", "005_whatsapp_contact.sql", "006_notification_outbox_leases.sql", "007_notification_provider_attempts.sql"]);
+    expect(fixture.executed).toEqual(["003_nullable_parts_estimate.sql", "004_customer_quote_consent.sql", "005_whatsapp_contact.sql", "006_notification_outbox_leases.sql", "007_notification_provider_attempts.sql"]);
   });
 });

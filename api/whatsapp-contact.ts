@@ -6,7 +6,7 @@ import { z } from "zod";
 import { inTransaction } from "./database";
 
 const phoneSchema = z.string().regex(/^\+[1-9]\d{7,14}$/);
-const consentPolicyVersion = "transactional-whatsapp-v1";
+export const transactionalWhatsappPolicyVersion = "transactional-whatsapp-v1";
 const challengeLifetimeMs = 10 * 60_000;
 const resendDelayMs = 60_000;
 
@@ -177,21 +177,21 @@ export function createWhatsAppContactHandlers(
            consent_policy_version = EXCLUDED.consent_policy_version,
            consent_revoked_at = NULL,
            updated_at = EXCLUDED.updated_at`,
-        [owner, encrypted.ciphertext, encrypted.iv, encrypted.authTag, phoneHmac, phoneE164.slice(-4), now, consentPolicyVersion],
+        [owner, encrypted.ciphertext, encrypted.iv, encrypted.authTag, phoneHmac, phoneE164.slice(-4), now, transactionalWhatsappPolicyVersion],
       );
 
       if (current.rows.length && !samePhone && current.rows[0].consent_revoked_at === null) {
         await client.query(
           `INSERT INTO whatsapp_consent_event (id, subject_id, event_type, phone_hmac, consent_policy_version)
            VALUES ($1, $2, 'consent_revoked', $3, $4)`,
-          [randomUUID(), owner, current.rows[0].phone_hmac, consentPolicyVersion],
+          [randomUUID(), owner, current.rows[0].phone_hmac, transactionalWhatsappPolicyVersion],
         );
       }
       const eventType = current.rows.length && !samePhone ? "phone_changed" : "consent_granted";
       await client.query(
         `INSERT INTO whatsapp_consent_event (id, subject_id, event_type, phone_hmac, consent_policy_version)
          VALUES ($1, $2, $3, $4, $5)`,
-        [randomUUID(), owner, eventType, phoneHmac, consentPolicyVersion],
+        [randomUUID(), owner, eventType, phoneHmac, transactionalWhatsappPolicyVersion],
       );
       await client.query(
         `INSERT INTO whatsapp_verification_challenge (subject_id, phone_hmac, code_hmac, attempt_count, last_sent_at, expires_at, consumed_at)

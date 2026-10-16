@@ -29,7 +29,9 @@ describe("marketplace boundaries", () => {
     let challengeHash: Buffer | undefined;
     let sentCode = "";
     const offerRows: unknown[][] = [];
-    const outboxRows: unknown[][] = [];
+    const outboxRows: { eventType: string; values: unknown[]; sql: string }[] = [];
+    const outboxStatements: string[] = [];
+    const createdBookingIds: string[] = [];
     let providersAvailable = true;
     const query = vi.fn(async (sql: string, values: unknown[] = []) => {
       if (sql.includes("INSERT INTO email_login_challenge")) { challengeId = String(values[0]); challengeHash = values[2] as Buffer; }
@@ -62,8 +64,12 @@ describe("marketplace boundaries", () => {
         { merchant_id: randomUUID(), business_name: "Local Electrician", latitude: "16.75", longitude: "81.68", service_radius_km: "5", visit_price_paise: "25000", labor_from_paise: "30000" },
         { merchant_id: randomUUID(), business_name: "Distant Electrician", latitude: "18.75", longitude: "83.68", service_radius_km: "5", visit_price_paise: "10000", labor_from_paise: "10000" },
       ] : [] };
+      if (sql.includes("INSERT INTO service_booking")) createdBookingIds.push(String(values[0]));
       if (sql.includes("INSERT INTO booking_offer")) offerRows.push(values);
-      if (sql.includes("INSERT INTO transactional_outbox")) outboxRows.push(values);
+      if (sql.includes("INSERT INTO transactional_outbox")) {
+        outboxRows.push({ eventType: sql.match(/VALUES \(\$1, '([^']+)'/)?.[1] ?? "unknown", values, sql });
+        outboxStatements.push(sql);
+      }
       return { rows: [] };
     });
     const client = { query, release: vi.fn() } as unknown as PoolClient;
@@ -117,8 +123,22 @@ describe("marketplace boundaries", () => {
     });
     expect(first.body.booking.notice).toBe("Request and eligible offers are saved. WhatsApp delivery is attempted asynchronously only when enabled and permitted; an accepted offer in FixHub confirms assignment.");
     expect(offerRows).toHaveLength(2);
-    expect(outboxRows).toHaveLength(2);
-    expect(JSON.stringify(outboxRows[0])).not.toContain("12 Main Street");
+    expect(outboxRows).toHaveLength(4);
+    expect(outboxStatements.filter((sql) => sql.includes("'request.created'"))).toHaveLength(2);
+    expect(outboxStatements.filter((sql) => sql.includes("'merchant.booking_offer'"))).toHaveLength(2);
+    const customerEvents = outboxRows.filter((row) => row.eventType === "request.created");
+    expect(customerEvents).toHaveLength(2);
+    expect(customerEvents.map((row) => String(row.values[1])).sort()).toEqual([...createdBookingIds].sort());
+    for (const row of customerEvents) {
+      const [eventId, aggregateId, idempotencyKey] = row.values;
+      expect(eventId).toEqual(expect.any(String));
+      expect(createdBookingIds).toContain(aggregateId);
+      expect(idempotencyKey).toBe(`request-created:${aggregateId}`);
+      expect(row.values).toHaveLength(3);
+      expect(row.sql).toContain("VALUES ($1, 'request.created', $2, '{}'::jsonb, $3)");
+    }
+    expect(new Set(customerEvents.map((row) => row.values[0])).size).toBe(customerEvents.length);
+    expect(JSON.stringify(outboxRows)).not.toContain("12 Main Street");
 
     const replay = await requestWithAuth("post", "/api/v1/customer/bookings")
       .set("Idempotency-Key", "request-key-00000001")

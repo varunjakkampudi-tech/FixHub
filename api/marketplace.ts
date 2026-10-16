@@ -204,6 +204,12 @@ export function createMarketplaceHandlers(pool: Pick<Pool, "connect">) {
           [eventId, bookingId, JSON.stringify({ bookingId, offerId, merchantId: candidate.merchant_id, serviceId: payload.serviceId }), `booking-offer:${offerId}`],
         );
       }
+      const customerEventId = randomUUID();
+      await client.query(
+        `INSERT INTO transactional_outbox (id, event_type, aggregate_id, payload, idempotency_key)
+         VALUES ($1, 'request.created', $2, '{}'::jsonb, $3)`,
+        [customerEventId, bookingId, `request-created:${bookingId}`],
+      );
       const body = {
         booking: {
           id: bookingId,
