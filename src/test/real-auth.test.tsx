@@ -40,6 +40,7 @@ describe("passwordless email sign-in", () => {
     fireEvent.change(screen.getByLabelText("Email address"), { target: { value: "person@example.test" } });
     fireEvent.click(screen.getByRole("button", { name: "Send sign-in code" }));
     expect(await screen.findByLabelText("Six-digit code")).toBeInTheDocument();
+    expect(document.activeElement).toBe(screen.getByLabelText("Six-digit code"));
     expect(mocks.request).toHaveBeenNthCalledWith(1, "/api/v1/auth/code", expect.objectContaining({
       method: "POST",
       body: JSON.stringify({ email: "person@example.test" }),

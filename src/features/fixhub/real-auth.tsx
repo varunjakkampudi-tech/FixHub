@@ -103,13 +103,14 @@ export function RealAuth({ mode = "sign-in" }: { mode?: string }) {
                 />
               </div>
             ) : (
-              <>
+              <div className="fixhub-auth-step">
                 <p className="mb-4 text-sm">{email}</p>
                 <div className="form-group">
                   <label htmlFor="fixhub-code" className="form-label">{te ? "ఆరు అంకెల కోడ్" : "Six-digit code"}</label>
                   <input
                     id="fixhub-code"
                     className="form-input"
+                    autoFocus
                     inputMode="numeric"
                     autoComplete="one-time-code"
                     pattern="[0-9]{6}"
@@ -121,7 +122,7 @@ export function RealAuth({ mode = "sign-in" }: { mode?: string }) {
                     disabled={busy}
                   />
                 </div>
-              </>
+              </div>
             )}
             {message && <div role="status" className="mb-4"><Notice>{message}</Notice></div>}
             {error && <div role="alert" className="mb-4"><Notice error>{error}</Notice></div>}
