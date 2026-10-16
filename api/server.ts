@@ -8,7 +8,7 @@ import { authConfigFromEnvironment } from "./auth";
 import { createDatabasePool } from "./database";
 import { createResendEmailSender, resendConfigFromEnvironment } from "./email";
 import { applyMigrations } from "./migrations";
-import { createTwilioWhatsAppSender, twilioConfigFromEnvironment } from "./twilio";
+import { createTwilioBookingNotificationSender, createTwilioWhatsAppSender, twilioConfigFromEnvironment } from "./twilio";
 import { whatsappContactEncryptionKeyFromEnvironment } from "./whatsapp-contact";
 import { createNotificationOutboxDispatcher } from "./notification-outbox";
 
@@ -29,9 +29,11 @@ const whatsappEncryptionKey = whatsappEnabled ? whatsappContactEncryptionKeyFrom
 const whatsappHmacSecret = whatsappEnabled ? process.env.WHATSAPP_CONTACT_HMAC_SECRET : undefined;
 const verificationContentSid = process.env.TWILIO_WHATSAPP_VERIFICATION_CONTENT_SID;
 const serviceContentSid = process.env.TWILIO_WHATSAPP_SERVICE_CONTENT_SID;
+const statusContentSid = process.env.TWILIO_WHATSAPP_STATUS_CONTENT_SID;
 if (whatsappEnabled && (!twilioConfig || !whatsappEncryptionKey || !whatsappHmacSecret || !whatsappHmacSecret.trim() || Buffer.byteLength(whatsappHmacSecret, "utf8") < 32 ||
     (verificationEnabled && (!verificationContentSid || !/^HX[0-9a-fA-F]{32}$/.test(verificationContentSid))) ||
-    (notificationsEnabled && (!serviceContentSid || !/^HX[0-9a-fA-F]{32}$/.test(serviceContentSid))))) {
+    (notificationsEnabled && (!serviceContentSid || !/^HX[0-9a-fA-F]{32}$/.test(serviceContentSid) ||
+      !statusContentSid || !/^HX[0-9a-fA-F]{32}$/.test(statusContentSid) || serviceContentSid === statusContentSid)))) {
   throw new Error("WhatsApp enablement requires complete credentials, the enabled feature's approved templates, and contact-protection keys");
 }
 if (production && (!databasePool || !authConfig || !resendConfig)) {
@@ -62,9 +64,9 @@ const app = createApiApp({
   },
 });
 const server = app.listen(port.data, host, () => logger.info({ host, port: port.data }, "Fix Hub API listening"));
-const dispatcher = notificationsEnabled && databasePool && twilioConfig && whatsappEncryptionKey && serviceContentSid
-  ? createNotificationOutboxDispatcher(databasePool, whatsappEncryptionKey, async (recipientE164, variables) =>
-      createTwilioWhatsAppSender(twilioConfig, fetch, serviceContentSid)({ toE164: recipientE164, variables }),
+const dispatcher = notificationsEnabled && databasePool && twilioConfig && whatsappEncryptionKey && serviceContentSid && statusContentSid
+  ? createNotificationOutboxDispatcher(databasePool, whatsappEncryptionKey,
+      createTwilioBookingNotificationSender(twilioConfig, { contextContentSid: serviceContentSid, statusContentSid }),
     )
   : undefined;
 const dispatcherTimer = dispatcher ? setInterval(() => {

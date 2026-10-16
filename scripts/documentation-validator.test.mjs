@@ -384,7 +384,11 @@ try {
 
   await expectFailure('duplicate Phase01 criterion', async () => {
     const file = path.join(fixtureRoot, 'docs/product/feasibility/evidence-inventory.json'); const v = JSON.parse(await readFile(file, 'utf8')); v.criteria[1] = v.criteria[0]; await writeFile(file, JSON.stringify(v));
-  }, /exact 12 unique ordered exit criteria/);
+  }, /exact 10 unique ordered exit criteria/);
+
+  await expectFailure('Phase01 deferred criteria cannot disappear', async () => {
+    const file = path.join(fixtureRoot, 'docs/product/feasibility/evidence-inventory.json'); const v = JSON.parse(await readFile(file, 'utf8')); v.deferredCriteria.pop(); await writeFile(file, JSON.stringify(v));
+  }, /deferred criteria or owner scope amendment missing/);
 
   await expectFailure('Phase01 status mismatch', async () => {
     const file = path.join(fixtureRoot, 'docs/product/feasibility/exit-criteria.md'); const v = await readFile(file, 'utf8'); await writeFile(file, v.replace('| PASS |', '| CONDITIONAL |'));
@@ -393,6 +397,29 @@ try {
   await expectFailure('Phase01 completion inflation', async () => {
     const file = path.join(fixtureRoot, 'docs/product/feasibility/evidence-inventory.json'); const v = JSON.parse(await readFile(file, 'utf8')); v.counts.pass = 12; await writeFile(file, JSON.stringify(v));
   }, /evidenced count mismatch/);
+
+  for (const [status, countKey] of [['CONDITIONAL', 'conditional'], ['FAIL', 'fail'], ['NOT ASSESSED', 'notAssessed']]) {
+    await createFixture();
+    const file = path.join(fixtureRoot, 'docs/product/feasibility/evidence-inventory.json');
+    const v = JSON.parse(await readFile(file, 'utf8'));
+    v.criteria[0].status = status;
+    v.counts.pass = 9;
+    v.counts[countKey] = 1;
+    await writeFile(file, JSON.stringify(v));
+    for (const name of ['exit-criteria.md', 'feasibility-assessment.md']) {
+      const document = path.join(fixtureRoot, 'docs/product/feasibility', name);
+      let content = (await readFile(document, 'utf8')).replaceAll('100.0%', '90.0%');
+      if (name === 'exit-criteria.md') {
+        content = content.replace(/^(\| P01-DOD-001[^|]*\|[^|]*\|[^|]*\| )PASS(?= \|)/m, `$1${status}`);
+        assert.ok(content.includes(`| ${status} |`), 'synthetic criterion status must be updated');
+      }
+      await writeFile(document, content);
+    }
+    const result = runValidator();
+    assert.equal(result.status, 0, `Phase01 ${status} evidence revision rejected:\n${result.stderr}`);
+    assert.match(result.stdout, /90\.0% scoped evidence coverage/);
+    console.log(`PASS Phase01 permits consistent ${status} evidence revision`);
+  }
 
   await expectFailure('Phase01 primary interviews cannot be fabricated', async () => {
     const file = path.join(fixtureRoot, 'docs/product/feasibility/evidence-inventory.json'); const v = JSON.parse(await readFile(file, 'utf8')); v.primaryResearch.customers = 30; await writeFile(file, JSON.stringify(v));

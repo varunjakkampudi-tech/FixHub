@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useFixHub } from "./context";
 import { type MessageKey } from "./locales";
@@ -160,7 +161,7 @@ function LiveDeletionRequest() {
         {requestId ? (
           <Notice>{te ? `మీ అభ్యర్థన నమోదైంది. సూచన: ${requestId}. ఖాతా యాక్సెస్ నిలిపివేశారు. ఇది అన్ని రికార్డులు తొలగించబడ్డాయని నిర్ధారణ కాదు.` : `Request ${requestId} is recorded and account access is disabled. This is not confirmation that all records have been deleted; retention and legal holds will be reviewed.`}</Notice>
         ) : (
-          <section className="summary-panel max-w-2xl">
+          <section className="summary-panel max-w-2xl" aria-busy={busy}>
             <Notice warning>{te ? "ఈ చర్య మీ సైన్-ఇన్ యాక్సెస్‌ను నిలిపివేస్తుంది. సేవా రికార్డులు, వివాదాలు, చట్టపరమైన నిల్వలు లేదా బ్యాకప్‌లలోని డేటా వెంటనే తొలగించబడదు." : "This disables account sign-in and records a deletion request. Service, dispute, legally held, and backup records are not immediately deleted; applicable retention must be reviewed."}</Notice>
             <p className="mt-4 text-sm"><Link className="underline" to="/privacy">{te ? "గోప్యతా సమాచారాన్ని చూడండి" : "Review the Privacy information"}</Link></p>
             <label className="my-5 flex min-h-11 items-start gap-3 text-sm">
@@ -168,7 +169,11 @@ function LiveDeletionRequest() {
               <span>{te ? "నా ఖాతా తొలగింపు అభ్యర్థనను నమోదు చేసి యాక్సెస్ నిలిపివేయడానికి నేను అంగీకరిస్తున్నాను." : "I confirm that I want to record an account-deletion request and disable access."}</span>
             </label>
             {error && <div role="alert"><Notice error>{error}</Notice></div>}
-            <Button variant="destructive" onClick={submit} disabled={!confirmed || busy}>{busy ? (te ? "నమోదు చేస్తోంది…" : "Recording…") : (te ? "తొలగింపు అభ్యర్థనను నమోదు చేయండి" : "Submit deletion request")}</Button>
+            <Button variant="destructive" onClick={submit} disabled={!confirmed || busy} aria-busy={busy}>
+              {busy && <LoaderCircle aria-hidden="true" className="animate-spin motion-reduce:animate-none" />}
+              {busy ? (te ? "నమోదు చేస్తోంది…" : "Recording…") : (te ? "తొలగింపు అభ్యర్థనను నమోదు చేయండి" : "Submit deletion request")}
+            </Button>
+            {busy && <p className="mt-3 text-sm text-muted-foreground" role="status" aria-live="polite">{te ? "మీ తొలగింపు అభ్యర్థనను నమోదు చేసి, సైన్-ఇన్‌ను నిలిపివేస్తున్నాం. ఇది రికార్డులు తొలగించబడ్డాయని నిర్ధారణ కాదు." : "Recording your request and disabling sign-in. This does not confirm that records have been deleted."}</p>}
           </section>
         )}
       </main>

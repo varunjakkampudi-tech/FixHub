@@ -1,6 +1,6 @@
 # Feasibility blockers and decision matrix
 
-Snapshot 2026-10-15. Phase 01 IN PROGRESS, Phase 02 NOT AUTHORIZED. Two formal-interview tasks are no longer Phase 01 exit criteria by explicit owner direction. Missing demand and qualified merchant supply **remain real-world prelaunch blockers**, never completed findings; see [risk history](../../../governance/risk-register.md).
+Snapshot 2026-10-16. Phase 01 IN PROGRESS, Phase 02 NOT AUTHORIZED. Formal interview completion was removed from active criteria by owner direction on 2026-10-15. P01-DOD-008 is deferred from scoring, not resolved; P01-DOD-014 remains a separate owner exit gate. Missing demand and qualified merchant supply **remain real-world prelaunch blockers**, never completed findings; see [risk register](../../../governance/risk-register.md) and [scope amendment](../../../reviews/phase-01-scope-amendment-2026-10-16.md).
 
 | Finding | Evidence / priority | Effect and proposed mitigation | Owner / external action / status |
 |---|---|---|---|
@@ -17,4 +17,4 @@ Snapshot 2026-10-15. Phase 01 IN PROGRESS, Phase 02 NOT AUTHORIZED. Two formal-i
 
 External constraints cannot be manufactured from desk research: actual participant outcomes, consented providers, professional legal guidance, dated Meta rate/account evidence, itemized quotes and staffed capacity. Removing formal interview criteria does not resolve these. Keep mandatory prelaunch pilot, supply and safety requirements; later code/runtime tests remain unexecuted.
 
-Recommendation: complete remaining active Phase 01 criteria 008 and 014 with bounded official evidence and owner risk assessment. P01-DOD-005 is PASS for its bounded desk-research recommendation only; it does not establish actual demand, supply, launch approval or real-world feasibility. Overall actual build/launch feasibility remains NOT ASSESSED. Do not convert unverified local market demand into GO.
+P01-DOD-008 provider facts are deferred from the Phase 01 score but remain a dependency before provider selection/activation and Phase 14 exit. P01-DOD-014 is not scored; obtain a separate explicit owner Phase 01 exit disposition. P01-DOD-005 is PASS for its bounded desk-research recommendation only; it does not establish actual demand, supply, launch approval or real-world feasibility. Overall actual build/launch feasibility remains NOT ASSESSED. Do not convert unverified local market demand into GO.

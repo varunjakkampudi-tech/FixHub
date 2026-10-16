@@ -41,7 +41,8 @@ export function createTwilioWhatsAppSender(config: TwilioWhatsAppConfig, fetchIm
   return async ({ toE164, variables }: WhatsAppMessage): Promise<{ messageSid: string; status: string }> => {
     if (!e164Pattern.test(toE164)) throw new Error("WhatsApp recipient must be an E.164 number");
     const entries = Object.entries(variables);
-    if (entries.length < 1 || entries.length > 10 || entries.some(([key, value]) => !/^\d{1,2}$/.test(key) || value.length > 500)) {
+    if (entries.length < 1 || entries.length > 10 || entries.some(([key, value]) => !/^\d{1,2}$/.test(key) ||
+        typeof value !== 'string' || !value.trim() || value.length > 500 || /[\u0000-\u001f\u007f-\u009f]| {5}/u.test(value))) {
       throw new Error("WhatsApp template variables are invalid");
     }
     const controller = new AbortController();
@@ -67,5 +68,21 @@ export function createTwilioWhatsAppSender(config: TwilioWhatsAppConfig, fetchIm
     } finally {
       clearTimeout(timeout);
     }
+  };
+}
+
+export function createTwilioBookingNotificationSender(
+  config: TwilioWhatsAppConfig,
+  templates: { contextContentSid: string; statusContentSid: string },
+  fetchImpl: typeof fetch = fetch,
+) {
+  if (templates.contextContentSid === templates.statusContentSid) throw new Error('Booking context and status require distinct approved templates');
+  const sendContext = createTwilioWhatsAppSender(config, fetchImpl, templates.contextContentSid);
+  const sendStatus = createTwilioWhatsAppSender(config, fetchImpl, templates.statusContentSid);
+  return async (toE164: string, variables: Record<string, string>) => {
+    const fields = Object.keys(variables).sort().join(',');
+    if (fields === '1,2,3') return sendContext({ toE164, variables });
+    if (fields === '1') return sendStatus({ toE164, variables });
+    throw new Error('Booking notification template fields are invalid');
   };
 }

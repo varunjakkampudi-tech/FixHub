@@ -28,6 +28,12 @@ type OutboxRecord = {
 type Notification = { recipientId: string; label: string; service: string; locality: string };
 export type TransactionalWhatsAppSender = (recipientE164: string, variables: Record<string, string>) => Promise<{ messageSid: string; status: string }>;
 
+function normalizeTemplateVariable(value: string, maxCodePoints = 120): string {
+  return Array.from(value.normalize("NFC").replace(/[\u0000-\u001f\u007f-\u009f]/gu, " ").replace(/\s+/gu, " ").trim())
+    .slice(0, maxCodePoints)
+    .join("");
+}
+
 export function createNotificationOutboxDispatcher(
   pool: Pick<Pool, "connect">,
   encryptionKey: Buffer,
@@ -103,7 +109,7 @@ export function createNotificationOutboxDispatcher(
            JOIN merchant_profile m ON m.subject_id = o.merchant_id
            JOIN identity_subject i ON i.id = m.subject_id AND i.status = 'active'
            JOIN service_catalog s ON s.id = b.service_id
-           JOIN customer_address a ON a.id = b.address_id
+           JOIN customer_address a ON a.id = b.address_id AND a.customer_id = b.customer_id
            WHERE o.id = $1 AND o.booking_id = $2 AND o.merchant_id = $3 AND o.status = 'pending'
              AND (o.expires_at IS NULL OR o.expires_at > clock_timestamp())
              AND b.status = 'offered' AND b.merchant_id IS NULL
@@ -113,9 +119,11 @@ export function createNotificationOutboxDispatcher(
       } else if (event.event_type === "request.created") {
         result = await client.query<Notification>(
           `SELECT b.customer_id AS "recipientId", 'Your request is recorded. No provider is assigned yet.' AS label,
-                  ''::text AS service, ''::text AS locality
+                  s.name AS service, a.locality
            FROM service_booking b
            JOIN identity_subject i ON i.id = b.customer_id AND i.status = 'active'
+           JOIN service_catalog s ON s.id = b.service_id
+           JOIN customer_address a ON a.id = b.address_id AND a.customer_id = b.customer_id
            WHERE b.id = $1 AND b.status = 'offered' AND b.merchant_id IS NULL`,
           [event.aggregate_id],
         );
@@ -123,22 +131,18 @@ export function createNotificationOutboxDispatcher(
         const expectedStatus = event.event_type === "customer.booking_accepted" ? "accepted" : "in_progress";
         const label = expectedStatus === "accepted" ? "Provider accepted" : "Work started";
         result = await client.query<Notification>(
-          `SELECT b.customer_id AS "recipientId", $2::text AS label, s.name AS service, a.locality
+          `SELECT b.customer_id AS "recipientId", $2::text AS label, ''::text AS service, ''::text AS locality
            FROM service_booking b
            JOIN identity_subject i ON i.id = b.customer_id AND i.status = 'active'
-           JOIN service_catalog s ON s.id = b.service_id
-           JOIN customer_address a ON a.id = b.address_id
            WHERE b.id = $1 AND b.status = $3`,
           [bookingId, label, expectedStatus],
         );
       } else if (event.event_type === "merchant.booking_completed" && merchantId) {
         result = await client.query<Notification>(
-          `SELECT b.merchant_id AS "recipientId", 'Service completed' AS label, s.name AS service, a.locality
+          `SELECT b.merchant_id AS "recipientId", 'Service completed' AS label, ''::text AS service, ''::text AS locality
            FROM service_booking b
            JOIN merchant_profile m ON m.subject_id = b.merchant_id AND m.verification_status = 'verified'
            JOIN identity_subject i ON i.id = m.subject_id AND i.status = 'active'
-           JOIN service_catalog s ON s.id = b.service_id
-           JOIN customer_address a ON a.id = b.address_id
            WHERE b.id = $1 AND b.merchant_id = $2 AND b.status = 'completed'`,
           [bookingId, merchantId],
         );
@@ -301,9 +305,11 @@ export function createNotificationOutboxDispatcher(
           transactionOpen = false;
           delivery = { kind: "suppressed", errorCode: "contact_unavailable" };
         } else {
-          const variables: Record<string, string> = event.event_type === "request.created"
-            ? { "1": notification.label, "2": "", "3": "" }
-            : { "1": notification.label, "2": notification.service.slice(0, 120), "3": notification.locality.slice(0, 120) };
+          const variables: Record<string, string> = { "1": normalizeTemplateVariable(notification.label) };
+          if (event.event_type === "request.created" || event.event_type === "merchant.booking_offer") {
+            variables["2"] = normalizeTemplateVariable(notification.service);
+            variables["3"] = normalizeTemplateVariable(notification.locality);
+          }
           providerOutcomeUncertain = true;
           if (!await markProviderAttemptStarted(event)) {
             await client.query("COMMIT");

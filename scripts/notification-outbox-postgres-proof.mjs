@@ -135,8 +135,12 @@ try {
   const staleCustomerId = "00000000-0000-4000-8000-000000000106";
   const staleBookingId = "00000000-0000-4000-8000-000000000107";
   const staleAddressId = "00000000-0000-4000-8000-000000000108";
+  const foreignAddressBookingId = "00000000-0000-4000-8000-000000000109";
+  const secondMerchantId = "00000000-0000-4000-8000-000000000110";
+  const secondOfferId = "00000000-0000-4000-8000-000000000111";
   const customerPhone = "+919876543211";
   const merchantPhone = "+919876543212";
+  const secondMerchantPhone = "+919876543214";
   const sent = [];
   let releaseSend;
   let signalSend;
@@ -172,9 +176,14 @@ try {
   await addIdentity(customerId, "proof.customer@example.invalid", customerPhone);
   await addIdentity(merchantId, "proof.merchant@example.invalid", merchantPhone);
   await addIdentity(staleCustomerId, "proof.stale@example.invalid", "+919876543213");
+  await addIdentity(secondMerchantId, "proof.merchant2@example.invalid", secondMerchantPhone);
   await pool.query(
     "INSERT INTO merchant_profile (subject_id, business_name, verification_status, accepting_jobs) VALUES ($1, $2, $3, $4)",
     [merchantId, "Proof Merchant", "verified", true],
+  );
+  await pool.query(
+    "INSERT INTO merchant_profile (subject_id, business_name, verification_status, accepting_jobs) VALUES ($1, $2, $3, $4)",
+    [secondMerchantId, "Proof Merchant Two", "verified", true],
   );
   await pool.query(
     "INSERT INTO customer_address (id, customer_id, label, address_text, locality) VALUES ($1, $2, $3, $4, $5)",
@@ -202,6 +211,16 @@ try {
     [randomUUID(), "merchant.booking_offer", bookingId, JSON.stringify({ bookingId, merchantId, offerId }), "proof-merchant-offer", "1 second"],
   );
   await pool.query(
+    `INSERT INTO booking_offer (id, booking_id, merchant_id, visit_price_paise, labor_price_paise, expires_at)
+     VALUES ($1, $2, $3, $4, $5, clock_timestamp() + $6::interval)`,
+    [secondOfferId, bookingId, secondMerchantId, 12_000, 18_000, "1 hour"],
+  );
+  await pool.query(
+    `INSERT INTO transactional_outbox (id, event_type, aggregate_id, payload, idempotency_key)
+     VALUES ($1, 'merchant.booking_offer', $2, $3::jsonb, $4)`,
+    [randomUUID(), bookingId, JSON.stringify({ bookingId, merchantId: secondMerchantId, offerId: secondOfferId }), "proof-merchant-offer-two"],
+  );
+  await pool.query(
     "INSERT INTO customer_address (id, customer_id, label, address_text, locality) VALUES ($1, $2, $3, $4, $5)",
     [staleAddressId, staleCustomerId, "home", "13 Proof Road", "Tanuku"],
   );
@@ -215,6 +234,22 @@ try {
     "INSERT INTO transactional_outbox (id, event_type, aggregate_id, payload, idempotency_key) VALUES ($1, $2, $3, $4::jsonb, $5)",
     [randomUUID(), "request.created", staleBookingId, "{}", "proof-stale-request"],
   );
+  await pool.query(
+    `INSERT INTO service_booking
+     (id, customer_id, service_id, address_id, status, visit_price_paise, labor_estimate_paise)
+     VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+    [foreignAddressBookingId, staleCustomerId, "10000000-0000-4000-8000-000000000002", addressId, "offered", 10_000, 20_000],
+  );
+  await pool.query(
+    "INSERT INTO transactional_outbox (id, event_type, aggregate_id, payload, idempotency_key) VALUES ($1, $2, $3, $4::jsonb, $5)",
+    [randomUUID(), "request.created", foreignAddressBookingId, "{}", "proof-foreign-address-request"],
+  );
+
+  const pendingOfferCount = await pool.query(
+    "SELECT count(*)::int AS count FROM booking_offer WHERE booking_id = $1 AND status = 'pending'",
+    [bookingId],
+  );
+  assert.equal(pendingOfferCount.rows[0]?.count, 2, "Both eligible merchants must have a pending offer for the booking");
 
   let updater;
   let firstDispatch;
@@ -256,26 +291,35 @@ try {
   }
 
   const merchantResult = await dispatcher.dispatchBatch(1);
+  const secondMerchantResult = await dispatcher.dispatchBatch(1);
   const staleResult = await dispatcher.dispatchBatch(1);
+  const foreignAddressResult = await dispatcher.dispatchBatch(1);
   assert.equal(merchantResult.sent, 1);
+  assert.equal(secondMerchantResult.sent, 1);
   assert.equal(staleResult.suppressed, 1);
-  assert.equal(sent.length, 2);
+  assert.equal(foreignAddressResult.suppressed, 1);
+  assert.equal((await pool.query("SELECT status FROM transactional_outbox WHERE idempotency_key = $1", ["proof-foreign-address-request"])).rows[0]?.status, "suppressed");
+  assert.equal(sent.length, 3);
   assert.equal(sent[0].phone, customerPhone);
   assert.deepEqual(sent[0].variables, {
-    "1": "Your request is recorded. No provider is assigned yet.", "2": "", "3": "",
+    "1": "Your request is recorded. No provider is assigned yet.", "2": "General plumbing service", "3": "Tanuku",
   });
   assert.equal(sent[1].phone, merchantPhone);
   assert.deepEqual(sent[1].variables, { "1": "New service request", "2": "General plumbing service", "3": "Tanuku" });
+  assert.equal(sent[2].phone, secondMerchantPhone);
+  assert.deepEqual(sent[2].variables, { "1": "New service request", "2": "General plumbing service", "3": "Tanuku" });
 
   const outcomes = (await pool.query(
     "SELECT status, count(*)::int AS count FROM transactional_outbox GROUP BY status ORDER BY status",
   )).rows;
-  assert.deepEqual(outcomes, [{ status: "sent", count: 2 }, { status: "suppressed", count: 1 }]);
+  assert.deepEqual(outcomes, [{ status: "sent", count: 3 }, { status: "suppressed", count: 2 }]);
   console.log(JSON.stringify({
     server: (await pool.query("SHOW server_version")).rows[0].server_version,
     migrationsApplied: applied.length,
     customerAndMerchantNotifications: sent.length,
-    staleNotificationSuppressed: 1,
+    eligibleMerchantsNotified: 2,
+    staleNotificationSuppressed: staleResult.suppressed,
+    foreignCustomerAddressNotificationSuppressed: foreignAddressResult.suppressed,
     realPostgresBookingLockHeldThroughSend: lockObserved,
     syntheticRecipientLastFour: sent.map(({ phone }) => phone.slice(-4)),
   }));

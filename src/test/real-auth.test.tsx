@@ -1,7 +1,7 @@
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-const mocks = vi.hoisted(() => ({ request: vi.fn(), navigate: vi.fn() }));
+const mocks = vi.hoisted(() => ({ request: vi.fn(), navigate: vi.fn(), resolveMode: vi.fn() }));
 
 vi.mock("@tanstack/react-router", () => ({
   Link: ({ children, to }: { children: React.ReactNode; to?: string }) => <a href={to ?? "#"}>{children}</a>,
@@ -13,6 +13,7 @@ vi.mock("@/features/fixhub/api-client", () => ({
     constructor(_status: number, _code: string, message: string) { super(message); }
   },
   apiRequest: mocks.request,
+  resolveApiSessionMode: mocks.resolveMode,
 }));
 
 vi.mock("@/features/fixhub/context", () => ({ useFixHub: () => ({ locale: "en-IN" }) }));
@@ -24,12 +25,14 @@ vi.mock("@/features/fixhub/shared", () => ({
 }));
 
 import { RealAuth } from "@/features/fixhub/real-auth";
+import { AccountPage } from "@/features/fixhub/account";
 import { ApiError } from "@/features/fixhub/api-client";
 
 afterEach(() => {
   cleanup();
   mocks.request.mockReset();
   mocks.navigate.mockReset();
+  mocks.resolveMode.mockReset();
 });
 
 describe("passwordless email sign-in", () => {
@@ -68,5 +71,26 @@ describe("passwordless email sign-in", () => {
 
     expect(await screen.findByRole("alert")).toHaveTextContent("Too many sign-in attempts. Please try again later.");
     expect(screen.getByLabelText("Six-digit code")).toBeInTheDocument();
+  });
+});
+
+describe("account deletion request", () => {
+  it("announces progress while recording the request without implying records were erased", async () => {
+    mocks.resolveMode.mockResolvedValue("authenticated");
+    let finishRequest: ((result: { requestId: string }) => void) | undefined;
+    mocks.request.mockImplementation(() => new Promise((resolve) => { finishRequest = resolve; }));
+    render(<AccountPage page="settings/delete-account" />);
+
+    fireEvent.click(await screen.findByRole("checkbox"));
+    fireEvent.click(screen.getByRole("button", { name: "Submit deletion request" }));
+
+    const busyButton = await screen.findByRole("button", { name: "Recording…" });
+    expect(busyButton).toBeDisabled();
+    expect(busyButton).toHaveAttribute("aria-busy", "true");
+    expect(screen.getByRole("status")).toHaveTextContent("This does not confirm that records have been deleted.");
+
+    await act(async () => finishRequest?.({ requestId: "synthetic-request-1" }));
+    expect(await screen.findByText(/Request synthetic-request-1 is recorded and account access is disabled/)).toBeInTheDocument();
+    expect(screen.getByText(/not confirmation that all records have been deleted/)).toBeInTheDocument();
   });
 });

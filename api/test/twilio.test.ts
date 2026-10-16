@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, expect, it, vi } from "vitest";
 
-import { createTwilioWhatsAppSender, twilioConfigFromEnvironment } from "../twilio";
+import { createTwilioBookingNotificationSender, createTwilioWhatsAppSender, twilioConfigFromEnvironment } from "../twilio";
 
 const config = {
   accountSid: `AC${"a".repeat(32)}`,
@@ -65,5 +65,27 @@ describe("Twilio WhatsApp adapter", () => {
     await expect(send({ toE164: "1234", variables: { "1": "x" } })).rejects.toThrow("E.164");
     expect(failedFetch).not.toHaveBeenCalled();
     await expect(send({ toE164: "+919876543210", variables: { "1": "x" } })).rejects.toThrow("WhatsApp provider request failed");
+  });
+
+  it("selects separate templates for booking context and status without relying on placeholder defaults", async () => {
+    const fetch = vi.fn().mockImplementation(async () => new Response(JSON.stringify({ sid: `SM${'e'.repeat(32)}`, status: 'queued' }), { status: 201 }));
+    const statusSid = `HX${'f'.repeat(32)}`;
+    const send = createTwilioBookingNotificationSender(config, { contextContentSid: config.contentSid, statusContentSid: statusSid }, fetch);
+    const payloads: Record<string, string>[] = [{ '1': 'New service request', '2': 'Plumbing', '3': 'Tanuku' }, { '1': 'Provider accepted' }];
+    for (const variables of payloads) {
+      await send('+919876543210', variables);
+    }
+    expect(fetch.mock.calls.map(([, options]) => new URLSearchParams(String(options.body)).get('ContentSid'))).toEqual([config.contentSid, statusSid]);
+    expect(fetch.mock.calls.map(([, options]) => JSON.parse(new URLSearchParams(String(options.body)).get('ContentVariables') ?? '{}'))).toEqual(payloads);
+    await expect(send('+919876543210', { '1': 'Status', '2': 'Unexpected' })).rejects.toThrow('template fields');
+    expect(fetch).toHaveBeenCalledTimes(2);
+    expect(() => createTwilioBookingNotificationSender(config, { contextContentSid: config.contentSid, statusContentSid: config.contentSid }, fetch)).toThrow('distinct');
+  });
+
+  it.each(['', '   ', 'line\nbreak', 'tab\tvalue', 'five     spaces'])("rejects invalid template value %j before sending", async (value) => {
+    const fetch = vi.fn();
+    const send = createTwilioWhatsAppSender(config, fetch);
+    await expect(send({ toE164: '+919876543210', variables: { '1': value } })).rejects.toThrow('template variables');
+    expect(fetch).not.toHaveBeenCalled();
   });
 });

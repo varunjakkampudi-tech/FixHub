@@ -117,7 +117,7 @@ No threat table row is a deployed security control or passed security audit. Ten
 |---|---|---|
 | PostgreSQL | Local 17.11 available; documented locking/isolation; bounded proof separately recorded | Supported pinned deployment version, schema review, restore/concurrency tests and cost |
 | PostGIS/maps | Documented distance mechanism, not local address accuracy or drive time | Extension/region support, permitted maps data, accuracy tests and cost |
-| WhatsApp direct/BSP | Official pathway exists; effective India numeric rates/account/callback details unresolved | P01-DOD-008, business identity, actual permission, policy/opt-in/templates and billing |
+| WhatsApp direct/BSP | Meta-maintained materials document HTTPS webhook delivery, WABA subscription, event envelope and message-status events (P01 source SRC-057); Twilio documents signed status callbacks (SRC-046/SRC-056). Meta signature/retry contract, account applicability, effective India bill and provider choice remain unresolved. | P01-DOD-008, business identity, actual permission, policy/opt-in/templates, provider signature/retry contract and billing |
 | FCM/APNs/Web Push | Planned adapter interfaces only | Account/entitlement/device permission, background/reconnect, token revocation and cost |
 | Identity, object storage, email/SMS | No vendor commitment | Security/privacy/region/support/quotas/itemized price and owner approval |
 | Hosting, telemetry, backup | Architecture option only; no resources | Approved budget, operational ownership, data location, RPO/RTO and restore proof |

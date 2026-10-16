@@ -165,6 +165,40 @@ describe("customer booking price preview", () => {
     }
   });
 
+  it("shows location lookup progress and ignores a late GPS result after the address changes", async () => {
+    const originalGeolocation = Object.getOwnPropertyDescriptor(navigator, "geolocation");
+    let resolvePosition: PositionCallback | undefined;
+    const position = { coords: { latitude: 16.75, longitude: 81.68 } } as GeolocationPosition;
+    Object.defineProperty(navigator, "geolocation", {
+      configurable: true,
+      value: { getCurrentPosition: (success: PositionCallback) => { resolvePosition = success; } },
+    });
+
+    try {
+      setupPricePreview(true);
+      await screen.findByLabelText("Saved addresses");
+      const locationButton = screen.getByRole("button", { name: "Use my current location" });
+      fireEvent.click(locationButton);
+
+      expect(await screen.findByRole("button", { name: "Finding your location…" })).toBeDisabled();
+      expect(screen.getByRole("status")).toHaveTextContent("Your location is not saved unless you choose “Save address and location.”");
+
+      fireEvent.change(screen.getByLabelText("Full address"), { target: { value: "A different service address" } });
+      expect(screen.getByRole("button", { name: "Use my current location" })).toBeEnabled();
+      expect(screen.queryByText("Finding your location…")).not.toBeInTheDocument();
+
+      expect(resolvePosition).toBeDefined();
+      act(() => resolvePosition?.(position));
+      expect(screen.getByLabelText("Full address")).toHaveValue("A different service address");
+      expect(screen.getByLabelText("Latitude")).toHaveValue(null);
+      expect(screen.queryByText("Location pin set for this service request")).not.toBeInTheDocument();
+      expect(screen.getByRole("status")).toHaveTextContent("Address changed. Share its location again");
+    } finally {
+      if (originalGeolocation) Object.defineProperty(navigator, "geolocation", originalGeolocation);
+      else Reflect.deleteProperty(navigator, "geolocation");
+    }
+  });
+
   it("allows a manually entered coordinate pair when geolocation permission is denied", async () => {
     const originalGeolocation = Object.getOwnPropertyDescriptor(navigator, "geolocation");
     Object.defineProperty(navigator, "geolocation", {

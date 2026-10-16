@@ -32,4 +32,30 @@ describe("Resend adapter", () => {
     const send = createResendEmailSender({ apiKey: "test-secret", from: "Fix Hub <noreply@example.test>" }, fetch as unknown as typeof globalThis.fetch);
     await expect(send("customer@example.test", "012345")).rejects.toThrow("Email delivery failed");
   });
+
+  it("aborts a stalled provider request at the eight-second bound", async () => {
+    vi.useFakeTimers();
+    try {
+      const fetch = vi.fn((_url: URL, options?: RequestInit) => new Promise<Response>((_resolve, reject) => {
+        options?.signal?.addEventListener("abort", () => reject(new Error("request aborted")), { once: true });
+      }));
+      const send = createResendEmailSender(
+        { apiKey: "test-secret", from: "Fix Hub <noreply@example.test>" },
+        fetch as unknown as typeof globalThis.fetch,
+      );
+      const sending = send("customer@example.test", "012345");
+      const observed = sending.then(
+        () => ({ error: null as unknown }),
+        (error: unknown) => ({ error }),
+      );
+
+      await vi.advanceTimersByTimeAsync(8_000);
+      await expect(observed).resolves.toMatchObject({ error: expect.objectContaining({ message: "request aborted" }) });
+      expect(fetch).toHaveBeenCalledTimes(1);
+      const options = fetch.mock.calls[0]?.[1] as RequestInit | undefined;
+      expect(options?.signal?.aborted).toBe(true);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 });

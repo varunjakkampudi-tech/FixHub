@@ -18,14 +18,17 @@ const event = {
   claim_token: "00000000-0000-4000-8000-000000000006",
 };
 
-function fixture(options: { eligible?: boolean; offers?: { status: "pending" | "expired" }[]; contact?: boolean; identityActive?: boolean; phoneVerified?: boolean; consentRevoked?: boolean; consentPolicyVersion?: string; send?: (recipient: string, variables: Record<string, string>) => Promise<{ messageSid: string; status: string }>; empty?: boolean; rateCapped?: boolean; resolutionError?: boolean; eventType?: string; transitionedBeforeDelivery?: boolean; commitFailureAfterSend?: boolean; failUncertainUpdate?: boolean; staleLeaseAfterMarker?: boolean; payloadBookingId?: string } = {}) {
+function fixture(options: { eligible?: boolean; offers?: { status: "pending" | "expired" }[]; contact?: boolean; identityActive?: boolean; phoneVerified?: boolean; consentRevoked?: boolean; consentPolicyVersion?: string; send?: (recipient: string, variables: Record<string, string>) => Promise<{ messageSid: string; status: string }>; empty?: boolean; rateCapped?: boolean; resolutionError?: boolean; eventType?: string; transitionedBeforeDelivery?: boolean; commitFailureAfterSend?: boolean; failUncertainUpdate?: boolean; staleLeaseAfterMarker?: boolean; payloadBookingId?: string; service?: string; locality?: string } = {}) {
   const encrypted = encryptPhone("+919876543210", recipientId, key);
   const bookingOffers = options.offers ?? [{ status: "pending" as const }];
   const statements: string[] = [];
   const queryRecords: { sql: string; values: unknown[] }[] = [];
   const timeline: string[] = [];
   let bookingLockHeld = false;
-  let bookingState = { status: "offered", merchant_id: null as string | null };
+  const initialBookingStatus = options.eventType === "customer.booking_accepted" ? "accepted"
+    : options.eventType === "customer.booking_in_progress" ? "in_progress"
+      : options.eventType === "merchant.booking_completed" ? "completed" : "offered";
+  let bookingState = { status: initialBookingStatus, merchant_id: options.eventType === "merchant.booking_completed" ? recipientId : null as string | null };
   let releaseBookingLock!: () => void;
   const bookingLockReleased = new Promise<void>((resolve) => { releaseBookingLock = resolve; });
   let claimed = false;
@@ -50,7 +53,7 @@ function fixture(options: { eligible?: boolean; offers?: { status: "pending" | "
     if (sql.startsWith("SELECT count(*)::int AS attempts")) return { rows: [{ attempts: options.rateCapped ? 12 : 0 }] };
     if (sql.includes("FROM booking_offer o") && sql.includes("JOIN merchant_profile m")) {
       if (options.resolutionError) throw new Error("transient database error");
-      return { rows: options.eligible === false ? [] : [{ recipientId, label: "New service request", service: "Plumbing", locality: "Tanuku" }] };
+      return { rows: options.eligible === false ? [] : [{ recipientId, label: "New service request", service: options.service ?? "Plumbing", locality: options.locality ?? "Tanuku" }] };
     }
     if (sql.includes("FROM booking_offer WHERE id = $1 AND booking_id = $2 AND merchant_id = $3 FOR SHARE")) {
       const active = bookingOffers.some((offer) => offer.status === "pending");
@@ -63,7 +66,7 @@ function fixture(options: { eligible?: boolean; offers?: { status: "pending" | "
       if (options.resolutionError) throw new Error("transient database error");
       const requiresPendingOffer = sql.includes("booking_offer");
       const hasPendingOffer = bookingOffers.some((offer) => offer.status === "pending");
-      return { rows: options.eligible === false || (requiresPendingOffer && !hasPendingOffer) ? [] : [{ recipientId, label: "Your request is recorded. No provider is assigned yet.", service: "", locality: "" }] };
+      return { rows: options.eligible === false || (requiresPendingOffer && !hasPendingOffer) ? [] : [{ recipientId, label: "Your request is recorded. No provider is assigned yet.", service: options.service ?? "Electrical repair", locality: options.locality ?? "Tanuku" }] };
     }
     if (sql.includes("FROM service_booking WHERE id = $1 FOR SHARE")) {
       bookingLockHeld = true;
@@ -131,17 +134,48 @@ describe("consent-aware transactional notification outbox", () => {
     const test = fixture();
     await expect(test.dispatcher.dispatchBatch()).resolves.toEqual({ sent: 1, suppressed: 0, failed: 0, retry: 0 });
     expect(test.send).toHaveBeenCalledWith("+919876543210", { "1": "New service request", "2": "Plumbing", "3": "Tanuku" });
+    const offerQuery = test.statements.find((sql) => sql.includes("FROM booking_offer o") && sql.includes("JOIN merchant_profile m"));
+    expect(offerQuery).toContain("a.locality");
+    expect(offerQuery).toContain("a.customer_id = b.customer_id");
+    expect(offerQuery).not.toContain("a.address_text");
     expect(test.statements.some((sql) => sql.includes("FOR SHARE"))).toBe(true);
     expect(test.statements.some((sql) => sql.includes("claim_token = $2"))).toBe(true);
+  });
+
+  it("normalizes template fields to single-line Unicode-safe values within the bound", async () => {
+    const service = `Electrical\u0000\nrepair ${"🔧".repeat(130)}`;
+    const test = fixture({ service, locality: "Tanuku\r\nWest" });
+    await expect(test.dispatcher.dispatchBatch()).resolves.toEqual({ sent: 1, suppressed: 0, failed: 0, retry: 0 });
+    const variables = vi.mocked(test.send).mock.calls[0]?.[1];
+    expect(variables?.["2"]).toBe(`Electrical repair ${"🔧".repeat(102)}`);
+    expect(Array.from(variables?.["2"] ?? "")).toHaveLength(120);
+    expect(variables?.["3"]).toBe("Tanuku West");
+    expect(Object.values(variables ?? {}).every((value) => !/[\u0000-\u001f\u007f-\u009f]/u.test(value))).toBe(true);
+  });
+
+  it("sends service and locality only for request-created and merchant-offer events", async () => {
+    for (const eventType of ["customer.booking_accepted", "merchant.booking_completed"]) {
+      const test = fixture({ eventType });
+      await expect(test.dispatcher.dispatchBatch()).resolves.toEqual({ sent: 1, suppressed: 0, failed: 0, retry: 0 });
+      const variables = vi.mocked(test.send).mock.calls[0]?.[1];
+      expect(Object.keys(variables ?? {})).toEqual(["1"]);
+      const resolutionQuery = test.statements.find((sql) => sql.includes("FROM service_booking b"));
+      expect(resolutionQuery).not.toContain("customer_address");
+      expect(resolutionQuery).not.toContain("service_catalog");
+    }
   });
 
   it("confirms a current booking using the canonical safe status copy", async () => {
     const test = fixture({ eventType: "request.created", offers: [{ status: "expired" }] });
     expect(test.bookingOffers).toEqual([{ status: "expired" }]);
     await expect(test.dispatcher.dispatchBatch()).resolves.toEqual({ sent: 1, suppressed: 0, failed: 0, retry: 0 });
-    expect(test.send).toHaveBeenCalledWith("+919876543210", { "1": "Your request is recorded. No provider is assigned yet.", "2": "", "3": "" });
+    expect(test.send).toHaveBeenCalledWith("+919876543210", { "1": "Your request is recorded. No provider is assigned yet.", "2": "Electrical repair", "3": "Tanuku" });
     const resolutionQuery = test.statements.find((sql) => sql.includes("FROM service_booking b"));
     expect(resolutionQuery).toContain("b.customer_id AS \"recipientId\"");
+    expect(resolutionQuery).toContain("s.name AS service");
+    expect(resolutionQuery).toContain("a.locality");
+    expect(resolutionQuery).toContain("a.customer_id = b.customer_id");
+    expect(resolutionQuery).not.toContain("a.address_text");
     expect(resolutionQuery).not.toContain("booking_offer");
     expect(test.statements.some((sql) => sql.includes("FROM booking_offer"))).toBe(false);
     expect(test.statements.some((sql) => sql.includes("FROM service_booking WHERE id = $1 FOR SHARE"))).toBe(true);

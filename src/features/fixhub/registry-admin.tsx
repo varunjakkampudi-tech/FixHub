@@ -25,8 +25,10 @@ import {
 } from "./location-model";
 import { lt, type LocationKey } from "./location-copy";
 import { statusLabel, categoryLabel, eventLabel } from "./demo-copy";
+import { AdminHealthDiagnostics } from "./admin-health";
 
 const links = [
+  ["/admin/health", "health"],
   ["/admin/communications", "communications"],
   ["/admin/dashboard", "dashboard"],
   ["/admin/cities", "cities"],
@@ -394,7 +396,8 @@ export function RegistryAdmin({ page = "dashboard", id }: { page?: string; id?: 
     </label>
   );
   let content: ReactNode;
-  if (currentPage === "cities")
+  if (currentPage === "health") content = <AdminHealthDiagnostics locale={locale} />;
+  else if (currentPage === "cities")
     content = (
       <div className="space-y-8">
         {registryList(

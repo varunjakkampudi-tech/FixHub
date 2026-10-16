@@ -137,6 +137,8 @@ export function RealBookingPage() {
   const [latitudeInput, setLatitudeInput] = useState("");
   const [longitudeInput, setLongitudeInput] = useState("");
   const [locationMessage, setLocationMessage] = useState("");
+  const [locating, setLocating] = useState(false);
+  const locationRequestRef = useRef(0);
   const [note, setNote] = useState("");
   const [scheduledAt, setScheduledAt] = useState("");
   const [busy, setBusy] = useState(false);
@@ -148,6 +150,10 @@ export function RealBookingPage() {
   const validCoordinates = latitude !== null && longitude !== null
     && Number.isFinite(latitude) && latitude >= -90 && latitude <= 90
     && Number.isFinite(longitude) && longitude >= -180 && longitude <= 180;
+
+  useEffect(() => () => {
+    locationRequestRef.current += 1;
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -203,13 +209,18 @@ export function RealBookingPage() {
   }, [serviceId, addressId]);
 
   function useCurrentLocation() {
+    const requestId = ++locationRequestRef.current;
     setLocationMessage("");
     if (!navigator.geolocation) {
+      setLocating(false);
       setLocationMessage(te ? "ఈ పరికరంలో స్థానం అందుబాటులో లేదు." : "Location is not available in this browser.");
       return;
     }
+    setLocating(true);
     navigator.geolocation.getCurrentPosition(
       (position) => {
+        if (requestId !== locationRequestRef.current) return;
+        setLocating(false);
         setAddressId("");
         setSavedAddress(false);
         setIdempotencyKey("");
@@ -219,12 +230,22 @@ export function RealBookingPage() {
         setLongitudeInput(String(position.coords.longitude));
         setLocationMessage(te ? "మీరు ఎంచుకున్న స్థానాన్ని ఫారమ్‌కు జోడించాం." : "Your chosen location was added to this address.");
       },
-      () => setLocationMessage(te ? "స్థాన అనుమతి లభించలేదు. చిరునామాతో సరిపోలే పిన్ అక్షాంశం, రేఖాంశాన్ని చేతితో నమోదు చేయండి." : "Location permission was not granted. Enter the address-matching pin coordinates manually below."),
+      () => {
+        if (requestId !== locationRequestRef.current) return;
+        setLocating(false);
+        setLocationMessage(te ? "స్థాన అనుమతి లభించలేదు. చిరునామాతో సరిపోలే పిన్ అక్షాంశం, రేఖాంశాన్ని చేతితో నమోదు చేయండి." : "Location permission was not granted. Enter the address-matching pin coordinates manually below.");
+      },
       { enableHighAccuracy: false, timeout: 8000, maximumAge: 60_000 },
     );
   }
 
+  function cancelLocationRequest() {
+    locationRequestRef.current += 1;
+    setLocating(false);
+  }
+
   function editServiceAddress(value: string) {
+    cancelLocationRequest();
     setAddressText(value);
     setAddressId("");
     setSavedAddress(false);
@@ -237,6 +258,7 @@ export function RealBookingPage() {
   }
 
   function editServiceLocality(value: string) {
+    cancelLocationRequest();
     setLocality(value);
     setAddressId("");
     setSavedAddress(false);
@@ -249,6 +271,7 @@ export function RealBookingPage() {
   }
 
   function editCoordinate(axis: "latitude" | "longitude", value: string) {
+    cancelLocationRequest();
     const parsed = value.trim() === "" ? null : Number(value);
     if (axis === "latitude") {
       setLatitudeInput(value);
@@ -264,6 +287,7 @@ export function RealBookingPage() {
   }
 
   function chooseSavedAddress(id: string) {
+    cancelLocationRequest();
     const selected = addresses.find((item) => item.id === id);
     setAddressId(selected?.id ?? "");
     setLabel(selected?.label ?? "Home");
@@ -392,9 +416,11 @@ export function RealBookingPage() {
                     <label className="form-label" htmlFor="address-locality">{te ? "ప్రాంతం / పట్టణం" : "Locality / town"}</label>
                     <input id="address-locality" className="form-input" maxLength={120} required value={locality} onChange={(event) => editServiceLocality(event.target.value)} />
                   </div>
-                  <Button type="button" variant="outline" className="mt-3" onClick={useCurrentLocation} disabled={busy}>
-                    {te ? "నా ప్రస్తుత స్థానాన్ని ఉపయోగించండి" : "Use my current location"}
+                  <Button type="button" variant="outline" className="mt-3" onClick={useCurrentLocation} disabled={busy || locating} aria-busy={locating}>
+                    {locating && <LoaderCircle aria-hidden="true" className="animate-spin motion-reduce:animate-none" />}
+                    {locating ? (te ? "స్థానాన్ని కనుగొంటున్నాం…" : "Finding your location…") : (te ? "నా ప్రస్తుత స్థానాన్ని ఉపయోగించండి" : "Use my current location")}
                   </Button>
+                  {locating && <p className="mt-2 text-sm text-muted-foreground" role="status" aria-live="polite">{te ? "మీ పరికర అనుమతిని వేచి చూస్తున్నాం. మీరు “చిరునామా, స్థానాన్ని సేవ్ చేయండి” ఎంచుకునే వరకు మీ స్థానం సేవ్ కాదు." : "Waiting for your device’s location permission. Your location is not saved unless you choose “Save address and location.”"}</p>}
                   <p className="mt-3 text-sm">{te ? "అనుమతి ఇవ్వలేకపోతే, మీకు నచ్చిన మ్యాప్ యాప్‌లో చిరునామాకు సరిపోయే పిన్ అక్షాంశం, రేఖాంశాన్ని నమోదు చేయండి." : "If you cannot grant location permission, enter the matching pin's latitude and longitude from a map app of your choice."}</p>
                   <div className="mt-3 grid gap-3 sm:grid-cols-2">
                     <div className="form-group">

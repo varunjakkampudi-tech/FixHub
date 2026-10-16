@@ -1,4 +1,5 @@
 export const locationCopy = {
+  health: ["System health", "వ్యవస్థ స్థితి"],
   communications: ["Communications", "సందేశాలు"],
   searchRecords: ["Search sample records", "నమూనా రికార్డులు వెతకండి"],
   city: ["City", "నగరం"],
