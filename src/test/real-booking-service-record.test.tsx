@@ -102,6 +102,7 @@ describe("completed booking service record", () => {
 
     expect(await screen.findByText(/notifications to eligible providers may be delayed or unavailable/i)).toBeInTheDocument();
     expect(screen.getByText(/no provider is assigned until one accepts/i)).toBeInTheDocument();
+    expect(screen.getByText("Status: Waiting for a provider")).toBeInTheDocument();
     expect(screen.queryByText(/they have not been notified/i)).not.toBeInTheDocument();
   });
 

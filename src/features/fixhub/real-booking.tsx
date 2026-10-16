@@ -36,6 +36,20 @@ function rupees(paise: number, locale: string) {
   return new Intl.NumberFormat(locale, { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(paise / 100);
 }
 
+function bookingStatusLabel(status: string, locale: string) {
+  const labels: Record<string, [string, string]> = {
+    requested: ["Request received", "అభ్యర్థన అందింది"],
+    offered: ["Waiting for a provider", "సేవా ప్రదాత కోసం వేచి ఉంది"],
+    accepted: ["Provider accepted", "ప్రదాత అంగీకరించారు"],
+    scheduled: ["Scheduled", "సమయం ఖరారైంది"],
+    in_progress: ["Work in progress", "పని జరుగుతోంది"],
+    completed: ["Completed", "పూర్తయింది"],
+    cancelled: ["Cancelled", "రద్దు చేయబడింది"],
+    disputed: ["Disputed", "వివాదంలో ఉంది"],
+  };
+  return labels[status]?.[locale === "te-IN" ? 1 : 0] ?? (locale === "te-IN" ? "స్థితి నవీకరణ" : "Status update");
+}
+
 function BookingLoadingState({ detail, locale }: { detail: boolean; locale: string }) {
   const te = locale === "te-IN";
   return (
@@ -591,7 +605,7 @@ export function RealBookingHistory({ detail = false }: { detail?: boolean; mode?
         {loading ? <BookingLoadingState detail={detail} locale={locale} /> : detail ? booking ? (
           <article className="summary-panel">
             <h2 className="text-xl font-semibold">{booking.service_name}</h2>
-            <p className="mt-2">{te ? "స్థితి" : "Status"}: {booking.status}</p>
+            <p className="mt-2">{te ? "స్థితి" : "Status"}: {bookingStatusLabel(booking.status, locale)}</p>
             {(booking.status === "requested" || booking.status === "offered") && <Notice warning>{te ? "మీ అభ్యర్థన సేవ్ అయింది. అర్హత గల ప్రదాతలకు సందేశాలు ఆలస్యంగా చేరవచ్చు లేదా చేరకపోవచ్చు; ఒకరు అంగీకరించే వరకు ఎవరూ కేటాయించబడరు. ప్రస్తుత స్థితి కోసం ఈ పేజీని చూడండి." : "Your request is saved. Notifications to eligible providers may be delayed or unavailable; no provider is assigned until one accepts. Check this page for current status."}</Notice>}
             <p>{booking.address_label} · {booking.locality}</p>
             {booking.address_text && <p className="mt-1">{booking.address_text}</p>}
@@ -659,7 +673,7 @@ export function RealBookingHistory({ detail = false }: { detail?: boolean; mode?
             {items.length === 0 ? <Notice>{te ? "ఇంకా బుకింగ్‌లు లేవు." : "No bookings yet."}</Notice> : <div className="grid gap-4 md:grid-cols-2">{items.map((item) => (
               <Link key={item.id} className="summary-panel block" to="/customer/bookings/$id" params={{ id: item.id }}>
                 <h2 className="font-semibold">{item.service_name}</h2>
-                <p>{item.status} · {item.address_label}, {item.locality}</p>
+                <p>{bookingStatusLabel(item.status, locale)} · {item.address_label}, {item.locality}</p>
                 <p>{rupees(item.visit_price_paise + item.labor_estimate_paise, locale)} · {te ? "భాగాలు అవసరమైతే అదనం; నగదు" : "Parts quoted separately if needed · Cash"}</p>
               </Link>
             ))}</div>}
