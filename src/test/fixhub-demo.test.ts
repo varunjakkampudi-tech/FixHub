@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   seed,
   transition,
+  eligible,
   calculate,
   initialPolicy,
   fifthExample,
@@ -82,12 +83,34 @@ describe("demo pricing", () => {
   });
 });
 describe("cross-role state machine", () => {
-  it("creates notifications, first acceptance wins, and assigns an eligible technician", () => {
+  it("offers every eligible merchant only, then enforces first acceptance and assignment", () => {
     let r = create();
     expect(r.ok).toBe(true);
     const id = r.bookingId ?? "";
-    expect(r.state.notifications.filter((n) => n.event === "created").map((n) => n.to)).toEqual(
-      expect.arrayContaining(["sample-m1", "sample-m2", "sample-c1", "sample-ops"]),
+    const booking = r.state.bookings.find((item) => item.id === id);
+    expect(booking).toBeDefined();
+    const currentlyEligible = eligible(
+      r.state,
+      "electrician",
+      "Tanuku",
+      "morning",
+      "2026-10-22",
+      undefined,
+      undefined,
+      now,
+    );
+    expect(booking?.offers).toEqual(currentlyEligible);
+    const created = r.state.notifications.filter(
+      (notification) => notification.bookingId === id && notification.event === "created",
+    );
+    const merchantRecipients = created
+      .map((notification) => notification.to)
+      .filter((recipient) => r.state.merchants.some((merchant) => merchant.id === recipient));
+    expect(merchantRecipients).toHaveLength(currentlyEligible.length);
+    expect([...merchantRecipients].sort()).toEqual([...currentlyEligible].sort());
+    expect(new Set(merchantRecipients).size).toBe(merchantRecipients.length);
+    expect(created.map((notification) => notification.to)).toEqual(
+      expect.arrayContaining(["sample-c1", "sample-ops", "sample-admin"]),
     );
     r = command(r.state, "accept", "sample-m1", id);
     expect(r.ok).toBe(true);
