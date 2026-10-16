@@ -215,7 +215,7 @@ export function createMarketplaceHandlers(pool: Pick<Pool, "connect">) {
           estimate: { visitPaise: Number(cheapest.visit_price_paise), laborFromPaise: Number(cheapest.labor_from_paise), totalFromPaise: serviceTotal(cheapest) },
           eligibleProviderCandidates: eligible.length,
           notificationStatus: "not_dispatched",
-          notice: "The request was saved and matching offers are visible to eligible merchants. Notifications are not active in this build.",
+          notice: "Request and eligible offers are saved. WhatsApp delivery is attempted asynchronously only when enabled and permitted; an accepted offer in FixHub confirms assignment.",
           createdAt: new Date().toISOString(),
         },
       };

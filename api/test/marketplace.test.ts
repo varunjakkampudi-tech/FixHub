@@ -115,6 +115,7 @@ describe("marketplace boundaries", () => {
       notificationStatus: "not_dispatched",
       estimate: { visitPaise: 25000, laborFromPaise: 30000, totalFromPaise: 55000 },
     });
+    expect(first.body.booking.notice).toBe("Request and eligible offers are saved. WhatsApp delivery is attempted asynchronously only when enabled and permitted; an accepted offer in FixHub confirms assignment.");
     expect(offerRows).toHaveLength(2);
     expect(outboxRows).toHaveLength(2);
     expect(JSON.stringify(outboxRows[0])).not.toContain("12 Main Street");
