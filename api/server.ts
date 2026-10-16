@@ -1,5 +1,6 @@
 import "dotenv/config";
 
+import pino from "pino";
 import { z } from "zod";
 
 import { createApiApp } from "./app";
@@ -16,7 +17,8 @@ if (!port.success) throw new Error("API_PORT must be an integer between 1 and 65
 
 const host = process.env.API_HOST ?? "127.0.0.1";
 const production = process.env.NODE_ENV === "production";
-const databasePool = createDatabasePool(process.env, (code) => console.error("Database pool error", { code }));
+const logger = pino({ level: process.env.LOG_LEVEL ?? "info" });
+const databasePool = createDatabasePool(process.env, (code) => logger.error({ code }, "Database pool error"));
 const authConfig = authConfigFromEnvironment(process.env);
 const resendConfig = resendConfigFromEnvironment(process.env);
 const verificationEnabled = process.env.FIXHUB_WHATSAPP_VERIFICATION_ENABLED === "true";
@@ -40,6 +42,7 @@ if (databasePool) await applyMigrations(databasePool);
 const sendAuthEmail = resendConfig ? createResendEmailSender(resendConfig) : undefined;
 const app = createApiApp({
   environment: production ? "production" : "development",
+  logger,
   databasePool: databasePool ?? undefined,
   marketplacePool: databasePool ?? undefined,
   authConfig: authConfig ?? undefined,
@@ -58,7 +61,7 @@ const app = createApiApp({
     return true;
   },
 });
-const server = app.listen(port.data, host, () => console.info(`Fix Hub API listening on http://${host}:${port.data}`));
+const server = app.listen(port.data, host, () => logger.info({ host, port: port.data }, "Fix Hub API listening"));
 const dispatcher = notificationsEnabled && databasePool && twilioConfig && whatsappEncryptionKey && serviceContentSid
   ? createNotificationOutboxDispatcher(databasePool, whatsappEncryptionKey, async (recipientE164, variables) =>
       createTwilioWhatsAppSender(twilioConfig, fetch, serviceContentSid)({ toE164: recipientE164, variables }),
@@ -66,20 +69,27 @@ const dispatcher = notificationsEnabled && databasePool && twilioConfig && whats
   : undefined;
 const dispatcherTimer = dispatcher ? setInterval(() => {
   void dispatcher.dispatchBatch().catch((error: unknown) => {
-    console.error("WhatsApp notification dispatch failed", { errorType: error instanceof Error ? error.name : "UnknownError" });
+    logger.error({ errorType: error instanceof Error ? error.name : "UnknownError" }, "WhatsApp notification dispatch failed");
   });
 }, 5_000) : undefined;
 dispatcherTimer?.unref();
 
 function shutdown(signal: string) {
-  console.info(`Received ${signal}; closing API server`);
+  logger.info({ signal }, "Closing API server");
   if (dispatcherTimer) clearInterval(dispatcherTimer);
   server.close((error) => {
     if (error) {
-      console.error("API server shutdown failed", error);
+      logger.error({ errorType: error.name }, "API server shutdown failed");
       process.exitCode = 1;
     }
-    if (databasePool) void databasePool.end();
+    if (databasePool) {
+      void databasePool.end().then(() => {
+        logger.info("Database pool closed");
+      }, (poolError: unknown) => {
+        logger.error({ errorType: poolError instanceof Error ? poolError.name : "UnknownError" }, "Database pool shutdown failed");
+        process.exitCode = 1;
+      });
+    }
   });
 }
 
