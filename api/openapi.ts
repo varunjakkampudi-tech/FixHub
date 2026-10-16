@@ -74,12 +74,36 @@ export const openApiDocument = {
       get: { summary: "List active services", responses: { "200": { description: "Public service catalog." } } },
     },
     "/api/v1/customer/addresses": {
-      get: { summary: "List the signed-in customer's saved addresses", responses: { "200": { description: "Addresses owned by the authenticated customer." }, "401": { description: "Authentication required." } } },
+      get: {
+        summary: "List the signed-in customer's saved addresses",
+        responses: {
+          "200": {
+            description: "Addresses owned by the authenticated customer; coordinates are JSON numbers or null.",
+            content: {
+              "application/json": {
+                schema: { type: "object", required: ["items"], properties: { items: { type: "array", items: { $ref: "#/components/schemas/CustomerAddress" } } } },
+              },
+            },
+          },
+          "401": { description: "Authentication required." },
+        },
+      },
       post: {
         summary: "Save a service address",
         description: "Coordinates are optional and should be supplied only after the customer explicitly shares their location.",
         requestBody: { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/CustomerAddressInput" } } } },
-        responses: { "201": { description: "Address saved." }, "400": { description: "Invalid input." }, "401": { description: "Authentication required." } },
+        responses: {
+          "201": {
+            description: "Address saved; coordinates are JSON numbers or null.",
+            content: {
+              "application/json": {
+                schema: { type: "object", required: ["item"], properties: { item: { $ref: "#/components/schemas/CustomerAddress" } } },
+              },
+            },
+          },
+          "400": { description: "Invalid input." },
+          "401": { description: "Authentication required." },
+        },
       },
     },
     "/api/v1/customer/pricing-preview": {
@@ -249,7 +273,18 @@ export const openApiDocument = {
         type: "object",
         required: ["label", "address", "locality"],
         additionalProperties: false,
-        properties: { label: { type: "string", maxLength: 40 }, address: { type: "string", maxLength: 500 }, locality: { type: "string", maxLength: 120 }, latitude: { type: "number", minimum: -90, maximum: 90 }, longitude: { type: "number", minimum: -180, maximum: 180 } },
+        dependentRequired: { latitude: ["longitude"], longitude: ["latitude"] },
+        properties: { label: { type: "string", minLength: 1, maxLength: 40 }, address: { type: "string", minLength: 5, maxLength: 500 }, locality: { type: "string", minLength: 2, maxLength: 120 }, latitude: { type: "number", minimum: -90, maximum: 90 }, longitude: { type: "number", minimum: -180, maximum: 180 } },
+      },
+      CustomerAddress: {
+        type: "object",
+        required: ["id", "label", "address", "locality", "latitude", "longitude"],
+        additionalProperties: false,
+        properties: {
+          id: { type: "string", format: "uuid" }, label: { type: "string" }, address: { type: "string" }, locality: { type: "string" },
+          latitude: { type: ["number", "null"], minimum: -90, maximum: 90 }, longitude: { type: ["number", "null"], minimum: -180, maximum: 180 },
+          created_at: { type: "string", format: "date-time" },
+        },
       },
       CustomerBookingInput: {
         type: "object",

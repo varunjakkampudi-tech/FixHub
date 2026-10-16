@@ -40,6 +40,12 @@ type Candidate = {
   service_radius_km: number | string;
 };
 
+type AddressRecord = QueryResultRow & { latitude: number | string | null; longitude: number | string | null };
+
+function addressResponse(row: AddressRecord) {
+  return { ...row, latitude: row.latitude === null ? null : Number(row.latitude), longitude: row.longitude === null ? null : Number(row.longitude) };
+}
+
 export function distanceKm(latA: number, lonA: number, latB: number, lonB: number): number {
   const radians = (degrees: number) => (degrees * Math.PI) / 180;
   const dLat = radians(latB - latA);
@@ -85,12 +91,12 @@ export function createMarketplaceHandlers(pool: Pick<Pool, "connect">) {
     if (!customerId) return response.status(401).json({ error: { code: "AUTH_REQUIRED", message: "Sign in to continue." } });
     const client = await pool.connect();
     try {
-      const result = await client.query(
+      const result = await client.query<AddressRecord>(
         `SELECT id, label, address_text AS address, locality, latitude, longitude, created_at
          FROM customer_address WHERE customer_id = $1 ORDER BY created_at DESC LIMIT 50`,
         [customerId],
       );
-      return response.status(200).json({ items: result.rows });
+      return response.status(200).json({ items: result.rows.map(addressResponse) });
     } finally { client.release(); }
   }
 
@@ -149,13 +155,13 @@ export function createMarketplaceHandlers(pool: Pick<Pool, "connect">) {
     const { label, address, locality, latitude, longitude } = parsed.data;
     const client = await pool.connect();
     try {
-      const result = await client.query(
+      const result = await client.query<AddressRecord>(
         `INSERT INTO customer_address (id, customer_id, label, address_text, locality, latitude, longitude)
          VALUES ($1, $2, $3, $4, $5, $6, $7)
          RETURNING id, label, address_text AS address, locality, latitude, longitude, created_at`,
         [id, customerId, label, address, locality, latitude ?? null, longitude ?? null],
       );
-      return response.status(201).json({ item: result.rows[0] });
+      return response.status(201).json({ item: addressResponse(result.rows[0]) });
     } finally { client.release(); }
   }
 

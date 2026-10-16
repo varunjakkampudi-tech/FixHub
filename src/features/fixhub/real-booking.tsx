@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ApiError, apiRequest } from "./api-client";
 import { useFixHub } from "./context";
 import { Notice, PageShell, PageTop } from "./shared";
+import { googleMapsPinUrl } from "./map-adapter";
 
 type Service = { id: string; name: string; category: string; description: string };
 type Address = { id: string; label: string; address: string; locality: string; latitude: number | null; longitude: number | null };
@@ -303,7 +304,7 @@ export function RealBookingPage() {
   }
 
   async function saveAddress() {
-    if (busy) return;
+    if (busy || locating) return;
     if (!validCoordinates) {
       setError(te ? "చిరునామాను సేవ్ చేయడానికి సరైన అక్షాంశం, రేఖాంశం అవసరం." : "Enter a valid latitude and longitude before saving this service address.");
       return;
@@ -327,7 +328,7 @@ export function RealBookingPage() {
 
   async function createBooking(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (busy) return;
+    if (busy || locating) return;
     setError("");
     const chosenAddress = addresses.find((item) => item.id === addressId);
     if (!chosenAddress || (chosenAddress.latitude === null || chosenAddress.longitude === null)) {
@@ -398,7 +399,7 @@ export function RealBookingPage() {
                   {addresses.length > 0 && (
                     <div className="form-group mt-4">
                       <label className="form-label" htmlFor="saved-address">{te ? "సేవ్ చేసిన చిరునామాలు" : "Saved addresses"}</label>
-                      <select id="saved-address" className="form-input" value={addressId} onChange={(event) => chooseSavedAddress(event.target.value)}>
+                      <select id="saved-address" className="form-input" value={addressId} onChange={(event) => chooseSavedAddress(event.target.value)} disabled={busy}>
                         <option value="">{te ? "చిరునామాను ఎంచుకోండి" : "Choose an address"}</option>
                         {addresses.map((item) => <option key={item.id} value={item.id}>{item.label} · {item.locality}</option>)}
                       </select>
@@ -406,15 +407,15 @@ export function RealBookingPage() {
                   )}
                   <div className="form-group mt-4">
                     <label className="form-label" htmlFor="address-label">{te ? "చిరునామా పేరు" : "Address label"}</label>
-                    <input id="address-label" className="form-input" maxLength={40} value={label} onChange={(event) => setLabel(event.target.value)} />
+                    <input id="address-label" className="form-input" maxLength={40} value={label} onChange={(event) => setLabel(event.target.value)} disabled={busy} />
                   </div>
                   <div className="form-group mt-4">
                     <label className="form-label" htmlFor="address-text">{te ? "పూర్తి చిరునామా" : "Full address"}</label>
-                    <textarea id="address-text" className="form-input min-h-24" maxLength={500} required value={addressText} onChange={(event) => editServiceAddress(event.target.value)} />
+                    <textarea id="address-text" className="form-input min-h-24" maxLength={500} required value={addressText} onChange={(event) => editServiceAddress(event.target.value)} disabled={busy} />
                   </div>
                   <div className="form-group mt-4">
                     <label className="form-label" htmlFor="address-locality">{te ? "ప్రాంతం / పట్టణం" : "Locality / town"}</label>
-                    <input id="address-locality" className="form-input" maxLength={120} required value={locality} onChange={(event) => editServiceLocality(event.target.value)} />
+                    <input id="address-locality" className="form-input" maxLength={120} required value={locality} onChange={(event) => editServiceLocality(event.target.value)} disabled={busy} />
                   </div>
                   <Button type="button" variant="outline" className="mt-3" onClick={useCurrentLocation} disabled={busy || locating} aria-busy={locating}>
                     {locating && <LoaderCircle aria-hidden="true" className="animate-spin motion-reduce:animate-none" />}
@@ -433,9 +434,15 @@ export function RealBookingPage() {
                     </div>
                   </div>
                   {validCoordinates && <p className="mt-2 text-xs text-muted-foreground">{te ? "స్థానం ఎంచుకోబడింది" : "Location pin set for this service request"}</p>}
+                  {validCoordinates && !locating && <div className="mt-2">
+                    <a className="inline-flex min-h-11 items-center text-sm text-primary underline underline-offset-4" href={googleMapsPinUrl({ lat: latitude!, lng: longitude! })} target="_blank" rel="noopener noreferrer">
+                      {te ? "ఈ పిన్‌ను Google Mapsలో తనిఖీ చేయండి" : "Check this pin in Google Maps"}
+                    </a>
+                    <p className="text-xs text-muted-foreground">{te ? "ఈ లింక్‌ను ఎంచుకుంటే కొత్త ట్యాబ్‌లో Google Maps తెరుచుకుని, ఎంచుకున్న స్థానం Googleతో పంచబడుతుంది." : "Choosing this link opens Google Maps in a new tab and shares the selected pin with Google."}</p>
+                  </div>}
                   <p className="mt-2 text-xs text-muted-foreground">{te ? "సేవా పరిధిని తనిఖీ చేయడానికి ఖచ్చితమైన స్థానం అవసరం. కేటాయించిన ప్రదాతకే పూర్తి దిశలు చూపబడతాయి." : "An exact location is needed to check service coverage. Full directions are shown only to an assigned provider."}</p>
                   {locationMessage && <p role="status" className="mt-2 text-sm">{locationMessage}</p>}
-                  <Button type="button" variant="outline" className="mt-3 block" onClick={saveAddress} disabled={busy || Boolean(addressId) || !addressText.trim() || !locality.trim() || !validCoordinates}>
+                  <Button type="button" variant="outline" className="mt-3 block" onClick={saveAddress} disabled={busy || locating || Boolean(addressId) || !addressText.trim() || !locality.trim() || !validCoordinates}>
                     {savedAddress ? (te ? "చిరునామా సేవ్ అయింది" : "Address saved") : (te ? "చిరునామా, స్థానాన్ని సేవ్ చేయండి" : "Save address and location")}
                   </Button>
                 </>
@@ -473,7 +480,7 @@ export function RealBookingPage() {
             </section>
             <Button
               type="submit"
-              disabled={busy || !serviceId || !addressId}
+              disabled={busy || locating || !serviceId || !addressId}
               aria-label={busy ? (te ? "అభ్యర్థన పంపుతోంది" : "Request in progress") : undefined}
             >
               {busy && <LoaderCircle aria-hidden="true" className="animate-spin motion-reduce:animate-none" />}

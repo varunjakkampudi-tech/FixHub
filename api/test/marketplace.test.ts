@@ -105,6 +105,7 @@ describe("marketplace boundaries", () => {
         const record = idempotency.get(key)!;
         record.body = JSON.parse(String(values[3]));
       }
+      if (sql.includes("INSERT INTO customer_address")) return { rows: [{ id: values[0], label: values[2], address: values[3], locality: values[4], latitude: String(values[5]), longitude: String(values[6]) }] };
       if (sql.includes("SELECT latitude, longitude FROM customer_address")) return { rows: [{ latitude: "16.75", longitude: "81.68" }] };
       if (sql.includes("SELECT id, name FROM service_catalog") || sql.includes("SELECT id FROM service_catalog")) return { rows: [{ id: serviceId, name: "General electrical service" }] };
       if (sql.includes("SELECT m.subject_id AS merchant_id")) {

@@ -52,6 +52,70 @@ afterEach(() => {
 });
 
 describe("customer booking price preview", () => {
+  it("blocks saving an older pin while a new location lookup is pending", async () => {
+    const previous = Object.getOwnPropertyDescriptor(navigator, "geolocation");
+    let finish!: PositionCallback;
+    Object.defineProperty(navigator, "geolocation", { configurable: true, value: { getCurrentPosition: (success: PositionCallback) => { finish = success; } } });
+    try {
+      setupPricePreview(true);
+      fireEvent.change(await screen.findByLabelText("Saved addresses"), { target: { value: "" } });
+      fireEvent.change(screen.getByLabelText("Full address"), { target: { value: "12 Synthetic Street" } });
+      fireEvent.change(screen.getByLabelText("Latitude"), { target: { value: "16.75" } });
+      fireEvent.change(screen.getByLabelText("Longitude"), { target: { value: "81.68" } });
+      const save = screen.getByRole("button", { name: "Save address and location" });
+      expect(save).toBeEnabled();
+      fireEvent.click(screen.getByRole("button", { name: "Use my current location" }));
+      expect(save).toBeDisabled();
+      fireEvent.click(save);
+      expect(mocks.request.mock.calls.some(([, options]) => options?.method === "POST")).toBe(false);
+      act(() => finish({ coords: { latitude: 16.76, longitude: 81.69 } } as GeolocationPosition));
+      expect(save).toBeEnabled();
+      const pin = screen.getByRole("link", { name: "Check this pin in Google Maps" });
+      expect(new URL(pin.getAttribute("href")!).searchParams.get("query")).toBe("16.76,81.69");
+      expect(pin).toHaveAttribute("rel", "noopener noreferrer");
+    } finally {
+      if (previous) Object.defineProperty(navigator, "geolocation", previous);
+      else Reflect.deleteProperty(navigator, "geolocation");
+    }
+  });
+
+  it("blocks submitting a saved address while replacement GPS coordinates are pending", async () => {
+    const previous = Object.getOwnPropertyDescriptor(navigator, "geolocation");
+    Object.defineProperty(navigator, "geolocation", { configurable: true, value: { getCurrentPosition: vi.fn() } });
+    try {
+      setupPricePreview(true);
+      fireEvent.change(await screen.findByLabelText("Saved addresses"), { target: { value: addressId } });
+      fireEvent.change(screen.getByLabelText("Service"), { target: { value: serviceId } });
+      const submit = screen.getByRole("button", { name: "Find eligible providers" });
+      expect(submit).toBeEnabled();
+      fireEvent.click(screen.getByRole("button", { name: "Use my current location" }));
+      expect(submit).toBeDisabled();
+      expect(screen.queryByRole("link", { name: "Check this pin in Google Maps" })).not.toBeInTheDocument();
+    } finally {
+      if (previous) Object.defineProperty(navigator, "geolocation", previous);
+      else Reflect.deleteProperty(navigator, "geolocation");
+    }
+  });
+
+  it("keeps address inputs fixed until a pending save finishes", async () => {
+    setupPricePreview(true);
+    fireEvent.change(await screen.findByLabelText("Saved addresses"), { target: { value: "" } });
+    fireEvent.change(screen.getByLabelText("Full address"), { target: { value: "12 Synthetic Street" } });
+    fireEvent.change(screen.getByLabelText("Latitude"), { target: { value: "16.75" } });
+    fireEvent.change(screen.getByLabelText("Longitude"), { target: { value: "81.68" } });
+    let finish!: (value: unknown) => void;
+    const implementation = mocks.request.getMockImplementation()!;
+    mocks.request.mockImplementation((path: string, options?: RequestInit) => path === "/api/v1/customer/addresses" && options?.method === "POST"
+      ? new Promise((resolve) => { finish = resolve; }) : implementation(path, options));
+    fireEvent.click(screen.getByRole("button", { name: "Save address and location" }));
+    for (const name of ["Full address", "Address label", "Locality / town", "Saved addresses", "Latitude", "Longitude"]) {
+      expect(screen.getByLabelText(name)).toBeDisabled();
+    }
+    await act(async () => finish({ item: { id: "30000000-0000-4000-8000-000000000001", label: "Home", address: "12 Synthetic Street", locality: "Tanuku", latitude: 16.75, longitude: 81.68 } }));
+    expect(screen.getByLabelText("Full address")).toBeEnabled();
+    expect(screen.getByLabelText("Saved addresses")).toHaveValue("30000000-0000-4000-8000-000000000001");
+  });
+
   it("shows accessible loading placeholders until services and saved addresses are ready", async () => {
     let resolveServices!: (value: { items: { id: string; name: string; category: string; description: string }[] }) => void;
     let resolveAddresses!: (value: { items: { id: string; label: string; address: string; locality: string; latitude: number; longitude: number }[] }) => void;

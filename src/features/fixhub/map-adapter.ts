@@ -29,7 +29,7 @@ export function canOpenAssignedDirections(
   return false;
 }
 
-export function googleMapsDirectionsUrl(destination: Pick<Pin, "lat" | "lng">): string {
+function validatedCoordinates(destination: Pick<Pin, "lat" | "lng">): string {
   if (
     !Number.isFinite(destination.lat) ||
     !Number.isFinite(destination.lng) ||
@@ -38,11 +38,20 @@ export function googleMapsDirectionsUrl(destination: Pick<Pin, "lat" | "lng">): 
     destination.lng < -180 ||
     destination.lng > 180
   ) {
-    throw new RangeError("Directions require valid destination coordinates");
+    throw new RangeError("Map links require valid destination coordinates");
   }
+  return `${destination.lat},${destination.lng}`;
+}
+
+export function googleMapsPinUrl(destination: Pick<Pin, "lat" | "lng">): string {
+  const query = new URLSearchParams({ api: "1", query: validatedCoordinates(destination) });
+  return `https://www.google.com/maps/search/?${query.toString()}`;
+}
+
+export function googleMapsDirectionsUrl(destination: Pick<Pin, "lat" | "lng">): string {
   const query = new URLSearchParams({
     api: "1",
-    destination: `${destination.lat},${destination.lng}`,
+    destination: validatedCoordinates(destination),
     travelmode: "driving",
   });
   return `https://www.google.com/maps/dir/?${query.toString()}`;
