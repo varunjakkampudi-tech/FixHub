@@ -25,6 +25,9 @@ describe("marketplace boundaries", () => {
     const addressId = randomUUID();
     const serviceId = "10000000-0000-4000-8000-000000000001";
     const idempotency = new Map<string, { hash: Buffer; body?: unknown }>();
+    const localMerchantId = randomUUID();
+    const nearbyMerchantId = randomUUID();
+    const distantMerchantId = randomUUID();
     let challengeId = "";
     let challengeHash: Buffer | undefined;
     let sentCode = "";
@@ -61,8 +64,9 @@ describe("marketplace boundaries", () => {
       if (sql.includes("SELECT latitude, longitude FROM customer_address")) return { rows: [{ latitude: "16.75", longitude: "81.68" }] };
       if (sql.includes("SELECT id, name FROM service_catalog")) return { rows: [{ id: serviceId, name: "General electrical service" }] };
       if (sql.includes("SELECT m.subject_id AS merchant_id")) return { rows: providersAvailable ? [
-        { merchant_id: randomUUID(), business_name: "Local Electrician", latitude: "16.75", longitude: "81.68", service_radius_km: "5", visit_price_paise: "25000", labor_from_paise: "30000" },
-        { merchant_id: randomUUID(), business_name: "Distant Electrician", latitude: "18.75", longitude: "83.68", service_radius_km: "5", visit_price_paise: "10000", labor_from_paise: "10000" },
+        { merchant_id: localMerchantId, business_name: "Local Electrician", latitude: "16.75", longitude: "81.68", service_radius_km: "5", visit_price_paise: "25000", labor_from_paise: "30000" },
+        { merchant_id: nearbyMerchantId, business_name: "Nearby Electrician", latitude: "16.76", longitude: "81.69", service_radius_km: "5", visit_price_paise: "30000", labor_from_paise: "10000" },
+        { merchant_id: distantMerchantId, business_name: "Distant Electrician", latitude: "18.75", longitude: "83.68", service_radius_km: "5", visit_price_paise: "10000", labor_from_paise: "10000" },
       ] : [] };
       if (sql.includes("INSERT INTO service_booking")) createdBookingIds.push(String(values[0]));
       if (sql.includes("INSERT INTO booking_offer")) offerRows.push(values);
@@ -117,15 +121,15 @@ describe("marketplace boundaries", () => {
       serviceId,
       status: "offered",
       paymentMethod: "cash_on_completion",
-      eligibleProviderCandidates: 1,
+      eligibleProviderCandidates: 2,
       notificationStatus: "not_dispatched",
-      estimate: { visitPaise: 25000, laborFromPaise: 30000, totalFromPaise: 55000 },
+      estimate: { visitPaise: 30000, laborFromPaise: 10000, totalFromPaise: 40000 },
     });
     expect(first.body.booking.notice).toBe("Request and eligible offers are saved. WhatsApp delivery is attempted asynchronously only when enabled and permitted; an accepted offer in FixHub confirms assignment.");
-    expect(offerRows).toHaveLength(2);
-    expect(outboxRows).toHaveLength(4);
+    expect(offerRows).toHaveLength(4);
+    expect(outboxRows).toHaveLength(6);
     expect(outboxStatements.filter((sql) => sql.includes("'request.created'"))).toHaveLength(2);
-    expect(outboxStatements.filter((sql) => sql.includes("'merchant.booking_offer'"))).toHaveLength(2);
+    expect(outboxStatements.filter((sql) => sql.includes("'merchant.booking_offer'"))).toHaveLength(4);
     const customerEvents = outboxRows.filter((row) => row.eventType === "request.created");
     expect(customerEvents).toHaveLength(2);
     expect(customerEvents.map((row) => String(row.values[1])).sort()).toEqual([...createdBookingIds].sort());
@@ -138,6 +142,23 @@ describe("marketplace boundaries", () => {
       expect(row.sql).toContain("VALUES ($1, 'request.created', $2, '{}'::jsonb, $3)");
     }
     expect(new Set(customerEvents.map((row) => row.values[0])).size).toBe(customerEvents.length);
+    const merchantEvents = outboxRows.filter((row) => row.eventType === "merchant.booking_offer");
+    expect(merchantEvents).toHaveLength(4);
+    expect(new Set(offerRows.map((row) => row[2])).size).toBe(2);
+    expect(offerRows.every((row) => ([localMerchantId, nearbyMerchantId] as string[]).includes(String(row[2])))).toBe(true);
+    expect(JSON.stringify(outboxRows)).not.toContain(distantMerchantId);
+    for (const bookingId of createdBookingIds) {
+      const offersForBooking = merchantEvents.filter((row) => row.values[1] === bookingId);
+      expect(offersForBooking).toHaveLength(2);
+      expect(new Set(offersForBooking.map((row) => JSON.parse(String(row.values[2])).merchantId)))
+        .toEqual(new Set([localMerchantId, nearbyMerchantId]));
+      for (const row of offersForBooking) {
+        const payload = JSON.parse(String(row.values[2])) as { bookingId: string; offerId: string; merchantId: string };
+        expect(payload.bookingId).toBe(bookingId);
+        expect(offerRows.some((offer) => offer[0] === payload.offerId && offer[1] === bookingId && offer[2] === payload.merchantId)).toBe(true);
+        expect(row.values[3]).toBe(`booking-offer:${payload.offerId}`);
+      }
+    }
     expect(JSON.stringify(outboxRows)).not.toContain("12 Main Street");
 
     const replay = await requestWithAuth("post", "/api/v1/customer/bookings")
@@ -145,13 +166,13 @@ describe("marketplace boundaries", () => {
       .send(body)
       .expect(200);
     expect(replay.body).toEqual(first.body);
-    expect(offerRows).toHaveLength(2);
+    expect(offerRows).toHaveLength(4);
 
     const conflict = await requestWithAuth("post", "/api/v1/customer/bookings")
       .set("Idempotency-Key", "request-key-00000001")
       .send({ ...body, note: "different request" })
       .expect(409);
     expect(conflict.body.error.code).toBe("IDEMPOTENCY_KEY_REUSED");
-    expect(offerRows).toHaveLength(2);
+    expect(offerRows).toHaveLength(4);
   });
 });
