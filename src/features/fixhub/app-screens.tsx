@@ -323,9 +323,31 @@ export function AppService({ id }: { id: string }) {
 }
 
 /* ---------- 5. Providers ---------- */
-function eligibleMerchants(state: ReturnType<typeof useDemo>["state"], cityId: string, category: Category) {
+export function eligibleMerchants(
+  state: ReturnType<typeof useDemo>["state"],
+  cityId: string,
+  category: Category,
+  date: string,
+) {
+  const dateValue = new Date(`${date}T12:00:00`);
+  const weekday = dateValue.getDay();
+  if (!Number.isFinite(dateValue.getTime())) return [];
+  const activeByMerchant = new Map<string, number>();
+  for (const booking of state.bookings) {
+    if (
+      !booking.merchantId ||
+      ["complete", "cancelled", "expired", "disputed"].includes(booking.status)
+    ) continue;
+    activeByMerchant.set(booking.merchantId, (activeByMerchant.get(booking.merchantId) ?? 0) + 1);
+  }
   return state.merchants.filter(
-    (m) => m.skills.includes(category) && (m.cityIds ?? ["tanuku"]).includes(cityId) && m.status === "active" && (m.verification ?? "approved") === "approved",
+    (m) => m.skills.includes(category)
+      && (m.cityIds ?? ["tanuku"]).includes(cityId)
+      && m.status === "active"
+      && (m.verification ?? "approved") === "approved"
+      && m.capacity > (activeByMerchant.get(m.id) ?? 0)
+      && (m.workDays ?? [0, 1, 2, 3, 4, 5, 6]).includes(weekday)
+      && !(m.blackouts ?? []).includes(date),
   );
 }
 function initials(name: string) {
@@ -335,9 +357,9 @@ export function AppProviders({ id }: { id: string }) {
   const { tr, locale, state, cityId, city } = useApp();
   const category = catOf(id);
   const price = usePrice(category);
-  const list = eligibleMerchants(state, cityId, category);
   const days = nextDays(4, locale);
   const [day, setDay] = useState(days[0]!.iso);
+  const list = eligibleMerchants(state, cityId, category, day);
   return (
     <AppShell nav={false}>
       <Top title={tr("Available professionals", "అందుబాటులో ఉన్న నిపుణులు")} />
