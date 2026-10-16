@@ -19,11 +19,25 @@ describe("Fix Hub API client", () => {
   });
 
   it("returns only the safe error envelope and does not leak response internals", async () => {
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(JSON.stringify({ error: { code: "NOT_FOUND", message: "Not found" }, sql: "secret query" }), { status: 404 })));
+    const requestId = "f437441e-3772-445d-bc99-3abe5a41307e";
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(JSON.stringify({ error: { code: "NOT_FOUND", message: "Not found" }, requestId, sql: "secret query" }), { status: 404 })));
     await expect(apiRequest("/api/v1/customer/bookings/missing")).rejects.toMatchObject({
       status: 404,
       code: "NOT_FOUND",
-      message: "Not found",
+      message: `Not found (Reference: ${requestId})`,
+      requestId,
+    } satisfies Partial<ApiError>);
+  });
+
+  it("uses only a validated request ID from the response header when the body value is malformed", async () => {
+    const requestId = "3ff32010-00ef-4db9-99c4-fe60c8c97e87";
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(JSON.stringify({ error: { code: "REQUEST_FAILED", message: "Try again" }, requestId: "<script>" }), {
+      status: 500,
+      headers: { "x-request-id": requestId },
+    })));
+    await expect(apiRequest("/api/v1/customer/bookings")).rejects.toMatchObject({
+      message: `Try again (Reference: ${requestId})`,
+      requestId,
     } satisfies Partial<ApiError>);
   });
 

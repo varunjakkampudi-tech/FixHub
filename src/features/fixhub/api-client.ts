@@ -1,6 +1,6 @@
 export class ApiError extends Error {
-  constructor(readonly status: number, readonly code: string, message: string) {
-    super(message);
+  constructor(readonly status: number, readonly code: string, message: string, readonly requestId?: string) {
+    super(requestId ? `${message} (Reference: ${requestId})` : message);
     this.name = "ApiError";
   }
 }
@@ -23,10 +23,17 @@ export async function apiRequest<T>(path: string, init: RequestInit = {}): Promi
   if (!response.ok) {
     const error = body && typeof body === "object" && "error" in body ? body.error : null;
     const details = error && typeof error === "object" ? error as { code?: unknown; message?: unknown } : {};
+    const bodyRequestId = body && typeof body === "object" && "requestId" in body
+      ? (body as { requestId?: unknown }).requestId
+      : undefined;
+    const requestId = [bodyRequestId, response.headers.get("x-request-id")]
+      .find((value): value is string => typeof value === "string" && /^[\da-f]{8}-(?:[\da-f]{4}-){3}[\da-f]{12}$/i.test(value.trim()))
+      ?.trim();
     throw new ApiError(
       response.status,
       typeof details.code === "string" ? details.code : "REQUEST_FAILED",
       typeof details.message === "string" ? details.message : "The request could not be completed.",
+      requestId,
     );
   }
   return body as T;
