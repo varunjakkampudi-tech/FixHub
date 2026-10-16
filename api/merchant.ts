@@ -4,6 +4,7 @@ import type { Pool, QueryResultRow } from "pg";
 import { z } from "zod";
 
 import { inTransaction } from "./database";
+import { bookingQuoteHash } from "./quote";
 
 function subjectId(response: Response): string | undefined {
   const auth = response.locals.auth as { subjectId?: unknown } | undefined;
@@ -179,7 +180,8 @@ export function createMerchantHandlers(pool: Pick<Pool, "connect">) {
     try {
       const result = await client.query(
         `SELECT b.id, b.status, b.scheduled_at, b.visit_price_paise, b.labor_estimate_paise,
-                b.parts_estimate_paise, b.currency, b.payment_method, b.created_at, s.name AS service_name,
+                b.parts_estimate_paise, b.currency, b.payment_method, b.created_at, b.customer_quote_accepted_at,
+                b.customer_accepted_quote_hash, s.name AS service_name,
                 a.label AS address_label, a.address_text, a.locality, a.latitude, a.longitude
          FROM service_booking b JOIN service_catalog s ON s.id = b.service_id
          JOIN customer_address a ON a.id = b.address_id AND a.customer_id = b.customer_id
@@ -188,9 +190,103 @@ export function createMerchantHandlers(pool: Pick<Pool, "connect">) {
          ORDER BY b.created_at DESC LIMIT 100`,
         [merchantId],
       );
-      return response.status(200).json({ items: result.rows });
+      const items = result.rows.map((row) => {
+        const currentQuoteHash = bookingQuoteHash(row as Parameters<typeof bookingQuoteHash>[0]);
+        const { customer_accepted_quote_hash: _acceptedQuoteHash, ...publicJob } = row;
+        return {
+          ...publicJob,
+          customer_quote_accepted: Boolean(row.customer_quote_accepted_at && (row.customer_accepted_quote_hash as Buffer | null)?.equals(currentQuoteHash)),
+        };
+      });
+      return response.status(200).json({ items });
     } finally { client.release(); }
   }
 
-  return { listOffers, respondToOffer, listJobs };
+  async function startJob(request: Request, response: Response) {
+    const merchantId = subjectId(response);
+    if (!merchantId) return response.status(401).json({ error: { code: "AUTH_REQUIRED", message: "Sign in to continue." } });
+    const bookingId = z.string().uuid().safeParse(request.params.id);
+    if (!bookingId.success) return response.status(400).json({ error: { code: "INVALID_INPUT", message: "The job id is invalid." } });
+    const key = request.get("Idempotency-Key");
+    if (!key || !/^[A-Za-z0-9._:-]{16,128}$/.test(key)) {
+      return response.status(400).json({ error: { code: "IDEMPOTENCY_KEY_REQUIRED", message: "Provide a valid Idempotency-Key header." } });
+    }
+    const routeKey = `POST:/api/v1/merchant/jobs/${bookingId.data}/start`;
+    const requestHash = createHash("sha256").update("start").digest();
+    const result = await inTransaction(pool, async (client) => {
+      const reservation = await client.query(
+        `INSERT INTO request_idempotency (subject_id, route_key, idempotency_key, request_hash)
+         VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING RETURNING idempotency_key`,
+        [merchantId, routeKey, key, requestHash],
+      );
+      if (!reservation.rows.length) {
+        const prior = await client.query<{ request_hash: Buffer; response_body: QueryResultRow }>(
+          `SELECT request_hash, response_body FROM request_idempotency
+           WHERE subject_id = $1 AND route_key = $2 AND idempotency_key = $3 FOR UPDATE`,
+          [merchantId, routeKey, key],
+        );
+        if (!prior.rows.length || !prior.rows[0].request_hash.equals(requestHash)) {
+          return { status: 409, body: { error: { code: "IDEMPOTENCY_KEY_REUSED", message: "Use a new key for a different action." } } };
+        }
+        if (prior.rows[0].response_body) return { status: 200, body: prior.rows[0].response_body };
+        return { status: 409, body: { error: { code: "REQUEST_IN_PROGRESS", message: "This action is still being processed." } } };
+      }
+
+      const job = await client.query<{
+        status: string;
+        visit_price_paise: number | string;
+        labor_estimate_paise: number | string;
+        parts_estimate_paise: number | string | null;
+        currency: string;
+        payment_method: string;
+        customer_quote_accepted_at: Date | null;
+        customer_accepted_quote_hash: Buffer | null;
+      }>(
+        `SELECT status, visit_price_paise, labor_estimate_paise, parts_estimate_paise,
+                currency, payment_method, customer_quote_accepted_at, customer_accepted_quote_hash
+         FROM service_booking WHERE id = $1 AND merchant_id = $2 FOR UPDATE`,
+        [bookingId.data, merchantId],
+      );
+      if (!job.rows.length) {
+        await client.query("DELETE FROM request_idempotency WHERE subject_id = $1 AND route_key = $2 AND idempotency_key = $3", [merchantId, routeKey, key]);
+        return { status: 404, body: { error: { code: "JOB_NOT_FOUND", message: "This assigned job was not found." } } };
+      }
+      const profile = await client.query<{ verification_status: string }>(
+        "SELECT verification_status FROM merchant_profile WHERE subject_id = $1 FOR UPDATE",
+        [merchantId],
+      );
+      if (profile.rows[0]?.verification_status !== "verified") {
+        await client.query("DELETE FROM request_idempotency WHERE subject_id = $1 AND route_key = $2 AND idempotency_key = $3", [merchantId, routeKey, key]);
+        return { status: 403, body: { error: { code: "MERCHANT_NOT_ELIGIBLE", message: "A verified merchant account is required." } } };
+      }
+      if (job.rows[0].status === "accepted" && (
+        !job.rows[0].customer_quote_accepted_at
+        || !job.rows[0].customer_accepted_quote_hash?.equals(bookingQuoteHash(job.rows[0]))
+      )) {
+        await client.query("DELETE FROM request_idempotency WHERE subject_id = $1 AND route_key = $2 AND idempotency_key = $3", [merchantId, routeKey, key]);
+        return { status: 409, body: { error: { code: "CUSTOMER_QUOTE_NOT_APPROVED", message: "Wait for the customer to approve the current quote before starting this job." } } };
+      }
+      if (job.rows[0].status !== "accepted" && job.rows[0].status !== "in_progress") {
+        await client.query("DELETE FROM request_idempotency WHERE subject_id = $1 AND route_key = $2 AND idempotency_key = $3", [merchantId, routeKey, key]);
+        return { status: 409, body: { error: { code: "JOB_STATE_CONFLICT", message: "Only an accepted job can be started." } } };
+      }
+      if (job.rows[0].status === "accepted") {
+        await client.query(
+          "UPDATE service_booking SET status = 'in_progress', updated_at = clock_timestamp(), version = version + 1 WHERE id = $1 AND merchant_id = $2 AND status = 'accepted'",
+          [bookingId.data, merchantId],
+        );
+      }
+      await client.query(
+        `INSERT INTO transactional_outbox (id, event_type, aggregate_id, payload, idempotency_key)
+         VALUES ($1, 'customer.booking_in_progress', $2, $3::jsonb, $4) ON CONFLICT (idempotency_key) DO NOTHING`,
+        [randomUUID(), bookingId.data, JSON.stringify({ bookingId: bookingId.data }), `booking-in-progress:${bookingId.data}`],
+      );
+      const body = { job: { id: bookingId.data, status: "in_progress" } };
+      await client.query("UPDATE request_idempotency SET response_body = $4 WHERE subject_id = $1 AND route_key = $2 AND idempotency_key = $3", [merchantId, routeKey, key, JSON.stringify(body)]);
+      return { status: 200, body };
+    });
+    return response.status(result.status).json(result.body);
+  }
+
+  return { listOffers, respondToOffer, listJobs, startJob };
 }

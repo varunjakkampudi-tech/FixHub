@@ -29,6 +29,7 @@ type Job = {
   visit_price_paise: number;
   labor_estimate_paise: number;
   parts_estimate_paise: number | null;
+  customer_quote_accepted: boolean;
 };
 
 export function googleMapsDirectionsUrl(latitude: number, longitude: number): string {
@@ -57,9 +58,11 @@ export function RealMerchantPage({ page }: { page: "requests" | "jobs" }) {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [pendingOffer, setPendingOffer] = useState<string | null>(null);
+  const [pendingJob, setPendingJob] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const retryKeys = useRef(new Map<string, string>());
+  const jobRetryKeys = useRef(new Map<string, string>());
 
   async function load(showLoader = false) {
     if (showLoader) setLoading(true);
@@ -106,6 +109,25 @@ export function RealMerchantPage({ page }: { page: "requests" | "jobs" }) {
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : (te ? "స్పందన నమోదు కాలేదు. మళ్లీ ప్రయత్నించండి." : "Your response was not recorded. Please retry."));
     } finally { setPendingOffer(null); }
+  }
+
+  async function startJob(jobId: string) {
+    const key = jobRetryKeys.current.get(jobId) ?? crypto.randomUUID();
+    jobRetryKeys.current.set(jobId, key);
+    setPendingJob(jobId);
+    setError("");
+    setMessage("");
+    try {
+      await apiRequest(`/api/v1/merchant/jobs/${encodeURIComponent(jobId)}/start`, {
+        method: "POST",
+        headers: { "Idempotency-Key": key },
+      });
+      jobRetryKeys.current.delete(jobId);
+      setMessage(te ? "పని ప్రారంభించినట్లు నమోదు అయింది." : "Job marked as in progress.");
+      await load();
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : (te ? "పని స్థితిని మార్చలేకపోయాం." : "We could not update the job status."));
+    } finally { setPendingJob(null); }
   }
 
   return (
@@ -157,8 +179,11 @@ export function RealMerchantPage({ page }: { page: "requests" | "jobs" }) {
           <p className="text-sm">{job.address_label} · {job.locality}</p>
           <p className="text-sm">{job.address_text}</p>
           <p className="text-sm text-muted-foreground">{dateLabel(job.scheduled_at, locale, te ? "సమయం నిర్ధారణ కాలేదు" : "Time not confirmed")}</p>
-          <p className="text-sm">{te ? "ధర అంచనా" : "Current estimate"}: {money(job.visit_price_paise + job.labor_estimate_paise, locale)} · {te ? "భాగాలు అవసరమైతే అదనం" : "parts quoted separately if needed"}</p>
+          <p className="text-sm">{te ? "ప్రదర్శించిన అంచనా" : "Displayed estimate"}: {money(job.visit_price_paise + job.labor_estimate_paise + (job.parts_estimate_paise ?? 0), locale)} · {job.parts_estimate_paise === null ? (te ? "భాగాలు అదనం కావచ్చు" : "parts may be additional") : (te ? "భాగాలు సహా" : "including parts")}</p>
           {job.latitude !== null && job.longitude !== null && <a className="inline-flex min-h-11 items-center rounded-md border px-4 font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" href={googleMapsDirectionsUrl(Number(job.latitude), Number(job.longitude))} target="_blank" rel="noopener noreferrer">{te ? "Google Mapsలో దిశలు తెరవండి" : "Open directions in Google Maps"}</a>}
+          {job.status === "accepted" && !job.customer_quote_accepted && <p className="text-sm text-muted-foreground">{te ? "కస్టమర్ ప్రదర్శించిన ధరను ఆమోదించిన తర్వాత పని ప్రారంభించండి." : "Wait for the customer to approve the displayed price before starting work."}</p>}
+          {job.status === "accepted" && job.customer_quote_accepted && <Button disabled={pendingJob !== null} onClick={() => void startJob(job.id)}>{pendingJob === job.id ? (te ? "సేవ్ అవుతోంది…" : "Saving…") : (te ? "పని ప్రారంభించు" : "Start job")}</Button>}
+          {job.status === "in_progress" && <p className="text-sm text-muted-foreground">{te ? "పని పూర్తయ్యాక కస్టమర్ పూర్తి చేసినట్లు నిర్ధారిస్తారు." : "The customer will confirm completion after the work is finished."}</p>}
         </article>
       ))}</div> : <div role="status"><Notice>{te ? "మీకు కేటాయించిన పనులు ఇంకా లేవు." : "Accepted jobs assigned to your business will appear here."}</Notice></div>}
     </section>

@@ -33,16 +33,22 @@ export async function apiRequest<T>(path: string, init: RequestInit = {}): Promi
 }
 
 export type ApiSessionMode = "authenticated" | "unauthenticated" | "demo" | "unavailable";
+export type ApiSession = { mode: ApiSessionMode; roles: string[] };
 
-export async function resolveApiSessionMode(): Promise<ApiSessionMode> {
+export async function resolveApiSession(): Promise<ApiSession> {
   try {
     const response = await fetch("/api/v1/auth/me", { credentials: "include", headers: { accept: "application/json" } });
-    if (response.status === 404) return "demo";
-    if (response.status === 401) return "unauthenticated";
-    if (!response.ok) return "unavailable";
-    const result = await response.json() as { authenticated?: unknown };
-    return result.authenticated === true ? "authenticated" : "unavailable";
-  } catch { return "unavailable"; }
+    if (response.status === 404) return { mode: "demo", roles: [] };
+    if (response.status === 401) return { mode: "unauthenticated", roles: [] };
+    if (!response.ok) return { mode: "unavailable", roles: [] };
+    const result = await response.json() as { authenticated?: unknown; roles?: unknown };
+    const roles = Array.isArray(result.roles) ? result.roles.filter((role): role is string => typeof role === "string") : [];
+    return result.authenticated === true ? { mode: "authenticated", roles } : { mode: "unavailable", roles: [] };
+  } catch { return { mode: "unavailable", roles: [] }; }
+}
+
+export async function resolveApiSessionMode(): Promise<ApiSessionMode> {
+  return (await resolveApiSession()).mode;
 }
 
 export async function hasAuthenticatedApiSession(): Promise<boolean> {

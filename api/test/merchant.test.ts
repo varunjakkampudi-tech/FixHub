@@ -5,8 +5,9 @@ import request from "supertest";
 import { describe, expect, it, vi } from "vitest";
 
 import { createApiApp } from "../app";
+import { bookingQuoteHash } from "../quote";
 
-function merchantApp(initialRole: "merchant" | "customer" = "merchant") {
+function merchantApp(initialRole: "merchant" | "customer" = "merchant", initialJobStatus: "accepted" | "in_progress" = "accepted", quoteApproved = true) {
   const merchantId = randomUUID();
   const offerId = randomUUID();
   const bookingId = randomUUID();
@@ -37,6 +38,24 @@ function merchantApp(initialRole: "merchant" | "customer" = "merchant") {
     if (statement.includes("SELECT id, status, merchant_id FROM service_booking")) return { rows: [{ id: bookingId, status: "offered", merchant_id: null }] };
     if (statement.includes("FROM booking_offer WHERE id = $1 AND merchant_id = $2 FOR UPDATE")) return { rows: [{ status: "pending", expires_at: new Date(Date.now() + 60_000), is_expired: false, visit_price_paise: 40000, labor_price_paise: 45000 }] };
     if (statement.includes("SELECT verification_status, accepting_jobs FROM merchant_profile")) return { rows: [{ verification_status: "verified", accepting_jobs: true }] };
+    if (statement.includes("FROM service_booking WHERE id = $1 AND merchant_id = $2 FOR UPDATE")) return { rows: [{
+      status: initialJobStatus,
+      visit_price_paise: 40000,
+      labor_estimate_paise: 45000,
+      parts_estimate_paise: null,
+      currency: "INR",
+      payment_method: "cash_on_completion",
+      customer_quote_accepted_at: quoteApproved ? new Date() : null,
+      customer_accepted_quote_hash: quoteApproved ? bookingQuoteHash({
+        visit_price_paise: 40000,
+        labor_estimate_paise: 45000,
+        parts_estimate_paise: null,
+        currency: "INR",
+        payment_method: "cash_on_completion",
+      }) : null,
+    }] };
+    if (statement.includes("SELECT verification_status FROM merchant_profile")) return { rows: [{ verification_status: "verified" }] };
+    if (statement.includes("UPDATE service_booking SET status = 'in_progress'")) return { rows: [{ id: bookingId }] };
     if (statement.includes("UPDATE booking_offer") && statement.includes("expires_at > clock_timestamp()")) return { rows: [{ id: String(values[0]) }] };
     if (statement.includes("UPDATE service_booking SET merchant_id")) { assignmentValues.push(...values); return { rows: [{ id: bookingId }] }; }
     if (statement.includes("SELECT request_hash, response_body FROM request_idempotency")) return { rows: [] };
@@ -92,5 +111,49 @@ describe("merchant offer workflow", () => {
     const fixture = merchantApp("customer");
     const session = await signInAsMerchant(fixture.app);
     await request(fixture.app).get("/api/v1/merchant/offers").set("Cookie", session.cookie).expect(403);
+  });
+
+  it("lets only an assigned verified merchant start an accepted job and emits a future notification event", async () => {
+    const fixture = merchantApp();
+    const session = await signInAsMerchant(fixture.app);
+    const csrf = decodeURIComponent(session.cookie.split("fixhub_csrf=")[1].split(";")[0]);
+    const response = await request(fixture.app)
+      .post(`/api/v1/merchant/jobs/${fixture.bookingId}/start`)
+      .set("Cookie", session.cookie)
+      .set("x-csrf-token", csrf)
+      .set("Idempotency-Key", "merchant-start-job-0001")
+      .expect(200);
+    expect(response.body.job).toEqual({ id: fixture.bookingId, status: "in_progress" });
+    expect(fixture.sql.some((statement) => statement.includes("WHERE id = $1 AND merchant_id = $2 FOR UPDATE"))).toBe(true);
+    expect(fixture.sql.some((statement) => statement.includes("customer.booking_in_progress"))).toBe(true);
+  });
+
+  it("replays a start action as successful when the assigned job is already in progress under a new key", async () => {
+    const fixture = merchantApp("merchant", "in_progress");
+    const session = await signInAsMerchant(fixture.app);
+    const csrf = decodeURIComponent(session.cookie.split("fixhub_csrf=")[1].split(";")[0]);
+    const response = await request(fixture.app)
+      .post(`/api/v1/merchant/jobs/${fixture.bookingId}/start`)
+      .set("Cookie", session.cookie)
+      .set("x-csrf-token", csrf)
+      .set("Idempotency-Key", "merchant-start-new-key-001")
+      .expect(200);
+    expect(response.body.job).toEqual({ id: fixture.bookingId, status: "in_progress" });
+    expect(fixture.sql.some((statement) => statement.includes("SET status = 'in_progress'"))).toBe(false);
+  });
+
+  it("blocks starting an accepted job until the customer approves its current quote", async () => {
+    const fixture = merchantApp("merchant", "accepted", false);
+    const session = await signInAsMerchant(fixture.app);
+    const csrf = decodeURIComponent(session.cookie.split("fixhub_csrf=")[1].split(";")[0]);
+    const response = await request(fixture.app)
+      .post(`/api/v1/merchant/jobs/${fixture.bookingId}/start`)
+      .set("Cookie", session.cookie)
+      .set("x-csrf-token", csrf)
+      .set("Idempotency-Key", "merchant-start-without-consent")
+      .send({})
+      .expect(409);
+    expect(response.body.error.code).toBe("CUSTOMER_QUOTE_NOT_APPROVED");
+    expect(fixture.sql.some((statement) => statement.includes("SET status = 'in_progress'"))).toBe(false);
   });
 });

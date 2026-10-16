@@ -19,6 +19,18 @@ describe("Fix Hub demo API foundation", () => {
     const docs = await request(app).get("/openapi.json").expect(200);
     expect(docs.body.openapi).toBe("3.1.0");
     expect(docs.body.paths["/api/v1/demo/prices/{category}"]).toBeDefined();
+    for (const [path, verb] of [
+      ["/api/v1/customer/bookings/{id}/complete", "post"],
+      ["/api/v1/customer/bookings/{id}/quote-approval", "post"],
+      ["/api/v1/customer/bookings/{id}/review", "post"],
+      ["/api/v1/merchant/jobs/{id}/start", "post"],
+    ]) {
+      const operation = docs.body.paths[path][verb];
+      expect(operation.responses["400"]).toBeDefined();
+      expect(operation.responses["403"]).toBeDefined();
+      expect(operation.parameters.find((parameter: { name: string }) => parameter.name === "Idempotency-Key").schema.pattern)
+        .toBe("^[A-Za-z0-9._:-]{16,128}$");
+    }
     await request(app).get("/docs/").expect(200);
   });
 

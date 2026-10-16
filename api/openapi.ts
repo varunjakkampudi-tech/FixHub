@@ -95,7 +95,7 @@ export const openApiDocument = {
       post: {
         summary: "Request an in-area service booking",
         description: "Requires a verified, accepting merchant with an active matching service within its configured radius. A customer request, intended-offer records and outbox events are written atomically; this release has no dispatcher, so it does not contact or assign a provider. Payment metadata is cash on completion only; this endpoint does not collect money.",
-        parameters: [{ name: "Idempotency-Key", in: "header", required: true, schema: { type: "string", minLength: 16, maxLength: 128 } }],
+        parameters: [{ name: "Idempotency-Key", in: "header", required: true, schema: { type: "string", pattern: "^[A-Za-z0-9._:-]{16,128}$", minLength: 16, maxLength: 128 } }],
         requestBody: { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/CustomerBookingInput" } } } },
         responses: { "201": { description: "Booking and eligible offers created." }, "400": { description: "Invalid input or missing idempotency key." }, "401": { description: "Authentication required." }, "409": { description: "No eligible provider or idempotency conflict." } },
       },
@@ -103,8 +103,45 @@ export const openApiDocument = {
     "/api/v1/customer/bookings/{id}": {
       get: {
         summary: "Read a booking owned by the signed-in customer",
+        description: "Returns the current quote_version for the displayed price terms and a derived customer_quote_accepted flag. The internal stored quote digest is not returned.",
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "string", format: "uuid" } }],
         responses: { "200": { description: "Booking details." }, "401": { description: "Authentication required." }, "404": { description: "Booking not found." } },
+      },
+    },
+    "/api/v1/customer/bookings/{id}/complete": {
+      post: {
+        summary: "Confirm completion of an in-progress booking",
+        description: "Only the owning customer may confirm a booking already marked in progress by its assigned verified merchant. This records service completion only; it does not verify or collect payment.",
+        parameters: [
+          { name: "id", in: "path", required: true, schema: { type: "string", format: "uuid" } },
+          { name: "Idempotency-Key", in: "header", required: true, schema: { type: "string", pattern: "^[A-Za-z0-9._:-]{16,128}$", minLength: 16, maxLength: 128 } },
+        ],
+        requestBody: { required: true, content: { "application/json": { schema: { type: "object", required: ["confirm"], additionalProperties: false, properties: { confirm: { const: true } } } } } },
+        responses: { "200": { description: "Customer-confirmed completion." }, "400": { description: "Invalid booking id, confirmation or idempotency key." }, "401": { description: "Authentication required." }, "403": { description: "Customer role required." }, "404": { description: "Booking not found." }, "409": { description: "Booking is not in progress or the idempotency key conflicts." } },
+      },
+    },
+    "/api/v1/customer/bookings/{id}/quote-approval": {
+      post: {
+        summary: "Approve the exact current cash quote before work starts",
+        description: "Only the owning customer may approve a quote after a verified merchant accepts the request. Consent is bound to the current itemized price, currency and cash-on-completion method; merchant start is denied if those terms differ. Parts shown as separate or unknown are not included in this approval and require separate approval before parts work. This endpoint does not collect or verify payment.",
+        parameters: [
+          { name: "id", in: "path", required: true, schema: { type: "string", format: "uuid" } },
+          { name: "Idempotency-Key", in: "header", required: true, schema: { type: "string", pattern: "^[A-Za-z0-9._:-]{16,128}$", minLength: 16, maxLength: 128 } },
+        ],
+        requestBody: { required: true, content: { "application/json": { schema: { type: "object", required: ["confirm", "quoteVersion"], additionalProperties: false, properties: { confirm: { const: true }, quoteVersion: { type: "string", pattern: "^[A-Za-z0-9_-]{43}$" } } } } } },
+        responses: { "200": { description: "The current quote was approved or the prior approval replayed." }, "400": { description: "Invalid booking id, quote version, confirmation or idempotency key." }, "401": { description: "Authentication required." }, "403": { description: "Customer role required." }, "404": { description: "Booking not found." }, "409": { description: "No accepted merchant, stale quote or idempotency conflict." } },
+      },
+    },
+    "/api/v1/customer/bookings/{id}/review": {
+      post: {
+        summary: "Submit one rating for a completed booking",
+        description: "Only the owning customer may review a booking after customer-confirmed completion. Reviews are private in this increment and are not yet publicly displayed or moderated.",
+        parameters: [
+          { name: "id", in: "path", required: true, schema: { type: "string", format: "uuid" } },
+          { name: "Idempotency-Key", in: "header", required: true, schema: { type: "string", pattern: "^[A-Za-z0-9._:-]{16,128}$", minLength: 16, maxLength: 128 } },
+        ],
+        requestBody: { required: true, content: { "application/json": { schema: { type: "object", required: ["rating"], additionalProperties: false, properties: { rating: { type: "integer", minimum: 1, maximum: 5 }, comment: { type: "string", maxLength: 1000 } } } } } },
+        responses: { "201": { description: "Review created." }, "400": { description: "Invalid booking id, rating, comment or idempotency key." }, "401": { description: "Authentication required." }, "403": { description: "Customer role required." }, "404": { description: "Booking not found." }, "409": { description: "Review is not available, already submitted or the idempotency key conflicts." } },
       },
     },
     "/api/v1/merchant/offers": {
@@ -113,10 +150,10 @@ export const openApiDocument = {
     "/api/v1/merchant/offers/{id}/response": {
       post: {
         summary: "Accept or decline a merchant offer",
-        description: "Requires an authenticated merchant role and verified accepting profile. Accept uses a conditional booking update; only one merchant can claim an unassigned offered booking. Identical retries replay their result.",
+        description: "Requires an authenticated merchant role and verified accepting profile. Accept uses a conditional booking update; only one merchant can claim an unassigned offered booking. The customer must approve the exact assigned cash quote before the merchant may start work. Identical retries replay their result.",
         parameters: [
           { name: "id", in: "path", required: true, schema: { type: "string", format: "uuid" } },
-          { name: "Idempotency-Key", in: "header", required: true, schema: { type: "string", minLength: 16, maxLength: 128 } },
+          { name: "Idempotency-Key", in: "header", required: true, schema: { type: "string", pattern: "^[A-Za-z0-9._:-]{16,128}$", minLength: 16, maxLength: 128 } },
         ],
         requestBody: {
           required: true,
@@ -136,6 +173,17 @@ export const openApiDocument = {
     },
     "/api/v1/merchant/jobs": {
       get: { summary: "List jobs assigned to the authenticated merchant", description: "Returns full service-address details only for bookings assigned to the signed-in verified merchant.", responses: { "200": { description: "The merchant's assigned jobs." }, "401": { description: "Authentication required." }, "403": { description: "Merchant role required." } } },
+    },
+    "/api/v1/merchant/jobs/{id}/start": {
+      post: {
+        summary: "Mark an accepted job as in progress",
+        description: "Only the assigned verified merchant can start its accepted booking after the customer has approved the exact current quote. Quote integrity is checked again at start. The update is idempotent and emits an outbox event for future customer notification; no notification is dispatched in this increment.",
+        parameters: [
+          { name: "id", in: "path", required: true, schema: { type: "string", format: "uuid" } },
+          { name: "Idempotency-Key", in: "header", required: true, schema: { type: "string", pattern: "^[A-Za-z0-9._:-]{16,128}$", minLength: 16, maxLength: 128 } },
+        ],
+        responses: { "200": { description: "Job marked in progress." }, "400": { description: "Invalid job id or idempotency key." }, "401": { description: "Authentication required." }, "403": { description: "Merchant role and verified merchant required." }, "404": { description: "Assigned job not found." }, "409": { description: "Job is not accepted or the idempotency key conflicts." } },
+      },
     },
   },
   components: {

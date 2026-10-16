@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { apiRequest, ApiError, hasAuthenticatedApiSession } from "@/features/fixhub/api-client";
+import { apiRequest, ApiError, hasAuthenticatedApiSession, resolveApiSession } from "@/features/fixhub/api-client";
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -30,5 +30,10 @@ describe("Fix Hub API client", () => {
   it("does not treat a missing API or expired session as authenticated", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("{}", { status: 401 })));
     await expect(hasAuthenticatedApiSession()).resolves.toBe(false);
+  });
+
+  it("preserves provisioned roles from the authenticated API session", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(JSON.stringify({ authenticated: true, roles: ["merchant", 4] }), { status: 200 })));
+    await expect(resolveApiSession()).resolves.toEqual({ mode: "authenticated", roles: ["merchant"] });
   });
 });

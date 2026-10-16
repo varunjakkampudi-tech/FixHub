@@ -7,6 +7,13 @@ import { inTransaction } from "./database";
 
 const migrationDirectory = fileURLToPath(new URL("./migrations/", import.meta.url));
 const migrationNamePattern = /^\d{3}_[a-z0-9_]+\.sql$/;
+// PR #17 accidentally published a second checksum for 002_marketplace.sql.
+// Accept that exact known revision during recovery; all other drift still fails closed.
+const knownHistoricalChecksums: Record<string, ReadonlySet<string>> = {
+  "002_marketplace.sql": new Set([
+    "f474bbedece28a7503b92fc24d82e84114c3ed585ed58aa2adfa9fcdc41f4e35",
+  ]),
+};
 
 export async function applyMigrations(pool: Pick<Pool, "connect">): Promise<string[]> {
   const names = (await readdir(migrationDirectory)).filter((name) => name.endsWith(".sql")).sort();
@@ -37,7 +44,10 @@ export async function applyMigrations(pool: Pick<Pool, "connect">): Promise<stri
         [name],
       );
       if (previous.rows.length) {
-        if (previous.rows[0].checksum !== checksum) throw new Error(`Applied migration checksum changed: ${name}`);
+        const recordedChecksum = previous.rows[0].checksum;
+        if (recordedChecksum !== checksum && !knownHistoricalChecksums[name]?.has(recordedChecksum)) {
+          throw new Error(`Applied migration checksum changed: ${name}`);
+        }
         continue;
       }
       await client.query(sql);
