@@ -61,10 +61,19 @@ export function RealMerchantPage({ page }: { page: "requests" | "jobs" }) {
   const [pendingJob, setPendingJob] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const loadInFlight = useRef(false);
+  const reloadRequested = useRef(false);
+  const loadRef = useRef<(showLoader?: boolean) => Promise<void>>(async () => {});
   const retryKeys = useRef(new Map<string, string>());
   const jobRetryKeys = useRef(new Map<string, string>());
 
   async function load(showLoader = false) {
+    if (loadInFlight.current) {
+      reloadRequested.current = true;
+      return;
+    }
+    loadInFlight.current = true;
     if (showLoader) setLoading(true);
     else setRefreshing(true);
     setError("");
@@ -76,6 +85,7 @@ export function RealMerchantPage({ page }: { page: "requests" | "jobs" }) {
         const result = await apiRequest<{ items: Job[] }>("/api/v1/merchant/jobs");
         setJobs(result.items);
       }
+      setLastUpdated(new Date());
     } catch (cause) {
       setError(cause instanceof ApiError && cause.status === 403
         ? (te ? "ఈ ఖాతాకు వ్యాపారి పనుల అనుమతి లేదు." : "This account is not authorized for merchant work.")
@@ -83,10 +93,24 @@ export function RealMerchantPage({ page }: { page: "requests" | "jobs" }) {
     } finally {
       setLoading(false);
       setRefreshing(false);
+      loadInFlight.current = false;
+      if (reloadRequested.current) {
+        reloadRequested.current = false;
+        void loadRef.current();
+      }
     }
   }
 
-  useEffect(() => { void load(true); }, [page]);
+  loadRef.current = load;
+
+  useEffect(() => {
+    void loadRef.current(true);
+    if (page !== "requests") return;
+    const timer = window.setInterval(() => {
+      if (document.visibilityState === "visible") void loadRef.current();
+    }, 30_000);
+    return () => window.clearInterval(timer);
+  }, [page]);
 
   async function respond(offerId: string, decision: "accept" | "decline") {
     const key = `${offerId}:${decision}`;
@@ -143,9 +167,16 @@ export function RealMerchantPage({ page }: { page: "requests" | "jobs" }) {
           {refreshing ? (te ? "తాజా సమాచారం…" : "Refreshing…") : (te ? "తాజా సమాచారం పొందండి" : "Refresh")}
         </Button>
       </div>
+      {page === "requests" && lastUpdated && <p className="text-right text-xs text-muted-foreground" role="status">
+        {te
+          ? `చివరిగా నవీకరించిన సమయం ${new Intl.DateTimeFormat(locale, { timeStyle: "short" }).format(lastUpdated)} · ఈ పేజీ తెరిచి ఉన్నప్పుడు 30 సెకన్లకు ఒకసారి తనిఖీ చేస్తుంది`
+          : `Updated ${new Intl.DateTimeFormat(locale, { timeStyle: "short" }).format(lastUpdated)} · checks every 30 seconds while this page is open`}
+      </p>}
       {error && <div role="alert"><Notice error>{error}</Notice></div>}
       {message && <div role="status"><Notice>{message}</Notice></div>}
-      <Notice warning>{te ? "వాట్సాప్ / పుష్ నోటిఫికేషన్లు ఇంకా సక్రియంగా లేవు; కొత్త అభ్యర్థనలను చూడటానికి రిఫ్రెష్ చేయండి." : "WhatsApp/push notifications are not active yet. Refresh to check for new offers."}</Notice>
+      <Notice warning>{page === "requests"
+        ? (te ? "వాట్సాప్ / పుష్ నోటిఫికేషన్లు ఇంకా సక్రియంగా లేవు. ఈ పేజీ తెరిచి ఉన్నప్పుడు కొత్త అభ్యర్థనల కోసం తనిఖీ చేస్తుంది; బ్రౌజర్ మూసి ఉన్నప్పుడు నోటిఫికేషన్ అందదు." : "WhatsApp/push notifications are not active yet. Offers refresh while this page is open; no notification is sent when the browser is closed.")
+        : (te ? "వాట్సాప్ / పుష్ నోటిఫికేషన్లు ఇంకా సక్రియంగా లేవు." : "WhatsApp/push notifications are not active yet.")}</Notice>
       {loading ? (
         <div role="status" aria-label={te ? "పనులు లోడ్ అవుతున్నాయి" : "Loading work"} className="space-y-3">
           {[0, 1].map((item) => <div key={item} className="h-36 animate-pulse motion-reduce:animate-none rounded-xl border bg-muted/40" />)}
