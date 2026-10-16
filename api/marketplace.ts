@@ -120,7 +120,7 @@ export function createMarketplaceHandlers(pool: Pick<Pool, "connect">) {
          FROM merchant_profile m
          JOIN merchant_service ms ON ms.merchant_id = m.subject_id AND ms.active = true
          WHERE ms.service_id = $1 AND m.verification_status = 'verified' AND m.accepting_jobs = true
-         ORDER BY m.business_name LIMIT 500`,
+         ORDER BY m.business_name`,
         [parsed.data.serviceId],
       );
       const location = address.rows[0].latitude !== null && address.rows[0].longitude !== null
@@ -216,7 +216,7 @@ export function createMarketplaceHandlers(pool: Pick<Pool, "connect">) {
          FROM merchant_profile m
          JOIN merchant_service ms ON ms.merchant_id = m.subject_id AND ms.active = true
          WHERE ms.service_id = $1 AND m.verification_status = 'verified' AND m.accepting_jobs = true
-         ORDER BY m.business_name LIMIT 500`,
+         ORDER BY m.business_name`,
         [payload.serviceId],
       );
       const eligible = eligibleCandidates(candidates.rows, address.rows[0].latitude !== null && address.rows[0].longitude !== null

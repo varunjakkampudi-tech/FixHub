@@ -46,6 +46,11 @@ describe("marketplace boundaries", () => {
       createdBookingIds: string[];
     } | null = null;
     let providersAvailable = true;
+    let merchantCandidates = [
+      { merchant_id: localMerchantId, business_name: "Local Electrician", latitude: "16.75", longitude: "81.68", service_radius_km: "5", visit_price_paise: "25000", labor_from_paise: "30000" },
+      { merchant_id: nearbyMerchantId, business_name: "Nearby Electrician", latitude: "16.76", longitude: "81.69", service_radius_km: "5", visit_price_paise: "30000", labor_from_paise: "10000" },
+      { merchant_id: distantMerchantId, business_name: "Distant Electrician", latitude: "18.75", longitude: "83.68", service_radius_km: "5", visit_price_paise: "10000", labor_from_paise: "10000" },
+    ];
     const query = vi.fn(async (sql: string, values: unknown[] = []) => {
       if (sql === "BEGIN") {
         transactionStatements.push(sql);
@@ -102,11 +107,10 @@ describe("marketplace boundaries", () => {
       }
       if (sql.includes("SELECT latitude, longitude FROM customer_address")) return { rows: [{ latitude: "16.75", longitude: "81.68" }] };
       if (sql.includes("SELECT id, name FROM service_catalog") || sql.includes("SELECT id FROM service_catalog")) return { rows: [{ id: serviceId, name: "General electrical service" }] };
-      if (sql.includes("SELECT m.subject_id AS merchant_id")) return { rows: providersAvailable ? [
-        { merchant_id: localMerchantId, business_name: "Local Electrician", latitude: "16.75", longitude: "81.68", service_radius_km: "5", visit_price_paise: "25000", labor_from_paise: "30000" },
-        { merchant_id: nearbyMerchantId, business_name: "Nearby Electrician", latitude: "16.76", longitude: "81.69", service_radius_km: "5", visit_price_paise: "30000", labor_from_paise: "10000" },
-        { merchant_id: distantMerchantId, business_name: "Distant Electrician", latitude: "18.75", longitude: "83.68", service_radius_km: "5", visit_price_paise: "10000", labor_from_paise: "10000" },
-      ] : [] };
+      if (sql.includes("SELECT m.subject_id AS merchant_id")) {
+        const limit = Number(sql.match(/\bLIMIT\s+(\d+)\b/i)?.[1] ?? Number.MAX_SAFE_INTEGER);
+        return { rows: providersAvailable ? merchantCandidates.slice(0, limit) : [] };
+      }
       if (sql.includes("INSERT INTO service_booking")) createdBookingIds.push(String(values[0]));
       if (sql.includes("INSERT INTO booking_offer")) {
         offerInsertCount += 1;
@@ -234,6 +238,26 @@ describe("marketplace boundaries", () => {
       .expect(409);
     expect(conflict.body.error.code).toBe("IDEMPOTENCY_KEY_REUSED");
     expect(offerRows).toHaveLength(4);
+
+    const wideFanoutCandidates = Array.from({ length: 501 }, (_, index) => ({
+      merchant_id: randomUUID(),
+      business_name: `Eligible Electrician ${String(index + 1).padStart(3, "0")}`,
+      latitude: "16.75",
+      longitude: "81.68",
+      service_radius_km: "5",
+      visit_price_paise: "25000",
+      labor_from_paise: "30000",
+    }));
+    merchantCandidates = wideFanoutCandidates;
+    const wideFanout = await requestWithAuth("post", "/api/v1/customer/bookings")
+      .set("Idempotency-Key", "fanout-wide-0000001")
+      .send(body)
+      .expect(201);
+    expect(wideFanout.body.booking.eligibleProviderCandidates).toBe(501);
+    const wideFanoutOffers = offerRows.filter((offer) => offer[1] === wideFanout.body.booking.id);
+    expect(wideFanoutOffers).toHaveLength(501);
+    expect(new Set(wideFanoutOffers.map((offer) => offer[2])).size).toBe(501);
+    expect(outboxRows.filter((row) => row.eventType === "merchant.booking_offer" && row.values[1] === wideFanout.body.booking.id)).toHaveLength(501);
 
     const offersBeforeFailure = offerRows.length;
     const outboxBeforeFailure = outboxRows.length;
