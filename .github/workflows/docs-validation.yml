@@ -1,48 +1,106 @@
-name: Documentation validation
+name: FixHub CI Quality & Validation Pipeline
 
 on:
+  push:
+    branches: [main, ready-for-main, "feat/**", "fix/**"]
   pull_request:
     branches: [main]
-  push:
-    branches: [main]
+  schedule:
+    - cron: "0 2 * * *" # Nightly 02:00 UTC full regression
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: "Test Suite Selector (spec 18.3 allowlist)"
+        required: true
+        default: "all"
+        type: choice
+        options:
+          - all
+          - unit
+          - api
+          - smoke
+          - sanity
+          - critical
+          - regression
+          - e2e
+          - security
+          - concurrency
+          - localization
+          - docs
 
 permissions:
   contents: read
 
 concurrency:
-  group: docs-validation-${{ github.event.pull_request.number || github.ref }}
+  group: fixhub-ci-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
-  docs-validation:
-    name: docs-validation
+  validate-and-test:
+    name: FixHub Comprehensive Verification
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
+
     steps:
-      - name: Check out source
+      - name: Check out source repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Set up Node.js
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js 22 LTS
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: 22
           cache: npm
+
       - name: Install locked dependencies
         run: npm ci
-      - name: Run app and API tests
-        run: npm test
-      - name: Typecheck application and API
+
+      - name: Syntax, Formatting & Security Linting (CR-01)
+        run: npm run lint
+
+      - name: TypeScript Static Typecheck
         run: npm run typecheck
-      - name: Build local demo
+
+      - name: FR-1 Security Quarantine & Defect Regression
+        run: npm run test:security
+
+      - name: Atomic Redlock Concurrency & Race Tests (QA-04)
+        run: npm run test:concurrency
+
+      - name: Smoke, Sanity & Critical Integration Suites
+        run: |
+          npm run test:smoke
+          npm run test:sanity
+          npm run test:critical
+          npm run test:regression
+
+      - name: Full Application & Microservice Unit Suites
+        run: npm test
+
+      - name: Headless Playwright Multi-Role Simulation (CR-01)
+        run: npm run test:playwright
+
+      - name: Bilingual Communications & Locale Invariants (FR-9)
+        run: npm run test:l10n
+
+      - name: Production Vite Build
         run: npm run build
-      - name: Audit dependencies
-        run: npm audit
-      - name: Validate documentation
+
+      - name: Dependency Vulnerability Audit
+        run: npm audit --audit-level=high
+
+      - name: Validate Canonical Documentation & Matrices
         run: node scripts/validate-documentation.mjs
-      - name: Test documentation validation safeguards
+
+      - name: Test Documentation Safeguards & Invariant Tests
         run: node scripts/documentation-validator.test.mjs
-      - name: Test economic scenario arithmetic
+
+      - name: Test Economic & Pricing Scenarios
         run: node scripts/financial-model.test.mjs
-      - name: Validate behaviour contract inventory and safeguards
+
+      - name: Validate Behaviour Contract Inventory
         run: node scripts/validate-behaviour-contracts.mjs --self-test
-      - name: Validate candidate design tokens and contrast safeguards
+
+      - name: Validate Design Tokens & Contrast Safeguards
         run: node scripts/validate-design-tokens.mjs --self-test

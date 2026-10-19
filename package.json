@@ -22,8 +22,11 @@
     "test:regression": "vitest run src/test/regression.test.ts",
     "test:playwright": "vitest run src/test/e2e-playwright.test.ts",
     "test:api": "vitest run api/test",
+    "test:security": "vitest run api/test/security-quarantine-fr1.test.ts",
+    "test:concurrency": "vitest run api/test/dispatch-and-race.test.ts src/test/critical.test.ts",
+    "test:l10n": "vitest run src/test/fixhub-communications.test.ts",
     "test:docs": "node --test scripts/documentation-validator.test.mjs",
-    "test:all": "npm run lint && npm run test:smoke && npm run test:sanity && npm run test:critical && npm run test:regression && npm run test:playwright && npm test && npm run test:docs",
+    "test:all": "npm run lint && npm run test:smoke && npm run test:sanity && npm run test:critical && npm run test:regression && npm run test:playwright && npm run test:security && npm test && npm run test:docs",
     "test:watch": "vitest"
   },
   "dependencies": {
