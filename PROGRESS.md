@@ -2,8 +2,8 @@
 
 **Project:** Fix Hub (Viswatra)  
 **Parent Brand:** Viswatra  
-**Baseline Main Commit:** `1ded0fbe89c6a43fb03c6d61371a6570b38d62b1`  
-**Current Active Integration Baseline:** `1ded0fbe89c6a43fb03c6d61371a6570b38d62b1`  
+**Baseline Main Commit:** `49943686c5941aa54a9efd6b0ed495f6e569169e`  
+**Current Active Baseline:** `49943686c5941aa54a9efd6b0ed495f6e569169e` (Single Canonical Branch: `main`)  
 **Governing Documents:**  
 - `docs/specs/FixHub-Product-Spec-v1.3.md` (Scope Frozen, Checksum `F549D93B52E1EB8A08CC1426F6B4244DA4C9A4EE569DE9D7031316923DEBC52D`)
 - `docs/specs/FixHub-Engineering-Standards.md` (Checksum `FCC1760BC72D38221EBB153538CEB35DB9040D0E8DBB952985000C9D4666ED55`)
@@ -24,21 +24,21 @@
   - External verified Git bundle backup creation and restore-validation.
   - Comprehensive Archival Manifest & specification tracking (`docs/archive/ARCHIVE_MANIFEST.md`).
   - Stage 0 Security Quarantine & Investigation (FR-1: remediation of role self-assignment, fixed-code bypass, default JWT signing secret, and false delivery claims).
+  - Real Playwright browser automation suite in headless Chromium and Mobile Chromium (Pixel 5) meeting CR-01 gate.
   - Draft matrices generation (`GAP_MATRIX.md`, `TEST_MATRIX.md`, `QUALITY_AUDIT.md`, `blocker.txt`).
 
 ---
 
 ## 2. Verified Baseline Backup (Section 4.1)
 
-- **Date:** 2026-10-19 / 2026-10-20
-- **Baseline Commit SHA:** `b34ea99a30665ec0de010d98d4e2bf0047eb01c9`
-- **Integrated Commit SHA:** `3f058fa07c568494aa594284aa7bc40ff4802585`
-- **Main Commit SHA:** `1ded0fbe89c6a43fb03c6d61371a6570b38d62b1`
-- **Working Tree State:** Clean
+- **Date:** 2026-10-20
+- **Main Commit SHA:** `49943686c5941aa54a9efd6b0ed495f6e569169e`
+- **Working Tree State:** Clean (100% synchronized with `origin/main`; all non-main branches deleted locally and remotely)
 - **Backup Bundles & SHA-256 Checksums:**
   - Baseline: `fixhub-baseline-b34ea99a30665ec0de010d98d4e2bf0047eb01c9.bundle` -> `CB0EB1BB3AF40E38FAC466D804E327B9146902096DD20C18B570CE25CB3EC31B`
   - Integrated: `fixhub-integrated-3f058fa07c568494aa594284aa7bc40ff4802585.bundle` -> `D0BED5F57819AE2BF1D7EDDA5889E3E3C8F3BD5C1F20E53536EB5D13A4E6ED54`
-- **Integrity Result:** PASS — Verified 100% recoverable without data loss via `git bundle verify` and `git fsck`.
+  - All-Branches Archive: `fixhub-all-branches-backup-4994368.bundle` -> `9114F88BB1333FEE834A9CE4279D6B01168F03D63A80F92C209E05C8C9D23BC7`
+- **Integrity Result:** PASS — Verified 100% recoverable without data loss via `git bundle verify`, clone, and `git fsck`.
 
 ---
 

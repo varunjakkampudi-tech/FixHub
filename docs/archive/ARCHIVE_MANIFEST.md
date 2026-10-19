@@ -2,7 +2,7 @@
 
 **Date of Record**: 2026-10-20  
 **Repository**: `varunjakkampudi-tech/FixHub`  
-**Current Main Commit Baseline**: `1ded0fbe89c6a43fb03c6d61371a6570b38d62b1`  
+**Current Main Commit Baseline**: `49943686c5941aa54a9efd6b0ed495f6e569169e`  
 **Parent Brand**: Viswatra  
 **Launch Market Target**: Tanuku, Andhra Pradesh (State Code 37)  
 **Governing Policy**: [AGENTS.md](../../AGENTS.md) & [product-foundation-work-authority.md](../governance/product-foundation-work-authority.md)
@@ -14,9 +14,10 @@
 All full-history backups are verified with `git fsck` and stored in external immutable storage.
 
 | Bundle File Name | Source Commit SHA | Checksum (SHA-256) | Verification Status | Storage Location | Retention Rationale |
-| :--- | :--- | :--- | :---: | :--- | :--- |
+| :--- | :--- | :--- | :--- | :--- | :--- |
 | `fixhub-baseline-b34ea99a30665ec0de010d98d4e2bf0047eb01c9.bundle` | `b34ea99a30665ec0de010d98d4e2bf0047eb01c9` | `CB0EB1BB3AF40E38FAC466D804E327B9146902096DD20C18B570CE25CB3EC31B` | `git fsck` VERIFIED (0 errors) | `C:\Users\Admin\Desktop\fixhub-backups\` | Clean pre-migration baseline preservation |
 | `fixhub-integrated-3f058fa07c568494aa594284aa7bc40ff4802585.bundle` | `3f058fa07c568494aa594284aa7bc40ff4802585` | `D0BED5F57819AE2BF1D7EDDA5889E3E3C8F3BD5C1F20E53536EB5D13A4E6ED54` | `git fsck` VERIFIED (0 errors) | `C:\Users\Admin\Desktop\fixhub-backups\` | Integration baseline with full test suites and matrices |
+| `fixhub-all-branches-backup-4994368.bundle` | `49943686c5941aa54a9efd6b0ed495f6e569169e` | `9114F88BB1333FEE834A9CE4279D6B01168F03D63A80F92C209E05C8C9D23BC7` | `git fsck` VERIFIED (0 errors) | `C:\Users\Admin\Desktop\` | Immutable archival of all 41 historical refs prior to branch pruning |
 
 ---
 
@@ -51,17 +52,15 @@ Historical planning documents and decision records remain preserved in Git histo
 
 ---
 
-## 4. Git Branch Disposition Policy
-
-Per Viswatra engineering standards and the 20 October 2026 Codebase Review, historical branches must **not** be deleted merely to create an illusion of cleanliness. All historical branches represent immutable commit provenance and development history.
-
-| Branch Category | Examples | Disposition |
-| :--- | :--- | :--- |
-| **Protected Production Baseline** | `main`, `ready-for-main` | Synchronized at commit `1ded0fb`; gated by CI and PR review |
-| **Historical Feature Branches** | `feature/fixhub-local-demo`, `feature/fixhub-api-foundation`, `feature/fixhub-marketplace-integration` | Preserved in remote tracking (`remotes/origin/*`) for historical commit lineage |
-| **Historical Fix Branches** | `fix/demo-cod-payment-disclosure`, `fix/demo-gps-storage-consent`, `fix/demo-pricing-and-eligible-offers` | Preserved as merged feature lineage |
-| **Phase Research Branches** | `phase-01/feasibility-research`, `phase-01/remove-interview-exit-criteria` | Preserved as Phase 01 research evidence |
-| **Documentation Branches** | `docs/api-runtime-resend-feasibility`, `docs/audit-settings-evidence`, `docs/phase-00-final-closure` | Preserved as documentation review records |
+## 4. Git Branch Disposition Policy & Archive Record
+ 
+ Per the owner instruction on 20 October 2026, all historical non-main branches were archived into the external verified bundle `fixhub-all-branches-backup-4994368.bundle` (SHA-256: `9114F88BB1333FEE834A9CE4279D6B01168F03D63A80F92C209E05C8C9D23BC7`) and subsequently pruned from both the local repository and the remote GitHub repository.
+ 
+ | Branch Category | Scope | Disposition |
+ | :--- | :--- | :--- |
+ | **Canonical Protected Main** | `main` (commit `49943686c5941aa54a9efd6b0ed495f6e569169e`) | Preserved as the sole active canonical branch both locally and remotely on GitHub. |
+ | **Pruned Historical Feature & Fix Branches** | `docs/*`, `feat/*`, `feature/*`, `fix/*`, `phase-01/*`, `ready-for-main` | Archived in external immutable bundle; deleted from local and remote tracking to keep strictly `main` in sync. |
+| **Historical Branches** | `feature/*`, `fix/*`, `docs/*`, `phase-01/*`, `ready-for-main` | Pruned from local and remote; preserved in `fixhub-all-branches-backup-4994368.bundle` |
 
 ---
 
