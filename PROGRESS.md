@@ -47,7 +47,7 @@
 
 ## 3. Stage 0 Security Quarantine & FR-1 Remediation
 
-- **Investigation Report:** [`docs/investigations/fr-1-jwt-secret.md`](file:///c:/Users/Admin/Desktop/FixHub/docs/investigations/fr-1-jwt-secret.md)
+- **Investigation Report:** [`docs/investigations/fr-1-jwt-secret.md`](docs/investigations/fr-1-jwt-secret.md)
 - **Four Critical Security Defects Remediated:**
   1. **Role Self-Assignment (FR-1):**
      - *Defect:* `requestOtp` accepted client-specified `role`, allowing unauthenticated users to create accounts with `role: "admin"`.
