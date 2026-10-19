@@ -50,22 +50,31 @@ export function DemoPage() {
         />
         <div className="content-grid">
           <section>
-            <h2>{d("signin")}</h2>
-            <div className="demo-personas">
-              {demo.state.personas
-                .filter((p) => !p.deactivated)
-                .map((p) => (
-                  <Button
-                    key={p.id}
-                    variant={demo.persona?.id === p.id ? "default" : "outline"}
-                    asChild
-                    onClick={() => demo.login(p.id)}
-                  >
-                    <Link to={rolePath(p.role)}>
-                      {p.name} · {d(p.role)}
-                    </Link>
-                  </Button>
-                ))}
+            <h2>{locale === "te-IN" ? "ప్రాథమిక లాగిన్ పాత్రలు" : "Primary Sign-In Roles"}</h2>
+            <p className="text-xs text-muted-foreground mb-4">
+              {locale === "te-IN"
+                ? "అన్ని ప్రాంతాల్లో గందరగోళం లేని 3 స్పష్టమైన పాత్రలు: కస్టమర్, వ్యాపారి, మరియు అడ్మిన్ (నేను)."
+                : "Crystal-clear access for all locations: Customer, Merchant, and Admin (Me)."}
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+              {[
+                { id: "sample-c1", name: locale === "te-IN" ? "కస్టమర్" : "Customer", role: "customer" as const, desc: locale === "te-IN" ? "సేవలను బుక్ చేయండి" : "Book & track home services" },
+                { id: "sample-m1", name: locale === "te-IN" ? "వ్యాపారి" : "Merchant", role: "merchant" as const, desc: locale === "te-IN" ? "జాబ్ ఆఫర్‌లను స్వీకరించండి" : "Accept leads & manage jobs" },
+                { id: "sample-admin", name: locale === "te-IN" ? "అడ్మిన్ (నేను)" : "Admin (Me)", role: "admin" as const, desc: locale === "te-IN" ? "పూర్తి సిస్టమ్ నియంత్రణ" : "System controls & logs" },
+              ].map((p) => (
+                <Button
+                  key={p.id}
+                  variant={demo.persona?.id === p.id ? "default" : "outline"}
+                  className="h-auto p-4 flex flex-col items-start text-left justify-between"
+                  asChild
+                  onClick={() => demo.login(p.id)}
+                >
+                  <Link to={rolePath(p.role)}>
+                    <strong className="text-base">{p.name}</strong>
+                    <span className="text-xs opacity-80 mt-1">{p.desc}</span>
+                  </Link>
+                </Button>
+              ))}
             </div>
             <h2 className="mt-8">{d("scenario")}</h2>
             <label htmlFor="demo-scenario" className="form-label">
@@ -243,22 +252,44 @@ export function DemoAuth({ mode = "sign-in" }: { mode?: string }) {
             >
               {!recovery && (
                 <div className="form-group">
-                  <label htmlFor="auth-persona" className="form-label">
-                    {d("signin")}
+                  <label htmlFor="auth-persona" className="form-label font-medium">
+                    {locale === "te-IN" ? "లాగిన్ పాత్రను ఎంచుకోండి" : "Select Sign-In Role"}
                   </label>
+                  <p className="text-xs text-muted-foreground mb-2">
+                    {locale === "te-IN"
+                      ? "స్పష్టమైన అనుభవం కోసం 3 ప్రాథమిక పాత్రలు మాత్రమే: కస్టమర్, వ్యాపారి, మరియు అడ్మిన్ (నేను)."
+                      : "Only 3 clean roles for crystal clarity: Customer, Merchant, and Admin (Me)."}
+                  </p>
+                  <div className="grid grid-cols-3 gap-2 mb-3">
+                    {[
+                      { id: "sample-c1", label: locale === "te-IN" ? "కస్టమర్" : "Customer", desc: "User" },
+                      { id: "sample-m1", label: locale === "te-IN" ? "వ్యాపారి" : "Merchant", desc: "Provider" },
+                      { id: "sample-admin", label: locale === "te-IN" ? "అడ్మిన్ (నేను)" : "Admin (Me)", desc: "Console" },
+                    ].map((roleChoice) => (
+                      <button
+                        key={roleChoice.id}
+                        type="button"
+                        onClick={() => setSelected(roleChoice.id)}
+                        className={`flex flex-col items-center justify-center p-3 rounded-lg border text-center transition-all ${
+                          selected === roleChoice.id
+                            ? "border-primary bg-primary/10 text-primary font-bold shadow-sm"
+                            : "border-border hover:bg-muted/50 text-foreground"
+                        }`}
+                      >
+                        <span className="text-sm">{roleChoice.label}</span>
+                        <span className="text-[10px] text-muted-foreground uppercase">{roleChoice.desc}</span>
+                      </button>
+                    ))}
+                  </div>
                   <select
                     id="auth-persona"
-                    className="form-input"
+                    className="form-input text-xs"
                     value={selected}
                     onChange={(e) => setSelected(e.target.value)}
                   >
-                    {demo.state.personas
-                      .filter((p) => !p.deactivated)
-                      .map((p) => (
-                        <option value={p.id} key={p.id}>
-                          {p.name} · {d(p.role)}
-                        </option>
-                      ))}
+                    <option value="sample-c1">Customer · {locale === "te-IN" ? "కస్టమర్" : "Customer"}</option>
+                    <option value="sample-m1">Merchant · {locale === "te-IN" ? "వ్యాపారి" : "Merchant"}</option>
+                    <option value="sample-admin">Admin (Me) · {locale === "te-IN" ? "అడ్మిన్" : "Super Admin"}</option>
                   </select>
                 </div>
               )}

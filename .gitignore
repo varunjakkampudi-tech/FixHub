@@ -10,4 +10,5 @@ build/
 coverage/
 *.log
 .playwright-cli/
-output/playwright/
+output/
+.worktrees/

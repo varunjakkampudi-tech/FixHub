@@ -10,6 +10,13 @@ import { z } from "zod";
 
 import { calculate, initialPolicy } from "../src/features/fixhub/demo-model";
 import { openApiDocument } from "./openapi";
+import { authRouter } from "./routes/auth-router";
+import { bookingsRouter } from "./routes/bookings-router";
+import { disputesRouter } from "./routes/disputes-router";
+import { merchantsRouter } from "./routes/merchants-router";
+import { notificationsRouter } from "./routes/notifications-router";
+import { reviewsRouter } from "./routes/reviews-router";
+import { webhooksRouter } from "./routes/webhooks-router";
 import { createAuthHandlers, type AuthConfig, type EmailSender } from "./auth";
 import { createMarketplaceHandlers } from "./marketplace";
 import { createMerchantHandlers } from "./merchant";
@@ -143,6 +150,13 @@ export function createApiApp(options: ApiAppOptions = {}) {
   });
   app.use("/api/v1", apiLimiter);
   app.use(express.json({ limit: "32kb", strict: true }));
+  app.use("/api/v1/auth", authRouter);
+  app.use("/api/v1/merchants", merchantsRouter);
+  app.use("/api/v1/bookings", bookingsRouter);
+  app.use("/api/v1/disputes", disputesRouter);
+  app.use("/api/v1", reviewsRouter);
+  app.use("/api/v1/notifications", notificationsRouter);
+  app.use("/api/v1/webhooks", webhooksRouter);
 
   if (options.databasePool && options.authConfig && options.sendAuthEmail) {
     const auth = createAuthHandlers(options.databasePool, options.authConfig, options.sendAuthEmail);
