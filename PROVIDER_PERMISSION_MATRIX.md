@@ -27,7 +27,7 @@ In accordance with FixHub Product Specification v1.3 and Autonomous Goal Section
 | **TRAI SMS DLT** | Telecom transactional SMS in India (+91) | **BLOCKED** (Awaiting D04) | `api/services/auth-service.ts` | `api/test/security-quarantine-fr1.test.ts` | `DLT_PE_ID`, `DLT_SENDER_ID`, `DLT_OTP_TEMPLATE_ID` |
 | **OpenStreetMap / Haversine** | Tanuku locality geocoding & spatial distance | **LOCAL_ACTIVE** (PostGIS) | `api/db/repository.ts` | `src/test/fixhub-location.test.ts` (11 tests) | None (Local calculation & PostGIS) |
 | **Payment Gateway** | Escrow & online digital payment collection | **DEFERRED** (D09 Locked to COD) | `api/routes/bookings-router.ts` | `src/test/demo-bill.test.ts` (4 tests) | None (Cash on Completion only in v1.3 launch) |
-| **Private Object Storage** | Work evidence photos & inspection documents | **LOCAL_ADAPTER** (Awaiting D26) | `api/routes/bookings-router.ts` | `src/test/e2e-playwright.test.ts` | `STORAGE_BUCKET_NAME`, `STORAGE_ENDPOINT`, `STORAGE_ACCESS_KEY`, `STORAGE_SECRET_KEY` |
+| **Private Object Storage** | Work evidence photos & inspection documents | **LOCAL_ADAPTER** (Awaiting D26) | `api/routes/bookings-router.ts` | `src/test/e2e-journey-api.test.ts` | `STORAGE_BUCKET_NAME`, `STORAGE_ENDPOINT`, `STORAGE_ACCESS_KEY`, `STORAGE_SECRET_KEY` |
 
 ---
 

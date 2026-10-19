@@ -11,16 +11,16 @@
 | Journey ID | Journey Title | Primary Persona | Key Stages & User Steps | Automated Test Suite | Status |
 |---|---|---|---|---|---|
 | J01 | Customer Sign-In & Onboarding | Customer | Enter phone -> receive OTP -> verify -> land on Tanuku marketplace | `src/test/sanity.test.ts`, `api/test/auth.test.ts` | **PASS** |
-| J02 | Instant Service Request | Customer | Select category -> pick Tanuku address -> review Price Clarity Card -> submit | `api/test/booking-lifecycle.test.ts`, `src/test/e2e-playwright.test.ts` | **PASS** |
+| J02 | Instant Service Request | Customer | Select category -> pick Tanuku address -> review Price Clarity Card -> submit | `api/test/booking-lifecycle.test.ts`, `src/test/e2e-journey-api.test.ts` | **PASS** |
 | J03 | Scheduled Booking Request | Customer | Select date & time slot -> describe issue -> confirm booking | `src/test/real-booking-price-preview.test.tsx` | **PASS** |
-| J04 | Quote Decisioning & Acceptance | Customer | Review technician's itemized parts/labor quote -> accept quote -> work begins | `src/test/e2e-playwright.test.ts`, `src/test/regression.test.ts` | **PASS** |
+| J04 | Quote Decisioning & Acceptance | Customer | Review technician's itemized parts/labor quote -> accept quote -> work begins | `src/test/e2e-journey-api.test.ts`, `src/test/regression.test.ts` | **PASS** |
 | J05 | Merchant Registration | Merchant | Enter business details -> select Tanuku coverage zones -> submit KYC | `api/test/merchants.test.ts` | **PASS** |
 | J06 | Atomic Lead Acceptance | Merchant | Receive broadcast offer -> tap Accept -> Redlock acquires atomic single win | `api/test/dispatch-and-race.test.ts`, `src/test/critical.test.ts` | **PASS** |
-| J07 | Technician Job Assignment | Merchant | Open accepted booking -> select available technician -> technician alerted | `src/test/e2e-playwright.test.ts` | **PASS** |
-| J08 | On-Site Diagnostic & Quote | Technician | Mark Arrived -> inspect appliance -> build digital quote -> submit to customer | `src/test/e2e-playwright.test.ts` | **PASS** |
+| J07 | Technician Job Assignment | Merchant | Open accepted booking -> select available technician -> technician alerted | `src/test/e2e-journey-api.test.ts` | **PASS** |
+| J08 | On-Site Diagnostic & Quote | Technician | Mark Arrived -> inspect appliance -> build digital quote -> submit to customer | `src/test/e2e-journey-api.test.ts` | **PASS** |
 | J09 | Cash on Completion (COD) | Customer | Verify job completed -> pay cash to technician -> receive digital service record | `src/test/demo-bill.test.ts`, `src/test/real-booking-service-record.test.tsx` | **PASS** |
 | J10 | Customer Feedback & Review | Customer | Rate 1–5 stars -> write feedback -> merchant rating dynamically updates | `api/test/completion-review.test.ts` | **PASS** |
-| J11 | Mobile Touch PWA Interaction | Mobile User | Touch navigation -> responsive layout -> sticky actions | `src/test/e2e-playwright.test.ts` | **PASS** |
+| J11 | Mobile Touch PWA Interaction | Mobile User | Touch navigation -> responsive layout -> sticky actions | `e2e/browser-validation.spec.ts` | **PASS** |
 | J12 | WhatsApp Channel Alert | Customer/Merchant| Outbox records notification -> adapter formats template -> status logged | `api/test/notification-outbox.test.ts`, `api/test/twilio.test.ts` | **PASS** |
 | J13 | Super Admin Health Monitoring | Super Admin | View liveness/readiness probes -> inspect DB & Redis latency | `src/test/admin-health.test.tsx` | **PASS** |
 | J14 | Merchant Dispute Response | Merchant | Customer raises issue -> merchant submits dispute evidence packet | `src/test/regression.test.ts` | **PASS** |

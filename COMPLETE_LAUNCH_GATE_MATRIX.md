@@ -25,7 +25,7 @@ In accordance with Section 21 of `FixHub-Autonomous-Goal.md`:
 | **G02** | RG0 | Security Quarantine & Zero Hardcoded Secrets | Remediation of 4 commit #21 defects; no default JWT secrets | TESTED_UNIT | **PASS** | `docs/investigations/fr-1-jwt-secret.md` |
 | **G03** | RG1 | Tanuku Service Catalog & Category Readiness | 4 verified categories (Electrician, AC, Plumbing, Appliance) | TESTED_UNIT | **PASS** | `SERVICE_CATEGORY_MATRIX.md` |
 | **G04** | RG1 | Tanuku Merchant Supply & Licensed Technicians | Real physical merchant contracts in Tanuku | FIELD_VALIDATED | **BLOCKED** | Owner Field Outreach (G04) |
-| **G05** | RG2 | End-to-End Booking Lifecycle Integrity | Request -> Offer -> Accept -> Quote -> Complete -> Settle | TESTED_BROWSER | **PASS** | `src/test/e2e-playwright.test.ts` |
+| **G05** | RG2 | End-to-End Booking Lifecycle Integrity | Request -> Offer -> Accept -> Quote -> Complete -> Settle | TESTED_INTEGRATION | **PASS** | `src/test/e2e-journey-api.test.ts` |
 | **G06** | RG2 | Atomic First-Wins Dispatch & Race Invariant | Zero double assignments under simultaneous race conditions | TESTED_UNIT | **PASS** | `api/test/dispatch-and-race.test.ts` |
 | **G07** | RG2 | Cash on Completion (COD) Disclosure | Honest pricing card, itemized bill, no false payment receipts | TESTED_UNIT | **PASS** | `src/test/demo-bill.test.ts` |
 | **G08** | RG2 | Legal Entity & Andhra Pradesh GSTIN ECO | Company registration, AP GSTIN 37 e-commerce registration | LIVE (Legal) | **BLOCKED** | BLOCKER-003 (`READY_FOR_OWNER`) |

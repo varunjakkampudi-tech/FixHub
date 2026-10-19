@@ -71,10 +71,10 @@
 | MX-02 | Service category & zone selection | INTEGRATED | TESTED_UNIT | `api/test/merchants.test.ts` |
 | MX-03 | Lead broadcast reception & atomic single-winner acceptance | INTEGRATED | TESTED_UNIT | `api/test/dispatch-and-race.test.ts`, `src/test/critical.test.ts` |
 | MX-04 | Technician staff roster management | INTEGRATED | TESTED_UNIT | `api/test/merchants.test.ts` |
-| MX-05 | Technician dispatch assignment to accepted bookings | INTEGRATED | TESTED_BROWSER | `src/test/e2e-playwright.test.ts` |
-| MX-06 | Job status transition controls (On the way, Arrived) | INTEGRATED | TESTED_BROWSER | `src/test/e2e-playwright.test.ts` |
-| MX-07 | Inspection quote submission with line items (parts, labor) | INTEGRATED | TESTED_BROWSER | `src/test/e2e-playwright.test.ts` |
-| MX-08 | Job completion verification & settlement receipt | INTEGRATED | TESTED_BROWSER | `src/test/e2e-playwright.test.ts` |
+| MX-05 | Technician dispatch assignment to accepted bookings | INTEGRATED | TESTED_INTEGRATION | `src/test/e2e-journey-api.test.ts` |
+| MX-06 | Job status transition controls (On the way, Arrived) | INTEGRATED | TESTED_INTEGRATION | `src/test/e2e-journey-api.test.ts` |
+| MX-07 | Inspection quote submission with line items (parts, labor) | INTEGRATED | TESTED_INTEGRATION | `src/test/e2e-journey-api.test.ts` |
+| MX-08 | Job completion verification & settlement receipt | INTEGRATED | TESTED_INTEGRATION | `src/test/e2e-journey-api.test.ts` |
 | MX-09 | Merchant availability toggle (Online/Offline) | INTEGRATED | TESTED_UNIT | `api/test/merchants.test.ts` |
 | MX-10 | Merchant reliability & rating dashboard | INTEGRATED | TESTED_UNIT | `api/test/completion-review.test.ts` |
 | MX-11 | Dispute and quote renegotiation packet | INTEGRATED | TESTED_UNIT | `src/test/regression.test.ts` |
@@ -96,7 +96,7 @@
 | AX-09 | Customer privacy request processing (data export, deletion) | INTEGRATED | TESTED_UNIT | `api/test/auth.test.ts` |
 | AX-10 | Rate limit monitoring & anomalous IP detection | INTEGRATED | TESTED_UNIT | `api/test/app.test.ts` |
 | AX-11 | Notification outbox queue inspection & retry management | INTEGRATED | TESTED_UNIT | `api/test/notification-outbox.test.ts` |
-| AX-12 | Invoice and billing audit breakdown verification | INTEGRATED | TESTED_BROWSER | `src/test/e2e-playwright.test.ts` |
+| AX-12 | Invoice and billing audit breakdown verification | INTEGRATED | TESTED_INTEGRATION | `src/test/e2e-journey-api.test.ts` |
 | AX-13 | Category readiness checklist & activation gate | PLANNED | SPECIFIED | EH-23 domain requirements |
 | AX-14 | Emergency platform kill-switch & maintenance mode | IMPLEMENTED | OBSERVED_CODE | `src/features/fixhub/registry-admin.tsx` |
 | AX-15 | Admin audit logging of all sensitive actions | INTEGRATED | TESTED_UNIT | `src/features/fixhub/registry-admin.tsx` |

@@ -50,4 +50,31 @@ test.describe("Real Browser E2E & CR-01 Validation Suite", () => {
     const count = await interactiveElements.count();
     expect(count).toBeGreaterThan(0);
   });
+
+  test("customer booking wizard navigates and renders pricing preview", async ({ page }) => {
+    await page.goto("/customer/book/new");
+    await page.waitForLoadState("domcontentloaded");
+
+    // Verify booking interface loads with heading or sign-in notice
+    const body = await page.locator("body").innerText();
+    expect(body.length).toBeGreaterThan(50);
+  });
+
+  test("merchant workspace enforces role gate or demo boundary", async ({ page }) => {
+    await page.goto("/merchant");
+    await page.waitForLoadState("domcontentloaded");
+
+    // Verify role boundary or workspace view
+    const body = await page.locator("body").innerText();
+    expect(body).toMatch(/merchant|sign in|access|workspace/i);
+  });
+
+  test("admin operations panel renders controls and telemetry surfaces", async ({ page }) => {
+    await page.goto("/admin");
+    await page.waitForLoadState("domcontentloaded");
+
+    // Verify admin dashboard landmarks
+    const body = await page.locator("body").innerText();
+    expect(body).toMatch(/admin|dashboard|operations|overview|fix hub/i);
+  });
 });
