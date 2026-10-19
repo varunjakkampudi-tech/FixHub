@@ -57,13 +57,19 @@ authRouter.post("/verify-otp", async (req, res) => {
   }
 });
 
-authRouter.get("/me", authenticate, (req, res) => {
-  const user = defaultRepository.users.get(req.user!.userId);
-  if (!user) {
-    return res.status(404).json({
-      error: { code: "USER_NOT_FOUND", message: "User profile not found." },
-      requestId: req.id,
+authRouter.get("/me", (req, res, next) => {
+  if (req.headers.authorization?.startsWith("Bearer ")) {
+    authenticate(req, res, () => {
+      const user = defaultRepository.users.get(req.user!.userId);
+      if (!user) {
+        return res.status(404).json({
+          error: { code: "USER_NOT_FOUND", message: "User profile not found." },
+          requestId: req.id,
+        });
+      }
+      return res.status(200).json({ user, requestId: req.id });
     });
+  } else {
+    next();
   }
-  return res.status(200).json({ user, requestId: req.id });
 });

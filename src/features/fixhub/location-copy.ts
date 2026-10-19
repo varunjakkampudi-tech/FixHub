@@ -115,7 +115,6 @@ export const locationCopy = {
   notifications: ["Notifications", "నోటిఫికేషన్లు"],
   analytics: ["Advanced Analytics", "సమగ్ర విశ్లేషణ"],
   logs: ["System Logs", "సిస్టమ్ లాగ్స్"],
-  health: ["API Health & Status", "API స్థితి & హెల్త్"],
   tracking: ["Live Job Tracking", "లైవ్ జాబ్ ట్రాకింగ్"],
   settings: ["Settings", "సెట్టింగులు"],
   all: ["All", "అన్నీ"],

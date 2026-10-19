@@ -113,7 +113,7 @@ export function RegistryAdmin({ page = "dashboard", id }: { page?: string; id?: 
             : page === "areas" || page === "locations"
               ? "cities"
               : page
-  ) as LocationKey;
+  ) as string;
   const patch = (key: string, value: unknown) =>
     setEdit((old) => (old ? { ...old, [key]: value } : old));
   const field = (key: string, label: LocationKey, value: unknown, type = "text") => (
@@ -1296,7 +1296,7 @@ export function RegistryAdmin({ page = "dashboard", id }: { page?: string; id?: 
     <PageShell role="admin">
       <main id="main" className="wrap pb-10">
         <PageTop
-          title={`${locale === "te-IN" ? "డెమో నిర్వహణ" : "Demo administration"} · ${lt(currentPage in { ...Object.fromEntries(links.map(([, k]) => [k, true])) } ? currentPage : "dashboard", locale)}`}
+          title={`${locale === "te-IN" ? "డెమో నిర్వహణ" : "Demo administration"} · ${lt((currentPage in { ...Object.fromEntries(links.map(([, k]) => [k, true])) } ? currentPage : "dashboard") as LocationKey, locale)}`}
           desc={t("terms")}
         />
         {!allowed ? (
