@@ -1,4 +1,6 @@
 import { Link } from "@tanstack/react-router";
+import { DemoAuth } from "./demo-pages";
+import { RealAuth } from "./real-auth";
 import { useState } from "react";
 import { ArrowRight, CircleHelp } from "lucide-react";
 import * as Accordion from "@radix-ui/react-accordion";
@@ -54,8 +56,6 @@ export function PublicPage({ page }: { page: string }) {
   const { t } = useFixHub();
   const [saved, setSaved] = useState(false);
   const [analytics, setAnalytics] = useState(false);
-  const [error, setError] = useState(false);
-  const [message, setMessage] = useState("");
   const title = t(publicTitles[page] ?? "help");
   const legal = [
     "privacy",
@@ -129,39 +129,7 @@ export function PublicPage({ page }: { page: string }) {
                 )}
               </>
             ) : page === "contact" ? (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  if (!message.trim()) {
-                    setError(true);
-                    return;
-                  }
-                  setError(false);
-                  setSaved(true);
-                }}
-              >
-                <div className="form-group">
-                  <label htmlFor="contact-message" className="form-label">
-                    {t("message")}
-                  </label>
-                  <textarea
-                    id="contact-message"
-                    className="form-input min-h-36"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                  />
-                </div>
-                {error && <Notice error>{t("required")}</Notice>}
-                <Notice warning>{t("routePreview")}</Notice>
-                <Button type="submit">{t("sendDemo")}</Button>
-                {saved && (
-                  <div className="mt-5" role="status">
-                    <Notice>
-                      {t("saved")} · {t("demo")}
-                    </Notice>
-                  </div>
-                )}
-              </form>
+              <Button asChild><Link to="/customer/support">{t("help")}</Link></Button>
             ) : page === "download" ? (
               <>
                 <h2>{t("appTitle")}</h2>
@@ -257,7 +225,10 @@ export function PublicPage({ page }: { page: string }) {
     </PageShell>
   );
 }
-export { DemoAuth as AuthPage } from "./demo-pages";
+export function AuthPage({ mode = "sign-in" }: { mode?: string }) {
+  if (mode === "sign-in" || mode.includes("register")) return <RealAuth mode={mode} />;
+  return <DemoAuth mode={mode} />;
+}
 function LegacyAuthPage({ mode = "sign-in" }: { mode?: string }) {
   const { t } = useFixHub();
   const [input, setInput] = useState("");

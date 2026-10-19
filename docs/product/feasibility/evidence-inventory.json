@@ -75,11 +75,6 @@
       "evidence": "finance/build-and-operating-costs.md"
     },
     {
-      "id": "P01-DOD-008",
-      "status": "CONDITIONAL",
-      "evidence": "integrations/whatsapp-feasibility.md"
-    },
-    {
       "id": "P01-DOD-009",
       "status": "PASS",
       "evidence": "integrations/app-store-readiness.md"
@@ -103,11 +98,20 @@
       "id": "P01-DOD-013",
       "status": "PASS",
       "evidence": "evidence/blockers.md"
+    }
+  ],
+  "deferredCriteria": [
+    {
+      "id": "P01-DOD-008",
+      "status": "DEFERRED",
+      "evidence": "integrations/whatsapp-feasibility.md",
+      "revisitGate": "Before provider selection/account activation and Phase 14 exit"
     },
     {
       "id": "P01-DOD-014",
-      "status": "CONDITIONAL",
-      "evidence": "feasibility-assessment.md"
+      "status": "GOVERNANCE_GATE",
+      "evidence": "feasibility-assessment.md",
+      "revisitGate": "Separate explicit owner Phase 01 exit disposition"
     }
   ],
   "primaryResearch": {
@@ -118,17 +122,18 @@
   "overallViability": "NOT ASSESSED",
   "counts": {
     "pass": 10,
-    "conditional": 2,
+    "conditional": 0,
     "fail": 0,
     "notAssessed": 0,
-    "total": 12
+    "total": 10
   },
   "criteriaPolicy": {
-    "effectiveDate": "2026-10-15",
-    "authority": "Owner explicitly directed removal of formal interview criteria; not a certification of research",
+    "effectiveDate": "2026-10-16",
+    "authority": "Owner explicitly directed removal of P01-DOD-008 and P01-DOD-014 from the scored Phase 01 denominator; unresolved evidence remains deferred, not passed",
     "priorCount": 14,
-    "activeCount": 12,
+    "activeCount": 10,
     "historicalReview": "docs/reviews/feasibility-review.md",
+    "ownerAmendment": "docs/reviews/phase-01-scope-amendment-2026-10-16.md",
     "limitation": "zero primary interviews, no verified supply/demand, future private-pilot and prelaunch evidence mandatory",
     "phase02Authorized": false
   }

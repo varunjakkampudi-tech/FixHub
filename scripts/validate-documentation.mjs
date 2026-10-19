@@ -195,7 +195,7 @@ try {
 } catch (error) {
   errors.push(`roadmap provenance: unable to validate checksum manifest (${error.message})`);
 }
-for (const id of ['DEC-016', 'DEC-017', 'RISK-005', 'RISK-016']) {
+for (const id of ['DEC-016', 'DEC-017', 'DEC-018', 'RISK-005', 'RISK-016']) {
   if (!all.includes(id)) errors.push(`traceability: required identifier ${id} not found`);
 }
 const functional = contents.get(path.join(root, 'docs', 'product', 'requirements', 'functional.md')) ?? '';
@@ -444,10 +444,17 @@ try {
     'technical/experiments-register.md',
     'technical/hosting-capacity-cost.md',
   ].sort();
-  const expectedIds = [1, 2, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].map(i => 'P01-DOD-' + String(i).padStart(3, '0'));
+  const expectedIds = [1, 2, 5, 6, 7, 9, 10, 11, 12, 13].map(i => 'P01-DOD-' + String(i).padStart(3, '0'));
+  const expectedDeferred = ['P01-DOD-008', 'P01-DOD-014'];
   if (inventory.version !== 1 || inventory.phase !== '01' || inventory.status !== 'IN PROGRESS' ||
       inventory.phase02Authorized !== false || inventory.overallViability !== 'NOT ASSESSED') {
     errors.push('phase01: authority or provisional conclusion changed without review');
+  }
+  if (JSON.stringify((inventory.deferredCriteria ?? []).map(entry => entry.id)) !== JSON.stringify(expectedDeferred) ||
+      inventory.deferredCriteria?.[0]?.status !== 'DEFERRED' || inventory.deferredCriteria?.[1]?.status !== 'GOVERNANCE_GATE' ||
+      inventory.criteriaPolicy?.ownerAmendment !== 'docs/reviews/phase-01-scope-amendment-2026-10-16.md' ||
+      !doc('docs/reviews/phase-01-scope-amendment-2026-10-16.md')) {
+    errors.push('phase01: deferred criteria or owner scope amendment missing');
   }
   if (JSON.stringify([...(inventory.requiredDocuments ?? [])].sort()) !== JSON.stringify(requiredPhase01)) {
     errors.push('phase01: exact required document inventory differs');
@@ -458,9 +465,9 @@ try {
   const rows = [...doc(base + 'exit-criteria.md').matchAll(/^\| (P01-DOD-\d{3})[^|]*\|[^|]*\|[^|]*\| (PASS|CONDITIONAL|FAIL|NOT ASSESSED) \|/gm)];
   if (JSON.stringify(rows.map(m => m[1])) !== JSON.stringify(expectedIds) ||
       JSON.stringify((inventory.criteria ?? []).map(e => e.id)) !== JSON.stringify(expectedIds)) {
-    errors.push('phase01: expected exact 12 unique ordered exit criteria');
+    errors.push('phase01: expected exact 10 unique ordered exit criteria');
   }
-  const counts = { pass: 0, conditional: 0, fail: 0, notAssessed: 0, total: 12 };
+  const counts = { pass: 0, conditional: 0, fail: 0, notAssessed: 0, total: 10 };
   const keys = { PASS: 'pass', CONDITIONAL: 'conditional', FAIL: 'fail', 'NOT ASSESSED': 'notAssessed' };
   for (const [i, entry] of (inventory.criteria ?? []).entries()) {
     if (!keys[entry.status]) { errors.push('phase01: invalid criterion status'); continue; }
@@ -472,15 +479,15 @@ try {
   if (inventory.primaryResearch?.customers !== 0 || inventory.primaryResearch?.merchants !== 0) {
     errors.push('phase01: primary research baseline requires genuine reviewed evidence before changing');
   }
-  if (inventory.criteriaPolicy?.priorCount !== 14 || inventory.criteriaPolicy?.activeCount !== 12 ||
-      inventory.criteriaPolicy?.effectiveDate !== '2026-10-15' || !inventory.criteriaPolicy.historicalReview) {
+  if (inventory.criteriaPolicy?.priorCount !== 14 || inventory.criteriaPolicy?.activeCount !== 10 ||
+      inventory.criteriaPolicy?.effectiveDate !== '2026-10-16' || !inventory.criteriaPolicy.historicalReview) {
     errors.push('phase01: owner-authorized criteria change lacks audit metadata');
   }
   const percentage = (100 * counts.pass / counts.total).toFixed(1) + '%';
   for (const relative of ['exit-criteria.md', 'feasibility-assessment.md']) {
     if (!doc(base + relative).includes(percentage)) errors.push('phase01: completion percentage mismatch ' + relative);
   }
-  phase01Summary = '; ' + requiredPhase01.length + ' Phase01 assessment documents and 12 active exit criteria reconciled (' + percentage + ' evidenced; not product completion)';
+  phase01Summary = '; ' + requiredPhase01.length + ' Phase01 assessment documents and 10 active exit criteria reconciled (' + percentage + ' scoped evidence coverage; Phase01 remains open)';
 } catch (error) {
   errors.push('phase01: unable to validate execution evidence (' + error.message + ')');
 }

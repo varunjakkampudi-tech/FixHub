@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ArrowRight, ArrowLeft, ImagePlus, CircleCheck, Clock, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useFixHub } from "./context";
@@ -7,12 +7,14 @@ import { categories, type MessageKey } from "./locales";
 import { PageShell, PageTop, Notice, Empty, Modal } from "./shared";
 import { useDemo } from "./demo-context";
 import { PriceBreakdown } from "./demo-price";
-import { calculate, categoriesDemo, zones, type Category } from "./demo-model";
+import { calculate, categoriesDemo, zones, type Category, type Role } from "./demo-model";
 import { dt } from "./demo-copy";
 import { CityPicker, AddressEditor, SampleProviders } from "./location-ui";
 import { enabledServices, ratesFor } from "./location-model";
 import { lt } from "./location-copy";
-export { DemoBookings as BookingHistory } from "./demo-pages";
+import { DemoBookings } from "./demo-pages";
+import { resolveApiSessionMode, type ApiSessionMode } from "./api-client";
+import { RealBookingHistory, RealBookingPage } from "./real-booking";
 const paths = [
   "/customer/book/new",
   "/customer/book/details",
@@ -21,6 +23,22 @@ const paths = [
   "/customer/book/review",
 ];
 export function BookingPage({ step = 0 }: { step?: number }) {
+  const { locale } = useFixHub();
+  const [mode, setMode] = useState<"checking" | ApiSessionMode>("checking");
+  useEffect(() => {
+    let active = true;
+    void resolveApiSessionMode().then((sessionMode) => {
+      if (active) setMode(sessionMode);
+    });
+    return () => { active = false; };
+  }, []);
+  if (mode === "checking") return <PageShell><main id="main" className="wrap"><p role="status">{locale === "te-IN" ? "లోడ్ అవుతోంది…" : "Loading your session…"}</p></main></PageShell>;
+  if (mode === "authenticated") return <RealBookingPage />;
+  if (mode === "demo") return <DemoBookingPage step={step} />;
+  return <PageShell functionalPreview><main id="main" className="wrap"><PageTop title={locale === "te-IN" ? "సైన్ ఇన్ అవసరం" : "Sign in required"} /><Notice warning><Link to="/sign-in">{locale === "te-IN" ? "సైన్ ఇన్ చేయండి" : "Sign in to book a service"}</Link></Notice></main></PageShell>;
+}
+
+function DemoBookingPage({ step = 0 }: { step?: number }) {
   const { t, locale, draft, updateDraft, setSubmitted, setCancelled } = useFixHub();
   const demo = useDemo();
   const zone = draft.zone;
@@ -377,6 +395,22 @@ export function BookingPage({ step = 0 }: { step?: number }) {
       </main>
     </PageShell>
   );
+}
+
+export function BookingHistory(props: { role?: Role; detail?: boolean; mode?: string }) {
+  const { locale } = useFixHub();
+  const [mode, setMode] = useState<"checking" | ApiSessionMode>("checking");
+  useEffect(() => {
+    let active = true;
+    void resolveApiSessionMode().then((sessionMode) => {
+      if (active) setMode(sessionMode === "authenticated" && (!props.role || props.role === "customer") ? "authenticated" : sessionMode);
+    });
+    return () => { active = false; };
+  }, [props.role]);
+  if (mode === "checking") return <PageShell><main id="main" className="wrap"><p role="status">{locale === "te-IN" ? "లోడ్ అవుతోంది…" : "Loading your session…"}</p></main></PageShell>;
+  if (mode === "authenticated") return <RealBookingHistory detail={props.detail} mode={props.mode} />;
+  if (mode === "demo") return <DemoBookings {...props} />;
+  return <PageShell functionalPreview><main id="main" className="wrap"><PageTop title={locale === "te-IN" ? "బుకింగ్‌లు అందుబాటులో లేవు" : "Bookings unavailable"} /><Notice warning>{mode === "unauthenticated" ? <Link to="/sign-in">{locale === "te-IN" ? "మీ బుకింగ్‌లను చూడటానికి సైన్ ఇన్ చేయండి" : "Sign in to view your bookings"}</Link> : (locale === "te-IN" ? "సేవను తాత్కాలికంగా లోడ్ చేయలేకపోయాం." : "The booking service is temporarily unavailable. Please try again shortly.")}</Notice></main></PageShell>;
 }
 export function SubmittedPage() {
   const { t } = useFixHub();

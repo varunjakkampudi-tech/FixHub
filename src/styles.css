@@ -781,6 +781,13 @@
 .form-group {
   margin-bottom: 22px;
 }
+.fixhub-auth-step {
+  animation: fixhub-auth-step-arrive 180ms ease-out both;
+}
+@keyframes fixhub-auth-step-arrive {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 .notice {
   display: flex;
   align-items: flex-start;

@@ -50,7 +50,11 @@ export function PriceBreakdown({
                     ? ` (${price.rates.taxBps / 100}%)`
                     : ""}
                 </dt>
-                <dd>{money(value, locale)}</dd>
+                <dd>
+                  {label === "tax" && !price.rates.taxConfigured
+                    ? d("taxNotConfigured")
+                    : money(value, locale)}
+                </dd>
               </div>
             ))}
             <div className="demo-price-row total">

@@ -43,11 +43,13 @@
         "opaqueEventReference",
         "messageKey",
         "language",
-        "safeStatusLabel"
+        "safeStatusLabel",
+        "serviceName",
+        "serviceLocality"
       ],
       "copy": {
-        "en": "Your request is recorded. No provider is assigned yet.",
-        "te": "మీ అభ్యర్థన నమోదైంది. ఇంకా సేవా ప్రదాత కేటాయించబడలేదు."
+        "en": "Your {serviceName} request in {serviceLocality} is recorded. No provider is assigned yet.",
+        "te": "{serviceLocality}లో మీ {serviceName} అభ్యర్థన నమోదైంది. ఇంకా సేవా ప్రదాత కేటాయించబడలేదు."
       },
       "expiryRule": "Suppress obsolete actionable copy; otherwise approved purpose TTL; secure view supplies current status",
       "consentRule": "Actual purpose-specific WhatsApp consent/window/template approval required; customer relationship is not assumed consent",
@@ -95,11 +97,13 @@
         "opaqueEventReference",
         "messageKey",
         "language",
-        "safeStatusLabel"
+        "safeStatusLabel",
+        "serviceName",
+        "serviceLocality"
       ],
       "copy": {
-        "en": "A service offer is available. Check its current status before accepting.",
-        "te": "ఒక సేవా అవకాశం అందుబాటులో ఉంది. అంగీకరించే ముందు దాని ప్రస్తుత స్థితిని చూడండి."
+        "en": "A {serviceName} request near {serviceLocality} is available. Review details and accept or decline in FixHub.",
+        "te": "{serviceLocality} పరిసరాల్లో {serviceName} సేవా అభ్యర్థన అందుబాటులో ఉంది. FixHubలో వివరాలు చూసి అంగీకరించండి లేదా తిరస్కరించండి."
       },
       "expiryRule": "Suppress when offer expired, invalidated, won/lost/declined or generation superseded",
       "consentRule": "Actual purpose-specific WhatsApp consent/window/template approval required; customer relationship is not assumed consent",

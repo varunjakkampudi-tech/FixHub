@@ -102,7 +102,16 @@ function validate({ state, interaction, notification }) {
     for (const field of ['event', 'recipient', 'purpose', 'expiryRule', 'consentRule', 'providerClassification']) requiredText(entry[field], 'notice field ' + field);
     requiredText(entry.copy.en, 'English candidate copy');
     assert.match(entry.copy.te, /[\u0C00-\u0C7F]/, 'Telugu candidate copy missing');
-    exact(entry.payloadAllowList, ['opaqueEventReference', 'messageKey', 'language', 'safeStatusLabel'], 'notification payload must remain minimal');
+    const minimalPayload = ['opaqueEventReference', 'messageKey', 'language', 'safeStatusLabel'];
+    const allowedPayload = ['P04-N-001', 'P04-N-003'].includes(entry.id)
+      ? [...minimalPayload, 'serviceName', 'serviceLocality']
+      : minimalPayload;
+    exact(entry.payloadAllowList, allowedPayload, 'notification payload must remain minimal and event-specific');
+    const templateFields = ['serviceName', 'serviceLocality'].filter(field => entry.payloadAllowList.includes(field));
+    for (const copy of Object.values(entry.copy)) {
+      const placeholders = [...copy.matchAll(/\{([A-Za-z][A-Za-z0-9]*)\}/gu)].map(match => match[1]);
+      exact(placeholders, templateFields, 'template copy placeholders must match its event-specific allowlist');
+    }
     assert.ok(entry.channels.length > 0 && entry.channels.every(channel => channels.includes(channel)), 'unknown channel');
     assert.equal(entry.review, 'PENDING', 'cannot fabricate copy/provider review');
     assert.match(entry.providerClassification, /^NOT VERIFIED/);
@@ -127,6 +136,11 @@ if (process.argv[2] === '--self-test') {
     ['duplicate notification ID', v => { v.notification.notifications[1].id = v.notification.notifications[0].id; }],
     ['missing Telugu candidate', v => { v.notification.notifications[0].copy.te = ''; }],
     ['PII payload field forbidden', v => v.notification.notifications[0].payloadAllowList.push('preciseAddress')],
+    ['service details cannot spread to unrelated notifications', v => v.notification.notifications[1].payloadAllowList.push('serviceName')],
+    ['customer confirmation requires both approved context fields', v => v.notification.notifications[0].payloadAllowList.pop()],
+    ['merchant offer requires both approved context fields', v => v.notification.notifications[2].payloadAllowList.pop()],
+    ['template cannot reference a field outside its allowlist', v => { v.notification.notifications[1].copy.en += ' {serviceName}'; }],
+    ['bilingual template placeholders remain aligned', v => { v.notification.notifications[2].copy.te = v.notification.notifications[2].copy.te.replace('{serviceLocality}', 'Tanuku'); }],
     ['unapproved template cannot be marked approved', v => { v.notification.notifications[0].review = 'APPROVED'; }],
     ['unknown provider channel', v => v.notification.notifications[0].channels.push('unofficial-whatsapp')],
     ['onboarding cannot require existing membership', v => { v.interaction.interactions.find(entry => entry.id === 'P04-I-M002').entry = 'Active own-business membership required'; }],

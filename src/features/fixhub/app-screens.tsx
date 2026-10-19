@@ -25,9 +25,17 @@ import {
 import { Button } from "@/components/ui/button";
 import { useFixHub } from "./context";
 import { useDemo } from "./demo-context";
-import { calculate, categoriesDemo, money, type Booking, type Category } from "./demo-model";
-import { demoBillLines } from "./demo-bill";
+import {
+  calculate,
+  categoriesDemo,
+  money,
+  type Booking,
+  type Category,
+  type Price,
+} from "./demo-model";
+import { demoBillLines, demoServiceRecordFile } from "./demo-bill";
 import { enabledServices, formattedAddress, ratesFor, placeLabel } from "./location-model";
+import { eligibleMerchants } from "./provider-availability";
 import { servicePhoto } from "./service-photos";
 import { Brand, CategoryIcon, LocaleControl } from "./shared";
 
@@ -41,6 +49,30 @@ function useApp() {
   const cityId = fx.draft.cityId ?? "tanuku";
   const city = demo.state.registry.cities.find((c) => c.id === cityId);
   return { ...fx, ...demo, locale, cityId, city, tr: (en: string, te: string) => L(locale, en, te) };
+}
+
+export function TaxDisclosure({ price, locale }: { price: Price; locale: Loc }) {
+  const tr = (en: string, te: string) => L(locale, en, te);
+  return (
+    <>
+      <div>
+        <span>{tr("Tax", "పన్ను")}</span>
+        <strong>
+          {price.rates.taxConfigured
+            ? money(price.tax, locale)
+            : tr("Not configured", "కాన్ఫిగర్ చేయలేదు")}
+        </strong>
+      </div>
+      {!price.rates.taxConfigured && (
+        <p className="app-note">
+          {tr(
+            "Tax is not configured and is excluded from this estimate. Confirm any applicable amount before service.",
+            "పన్ను ఇంకా కాన్ఫిగర్ చేయలేదు; ఈ అంచనాలో చేర్చలేదు. సేవకు ముందు వర్తించే మొత్తాన్ని నిర్ధారించండి.",
+          )}
+        </p>
+      )}
+    </>
+  );
 }
 
 /* ---------- shell ---------- */
@@ -276,6 +308,7 @@ export function AppService({ id }: { id: string }) {
           <div><span>{tr("Illustrative inspection fee", "అంచనా పరిశీలన రుసుము")}</span><strong>{money(price.visit, locale)}</strong></div>
           <div><span>{tr("Estimated labour", "అంచనా శ్రమ")}</span><strong>{money(price.labor, locale)}</strong></div>
           <div><span>{tr("Parts allowance", "భాగాల పరిమితి")}</span><strong>{money(price.parts, locale)}</strong></div>
+          <TaxDisclosure price={price} locale={locale} />
           <div className="total"><span>{tr("Estimated total (DEMO)", "అంచనా మొత్తం (DEMO)")}</span><strong>{money(price.total, locale)}</strong></div>
           <p>{tr("Planned payment: cash after service completion (COD). DEMO only; no cash is requested or collected.", "ప్రతిపాదిత చెల్లింపు: సేవ పూర్తయ్యాక నగదు (COD). DEMO మాత్రమే; నగదు అడగరు లేదా వసూలు చేయరు.")}</p>
           <p>{tr("Final quote may vary after inspection and needs your approval.", "పరిశీలన తర్వాత తుది కోట్ మారవచ్చు; మీ ఆమోదం అవసరం.")}</p>
@@ -291,11 +324,6 @@ export function AppService({ id }: { id: string }) {
 }
 
 /* ---------- 5. Providers ---------- */
-function eligibleMerchants(state: ReturnType<typeof useDemo>["state"], cityId: string, category: Category) {
-  return state.merchants.filter(
-    (m) => m.skills.includes(category) && (m.cityIds ?? ["tanuku"]).includes(cityId) && m.status === "active" && (m.verification ?? "approved") === "approved",
-  );
-}
 function initials(name: string) {
   return name.replace(/SAMPLE|DEMO/g, "").trim().split(/\s+/).map((w) => w[0]).slice(0, 2).join("");
 }
@@ -303,9 +331,9 @@ export function AppProviders({ id }: { id: string }) {
   const { tr, locale, state, cityId, city } = useApp();
   const category = catOf(id);
   const price = usePrice(category);
-  const list = eligibleMerchants(state, cityId, category);
   const days = nextDays(4, locale);
   const [day, setDay] = useState(days[0]!.iso);
+  const list = eligibleMerchants(state, cityId, category, day);
   return (
     <AppShell nav={false}>
       <Top title={tr("Available professionals", "అందుబాటులో ఉన్న నిపుణులు")} />
@@ -576,7 +604,7 @@ export function AppBookConfirm({ search }: { search: BookSearch }) {
           <div><span>{tr("Parts allowance", "భాగాల పరిమితి")}</span><strong>{money(price.parts, locale)}</strong></div>
           {price.fee > 0 && <div><span>{tr("Platform fee", "ప్లాట్‌ఫామ్ రుసుము")}</span><strong>{money(price.fee, locale)}</strong></div>}
           {price.discount > 0 && <div><span>{tr("Discount", "తగ్గింపు")}</span><strong>−{money(price.discount, locale)}</strong></div>}
-          <div><span>{tr("Taxes", "పన్నులు")}</span><strong>{price.rates.taxConfigured ? money(price.tax, locale) : tr("At checkout", "చెక్అవుట్‌లో")}</strong></div>
+          <TaxDisclosure price={price} locale={locale} />
           <div className="total"><span>{tr("Estimated total (DEMO)", "అంచనా మొత్తం (DEMO)")}</span><strong>{money(price.total, locale)}</strong></div>
         </div>
         <p className="app-note">{tr("Planned payment: cash after service completion (COD). DEMO only; no cash is requested or collected.", "ప్రతిపాదిత చెల్లింపు: సేవ పూర్తయ్యాక నగదు (COD). DEMO మాత్రమే; నగదు అడగరు లేదా వసూలు చేయరు.")}</p>
@@ -660,6 +688,7 @@ export function AppComplete({ id }: { id: string }) {
   const [sent, setSent] = useState(false);
   const final = b?.approvedQuote ?? b?.estimate;
   const bill = b?.status === "complete" && b.approvedQuote ? b.approvedQuote : null;
+  const recordFile = bill && b ? demoServiceRecordFile(b.id, b.category, bill, locale) : null;
   return (
     <AppShell nav={false}>
       <Top />
@@ -697,6 +726,11 @@ export function AppComplete({ id }: { id: string }) {
             </dl>
             <p className="app-note">{tr("Cash collection is outside this demo. No payment was processed or recorded; this is not proof of payment or a tax invoice.", "నగదు చెల్లింపు ఈ డెమో వెలుపల ఉంటుంది. చెల్లింపు ప్రాసెస్ లేదా రికార్డ్ చేయలేదు; ఇది చెల్లింపు రుజువు లేదా పన్ను ఇన్వాయిస్ కాదు.")}</p>
             <div className="app-bill-actions">
+              {recordFile && <Button asChild variant="outline" className="app-cta">
+                <a href={recordFile.href} download={recordFile.filename}>
+                  {tr("Download service record (.txt)", "సేవా రికార్డు డౌన్‌లోడ్ చేయండి (.txt)")}
+                </a>
+              </Button>}
               <Button type="button" className="app-cta" onClick={() => window.print()}>
                 {tr("Print / save bill as PDF", "బిల్లును ప్రింట్ / PDFగా సేవ్ చేయండి")}
               </Button>
