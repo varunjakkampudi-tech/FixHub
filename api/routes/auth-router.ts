@@ -27,7 +27,8 @@ authRouter.post("/request-otp", async (req, res) => {
   }
 
   try {
-    const result = await defaultAuthService.requestOtp(parsed.data.phone, parsed.data.role);
+    // FR-1: Roles are never client-selected. Client-provided role is strictly ignored.
+    const result = await defaultAuthService.requestOtp(parsed.data.phone);
     return res.status(200).json({ ...result, requestId: req.id });
   } catch (err: any) {
     return res.status(400).json({

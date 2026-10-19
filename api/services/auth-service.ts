@@ -8,43 +8,80 @@ export interface TokenPayload {
   exp: number;
 }
 
-const JWT_SECRET = process.env.JWT_SECRET || "fixhub-local-development-secret-key-min-32-chars-long";
+export const EXPOSED_LEAKED_JWT_SECRET = "fixhub-local-development-secret-key-min-32-chars-long";
+
+/**
+ * Validates and retrieves the active JWT HMAC secret.
+ * Enforces FR-1:
+ * - Server startup/token generation fails without signing secret in non-test mode.
+ * - Leaked default secret is strictly rejected in non-test mode.
+ */
+export function getAuthJwtSecret(): string {
+  const secret = process.env.JWT_SECRET || process.env.AUTH_HMAC_SECRET;
+  const isTest = process.env.NODE_ENV === "test";
+
+  if (!isTest) {
+    if (!secret || secret.trim().length < 32) {
+      throw new Error("FATAL_SECURITY_ERROR: JWT_SECRET or AUTH_HMAC_SECRET must contain at least 32 non-whitespace characters.");
+    }
+    if (secret === EXPOSED_LEAKED_JWT_SECRET) {
+      throw new Error("FATAL_SECURITY_ERROR: Known leaked default JWT_SECRET is strictly forbidden. Configure a secure, high-entropy secret.");
+    }
+    return secret;
+  }
+
+  // Safe isolated test environment fallback
+  return secret || "fixhub-test-environment-jwt-secret-key-32chars";
+}
 
 export class AuthService {
-  private otpStore = new Map<string, { otp: string; expiresAt: number; role?: UserRole }>();
+  private otpStore = new Map<string, { otp: string; expiresAt: number }>();
 
   constructor(private repo: Repository = defaultRepository) {}
 
   /**
    * Generates a 6-digit OTP and stores it with a 5-minute expiry.
+   * Enforces FR-1:
+   * - Roles are NEVER client-selected (role argument removed from request).
+   * - No fixed or returned codes outside test mode.
+   * - Truthful delivery messages: no false claims of SMS/WhatsApp transmission when mock/unconfigured.
    */
-  async requestOtp(phone: string, role: UserRole = "customer"): Promise<{ success: boolean; message: string; testOtp?: string }> {
+  async requestOtp(phone: string): Promise<{ success: boolean; message: string; testOtp?: string }> {
     const formattedPhone = phone.trim();
-    if (!/^\+?[0-9]{10,13}$/.test(formattedPhone)) {
+    if (!/^\+?[0-9]{10,15}$/.test(formattedPhone)) {
       throw new Error("Invalid phone number format");
     }
 
-    // Deterministic OTP for test phone numbers, random 6-digit for others
-    const otp = formattedPhone.endsWith("0000") || process.env.NODE_ENV === "test" ? "123456" : crypto.randomInt(100000, 999999).toString();
+    const isTestMode = process.env.NODE_ENV === "test";
+
+    // In test mode: deterministic OTP for automated testing
+    // Outside test mode: cryptographically secure random 6-digit integer
+    const otp = isTestMode ? "123456" : crypto.randomInt(100000, 1000000).toString();
     const expiresAt = Date.now() + 5 * 60 * 1000;
 
-    this.otpStore.set(formattedPhone, { otp, expiresAt, role });
+    // Roles are NEVER stored from client requests
+    this.otpStore.set(formattedPhone, { otp, expiresAt });
 
     return {
       success: true,
-      message: "OTP sent successfully via SMS and WhatsApp.",
-      testOtp: process.env.NODE_ENV === "test" || formattedPhone.endsWith("0000") ? otp : undefined,
+      message: isTestMode
+        ? "OTP generated for test verification."
+        : "OTP generated. Verification code required.",
+      testOtp: isTestMode ? otp : undefined,
     };
   }
 
   /**
    * Verifies OTP and returns user + signed session token.
+   * Enforces FR-1:
+   * - If existing user, existing assigned role is loaded from authoritative store.
+   * - If new registration, role is unconditionally set to "customer".
+   * - Admin/merchant privilege escalation via client parameter is impossible.
    */
   async verifyOtp(phone: string, otp: string, userName?: string): Promise<{ user: User; token: string }> {
     const formattedPhone = phone.trim();
     const entry = this.otpStore.get(formattedPhone);
 
-    // Accept 123456 in test environment or check stored OTP
     const isTestMode = process.env.NODE_ENV === "test" && otp === "123456";
     if (!isTestMode) {
       if (!entry) {
@@ -64,12 +101,12 @@ export class AuthService {
     // Find or create user
     let user = this.repo.getUserByPhone(formattedPhone);
     if (!user) {
-      const role = entry?.role || "customer";
+      // FR-1: New sign-ups are ALWAYS customer role. No client role self-selection.
       user = {
         id: `usr-${crypto.randomUUID()}`,
         phone: formattedPhone,
-        name: userName || (role === "merchant" ? "New Service Merchant" : "FixHub Customer"),
-        role,
+        name: userName || "FixHub Customer",
+        role: "customer",
         locale: "en",
         isActive: true,
         createdAt: new Date().toISOString(),
@@ -85,6 +122,7 @@ export class AuthService {
    * Generates a signed HMAC SHA-256 token.
    */
   generateToken(user: User, expiresInSeconds: number = 86400 * 7): string {
+    const secret = getAuthJwtSecret();
     const header = Buffer.from(JSON.stringify({ alg: "HS256", typ: "JWT" })).toString("base64url");
     const payload: TokenPayload = {
       userId: user.id,
@@ -94,7 +132,7 @@ export class AuthService {
     };
     const encodedPayload = Buffer.from(JSON.stringify(payload)).toString("base64url");
     const signature = crypto
-      .createHmac("sha256", JWT_SECRET)
+      .createHmac("sha256", secret)
       .update(`${header}.${encodedPayload}`)
       .digest("base64url");
     return `${header}.${encodedPayload}.${signature}`;
@@ -105,11 +143,12 @@ export class AuthService {
    */
   verifyToken(token: string): TokenPayload | null {
     try {
+      const secret = getAuthJwtSecret();
       const parts = token.split(".");
       if (parts.length !== 3) return null;
       const [header, payload, signature] = parts;
       const expectedSig = crypto
-        .createHmac("sha256", JWT_SECRET)
+        .createHmac("sha256", secret)
         .update(`${header}.${payload}`)
         .digest("base64url");
 

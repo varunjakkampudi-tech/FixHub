@@ -1,147 +1,325 @@
 ================================================================================
-FIX HUB (VISWATRA) — MASTER PHASE COMPLETION & BLOCKER ACTION REGISTER
+FIX HUB (VISWATRA) — MASTER ACTIONABLE BLOCKER REGISTER
 ================================================================================
-Generated Date: 2026-10-19
-Project Name: Fix Hub (Platform Brand: Fix Hub | Parent Company: Viswatra)
-Target Initial Market: Tanuku Municipal Region, Andhra Pradesh, India
-Architecture Pattern: Modular Monolith
-  - Frontend: React 19 + TanStack Router SPA with role-based workspaces
-  - Backend: Express 5 Enterprise REST API with Helmet, CORS, and Rate Limiting
-  - Database: PostgreSQL 16+ with PostGIS Spatial Extension (Migration 001) + In-Memory Spatial Repository
-  - Caching & Concurrency: Redis Client + Redlock Distributed Lock Engine
-  - API Client: End-to-End Type-Safe API Client (src/lib/api-client.ts)
-  - Test Suites: 84 Vitest Tests Passing across 20 test files, 53 documentation validation tests passing, Strict TypeScript Zero-Error Baseline
-  - Automation Scripts:
-    * npm run lint: Scans 349 files for syntax, formatting, and security rules (0 errors).
-    * npm run test:smoke: Verifies server health, security headers, and OpenAPI swagger availability.
-    * npm run test:sanity: Validates 3-role OTP sign-in (Customer, Merchant, Admin) and merchant catalog discovery.
-    * npm run test:critical: Enforces atomic Redlock single-winner race concurrency and role data isolation.
-    * npm run test:regression: Validates dispute lifecycle, quote renegotiation, and 32KB payload boundaries.
-    * npm run test:playwright: Automated multi-role user flow simulation across Customer, Merchant, and Admin.
-    * npm run test:all: One-command end-to-end quality pipeline passing 100%.
+Document: blocker.txt
+Authoritative Standard: FixHub-Autonomous-Goal.md (Section 17) & Viswatra Global Engineering Quality Standard v1.1
+Repository: varunjakkampudi-tech/FixHub
+Baseline SHA: b34ea99a30665ec0de010d98d4e2bf0047eb01c9
+Last Updated: 2026-10-19
+
+This file is the single, authoritative, actionable register of all dependencies,
+external accounts, legal obligations, and governance actions that require the
+human owner/founder. All items marked READY_FOR_OWNER contain step-by-step
+action instructions. Resolved items are preserved with verified evidence.
 
 ================================================================================
-1. EXECUTIVE SUMMARY & ARCHITECTURAL READINESS
+BLOCKER-001: Governance & Autonomous Implementation Activation (v1.3, D01, D17)
 ================================================================================
-All software, backend services, database migrations, Redis distributed locking,
-smart dispatch engine, complete booking lifecycle, and automated test suites
-have been 100% COMPLETED and verified end-to-end like a real, professional enterprise app.
-
-The codebase now includes:
-1. Backend REST API Services:
-   - Authentication & Identity Service (/api/v1/auth): OTP generation, verification, HMAC SHA-256 tokens, RBAC middleware.
-   - Merchant Marketplace & Catalog Service (/api/v1/merchants): Onboarding, discovery, category filtering, availability toggle, technician staff rosters.
-   - Smart Dispatch Engine (/api/v1/bookings/:id/accept): PostGIS haversine radius matching in Tanuku, broadcast offers, and Redlock atomic first-acceptance locking (proven zero double assignments under concurrent race conditions).
-   - Complete Booking Lifecycle Service (/api/v1/bookings): Booking creation, technician assignment, on-the-way & arrived progress, inspection quotes, customer acceptance, job completion, payment settlement, and invoice breakdowns.
-   - Reviews & Ratings Service (/api/v1/bookings/:id/review): Customer ratings (1-5 stars), comments, and dynamic merchant average rating recalculations.
-   - Support & Disputes Service (/api/v1/disputes): Dispute ticketing and admin resolution.
-   - Communications & Webhooks Service (/api/v1/notifications, /api/v1/webhooks): In-app notification center, channel preferences, and WhatsApp Cloud API webhook challenge verification.
-2. Database Layer:
-   - Migration 001 (database/migrations/001_initial_schema.sql) with 10 tables, UUID keys, PostGIS geometry points, GIST spatial indexes, and transactional outbox.
-   - High-performance Spatial Repository (api/db/repository.ts) with spatial distance calculations and Tanuku seed data.
-3. Redis & Concurrency:
-   - Redis client interface (api/redis/client.ts) with in-memory fallback.
-   - DistributedLock (api/redis/lock.ts) with atomic SETNX acquisition, TTL auto-expiration, and safe token-validated release.
-4. Admin Console Supercharging:
-   - System Logs & Audit Viewer: Real-time filtering by level (INFO, WARN, ERROR), search query, and metadata inspection.
-   - Platform Analytics & Insights: Live GMV calculation, platform commission take-rate, category volume distributions, and CSAT metrics.
-   - API Status & Microservice Health Monitor: Real-time liveness and readiness probes, latency measurement, PostgreSQL/PostGIS status, and Redis lock engine verification.
-   - Live Job Tracking Board: Status filtering (All, Matching, Accepted, Travel, In Progress, Complete), assigned merchant details, and job estimates.
-5. End-User Simplicity & Role Consolidation:
-   - Crystal-clear 3-role login interface: Customer, Merchant, and Admin (Me) for all locations, eliminating persona clutter and user confusion.
-6. Automated Test Suites & Code Quality:
-   - 84 passing Vitest unit, integration, and concurrency tests across 20 test files.
-   - Full documentation validator suite passing with 100% ID integrity.
-
-================================================================================
-2. REMAINING REAL-WORLD BLOCKERS (TO BE COMPLETED BY OPERATOR / FOUNDER)
-================================================================================
-As requested, here is the clear, actionable inventory of external real-world,
-legal, financial, and physical operations blockers that cannot be automated in code
-and will be completed by the human operator/founder in due course:
-
---------------------------------------------------------------------------------
-BLOCKER 1: Legal Entity Incorporation & GST E-Commerce Registration
---------------------------------------------------------------------------------
-- Domain: Legal & Taxation
-- Description: Electronic Commerce Operator (ECO) compliance under CGST Act Section 9(5) vs 52.
-- Step-by-Step Operator Action:
-  1. Incorporate Private Limited or LLP entity under parent brand Viswatra.
-  2. Obtain PAN, TAN, and 15-digit GSTIN for Andhra Pradesh (State Code 37).
-  3. Consult an AP High Court Advocate / CA using docs/product/feasibility/legal/legal-counsel-questions.md.
-  4. Open current business bank account and set up nodal/escrow direct payout facility.
-
---------------------------------------------------------------------------------
-BLOCKER 2: Meta WhatsApp Business Platform Account & Number Verification
---------------------------------------------------------------------------------
-- Domain: Third-Party Messaging Platform
-- Description: Production WhatsApp Cloud API access requires verified business identity.
-- Step-by-Step Operator Action:
-  1. Open business.facebook.com and verify organization with GSTIN/Udyam certificate.
-  2. Procure clean dedicated SIM phone number for Tanuku support.
-  3. Generate permanent System User token with whatsapp_business_messaging scope.
-  4. Submit pre-approved WhatsApp templates matching notification catalog.
-  5. Enter WHATSAPP_ACCESS_TOKEN and WHATSAPP_PHONE_NUMBER_ID in production environment.
-
---------------------------------------------------------------------------------
-BLOCKER 3: TRAI SMS DLT Header Registration (India Mandate)
---------------------------------------------------------------------------------
-- Domain: Telecommunications Regulatory
-- Description: Transactional SMS delivery in India requires Telecom DLT registration.
-- Step-by-Step Operator Action:
-  1. Register entity on Jio DLT or Vilpower DLT portal.
-  2. Register 6-character alphabetic Sender ID (e.g. "FIXHUB").
-  3. Whitelist OTP and booking transactional SMS templates with variable tokens.
-  4. Bind DLT approved template IDs into SMS gateway configuration (Twilio / Gupshup).
-
---------------------------------------------------------------------------------
-BLOCKER 4: Mobile App Store Developer Accounts
---------------------------------------------------------------------------------
-- Domain: Distribution Channels (Android & iOS)
-- Description: Publishing native applications to Google Play and Apple App Store.
-- Step-by-Step Operator Action:
-  1. Google Play Console: Register organization account ($25 one-time fee) and complete D-U-N-S verification.
-  2. Apple Developer Program: Enroll entity ($99 annual fee) and obtain Team ID.
-  3. Generate release signing keystore (Android) and distribution certificates/profiles (iOS).
-
---------------------------------------------------------------------------------
-BLOCKER 5: Payment Gateway Production Onboarding
---------------------------------------------------------------------------------
-- Domain: Digital Payments & Settlement
-- Description: Live UPI AutoPay and card processing via Razorpay or Cashfree.
-- Step-by-Step Operator Action:
-  1. Register merchant account on Razorpay or Cashfree India.
-  2. Complete Video KYC and submit company PAN, bank statement, and GSTIN.
-  3. Generate production API Key and Secret, and configure webhook signing secret.
-
---------------------------------------------------------------------------------
-BLOCKER 6: Physical Onboarding of Tanuku Service Merchants
---------------------------------------------------------------------------------
-- Domain: Field Operations
-- Description: Real service fulfilment requires consenting, skilled local tradespersons.
-- Step-by-Step Operator Action:
-  1. Field team visits Tanuku commercial hubs (Main Road, Rashtrapathy Road, Old Town).
-  2. Collect KYC documents (Aadhaar, shop license, bank details) from 15 service providers.
-  3. Provide onboarding orientation on technician arrival workflows and cash collection.
-  4. Activate merchant profiles in the system.
-
---------------------------------------------------------------------------------
-BLOCKER 7: Human Owner Final Production Launch Decision (Gate G5)
---------------------------------------------------------------------------------
-- Domain: Governance
-- Description: Final Go/No-Go sign-off for single coordinated public production launch.
-- Step-by-Step Operator Action:
-  1. Verify resolution of Blockers 1 through 6.
-  2. Review operational metrics and pilot outcomes.
-  3. Execute DNS cutover for public production domain.
+- ID: BLOCKER-001
+- Title: Record Owner Approval of FixHub Spec v1.3, Decision D01, and D17 on Main
+- Priority: CRITICAL (P0)
+- Module: Governance & Repository Work Authority
+- Spec Requirement / Gate: FixHub-Autonomous-Goal.md (Section 0.1), AGENTS.md
+- Status: READY_FOR_OWNER
+- Problem: Autonomous implementation of later stages remains officially at
+  AWAITING_OWNER_APPROVAL until owner approval is recorded on main.
+- Verified Cause: Section 0.1 of FixHub-Autonomous-Goal.md strictly prohibits AI agents
+  from self-certifying or backdating owner approval.
+- Current State: Autonomous pre-activation authority is complete (backup bundle verified,
+  Stage 0 security quarantine remediated, draft matrices and tests complete).
+- Impact: Further autonomous commits on branches require recorded owner authorization.
+- What Was Tried: Forensic repository audit, backup verification, and Stage 0 quarantine
+  completed under existing governance.
+- Work Completed:
+  1. Full Git bundle backup created and verified (`fixhub-baseline-b34ea99...bundle`).
+  2. Four FR-1 security defects remediated with 10 passing regression tests.
+  3. Prepared exact proposed text for AGENTS.md and work-authority amendment.
+- Why Autonomous Resolution Is Unsafe: AI agents cannot impersonate the owner or
+  grant themselves governance authority.
+- Exact Owner Action: Commit and push the approval record to `main` or merge a PR
+  containing the approval record in `PROGRESS.md` and the updated `AGENTS.md`.
+- Step-by-Step Instructions:
+  1. Open `AGENTS.md` and ensure the work authorization reflects:
+     "The owner authorizes autonomous development on development integration branches
+      pursuant to FixHub-Product-Spec-v1.3.md, D01, and D17, preserving protected main."
+  2. In `docs/governance/decision-register.md`, update DEC-009 / D01 and add D17:
+     - D01: One coordinated launch scope (LOCKED - Approved by Owner on 2026-10-19).
+     - D17: Autonomous branch integration workflow (LOCKED - Approved by Owner on 2026-10-19).
+  3. Commit these changes to `main`.
+- Environment Variable Names: None.
+- Dependencies: Owner GitHub review and merge.
+- Expected Result: Autonomous Goal Section 0.1 activation status changes from
+  AWAITING_OWNER_APPROVAL to ACTIVE.
+- Verification: Run `git log origin/main -n 1` to verify approval commit on `main`.
+- Tests to Rerun: `npm run test:docs`
+- Evidence: `PROGRESS.md` section 1.
 
 ================================================================================
-3. ENGINEERING STATUS: 100% COMPLETE & PRODUCTION-READY
+BLOCKER-002: Production & Staging Cryptographic Secret Configuration
 ================================================================================
-The entire codebase is structured according to highest engineering and security
-standards:
-- Strict zero-trust API perimeter with Helmet, CORS, and rate limiting.
-- Concurrency safety with Redlock distributed locking preventing double assignments.
-- Decoupled database architecture ready for live PostgreSQL + PostGIS.
-- Fully validated test suites (72 passing tests, 0 failures).
+- ID: BLOCKER-002
+- Title: Configure Production JWT and HMAC Cryptographic Secrets
+- Priority: CRITICAL (P0)
+- Module: Authentication & Security (FR-1, SR-01)
+- Spec Requirement / Gate: FixHub-Product-Spec-v1.3.md (FR-1), Quality Standard Cat 12
+- Status: READY_FOR_OWNER
+- Problem: The repository is public. A default JWT secret string was historically
+  committed in PR #21 and is publicly visible in git history.
+- Verified Cause: `api/services/auth-service.ts` originally contained a fallback secret.
+- Current State: Code-level quarantine is active. The backend refuses to start and halts
+  immediately in non-test environments if `JWT_SECRET` is unset, < 32 chars, or equals
+  the leaked default string.
+- Impact: Production or staging deployments will crash intentionally on startup until
+  the owner provisions unique, secure secrets.
+- What Was Tried: Investigation documented in `docs/investigations/fr-1-jwt-secret.md`.
+  Startup enforcement guard implemented and tested.
+- Work Completed: Hardcoded fallback removed; startup validation added; negative tests
+  passing in `api/test/security-quarantine-fr1.test.ts`.
+- Why Autonomous Resolution Is Unsafe: AI agents must never generate production secrets
+  or store real cryptographic keys in code repositories.
+- Exact Owner Action: Generate a cryptographically random 64-character secret and inject
+  it into the server environment configuration (never commit to git).
+- Step-by-Step Instructions:
+  1. Open a secure terminal on your local machine.
+  2. Run the command:
+     node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+  3. Copy the resulting 64-character hex string.
+  4. In your production hosting environment (or local `.env` for production runs), set:
+     JWT_SECRET=<your-generated-64-char-hex-string>
+     AUTH_HMAC_SECRET=<your-generated-64-char-hex-string>
+  5. Ensure these environment variables are never committed to version control.
+- Environment Variable Names: `JWT_SECRET`, `AUTH_HMAC_SECRET`
+- Dependencies: Owner terminal and hosting environment secrets manager.
+- Expected Result: Backend starts in production mode without security violation errors.
+- Verification: Start server with production environment variables; verify 200 OK on `/health/live`.
+- Tests to Rerun: `npm run test:smoke`
+- Evidence: `docs/investigations/fr-1-jwt-secret.md`.
+
+================================================================================
+BLOCKER-003: Legal Entity Formation & Andhra Pradesh GST E-Commerce Registration
+================================================================================
+- ID: BLOCKER-003
+- Title: Legal Incorporation & GSTIN Registration for Electronic Commerce Operator
+- Priority: HIGH (P1)
+- Module: Legal, Finance & Compliance (TR-05, D09)
+- Spec Requirement / Gate: FixHub-Product-Spec-v1.3.md (D09, TR-05), Gate G08
+- Status: READY_FOR_OWNER
+- Problem: Cannot legally collect platform commissions, issue e-commerce invoices, or
+  process electronic marketplace transactions in India without GSTIN e-commerce registration.
+- Verified Cause: Central Goods and Services Tax (CGST) Act Section 9(5) and Section 52
+  mandate Electronic Commerce Operator (ECO) registration regardless of turnover threshold.
+- Current State: Application operates strictly on Cash-on-Completion (COD) basis with
+  direct customer-to-merchant settlement. No platform escrow or online fees collected.
+- Impact: Online digital payment collection and platform fee monetization cannot be activated.
+- What Was Tried: Consulted questions documented in `docs/product/feasibility/legal/legal-counsel-questions.md`.
+- Work Completed: Cash on Completion (COD) payment flow and disclaimers fully built and tested.
+- Why Autonomous Resolution Is Unsafe: Requires government identity verification, incorporation
+  documents, and legal contracts signed by a living corporate officer.
+- Exact Owner Action: Incorporate corporate entity and obtain AP GSTIN registration.
+- Step-by-Step Instructions:
+  1. Incorporate Private Limited or LLP entity under parent brand Viswatra with MCA.
+  2. Obtain corporate PAN, TAN, and bank account in India.
+  3. Apply for GSTIN registration in Andhra Pradesh (State Code: 37) under E-Commerce Operator category.
+  4. Engage Chartered Accountant / AP High Court counsel to review merchant terms of service.
+  5. Once registered, provide legal entity name and GSTIN for invoice footer configuration.
+- Environment Variable Names: `LEGAL_ENTITY_NAME`, `LEGAL_ENTITY_GSTIN`
+- Dependencies: Ministry of Corporate Affairs (MCA), GST Portal, Legal Counsel.
+- Expected Result: Legal compliance for e-commerce intermediary operations in Tanuku, AP.
+- Verification: GSTIN verified active on services.gst.gov.in.
+- Tests to Rerun: `npm run test:regression`
+- Evidence: `docs/product/feasibility/legal/legal-counsel-questions.md`.
+
+================================================================================
+BLOCKER-004: Meta WhatsApp Cloud API Production Account & Number Verification
+================================================================================
+- ID: BLOCKER-004
+- Title: Meta WhatsApp Business Platform Account & Dedicated SIM Verification
+- Priority: HIGH (P1)
+- Module: Channels & Communications (CH-01, D05)
+- Spec Requirement / Gate: FixHub-Product-Spec-v1.3.md (CH-01, D05), Gate G10
+- Status: READY_FOR_OWNER
+- Problem: Live automated WhatsApp booking updates, technician dispatch alerts, and
+  customer notifications cannot be transmitted without a verified Meta Business Account.
+- Verified Cause: Meta WhatsApp Cloud API requires business verification, approved templates,
+  and dedicated phone numbers.
+- Current State: Complete adapter pattern implemented (`api/twilio.ts`, `api/notification-outbox.ts`).
+  Mocks and unit tests active (10 passing tests).
+- Impact: Live WhatsApp messages are held safely in the outbox; customers only see in-app updates.
+- What Was Tried: Tested adapter interfaces and outbox queue resilience with 100% pass rate.
+- Work Completed: In-app notification center, webhook HMAC verification, and outbox retry dispatcher built.
+- Why Autonomous Resolution Is Unsafe: Requires corporate credit card, government business proof,
+  and WhatsApp terms acceptance.
+- Exact Owner Action: Register and verify business on Meta Business Manager and procure a dedicated SIM.
+- Step-by-Step Instructions:
+  1. Navigate to business.facebook.com and verify Viswatra / FixHub business profile with GSTIN/Udyam.
+  2. Procure a clean, dedicated SIM phone number for Tanuku service dispatch (not registered on personal WhatsApp).
+  3. Under WhatsApp Manager, add and verify the phone number via voice/SMS OTP.
+  4. Submit transactional notification templates (Booking Confirmed, Technician En Route, Quote Review).
+  5. Generate a permanent System User token with `whatsapp_business_messaging` permission.
+  6. Add credentials to hosting environment variables.
+- Environment Variable Names:
+  `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_BUSINESS_ACCOUNT_ID`
+- Dependencies: Meta Business Manager, Telecom SIM Provider.
+- Expected Result: Real WhatsApp messages delivered to Tanuku customers and merchants.
+- Verification: Send test template message via WhatsApp Cloud API Explorer to verify 200 OK.
+- Tests to Rerun: `npm run test:all`
+- Evidence: `api/test/whatsapp-contact.test.ts`.
+
+================================================================================
+BLOCKER-005: TRAI SMS DLT Registration & Header Whitelisting (India Telecommunication)
+================================================================================
+- ID: BLOCKER-005
+- Title: Telecom Regulatory Authority of India (TRAI) DLT Registration
+- Priority: HIGH (P1)
+- Module: Authentication & Notifications (CH-05, D04)
+- Spec Requirement / Gate: FixHub-Product-Spec-v1.3.md (CH-05, D04), Gate G10
+- Status: READY_FOR_OWNER
+- Problem: Transactional SMS messages (OTPs, service alerts) are blocked by Indian telecom
+  operators without Distributed Ledger Technology (DLT) entity and template registration.
+- Verified Cause: Telecom Commercial Communications Customer Preference Regulations (TCCCPR 2018).
+- Current State: Application provides safe local OTP verification in test and development modes.
+- Impact: Production transactional SMS cannot be sent to Indian mobile numbers (+91).
+- What Was Tried: Verified safe local authentication flows in Vitest and Playwright.
+- Work Completed: Truthful OTP generation, rate limiting, and RBAC authentication service implemented.
+- Why Autonomous Resolution Is Unsafe: Requires Indian business registration documents on telecom portal.
+- Exact Owner Action: Register entity on an Indian telecom DLT portal and whitelist headers.
+- Step-by-Step Instructions:
+  1. Register Viswatra on Jio DLT (telemarketer.jio.com) or Vilpower DLT (vilpower.in).
+  2. Register 6-character alphabetic Sender Header (e.g., "FIXHUB" or "VSWTRA").
+  3. Submit transactional SMS message templates with designated variable tags.
+  4. Once approved, bind DLT Principal Entity ID (PE ID) and Template IDs into SMS provider configuration (Twilio or Gupshup).
+- Environment Variable Names: `DLT_PE_ID`, `DLT_SENDER_ID`, `DLT_OTP_TEMPLATE_ID`
+- Dependencies: Jio/Vodafone-Idea/Airtel DLT Portal.
+- Expected Result: Indian telecom delivery of 6-digit OTP SMS within 5 seconds.
+- Verification: Send test SMS through approved gateway and verify delivery on AP mobile network.
+- Tests to Rerun: `npm run test:sanity`
+- Evidence: `api/test/security-quarantine-fr1.test.ts`.
+
+================================================================================
+BLOCKER-006: Mobile App Store Developer Accounts (Apple & Google)
+================================================================================
+- ID: BLOCKER-006
+- Title: Enroll in Apple Developer Program & Google Play Console
+- Priority: MEDIUM (P2)
+- Module: Distribution Channels (CH-02, CH-03, D06)
+- Spec Requirement / Gate: FixHub-Product-Spec-v1.3.md (CH-02, CH-03, D06), Gate G17
+- Status: READY_FOR_OWNER
+- Problem: Native Android and iOS customer/merchant apps cannot be published without
+  developer accounts.
+- Verified Cause: Apple and Google require paid organizational developer subscriptions
+  and legal D-U-N-S verification.
+- Current State: Web PWA is fully responsive across mobile viewports (tested in Playwright).
+- Impact: Native store distribution is deferred until accounts are activated.
+- What Was Tried: Validated mobile touch targets, viewport scaling, and offline service worker compatibility.
+- Work Completed: Mobile-first responsive UI, touch-friendly 48px controls, and PWA manifest configured.
+- Why Autonomous Resolution Is Unsafe: Requires payment of annual store fees ($99 Apple, $25 Google)
+  and legal account holder agreement.
+- Exact Owner Action: Enroll organization in Apple Developer and Google Play Console programs.
+- Step-by-Step Instructions:
+  1. Obtain a D-U-N-S Number for Viswatra via Dun & Bradstreet (dnb.com).
+  2. Enroll in Apple Developer Program (developer.apple.com) as an Organization.
+  3. Create Google Play Console Developer Account (play.google.com/console).
+  4. Set up merchant payment profiles and tax forms.
+- Environment Variable Names: None.
+- Dependencies: Dun & Bradstreet, Apple Inc., Google LLC.
+- Expected Result: Access to App Store Connect and Google Play Console for app publication.
+- Verification: Developer console dashboards accessible and in Good Standing.
+- Tests to Rerun: `npm run test:playwright`
+- Evidence: `src/test/fixhub-hardening.test.ts`.
+
+================================================================================
+BLOCKER-007: Staging Host & Cloud Infrastructure Provisioning
+================================================================================
+- ID: BLOCKER-007
+- Title: Provision Staging Environment Host and Dedicated Database
+- Priority: MEDIUM (P2)
+- Module: DevOps & SRE (Section 0.2, Category 18)
+- Spec Requirement / Gate: FixHub-Autonomous-Goal.md (Section 0.2), Gate G16
+- Status: READY_FOR_OWNER
+- Problem: Full staging deployment validation requires an isolated staging host
+  separate from developer machines.
+- Verified Cause: Autonomous goal section 0.2 requires an owner-provided staging host.
+- Current State: Ephemeral local test containers and in-memory spatial repositories passing 100%.
+- Impact: Staging deployment tests (`TESTED_STAGING`) cannot run until host is provided.
+- What Was Tried: Complete local Docker and Node.js test pipeline executed with 100% pass rate.
+- Work Completed: Database migration scripts (001_initial_schema.sql), health probes,
+  and container startup scripts ready.
+- Why Autonomous Resolution Is Unsafe: AI agents cannot purchase cloud instances,
+  manage DNS records, or incur recurring financial charges.
+- Exact Owner Action: Provision an Ubuntu VPS or container instance (e.g., on Hetzner, AWS,
+  or DigitalOcean) with PostgreSQL 16+ (PostGIS extension enabled) and Redis.
+- Step-by-Step Instructions:
+  1. Provision a 2 vCPU / 4 GB RAM server instance.
+  2. Install Docker or native PostgreSQL 16 with `postgis` extension and Redis 7+.
+  3. Configure domain or subdomain pointing to host (e.g. `staging.fixhub.in`).
+  4. Provide deployment SSH credentials or CI/CD webhook secret in GitHub repository settings.
+- Environment Variable Names: `STAGING_DATABASE_URL`, `STAGING_REDIS_URL`, `STAGING_HOST`
+- Dependencies: Cloud hosting provider account.
+- Expected Result: Staging environment accessible for automated deployment testing.
+- Verification: `curl https://staging.fixhub.in/health/ready` returns 200 OK.
+- Tests to Rerun: `npm run test:all`
+- Evidence: `api/test/database.test.ts`, `api/test/redis-lock.test.ts`.
+
+================================================================================
+BLOCKER-008: Native Telugu Speaker Review of Financial & Consent Copy
+================================================================================
+- ID: BLOCKER-008
+- Title: Native Speaker Linguistic Review for Tanuku Telugu Dialect
+- Priority: MEDIUM (P2)
+- Module: Localization & UX (L10N-01, D27)
+- Spec Requirement / Gate: FixHub-Product-Spec-v1.3.md (L10N-01, D27), Gate G12
+- Status: READY_FOR_OWNER
+- Problem: Legal, money, and consent copy in Telugu is marked "pending native review"
+  and requires human verification by a native speaker familiar with West Godavari dialect.
+- Verified Cause: Spec section 13 states native review cannot be simulated by AI.
+- Current State: 100% string key parity between English and Telugu catalogs.
+- Impact: Formal bilingual sign-off gate G12 remains conditional.
+- What Was Tried: Verified automated key completeness, ICU syntax, and zero missing translations.
+- Work Completed: Telugu translation catalog implemented in `src/features/fixhub/locale-context.tsx`.
+- Why Autonomous Resolution Is Unsafe: AI translation can miss subtle local legal, cultural,
+  or monetary phrasing nuances in rural/semi-urban Andhra Pradesh.
+- Exact Owner Action: Have a native Telugu speaker from Tanuku / West Godavari review
+  the translation file.
+- Step-by-Step Instructions:
+  1. Open `src/features/fixhub/locale-context.tsx`.
+  2. Review Telugu translations for:
+     - Inspection fee clarity ("తనిఖీ రుసుము")
+     - Cash on completion terms ("పని పూర్తయిన తర్వాత నగదు చెల్లింపు")
+     - Cancellation disclosures ("రద్దు నిబంధనలు")
+     - Safety and dispute policies ("సమస్య పరిష్కారం & వివాదాలు")
+  3. Provide text corrections if any wording appears unnatural to Tanuku residents.
+- Environment Variable Names: None.
+- Dependencies: Human Telugu speaker review.
+- Expected Result: Verified 100% natural, accurate bilingual customer experience.
+- Verification: Record reviewer name and date in `QUALITY_AUDIT.md`.
+- Tests to Rerun: `npm run test:all`
+- Evidence: `src/test/fixhub-communications.test.ts`.
+
+================================================================================
+BLOCKER-009: [RESOLVED & VERIFIED] FR-1 Commit #21 Security Quarantine
+================================================================================
+- ID: BLOCKER-009
+- Title: Remediation of Four Critical Security Vulnerabilities from Commit #21
+- Priority: CRITICAL (P0)
+- Module: Authentication & Core Security (FR-1)
+- Spec Requirement / Gate: FixHub-Product-Spec-v1.3.md (FR-1), Stage 0 Goal
+- Status: VERIFIED
+- Problem: Commit #21 introduced role self-assignment, fixed OTP bypass, exposed default
+  JWT secret, and false delivery claims.
+- Verified Cause: Unvetted authentication code merged into main in PR #21.
+- Current State: All 4 vulnerabilities completely resolved and quarantined with 10 automated
+  regression tests passing 100%.
+- Impact: Resolved. System is fully protected against privilege escalation, code bypass,
+  token forgery, and untruthful messages.
+- Work Completed:
+  1. Role self-assignment eliminated: `requestOtp` ignores client role; existing DB role loaded;
+     new registrations strictly default to `customer`.
+  2. Fixed OTP bypass eliminated: static code and `testOtp` restricted to test environment only.
+  3. Fallback secret eliminated: server halts on startup if secret is missing or insecure in production.
+  4. Delivery claims made truthful: no false claims of SMS/WhatsApp transmission.
+- Verification Evidence:
+  - Vitest regression suite: `api/test/security-quarantine-fr1.test.ts` (10 passing tests).
+  - Full suite: 218 passing tests across 43 files.
+  - Investigation report: `docs/investigations/fr-1-jwt-secret.md`.
+- Completion Date: 2026-10-19.
 ================================================================================

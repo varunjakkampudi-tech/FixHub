@@ -199,10 +199,10 @@ export class Repository {
   }
 
   private seedInitialData(): void {
-    // 1. Admin User
+    // 1. Admin Users (Operational + Test)
     const adminUser: User = {
       id: "usr-admin-001",
-      phone: "+919900000001",
+      phone: "+919999999999",
       name: "FixHub Platform Operations",
       email: "ops@fixhub.in",
       role: "admin",
@@ -211,6 +211,18 @@ export class Repository {
       createdAt: new Date().toISOString(),
     };
     this.users.set(adminUser.id, adminUser);
+
+    const adminUserAlt: User = {
+      id: "usr-admin-002",
+      phone: "+919900000001",
+      name: "FixHub Operations Lead",
+      email: "lead.ops@fixhub.in",
+      role: "admin",
+      locale: "en",
+      isActive: true,
+      createdAt: new Date().toISOString(),
+    };
+    this.users.set(adminUserAlt.id, adminUserAlt);
 
     // 2. Customer User
     const customerUser: User = {
@@ -225,10 +237,10 @@ export class Repository {
     };
     this.users.set(customerUser.id, customerUser);
 
-    // 3. Merchants in Tanuku
+    // 3. Merchants in Tanuku (Test + Operational)
     const merchantUser1: User = {
       id: "usr-merch-001",
-      phone: "+919848011223",
+      phone: "+919876543211",
       name: "Suresh Electrical Works",
       email: "suresh.electric@example.in",
       role: "merchant",
@@ -237,6 +249,18 @@ export class Repository {
       createdAt: new Date().toISOString(),
     };
     this.users.set(merchantUser1.id, merchantUser1);
+
+    const merchantUser1Alt: User = {
+      id: "usr-merch-001-alt",
+      phone: "+919848011223",
+      name: "Suresh Electrical Works (Direct)",
+      email: "suresh.direct@example.in",
+      role: "merchant",
+      locale: "te",
+      isActive: true,
+      createdAt: new Date().toISOString(),
+    };
+    this.users.set(merchantUser1Alt.id, merchantUser1Alt);
 
     const merchant1: Merchant = {
       id: "mch-001",

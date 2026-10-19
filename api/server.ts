@@ -11,6 +11,10 @@ import { applyMigrations } from "./migrations";
 import { createTwilioBookingNotificationSender, createTwilioWhatsAppSender, twilioConfigFromEnvironment } from "./twilio";
 import { whatsappContactEncryptionKeyFromEnvironment } from "./whatsapp-contact";
 import { createNotificationOutboxDispatcher } from "./notification-outbox";
+import { getAuthJwtSecret } from "./services/auth-service";
+
+// FR-1: Validate JWT secret on startup; halts process if invalid or leaked default in non-test mode
+getAuthJwtSecret();
 
 const port = z.coerce.number().int().min(1).max(65535).safeParse(process.env.API_PORT ?? "4000");
 if (!port.success) throw new Error("API_PORT must be an integer between 1 and 65535");
