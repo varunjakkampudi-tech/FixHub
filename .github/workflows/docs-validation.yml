@@ -78,6 +78,9 @@ jobs:
       - name: Full Application & Microservice Unit Suites
         run: npm test
 
+      - name: Install Playwright Browsers & System Dependencies
+        run: npx playwright install --with-deps chromium
+
       - name: Headless Playwright Multi-Role Simulation (CR-01)
         run: npm run test:playwright
 
