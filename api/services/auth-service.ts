@@ -35,16 +35,14 @@ export function getAuthJwtSecret(): string {
 }
 
 export class AuthService {
-  private otpStore = new Map<string, { otp: string; expiresAt: number }>();
-
   constructor(private repo: Repository = defaultRepository) {}
 
   /**
-   * Generates a 6-digit OTP and stores it with a 5-minute expiry.
+   * Generates a 6-digit OTP and stores it in the authoritative repository challenge store with 5-minute expiry.
    * Enforces FR-1:
    * - Roles are NEVER client-selected (role argument removed from request).
    * - No fixed or returned codes outside test mode.
-   * - Truthful delivery messages: no false claims of SMS/WhatsApp transmission when mock/unconfigured.
+   * - Truthful delivery messages: dispatches to persistent outbox with full event lineage.
    */
   async requestOtp(phone: string): Promise<{ success: boolean; message: string; testOtp?: string }> {
     const formattedPhone = phone.trim();
@@ -58,15 +56,40 @@ export class AuthService {
     // Outside test mode: cryptographically secure random 6-digit integer
     const otp = isTestMode ? "123456" : crypto.randomInt(100000, 1000000).toString();
     const expiresAt = Date.now() + 5 * 60 * 1000;
+    const challengeId = `otp-${crypto.randomUUID()}`;
 
-    // Roles are NEVER stored from client requests
-    this.otpStore.set(formattedPhone, { otp, expiresAt });
+    // Store in canonical repository challenge store
+    this.repo.otpChallenges.set(formattedPhone, {
+      id: challengeId,
+      phone: formattedPhone,
+      otp,
+      expiresAt,
+      attempts: 0,
+      channel: isTestMode ? "outbox_dev" : (process.env.SMS_DLT_KEY ? "sms" : "outbox_dev"),
+      dispatchedAt: new Date().toISOString(),
+      consumed: false,
+    });
+
+    // Dispatches OTP to notification outbox for asynchronous transmission
+    this.repo.outboxEvents.set(challengeId, {
+      id: challengeId,
+      aggregateType: "auth",
+      aggregateId: formattedPhone,
+      eventType: "otp_dispatched",
+      payload: {
+        phone: formattedPhone,
+        channel: isTestMode ? "outbox_dev" : (process.env.SMS_DLT_KEY ? "sms" : "outbox_dev"),
+        expiresAt,
+      },
+      status: "pending",
+      createdAt: new Date().toISOString(),
+    });
 
     return {
       success: true,
       message: isTestMode
         ? "OTP generated for test verification."
-        : "OTP generated. Verification code required.",
+        : "Verification code required (dispatched to outbox).",
       testOtp: isTestMode ? otp : undefined,
     };
   }
@@ -80,23 +103,32 @@ export class AuthService {
    */
   async verifyOtp(phone: string, otp: string, userName?: string): Promise<{ user: User; token: string }> {
     const formattedPhone = phone.trim();
-    const entry = this.otpStore.get(formattedPhone);
+    const entry = this.repo.otpChallenges.get(formattedPhone);
 
     const isTestMode = process.env.NODE_ENV === "test" && otp === "123456";
     if (!isTestMode) {
       if (!entry) {
         throw new Error("No active OTP request found for this phone number");
       }
+      if (entry.consumed) {
+        throw new Error("OTP has already been used. Please request a new one.");
+      }
       if (Date.now() > entry.expiresAt) {
-        this.otpStore.delete(formattedPhone);
+        this.repo.otpChallenges.delete(formattedPhone);
         throw new Error("OTP has expired. Please request a new one.");
+      }
+      entry.attempts += 1;
+      if (entry.attempts > 5) {
+        this.repo.otpChallenges.delete(formattedPhone);
+        throw new Error("Too many failed attempts. Please request a new OTP.");
       }
       if (entry.otp !== otp.trim()) {
         throw new Error("Incorrect OTP entered. Please try again.");
       }
+      entry.consumed = true;
     }
 
-    this.otpStore.delete(formattedPhone);
+    this.repo.otpChallenges.delete(formattedPhone);
 
     // Find or create user
     let user = this.repo.getUserByPhone(formattedPhone);

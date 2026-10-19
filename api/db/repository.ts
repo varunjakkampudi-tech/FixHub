@@ -157,6 +157,18 @@ export interface OutboxEvent {
   createdAt: string;
 }
 
+export interface OtpChallenge {
+  id: string;
+  phone: string;
+  otp: string;
+  expiresAt: number;
+  attempts: number;
+  channel: "sms" | "whatsapp" | "outbox_dev";
+  dispatchedAt: string;
+  messageId?: string;
+  consumed: boolean;
+}
+
 export function calculateDistanceKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const R = 6371; // Earth's radius in km
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
@@ -179,6 +191,7 @@ export class Repository {
   public disputes = new Map<string, Dispute>();
   public notifications = new Map<string, Notification>();
   public outboxEvents = new Map<string, OutboxEvent>();
+  public otpChallenges = new Map<string, OtpChallenge>();
 
   constructor() {
     this.seedInitialData();
@@ -195,6 +208,7 @@ export class Repository {
     this.disputes.clear();
     this.notifications.clear();
     this.outboxEvents.clear();
+    this.otpChallenges.clear();
     this.seedInitialData();
   }
 

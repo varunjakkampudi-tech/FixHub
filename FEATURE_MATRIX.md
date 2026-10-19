@@ -3,7 +3,7 @@
 **Project:** Fix Hub (Viswatra)  
 **Spec Reference:** `FixHub-Product-Spec-v1.3.md` (Scope Frozen)  
 **Status Reference:** Spec Section 18.4 & Autonomous Goal Section 5  
-**Current Audit Commit:** `554fde9`  
+**Current Audit Commit:** `1ded0fbe89c6a43fb03c6d61371a6570b38d62b1`  
 
 ---
 
@@ -28,14 +28,14 @@ This matrix inventories every feature requirement under FixHub v1.3 across all o
 
 | ID | Feature Name | Description | Spec Section | Implementation State | Evidence Level |
 |---|---|---|---|---|---|
-| CX-01 | Streamlined 3-Role Authentication | Customer sign-in via phone OTP; no persona clutter | Spec 3.1 | IMPLEMENTED | TESTED_BROWSER |
+| CX-01 | Streamlined 3-Role Authentication | Customer sign-in via phone OTP; no persona clutter | Spec 3.1 | IMPLEMENTED | TESTED_API_CONTRACT |
 | CX-02 | Tanuku Local Service Catalog | Browse electrician, plumbing, AC, appliance repairs | Spec 3.2 | IMPLEMENTED | TESTED_BROWSER |
-| CX-03 | Intuitive Booking Creation | Address selection, issue description, slot timing | Spec 3.3 | IMPLEMENTED | TESTED_BROWSER |
+| CX-03 | Intuitive Booking Creation | Address selection, issue description, slot timing | Spec 3.3 | IMPLEMENTED | TESTED_COMPONENT |
 | CX-04 | Price Clarity Card | Breakdown of inspection fee, labor, estimated parts | Spec 3.4 | IMPLEMENTED | TESTED_UNIT |
-| CX-05 | Service Evidence Timeline | Real-time tracking from matching to completion | Spec 3.5 | IMPLEMENTED | TESTED_BROWSER |
-| CX-06 | Inspection Quote Decisioning | Accept/reject adjusted quote before repair begins | Spec 3.6 | IMPLEMENTED | TESTED_BROWSER |
+| CX-05 | Service Evidence Timeline | Real-time tracking from matching to completion | Spec 3.5 | IMPLEMENTED | TESTED_COMPONENT |
+| CX-06 | Inspection Quote Decisioning | Accept/reject adjusted quote before repair begins | Spec 3.6 | IMPLEMENTED | TESTED_COMPONENT |
 | CX-07 | Cash on Completion (COD) | Safe offline cash settlement with clear disclosures | Spec 3.7 | IMPLEMENTED | TESTED_UNIT |
-| CX-08 | Service Record Download | Itemized proof of service without sensitive PII | Spec 3.8 | IMPLEMENTED | TESTED_UNIT |
+| CX-08 | Service Record Download | Itemized proof of service without sensitive PII | Spec 3.8 | IMPLEMENTED | TESTED_COMPONENT |
 | CX-09 | 5-Star Ratings & Feedback | Honest review submission updating merchant score | Spec 3.9 | IMPLEMENTED | TESTED_UNIT |
 | CX-10 | Support Ticket Creation | In-app dispute raising with unique reference ID | Spec 3.10 | IMPLEMENTED | TESTED_UNIT |
 | CX-11 | Bilingual English/Telugu Toggle | 1-click persistent switch in header and navigation | Spec 3.11 | IMPLEMENTED | TESTED_UNIT |
@@ -53,10 +53,10 @@ This matrix inventories every feature requirement under FixHub v1.3 across all o
 | MX-02 | Service Categories & Coverage | Select categories and active Tanuku coverage zones | Spec 4.2 | IMPLEMENTED | TESTED_UNIT |
 | MX-03 | Atomic Broadcast Acceptance | Single-winner lead acceptance via Redlock engine | Spec 4.3 | IMPLEMENTED | TESTED_UNIT |
 | MX-04 | Technician Roster Management | Add, edit, and assign technicians to jobs | Spec 4.4 | IMPLEMENTED | TESTED_UNIT |
-| MX-05 | Dispatch Job Assignment | Assign on-duty technician to accepted booking | Spec 4.5 | IMPLEMENTED | TESTED_BROWSER |
-| MX-06 | Real-Time Status Updates | Dispatch updates (On the way, Arrived at site) | Spec 4.6 | IMPLEMENTED | TESTED_BROWSER |
-| MX-07 | Formal Inspection Quote | Itemized parts and labor submission | Spec 4.7 | IMPLEMENTED | TESTED_BROWSER |
-| MX-08 | Job Completion & Bill Receipt | Mark job done, record COD collection | Spec 4.8 | IMPLEMENTED | TESTED_BROWSER |
+| MX-05 | Dispatch Job Assignment | Assign on-duty technician to accepted booking | Spec 4.5 | IMPLEMENTED | TESTED_API_CONTRACT |
+| MX-06 | Real-Time Status Updates | Dispatch updates (On the way, Arrived at site) | Spec 4.6 | IMPLEMENTED | TESTED_COMPONENT |
+| MX-07 | Formal Inspection Quote | Itemized parts and labor submission | Spec 4.7 | IMPLEMENTED | TESTED_COMPONENT |
+| MX-08 | Job Completion & Bill Receipt | Mark job done, record COD collection | Spec 4.8 | IMPLEMENTED | TESTED_COMPONENT |
 | MX-09 | Availability Toggle | Switch merchant online/offline availability | Spec 4.9 | IMPLEMENTED | TESTED_UNIT |
 | MX-10 | Performance & Score Dashboard | View rating, completed jobs, and dispute history | Spec 4.10 | IMPLEMENTED | TESTED_UNIT |
 | MX-11 | Dispute & Renegotiation Packet | Submit counter-evidence for disputed bookings | Spec 4.11 | IMPLEMENTED | TESTED_UNIT |
@@ -67,13 +67,13 @@ This matrix inventories every feature requirement under FixHub v1.3 across all o
 
 | ID | Feature Name | Description | Spec Section | Implementation State | Evidence Level |
 |---|---|---|---|---|---|
-| TX-01 | Technician Mobile Assignment View | Assigned job card with customer address in Tanuku | Spec 5.1 | IMPLEMENTED | TESTED_BROWSER |
+| TX-01 | Technician Mobile Assignment View | Assigned job card with customer address in Tanuku | Spec 5.1 | IMPLEMENTED | TESTED_COMPONENT |
 | TX-02 | One-Tap Navigation & Call | Reach customer locality without PII exposure | Spec 5.2 | IMPLEMENTED | OBSERVED_CODE |
-| TX-03 | Status Progression Buttons | Transit, arrived, diagnosing, work in progress | Spec 5.3 | IMPLEMENTED | TESTED_BROWSER |
-| TX-04 | Digital Quote Generation | On-site parts and labor estimate builder | Spec 5.4 | IMPLEMENTED | TESTED_BROWSER |
-| TX-05 | Customer Approval Capture | In-person digital acceptance acknowledgment | Spec 5.5 | IMPLEMENTED | TESTED_BROWSER |
+| TX-03 | Status Progression Buttons | Transit, arrived, diagnosing, work in progress | Spec 5.3 | IMPLEMENTED | TESTED_COMPONENT |
+| TX-04 | Digital Quote Generation | On-site parts and labor estimate builder | Spec 5.4 | IMPLEMENTED | TESTED_COMPONENT |
+| TX-05 | Customer Approval Capture | In-person digital acceptance acknowledgment | Spec 5.5 | IMPLEMENTED | TESTED_COMPONENT |
 | TX-06 | Work Evidence Photo Upload | Before and after repair photo submission | Spec 5.6 | IMPLEMENTED | OBSERVED_CODE |
-| TX-07 | Cash Collection Confirmation | Record cash collected on completion | Spec 5.7 | IMPLEMENTED | TESTED_BROWSER |
+| TX-07 | Cash Collection Confirmation | Record cash collected on completion | Spec 5.7 | IMPLEMENTED | TESTED_COMPONENT |
 | TX-08 | Technician Availability Status | Toggle active duty status | Spec 5.8 | IMPLEMENTED | TESTED_UNIT |
 | TX-09 | Incident / Safety Escalation | Report hazard or customer dispute on site | Spec 5.9 | PLANNED (EH-21) | SPECIFIED |
 
@@ -97,7 +97,7 @@ This matrix inventories every feature requirement under FixHub v1.3 across all o
 | AX-12 | Category Activation Gates | Enable/disable service categories (EH-23) | Spec 6.12 | PLANNED | SPECIFIED |
 | AX-13 | Emergency Kill-Switch | Maintenance mode toggle for platform safety | Spec 6.13 | IMPLEMENTED | OBSERVED_CODE |
 | AX-14 | Manual Audit Log History | Tamper-evident record of administrative operations | Spec 6.14 | IMPLEMENTED | TESTED_UNIT |
-| AX-15 | Invoice Audit & Breakdown Check | Inspect itemized bills and settlement receipts | Spec 6.15 | IMPLEMENTED | TESTED_BROWSER |
+| AX-15 | Invoice Audit & Breakdown Check | Inspect itemized bills and settlement receipts | Spec 6.15 | IMPLEMENTED | TESTED_COMPONENT |
 
 ---
 

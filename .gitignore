@@ -12,3 +12,5 @@ coverage/
 .playwright-cli/
 output/
 .worktrees/
+.data/
+test-results/

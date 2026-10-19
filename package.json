@@ -20,13 +20,15 @@
     "test:sanity": "vitest run src/test/sanity.test.ts",
     "test:critical": "vitest run src/test/critical.test.ts",
     "test:regression": "vitest run src/test/regression.test.ts",
-    "test:playwright": "vitest run src/test/e2e-playwright.test.ts",
+    "test:journey": "vitest run src/test/e2e-journey-api.test.ts",
+    "test:playwright": "node ./node_modules/@playwright/test/cli.js test",
     "test:api": "vitest run api/test",
     "test:security": "vitest run api/test/security-quarantine-fr1.test.ts",
     "test:concurrency": "vitest run api/test/dispatch-and-race.test.ts src/test/critical.test.ts",
     "test:l10n": "vitest run src/test/fixhub-communications.test.ts",
     "test:docs": "node --test scripts/documentation-validator.test.mjs",
-    "test:all": "npm run lint && npm run test:smoke && npm run test:sanity && npm run test:critical && npm run test:regression && npm run test:playwright && npm run test:security && npm test && npm run test:docs",
+    "format:check": "node ./node_modules/prettier/bin/prettier.cjs --check \"src/**/*.{ts,tsx}\" \"api/**/*.{ts,tsx}\" \"scripts/**/*.{js,mjs}\"",
+    "test:all": "npm run lint && npm run test:smoke && npm run test:sanity && npm run test:critical && npm run test:regression && npm run test:journey && npm run test:security && npm test && npm run test:docs",
     "test:watch": "vitest"
   },
   "dependencies": {
@@ -86,6 +88,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/vite": "^4.1.17",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",

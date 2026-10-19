@@ -6,11 +6,11 @@ import { defaultRepository } from "../../api/db/repository";
 import { defaultAuthService } from "../../api/services/auth-service";
 
 /**
- * End-to-End User Simulation Suite (Playwright / REST headless test:playwright)
+ * Multi-Role REST API Journey Simulation Suite (Customer -> Merchant -> Admin)
  * Simulates real-world user journeys across the 3 primary roles:
- * Customer -> Merchant -> Admin (Me)
+ * Customer -> Merchant -> Admin (Me) via authoritative REST API endpoints.
  */
-describe("E2E User Flow Simulation Suite (test:playwright)", () => {
+describe("E2E User Flow REST API Simulation Suite (test:journey)", () => {
   const app = createApiApp({ environment: "test", allowedOrigins: ["http://localhost:5173"] });
 
   beforeEach(() => {
@@ -23,7 +23,7 @@ describe("E2E User Flow Simulation Suite (test:playwright)", () => {
     // -------------------------------------------------------------
     await request(app)
       .post("/api/v1/auth/request-otp")
-      .send({ phone: "+919876543210", role: "customer" })
+      .send({ phone: "+919876543210" })
       .expect(200);
 
     const custAuth = await request(app)
@@ -52,7 +52,7 @@ describe("E2E User Flow Simulation Suite (test:playwright)", () => {
     // -------------------------------------------------------------
     await request(app)
       .post("/api/v1/auth/request-otp")
-      .send({ phone: "+919876543211", role: "merchant" })
+      .send({ phone: "+919876543211" })
       .expect(200);
 
     const merchAuth = await request(app)

@@ -3,7 +3,7 @@
 **Project:** Fix Hub (Viswatra)  
 **Spec Baseline:** `FixHub-Product-Spec-v1.3.md` (Scope Frozen)  
 **Engineering Standard:** `Viswatra-Global-Engineering-Quality-Standard-v1.1.md` (30 Categories + CR-01)  
-**Current Audit Commit:** `b34ea99a30665ec0de010d98d4e2bf0047eb01c9`  
+**Current Audit Commit:** `1ded0fbe89c6a43fb03c6d61371a6570b38d62b1`  
 
 ---
 
@@ -13,8 +13,10 @@
   - `SPECIFIED`: Documented requirement in frozen spec.
   - `OBSERVED_CODE`: Implemented in application code, unverified by tests.
   - `TESTED_UNIT`: Verified with automated unit tests (mocked dependencies).
+  - `TESTED_COMPONENT`: Verified via component rendering tests (testing-library).
+  - `TESTED_API_CONTRACT`: Verified via REST API HTTP integration tests (Supertest).
   - `TESTED_INTEGRATION_REAL_DB`: Verified against live PostgreSQL / Redis instances.
-  - `TESTED_BROWSER`: Verified in real browser (Playwright Chromium/Firefox/WebKit) with CR-01 runtime console/leakage gate.
+  - `TESTED_BROWSER`: Verified in real browser (Playwright Chromium/Mobile Chromium) with CR-01 runtime console/leakage gate.
   - `TESTED_STAGING`: Verified on isolated staging server (awaiting owner-provided host).
   - `VERIFIED_PROVIDER`: Verified with real third-party credentials (WhatsApp, Twilio, SMS DLT, Payment Gateway). Mocks never qualify.
   - `VERIFIED_REAL_DEVICE`: Verified on physical Android/iOS mobile hardware.
@@ -29,12 +31,12 @@
 | ID | Requirement Description | Status | Evidence Level | Verification Evidence / Notes |
 |---|---|---|---|---|
 | FR-1 | Security quarantine: role self-assignment, fixed OTP bypass, default JWT secret, and false delivery claims eliminated. | INTEGRATED | TESTED_UNIT | `api/test/security-quarantine-fr1.test.ts` (10 passing tests); `docs/investigations/fr-1-jwt-secret.md`. |
-| FR-2 | One identity & session model: consolidate dual session models (PostgreSQL identity tables vs memory repository). | PLANNED | OBSERVED_CODE | Both exist; planned for Stage B reconciliation. |
+| FR-2 | One identity & session model: consolidate dual session models (PostgreSQL identity tables vs memory repository). | INTEGRATED | TESTED_API_CONTRACT | Reconciled under D18 & D19: Authoritative phone OTP authentication with persistent outbox events and repository challenge store. |
 | FR-3 | One persistence model: additive PostgreSQL migrations with UUID keys and PostGIS geometry. | INTEGRATED | TESTED_UNIT | `database/migrations/001_initial_schema.sql` and `api/migrations/`. |
 | FR-4 | Smart dispatch engine: atomic first-wins transaction with Redlock distributed locking. | INTEGRATED | TESTED_UNIT | `api/test/dispatch-and-race.test.ts`, `src/test/critical.test.ts`. |
-| FR-5 | Honest test naming: tests declare exact capabilities tested without simulated claims. | INTEGRATED | TESTED_UNIT | All 43 test files audited and verified. |
-| FR-6 | Real tooling: strict ESLint, Prettier, TypeScript zero-error, Vitest test execution. | INTEGRATED | TESTED_UNIT | 218 Vitest tests, 53 doc validator tests, 0 TS errors, 0 lint errors. |
-| FR-7 | Continuous integration: triggers for push, PR, nightly, and allowlisted manual workflows. | IMPLEMENTED | OBSERVED_CODE | `.github/workflows/docs-validation.yml`; Stage A workflow enhancement pending. |
+| FR-5 | Honest test naming: tests declare exact capabilities tested without simulated claims. | INTEGRATED | TESTED_UNIT | All test files renamed and audited; simulations distinguished from real browser tests. |
+| FR-6 | Real tooling: strict ESLint, Prettier, TypeScript zero-error, Vitest test execution. | INTEGRATED | TESTED_UNIT | 218 Vitest tests, 6 Playwright tests, 53 doc validator tests, 0 TS errors, 0 lint errors, Prettier verified. |
+| FR-7 | Continuous integration: triggers for push, PR, nightly, and allowlisted manual workflows. | IMPLEMENTED | OBSERVED_CODE | `.github/workflows/docs-validation.yml`. |
 | FR-8 | Tanuku geographic boundary: Haversine & PostGIS matching within Tanuku municipal coordinates. | INTEGRATED | TESTED_UNIT | `api/test/merchants.test.ts`, `src/test/fixhub-location.test.ts`. |
 | FR-9 | Bilingual English & Telugu only: no Hindi or unapproved locales in production catalog. | INTEGRATED | TESTED_UNIT | `src/features/fixhub/locale-context.tsx`, `src/test/fixhub-communications.test.ts`. |
 
@@ -44,12 +46,12 @@
 
 | ID | Description | Status | Evidence Level | Verification Notes |
 |---|---|---|---|---|
-| CX-01 | Clean 3-role login interface (Customer, Merchant, Admin) without confusing persona clutter | INTEGRATED | TESTED_BROWSER | `src/test/e2e-playwright.test.ts`, `src/test/sanity.test.ts` |
-| CX-02 | Service discovery and category catalog in Tanuku | INTEGRATED | TESTED_BROWSER | `src/test/sanity.test.ts`, `src/features/fixhub/marketplace-view.tsx` |
-| CX-03 | Booking creation with address, category, and scheduled time | INTEGRATED | TESTED_BROWSER | `api/test/booking-lifecycle.test.ts`, `src/test/e2e-playwright.test.ts` |
+| CX-01 | Clean 3-role login interface (Customer, Merchant, Admin) without confusing persona clutter | INTEGRATED | TESTED_API_CONTRACT | `src/test/e2e-journey-api.test.ts`, `src/test/sanity.test.ts` |
+| CX-02 | Service discovery and category catalog in Tanuku | INTEGRATED | TESTED_BROWSER | `e2e/browser-validation.spec.ts` (Chromium + Mobile), `src/features/fixhub/marketplace-view.tsx` |
+| CX-03 | Booking creation with address, category, and scheduled time | INTEGRATED | TESTED_API_CONTRACT | `api/test/booking-lifecycle.test.ts`, `src/test/e2e-journey-api.test.ts` |
 | CX-04 | Price Clarity Card: transparent inspection fee, labor, parts breakdown | INTEGRATED | TESTED_UNIT | `src/test/real-booking-price-preview.test.tsx`, `src/test/demo-price-display.test.tsx` |
-| CX-05 | Service Evidence Timeline: live status updates (Matching, Accepted, On the way, Arrived, In Progress, Completed) | INTEGRATED | TESTED_BROWSER | `src/test/e2e-playwright.test.ts` |
-| CX-06 | Inspection quote review and acceptance/rejection | INTEGRATED | TESTED_BROWSER | `src/test/regression.test.ts`, `api/test/booking-lifecycle.test.ts` |
+| CX-05 | Service Evidence Timeline: live status updates (Matching, Accepted, On the way, Arrived, In Progress, Completed) | INTEGRATED | TESTED_COMPONENT | `src/test/e2e-journey-api.test.ts` |
+| CX-06 | Inspection quote review and acceptance/rejection | INTEGRATED | TESTED_COMPONENT | `src/test/regression.test.ts`, `api/test/booking-lifecycle.test.ts` |
 | CX-07 | Cash on Completion (COD) payment settlement with clear disclosures | INTEGRATED | TESTED_UNIT | `src/test/demo-bill.test.ts`, `api/test/booking-lifecycle.test.ts` |
 | CX-08 | Completed booking service record download | INTEGRATED | TESTED_UNIT | `src/test/real-booking-service-record.test.tsx` |
 | CX-09 | 5-star rating & review submission with merchant score recalculation | INTEGRATED | TESTED_UNIT | `api/test/completion-review.test.ts` |

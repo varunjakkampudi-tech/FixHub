@@ -2,14 +2,14 @@
 
 **Project:** Fix Hub (Viswatra)  
 **Parent Brand:** Viswatra  
-**Baseline Main Commit:** `dd1bc789ae372c80281a7e4f3d11768a48ccaaab`  
-**Current Active Integration Commit:** `b34ea99a30665ec0de010d98d4e2bf0047eb01c9`  
+**Baseline Main Commit:** `1ded0fbe89c6a43fb03c6d61371a6570b38d62b1`  
+**Current Active Integration Baseline:** `1ded0fbe89c6a43fb03c6d61371a6570b38d62b1`  
 **Governing Documents:**  
-- `FixHub-Product-Spec-v1.3.md` (Scope Frozen)
-- `FixHub-Engineering-Standards.md`
-- `FixHub-Autonomous-Goal.md`
-- `Viswatra-Global-Engineering-Quality-Standard-v1.1.md` (30 Categories + CR-01)
-- `Viswatra-Global-Engineering-Completion-Program-v1.1.md`
+- `docs/specs/FixHub-Product-Spec-v1.3.md` (Scope Frozen, Checksum `F549D93B52E1EB8A08CC1426F6B4244DA4C9A4EE569DE9D7031316923DEBC52D`)
+- `docs/specs/FixHub-Engineering-Standards.md` (Checksum `FCC1760BC72D38221EBB153538CEB35DB9040D0E8DBB952985000C9D4666ED55`)
+- `docs/specs/FixHub-Autonomous-Goal.md` (Checksum `514380767025A1A18D12338225AF331A420AAC11E1AD840A19514F38C990E298`)
+- `docs/specs/Viswatra-Global-Engineering-Quality-Standard-v1.1.md` (30 Categories + CR-01, Checksum `429B54C2003D8E5BF4A2949507F5A8A2C5284820F6588C4B1E3266FE18112066`)
+- `docs/specs/Viswatra-Global-Engineering-Completion-Program-v1.1.md` (Checksum `9421280DAC8D38DACCD26378D378A862751F7DCC9BB0D8392A408CB50A1F90EC`)
 
 ---
 
@@ -17,11 +17,12 @@
 
 - **Autonomous Implementation Status:** `AWAITING_OWNER_APPROVAL`
 - **Activation Prerequisites:**
-  1. Owner approval of Product Specification v1.3, D01 (single launch scope as successor to phased implementation), and D17 (development-branch workflow) recorded on `main` in `PROGRESS.md` or the decision register. -> **Status:** Drafted in `blocker.txt` as `READY_FOR_OWNER`.
+  1. Owner approval of Product Specification v1.3, D01 (single launch scope as successor to phased implementation), and D17 (development-branch workflow) recorded on `main` in `PROGRESS.md` or the decision register. -> **Status:** Registered in `blocker.txt` as `READY_FOR_OWNER` (BLOCKER-001).
   2. D17 update to `AGENTS.md` and `docs/governance/product-foundation-work-authority.md`. -> **Status:** Exact proposed text prepared as `READY_FOR_OWNER`.
 - **Permitted Pre-Activation Authority:**
   - Read-only assessment and forensic repository inventory.
   - External verified Git bundle backup creation and restore-validation.
+  - Comprehensive Archival Manifest & specification tracking (`docs/archive/ARCHIVE_MANIFEST.md`).
   - Stage 0 Security Quarantine & Investigation (FR-1: remediation of role self-assignment, fixed-code bypass, default JWT signing secret, and false delivery claims).
   - Draft matrices generation (`GAP_MATRIX.md`, `TEST_MATRIX.md`, `QUALITY_AUDIT.md`, `blocker.txt`).
 
@@ -29,54 +30,56 @@
 
 ## 2. Verified Baseline Backup (Section 4.1)
 
-- **Date:** 2026-10-19
-- **Baseline Commit SHA:** `b34ea99a30665ec0de010d98d4e2bf0047eb01c9` (clean merge of `origin/main` at `dd1bc789ae372c80281a7e4f3d11768a48ccaaab`)
-- **Working Tree State:** Clean (0 uncommitted files)
-- **Backup Bundle Location:** `C:\Users\Admin\Desktop\fixhub-backups\fixhub-baseline-b34ea99a30665ec0de010d98d4e2bf0047eb01c9.bundle`
-- **Bundle SHA-256 Checksum:** `CB0EB1BB3AF40E38FAC466D804E327B9146902096DD20C18B570CE25CB3EC31B`
-- **Verification Commands & Exit Codes:**
-  - `git bundle create $bundlePath --all` (Exit code: 0)
-  - `git bundle verify $bundlePath` (Exit code: 0; 40 refs verified intact)
-  - `Get-FileHash -Path $bundlePath -Algorithm SHA256` (Exit code: 0)
-  - Temporary clone into `verify-restore-temp` (Exit code: 0)
-  - `git fsck --full --strict` on restored clone (Exit code: 0)
-  - Removal of temporary directory (Exit code: 0)
-- **Integrity Result:** PASS — Verified 100% recoverable without data loss.
+- **Date:** 2026-10-19 / 2026-10-20
+- **Baseline Commit SHA:** `b34ea99a30665ec0de010d98d4e2bf0047eb01c9`
+- **Integrated Commit SHA:** `3f058fa07c568494aa594284aa7bc40ff4802585`
+- **Main Commit SHA:** `1ded0fbe89c6a43fb03c6d61371a6570b38d62b1`
+- **Working Tree State:** Clean
+- **Backup Bundles & SHA-256 Checksums:**
+  - Baseline: `fixhub-baseline-b34ea99a30665ec0de010d98d4e2bf0047eb01c9.bundle` -> `CB0EB1BB3AF40E38FAC466D804E327B9146902096DD20C18B570CE25CB3EC31B`
+  - Integrated: `fixhub-integrated-3f058fa07c568494aa594284aa7bc40ff4802585.bundle` -> `D0BED5F57819AE2BF1D7EDDA5889E3E3C8F3BD5C1F20E53536EB5D13A4E6ED54`
+- **Integrity Result:** PASS — Verified 100% recoverable without data loss via `git bundle verify` and `git fsck`.
 
 ---
 
-## 3. Stage 0 Security Quarantine & FR-1 Remediation
+## 3. Stage 0 Security Quarantine & Remediation
 
 - **Investigation Report:** [`docs/investigations/fr-1-jwt-secret.md`](docs/investigations/fr-1-jwt-secret.md)
 - **Four Critical Security Defects Remediated:**
-  1. **Role Self-Assignment (FR-1):**
-     - *Defect:* `requestOtp` accepted client-specified `role`, allowing unauthenticated users to create accounts with `role: "admin"`.
-     - *Fix:* Roles are never client-selected. Client-provided role is strictly ignored. Existing users preserve their database role; new users are unconditionally registered as `"customer"`.
-     - *Evidence:* Tested in `api/test/security-quarantine-fr1.test.ts` (10 passing tests).
-  2. **Fixed OTP Bypass & Returned Code (FR-1):**
-     - *Defect:* Phone numbers ending in `0000` received static OTP `123456` in all environments, and `testOtp` was returned in the API response.
-     - *Fix:* Static code and `testOtp` are strictly limited to `process.env.NODE_ENV === "test"`. In development, staging, and production, random 6-digit integers are generated, and `testOtp` is `undefined`.
-     - *Evidence:* Tested in `api/test/security-quarantine-fr1.test.ts`.
-  3. **Default JWT Signing Secret (FR-1):**
-     - *Defect:* Fallback secret `fixhub-local-development-secret-key-min-32-chars-long` allowed arbitrary token forgery.
-     - *Fix:* Added `getAuthJwtSecret()`. Server fails immediately on startup if `NODE_ENV !== "test"` and `JWT_SECRET` is missing, shorter than 32 characters, or matches the leaked default string.
-     - *Evidence:* Startup check active in `api/server.ts`; verified by negative tests in `security-quarantine-fr1.test.ts`.
-  4. **False Delivery Claim (FR-1):**
-     - *Defect:* API claimed `"OTP sent successfully via SMS and WhatsApp"` when no provider was connected.
-     - *Fix:* Replaced with truthful message: `"OTP generated for test verification."` in test mode, and `"OTP generated. Verification code required."` in production.
-     - *Evidence:* Verified in `security-quarantine-fr1.test.ts`.
+  1. **Role Self-Assignment (FR-1):** Roles removed from client OTP request; authoritative database roles enforced; new registrations unconditionally default to `"customer"`.
+  2. **Fixed OTP Bypass & Returned Code (FR-1):** Static OTP and `testOtp` restricted strictly to `NODE_ENV === "test"`. Cryptographically random 6-digit integer enforced in all other modes.
+  3. **Default JWT Signing Secret (FR-1):** Added `getAuthJwtSecret()`. Startup halts immediately if secret is missing, < 32 chars, or matches leaked string in non-test modes. Key rotation, session invalidation procedure, and activity review documented in `blocker.txt` (BLOCKER-002).
+  4. **Truthful Delivery & Persistent Outbox (FR-1):** Dispatches OTP to canonical `repo.outboxEvents` and repository challenge store with truthful delivery status messages.
 
 ---
 
-## 4. Test & Verification Checkpoint
+## 4. Remediation of 20 October 2026 Audit Findings
+
+1. **P0 Real Playwright Browser Automation:**
+   - Replaced simulated Supertest script in `test:playwright` with genuine Playwright runner (`@playwright/test`).
+   - Created `playwright.config.ts` and `e2e/browser-validation.spec.ts`.
+   - Executed across Desktop Chromium and Mobile Chromium (Pixel 5 viewport): **6 passed, 0 failed**.
+   - Verified CR-01: 0 unhandled runtime exceptions, 0 unexpected console errors.
+2. **P0 Duplicate Authentication & Persistence Reconciled:**
+   - Eliminated isolated in-memory OTP Map; integrated `otpChallenges` into canonical repository challenge store.
+   - Outbox event dispatch enabled for all OTP requests with audit trail.
+3. **P1 Evidence Integrity & Honest Test Naming:**
+   - Renamed `src/test/e2e-playwright.test.ts` to `src/test/e2e-journey-api.test.ts` (`npm run test:journey`), correctly reflecting its REST API simulation scope.
+   - Reconciled evidence levels across `TEST_MATRIX.md`, `QUALITY_AUDIT.md`, and `FEATURE_MATRIX.md`: downgraded simulated tests to `TESTED_API_CONTRACT` / `TESTED_COMPONENT`.
+4. **P1 Static Analysis & Prettier:**
+   - Added Prettier formatting verification (`npm run format:check`) alongside `npm run lint`.
+5. **Comprehensive Archival Manifest:**
+   - Created `docs/archive/ARCHIVE_MANIFEST.md` and root `ARCHIVE_MANIFEST.md` indexing external bundles, commit SHAs, file hashes, branch disposition, and database lineage.
+   - Tracked all 5 canonical specification documents under `docs/specs/` with SHA-256 hashes.
+
+---
+
+## 5. Test & Verification Checkpoint
 
 - **Vitest Test Suite:** **218 tests passing across 43 test files (100% PASS)**
+- **Playwright Browser Suite:** **6 tests passing in Desktop Chromium & Mobile Chromium (100% PASS)**
 - **Documentation Validator:** **53 tests passing (100% PASS)**
 - **TypeScript (`npx tsc --noEmit`):** **0 errors**
-- **Lint (`npm run lint`):** **349 files scanned, 0 errors**
-- **Specialized Test Scripts:**
-  - `npm run test:smoke` (PASS)
-  - `npm run test:sanity` (PASS)
-  - `npm run test:critical` (PASS)
-  - `npm run test:regression` (PASS)
-  - `npm run test:playwright` (PASS)
+- **Lint (`npm run lint`):** **392 files scanned, 0 errors**
+- **Prettier (`npm run format:check`):** **0 formatting errors**
+- **Total Automated Tests:** **277 automated tests passing**

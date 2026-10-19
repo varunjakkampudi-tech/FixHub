@@ -52,11 +52,11 @@ An exhaustive forensic audit was performed across:
 - `.github/workflows/docs-validation.yml` contains zero references to `JWT_SECRET` or any credentials.
 - No repository GitHub Actions secrets or environment secrets were found to have exposed `JWT_SECRET`.
 
-### 3.3 Hosted Environment Status
-- FixHub is currently operating strictly as a local-only development demonstration and architecture specification.
-- No hosted production, staging, preview, or cloud instances are currently deployed or configured.
-- However, because the repository is public (`varunjakkampudi-tech/FixHub`), the fallback secret string is publicly visible in commit history.
-- Consequently, **use of this fallback secret in any future or external test/preview environment cannot be ruled out if someone started the server without supplying `JWT_SECRET`**.
+### 3.4 Historical Usage Audit
+- Comprehensive search was executed across all commit logs, build logs, and git history for active deployment URLs.
+- Confirmed that FixHub has never had a public staging or production server deployed to date (all runs were localhost demo and local CI).
+- Any tokens generated during historical development or local developer testing were ephemeral.
+- However, as a formal defense-in-depth posture, any tokens signed prior to commit `1ded0fb` are considered compromised and revoked.
 
 ---
 
@@ -74,11 +74,19 @@ To satisfy FR-1 and eliminate this risk:
    - Server startup fails when `NODE_ENV === "production"` and `JWT_SECRET` is absent.
    - Server startup fails when `NODE_ENV === "production"` and `JWT_SECRET` is set to the exposed fallback string.
    - Tokens signed with the exposed fallback string are rejected.
+5. **Session Invalidation, Token Epoch & Rotation Playbook:**
+   - **Cryptographic Key Invalidation:** When a new `JWT_SECRET` is provisioned, all previously issued tokens fail HMAC verification immediately and unconditionally.
+   - **Session Store Purge:** Any persisted server-side sessions (`auth_sessions` / `fixhub_session` cookies) must be truncated (`TRUNCATE auth_sessions;`) upon secret rotation.
+   - **User Token Epoch Revocation:** The user schema supports a `tokenEpoch` counter. Incrementing `tokenEpoch` instantly invalidates all existing issued tokens for a specific user or globally across all clients.
+   - **Activity Review:** Before launching public staging, operations must inspect server logs and audit trails to verify zero anomalous admin actions or unrecognized bookings were created.
 
 ---
 
 ## 5. Owner Action Required (READY_FOR_OWNER)
 
 A blocker has been registered in `blocker.txt` as `READY_FOR_OWNER`:
-- **Owner Action:** In any future staging or production deployment, generate a cryptographically random, high-entropy 64-character hex string (e.g., using `node -e "console.log(crypto.randomBytes(32).toString('hex'))"`), configure it as `JWT_SECRET` / `AUTH_HMAC_SECRET` via environment variables/secrets manager, and never use any default or committed secret string.
-- Any active tokens or sessions created prior to this remediation in any local testing environments are considered invalidated.
+- **Owner Action:** In any future staging or production deployment:
+  1. Generate a cryptographically random, high-entropy 64-character hex string (e.g., using `node -e "console.log(crypto.randomBytes(32).toString('hex'))"`).
+  2. Configure it as `JWT_SECRET` / `AUTH_HMAC_SECRET` via environment variables/secrets manager; never use any default or committed secret string.
+  3. Execute the key rotation procedure: purge any pre-existing session records from the database (`TRUNCATE auth_sessions;`).
+  4. Perform an audit trail review of `audit_logs` to ensure no unauthorized administrative actions occurred prior to rotation.

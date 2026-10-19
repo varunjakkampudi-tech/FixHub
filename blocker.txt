@@ -88,6 +88,10 @@ BLOCKER-002: Production & Staging Cryptographic Secret Configuration
      JWT_SECRET=<your-generated-64-char-hex-string>
      AUTH_HMAC_SECRET=<your-generated-64-char-hex-string>
   5. Ensure these environment variables are never committed to version control.
+  6. Session Invalidation Procedure: Purge any pre-existing session records from the database
+     via `TRUNCATE auth_sessions;` so no legacy sessions survive rotation.
+  7. Activity Audit: Review `audit_logs` table and access logs to confirm no unrecognized
+     privileged actions or unauthorized booking states occurred prior to rotation.
 - Environment Variable Names: `JWT_SECRET`, `AUTH_HMAC_SECRET`
 - Dependencies: Owner terminal and hosting environment secrets manager.
 - Expected Result: Backend starts in production mode without security violation errors.
