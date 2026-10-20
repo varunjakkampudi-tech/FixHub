@@ -99,9 +99,9 @@ describe("email-code authentication", () => {
     expect(fixture.sqlLog.some((sql) => sql.includes("INSERT INTO identity_role"))).toBe(true);
     expect(fixture.sqlLog.some((sql) => sql.includes("INSERT INTO identity_session"))).toBe(true);
 
-    const csrfCookie = cookies.find((cookie) => cookie.startsWith("fixhub_csrf="))!;
+    const csrfCookie = cookies.find((cookie) => cookie.startsWith("fixhub24_csrf="))!;
     const csrf = decodeURIComponent(csrfCookie.split(";", 1)[0].split("=", 2)[1]);
-    const sessionCookie = cookies.find((cookie) => cookie.startsWith("fixhub_session="))!;
+    const sessionCookie = cookies.find((cookie) => cookie.startsWith("fixhub24_session="))!;
     const me = await request(fixture.app)
       .get("/api/v1/auth/me")
       .set("Cookie", `${sessionCookie.split(";", 1)[0]}; ${csrfCookie.split(";", 1)[0]}`)
@@ -165,8 +165,8 @@ describe("email-code authentication", () => {
       .expect(200);
     const cookieHeader = verified.headers["set-cookie"];
     const cookies = Array.isArray(cookieHeader) ? cookieHeader : [cookieHeader];
-    const csrfCookie = cookies.find((cookie) => cookie.startsWith("fixhub_csrf="))!;
-    const sessionCookie = cookies.find((cookie) => cookie.startsWith("fixhub_session="))!;
+    const csrfCookie = cookies.find((cookie) => cookie.startsWith("fixhub24_csrf="))!;
+    const sessionCookie = cookies.find((cookie) => cookie.startsWith("fixhub24_session="))!;
     const csrf = decodeURIComponent(csrfCookie.split(";", 1)[0].split("=", 2)[1]);
     const result = await request(fixture.app)
       .post("/api/v1/customer/account-deletion")

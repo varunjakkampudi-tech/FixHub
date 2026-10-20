@@ -123,8 +123,8 @@ async function signInAsMerchant(app: ReturnType<typeof merchantApp>["app"]) {
     .expect(200);
   const setCookie = verified.headers["set-cookie"];
   const cookies = Array.isArray(setCookie) ? setCookie : [setCookie ?? ""];
-  const sessionCookie = cookies.find((cookie) => cookie.startsWith("fixhub_session="))!;
-  const csrfCookie = cookies.find((cookie) => cookie.startsWith("fixhub_csrf="))!;
+  const sessionCookie = cookies.find((cookie) => cookie.startsWith("fixhub24_session="))!;
+  const csrfCookie = cookies.find((cookie) => cookie.startsWith("fixhub24_csrf="))!;
   return { cookie: `${sessionCookie.split(";", 1)[0]}; ${csrfCookie.split(";", 1)[0]}` };
 }
 
@@ -143,7 +143,7 @@ describe("merchant offer workflow", () => {
       .set("Cookie", session.cookie)
       .set(
         "x-csrf-token",
-        decodeURIComponent(session.cookie.split("fixhub_csrf=")[1].split(";")[0]),
+        decodeURIComponent(session.cookie.split("fixhub24_csrf=")[1].split(";")[0]),
       )
       .set("Idempotency-Key", "merchant-response-0001")
       .send({ decision: "accept" })
@@ -185,7 +185,7 @@ describe("merchant offer workflow", () => {
   it("lets only an assigned verified merchant start an accepted job and emits a future notification event", async () => {
     const fixture = merchantApp();
     const session = await signInAsMerchant(fixture.app);
-    const csrf = decodeURIComponent(session.cookie.split("fixhub_csrf=")[1].split(";")[0]);
+    const csrf = decodeURIComponent(session.cookie.split("fixhub24_csrf=")[1].split(";")[0]);
     const response = await request(fixture.app)
       .post(`/api/v1/merchant/jobs/${fixture.bookingId}/start`)
       .set("Cookie", session.cookie)
@@ -206,7 +206,7 @@ describe("merchant offer workflow", () => {
   it("replays a start action as successful when the assigned job is already in progress under a new key", async () => {
     const fixture = merchantApp("merchant", "in_progress");
     const session = await signInAsMerchant(fixture.app);
-    const csrf = decodeURIComponent(session.cookie.split("fixhub_csrf=")[1].split(";")[0]);
+    const csrf = decodeURIComponent(session.cookie.split("fixhub24_csrf=")[1].split(";")[0]);
     const response = await request(fixture.app)
       .post(`/api/v1/merchant/jobs/${fixture.bookingId}/start`)
       .set("Cookie", session.cookie)
@@ -222,7 +222,7 @@ describe("merchant offer workflow", () => {
   it("blocks starting an accepted job until the customer approves its current quote", async () => {
     const fixture = merchantApp("merchant", "accepted", false);
     const session = await signInAsMerchant(fixture.app);
-    const csrf = decodeURIComponent(session.cookie.split("fixhub_csrf=")[1].split(";")[0]);
+    const csrf = decodeURIComponent(session.cookie.split("fixhub24_csrf=")[1].split(";")[0]);
     const response = await request(fixture.app)
       .post(`/api/v1/merchant/jobs/${fixture.bookingId}/start`)
       .set("Cookie", session.cookie)

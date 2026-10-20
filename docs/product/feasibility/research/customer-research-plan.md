@@ -10,7 +10,7 @@ Owner approves recruitment script, channel, language, incentives and private sto
 
 ## Method and safeguards
 
-Interviews take 20–30 minutes, with notes by default; no audio, photos, precise address, phone or ID without separate justified consent. Ask about recent behavior before revealing Fix Hub. Use anonymous C01-001-style identifiers; store recruitment contact keys separately with restricted access, never in public Git. Proposed raw-note retention is 90 days after analysis, with withdrawal before aggregation through a privately supplied contact; the legal retention basis is not yet approved.
+Interviews take 20–30 minutes, with notes by default; no audio, photos, precise address, phone or ID without separate justified consent. Ask about recent behavior before revealing FixHub24. Use anonymous C01-001-style identifiers; store recruitment contact keys separately with restricted access, never in public Git. Proposed raw-note retention is 90 days after analysis, with withdrawal before aggregation through a privately supplied contact; the legal retention basis is not yet approved.
 
 Two-pass thematic coding: recent case, source, costs, time, failure, workaround, switch barriers, channel, quote tolerance. Preserve negative cases and missing responses; counts always include denominator. Compare strata, do not report inferential town prevalence or confidence intervals from convenience interviews.
 

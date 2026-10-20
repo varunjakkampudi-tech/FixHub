@@ -55,7 +55,7 @@ import { Route as SessionExpiredRouteImport } from './routes/session-expired'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as TechnicianRouteImport } from './routes/technician'
 import { Route as TermsRouteImport } from './routes/terms'
-import { Route as WhyFixhubRouteImport } from './routes/why-fixhub'
+import { Route as WhyFixhub24RouteImport } from './routes/why-fixhub24'
 import { Route as AdminAccessRouteImport } from './routes/admin_.access'
 import { Route as AdminAccessDeniedRouteImport } from './routes/admin_.access-denied'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin_.analytics'
@@ -452,9 +452,9 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WhyFixhubRoute = WhyFixhubRouteImport.update({
-  id: '/why-fixhub',
-  path: '/why-fixhub',
+const WhyFixhub24Route = WhyFixhub24RouteImport.update({
+  id: '/why-fixhub24',
+  path: '/why-fixhub24',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminAccessRoute = AdminAccessRouteImport.update({
@@ -1362,7 +1362,7 @@ export interface FileRoutesByFullPath {
   '/sign-in': typeof SignInRoute
   '/technician': typeof TechnicianRoute
   '/terms': typeof TermsRoute
-  '/why-fixhub': typeof WhyFixhubRoute
+  '/why-fixhub24': typeof WhyFixhub24Route
   '/admin/access': typeof AdminAccessRoute
   '/admin/access-denied': typeof AdminAccessDeniedRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
@@ -1576,7 +1576,7 @@ export interface FileRoutesByTo {
   '/sign-in': typeof SignInRoute
   '/technician': typeof TechnicianRoute
   '/terms': typeof TermsRoute
-  '/why-fixhub': typeof WhyFixhubRoute
+  '/why-fixhub24': typeof WhyFixhub24Route
   '/admin/access': typeof AdminAccessRoute
   '/admin/access-denied': typeof AdminAccessDeniedRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
@@ -1791,7 +1791,7 @@ export interface FileRoutesById {
   '/sign-in': typeof SignInRoute
   '/technician': typeof TechnicianRoute
   '/terms': typeof TermsRoute
-  '/why-fixhub': typeof WhyFixhubRoute
+  '/why-fixhub24': typeof WhyFixhub24Route
   '/admin_/access': typeof AdminAccessRoute
   '/admin_/access-denied': typeof AdminAccessDeniedRoute
   '/admin_/analytics': typeof AdminAnalyticsRoute
@@ -2007,7 +2007,7 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/technician'
     | '/terms'
-    | '/why-fixhub'
+    | '/why-fixhub24'
     | '/admin/access'
     | '/admin/access-denied'
     | '/admin/analytics'
@@ -2221,7 +2221,7 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/technician'
     | '/terms'
-    | '/why-fixhub'
+    | '/why-fixhub24'
     | '/admin/access'
     | '/admin/access-denied'
     | '/admin/analytics'
@@ -2435,7 +2435,7 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/technician'
     | '/terms'
-    | '/why-fixhub'
+    | '/why-fixhub24'
     | '/admin_/access'
     | '/admin_/access-denied'
     | '/admin_/analytics'
@@ -2650,7 +2650,7 @@ export interface RootRouteChildren {
   SignInRoute: typeof SignInRoute
   TechnicianRoute: typeof TechnicianRoute
   TermsRoute: typeof TermsRoute
-  WhyFixhubRoute: typeof WhyFixhubRoute
+  WhyFixhub24Route: typeof WhyFixhub24Route
   AdminAccessRoute: typeof AdminAccessRoute
   AdminAccessDeniedRoute: typeof AdminAccessDeniedRoute
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
@@ -3142,11 +3142,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/why-fixhub': {
-      id: '/why-fixhub'
-      path: '/why-fixhub'
-      fullPath: '/why-fixhub'
-      preLoaderRoute: typeof WhyFixhubRouteImport
+    '/why-fixhub24': {
+      id: '/why-fixhub24'
+      path: '/why-fixhub24'
+      fullPath: '/why-fixhub24'
+      preLoaderRoute: typeof WhyFixhub24RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin_/access': {
@@ -4354,7 +4354,7 @@ const rootRouteChildren: RootRouteChildren = {
   SignInRoute: SignInRoute,
   TechnicianRoute: TechnicianRoute,
   TermsRoute: TermsRoute,
-  WhyFixhubRoute: WhyFixhubRoute,
+  WhyFixhub24Route: WhyFixhub24Route,
   AdminAccessRoute: AdminAccessRoute,
   AdminAccessDeniedRoute: AdminAccessDeniedRoute,
   AdminAnalyticsRoute: AdminAnalyticsRoute,

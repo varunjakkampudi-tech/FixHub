@@ -1,4 +1,4 @@
--- Fix Hub Platform Database Migration 001
+-- FixHub24 Platform Database Migration 001
 -- PostgreSQL 16+ with PostGIS Spatial Extension
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";

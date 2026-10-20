@@ -27,7 +27,7 @@ export function databaseConfigFromEnvironment(environment: DatabaseEnvironment):
 
   return {
     connectionString,
-    application_name: "fixhub-api",
+    application_name: "fixhub24-api",
     max,
     connectionTimeoutMillis: 3_000,
     idleTimeoutMillis: 30_000,

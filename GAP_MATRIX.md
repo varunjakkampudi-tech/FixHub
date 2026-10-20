@@ -1,6 +1,6 @@
-# FixHub — Gap & Requirement Audit Matrix
+# FixHub24 — Gap & Requirement Audit Matrix
 
-**Project:** Fix Hub (Viswatra)  
+**Project:** FixHub24 (Viswatra)  
 **Spec Baseline:** `FixHub-Product-Spec-v1.3.md` (Scope Frozen)  
 **Engineering Standard:** `Viswatra-Global-Engineering-Quality-Standard-v1.1.md` (30 Categories + CR-01)  
 **Current Audit Commit:** `67c4d573fe7a24f5ea37da45b7a1106bd73eec17`  
@@ -37,8 +37,8 @@
 | FR-5 | Honest test naming: tests declare exact capabilities tested without simulated claims. | INTEGRATED | TESTED_UNIT | All test files renamed and audited; simulations distinguished from real browser tests. |
 | FR-6 | Real tooling: strict ESLint, Prettier, TypeScript zero-error, Vitest test execution. | PARTIAL | TESTED_UNIT | 220 Vitest tests (task branch; 218 on main), 12 Playwright tests (Chromium projects), 1 doc validator test, typecheck clean. ESLint is not installed and the Prettier check fails (blocker BLOCKER-018). |
 | FR-7 | Continuous integration: triggers for push, PR, nightly, and allowlisted manual workflows. | IMPLEMENTED | OBSERVED_CODE | `.github/workflows/docs-validation.yml`. |
-| FR-8 | Tanuku geographic boundary: Haversine & PostGIS matching within Tanuku municipal coordinates. | INTEGRATED | TESTED_UNIT | `api/test/merchants.test.ts`, `src/test/fixhub-location.test.ts`. |
-| FR-9 | Bilingual English & Telugu only: no Hindi or unapproved locales in production catalog. | INTEGRATED | TESTED_UNIT | `src/features/fixhub/locale-context.tsx`, `src/test/fixhub-communications.test.ts`. |
+| FR-8 | Tanuku geographic boundary: Haversine & PostGIS matching within Tanuku municipal coordinates. | INTEGRATED | TESTED_UNIT | `api/test/merchants.test.ts`, `src/test/fixhub24-location.test.ts`. |
+| FR-9 | Bilingual English & Telugu only: no Hindi or unapproved locales in production catalog. | INTEGRATED | TESTED_UNIT | `src/features/fixhub24/locale-context.tsx`, `src/test/fixhub24-communications.test.ts`. |
 
 ---
 
@@ -47,7 +47,7 @@
 | ID | Description | Status | Evidence Level | Verification Notes |
 |---|---|---|---|---|
 | CX-01 | Clean 3-role login interface (Customer, Merchant, Admin) without confusing persona clutter | INTEGRATED | TESTED_API_CONTRACT | `src/test/e2e-journey-api.test.ts`, `src/test/sanity.test.ts` |
-| CX-02 | Service discovery and category catalog in Tanuku | INTEGRATED | TESTED_BROWSER | `e2e/browser-validation.spec.ts` (Chromium + Mobile), `src/features/fixhub/marketplace-view.tsx` |
+| CX-02 | Service discovery and category catalog in Tanuku | INTEGRATED | TESTED_BROWSER | `e2e/browser-validation.spec.ts` (Chromium + Mobile), `src/features/fixhub24/marketplace-view.tsx` |
 | CX-03 | Booking creation with address, category, and scheduled time | INTEGRATED | TESTED_API_CONTRACT | `api/test/booking-lifecycle.test.ts`, `src/test/e2e-journey-api.test.ts` |
 | CX-04 | Price Clarity Card: transparent inspection fee, labor, parts breakdown | INTEGRATED | TESTED_UNIT | `src/test/real-booking-price-preview.test.tsx`, `src/test/demo-price-display.test.tsx` |
 | CX-05 | Service Evidence Timeline: live status updates (Matching, Accepted, On the way, Arrived, In Progress, Completed) | INTEGRATED | TESTED_COMPONENT | `src/test/e2e-journey-api.test.ts` |
@@ -56,8 +56,8 @@
 | CX-08 | Completed booking service record download | INTEGRATED | TESTED_UNIT | `src/test/real-booking-service-record.test.tsx` |
 | CX-09 | 5-star rating & review submission with merchant score recalculation | INTEGRATED | TESTED_UNIT | `api/test/completion-review.test.ts` |
 | CX-10 | Support ticket creation & reference ID tracking | INTEGRATED | TESTED_UNIT | `src/test/notice-support-reference.test.tsx`, `src/test/support.test.tsx` |
-| CX-11 | Bilingual language toggle (English <-> Telugu) across all customer screens | INTEGRATED | TESTED_UNIT | `src/test/fixhub-communications.test.ts` |
-| CX-12 | Senior-friendly high-contrast controls & large text options | IMPLEMENTED | OBSERVED_CODE | `src/features/fixhub/senior-mode.tsx` |
+| CX-11 | Bilingual language toggle (English <-> Telugu) across all customer screens | INTEGRATED | TESTED_UNIT | `src/test/fixhub24-communications.test.ts` |
+| CX-12 | Senior-friendly high-contrast controls & large text options | IMPLEMENTED | OBSERVED_CODE | `src/features/fixhub24/senior-mode.tsx` |
 | CX-13 | Trust Passport: merchant background check, KYC badge, review counts | INTEGRATED | TESTED_UNIT | `api/test/merchants.test.ts` |
 | CX-14 | No-provider rescue workflow when local dispatch times out | PLANNED | SPECIFIED | EH-19 workflow specification |
 
@@ -86,20 +86,20 @@
 | ID | Description | Status | Evidence Level | Verification Notes |
 |---|---|---|---|---|
 | AX-01 | Super Admin authentication & role enforcement | INTEGRATED | TESTED_UNIT | `api/test/security-quarantine-fr1.test.ts`, `src/test/sanity.test.ts` |
-| AX-02 | System Logs & Real-Time Audit Viewer (level, query, metadata) | INTEGRATED | TESTED_UNIT | `src/features/fixhub/registry-admin.tsx` |
+| AX-02 | System Logs & Real-Time Audit Viewer (level, query, metadata) | INTEGRATED | TESTED_UNIT | `src/features/fixhub24/registry-admin.tsx` |
 | AX-03 | Live microservice health & API latency monitoring | INTEGRATED | TESTED_UNIT | `src/test/admin-health.test.tsx` |
-| AX-04 | Platform financial telemetry: GMV, commission take-rate | INTEGRATED | TESTED_UNIT | `src/features/fixhub/registry-admin.tsx` |
-| AX-05 | Live job tracking board across all Tanuku bookings | INTEGRATED | TESTED_UNIT | `src/features/fixhub/registry-admin.tsx` |
+| AX-04 | Platform financial telemetry: GMV, commission take-rate | INTEGRATED | TESTED_UNIT | `src/features/fixhub24/registry-admin.tsx` |
+| AX-05 | Live job tracking board across all Tanuku bookings | INTEGRATED | TESTED_UNIT | `src/features/fixhub24/registry-admin.tsx` |
 | AX-06 | Merchant KYC verification and suspension controls | INTEGRATED | TESTED_UNIT | `api/test/merchants.test.ts` |
 | AX-07 | Support dispute resolution ticketing & arbitration | INTEGRATED | TESTED_UNIT | `src/test/support.test.tsx`, `api/test/disputes-and-notifications.test.ts` |
-| AX-08 | Platform configuration management & zone publishing | IMPLEMENTED | OBSERVED_CODE | `src/features/fixhub/registry-admin.tsx` |
+| AX-08 | Platform configuration management & zone publishing | IMPLEMENTED | OBSERVED_CODE | `src/features/fixhub24/registry-admin.tsx` |
 | AX-09 | Customer privacy request processing (data export, deletion) | INTEGRATED | TESTED_UNIT | `api/test/auth.test.ts` |
 | AX-10 | Rate limit monitoring & anomalous IP detection | INTEGRATED | TESTED_UNIT | `api/test/app.test.ts` |
 | AX-11 | Notification outbox queue inspection & retry management | INTEGRATED | TESTED_UNIT | `api/test/notification-outbox.test.ts` |
 | AX-12 | Invoice and billing audit breakdown verification | INTEGRATED | TESTED_INTEGRATION | `src/test/e2e-journey-api.test.ts` |
 | AX-13 | Category readiness checklist & activation gate | PLANNED | SPECIFIED | EH-23 domain requirements |
-| AX-14 | Emergency platform kill-switch & maintenance mode | IMPLEMENTED | OBSERVED_CODE | `src/features/fixhub/registry-admin.tsx` |
-| AX-15 | Admin audit logging of all sensitive actions | INTEGRATED | TESTED_UNIT | `src/features/fixhub/registry-admin.tsx` |
+| AX-14 | Emergency platform kill-switch & maintenance mode | IMPLEMENTED | OBSERVED_CODE | `src/features/fixhub24/registry-admin.tsx` |
+| AX-15 | Admin audit logging of all sensitive actions | INTEGRATED | TESTED_UNIT | `src/features/fixhub24/registry-admin.tsx` |
 
 ---
 
@@ -109,7 +109,7 @@
 |---|---|---|---|
 | Legal | ECO GSTIN Registration (AP State Code 37) | Form entity & obtain GSTIN | `READY_FOR_OWNER` |
 | Messaging | Meta WhatsApp Business Platform Account | Verify business & procure SIM | `READY_FOR_OWNER` |
-| Telecom | TRAI SMS DLT Header Registration ("FIXHUB") | Register entity & header on DLT portal | `READY_FOR_OWNER` |
+| Telecom | TRAI SMS DLT Header Registration ("FIXHUB24") | Register entity & header on DLT portal | `READY_FOR_OWNER` |
 | Mobile Stores | Apple App Store & Google Play Console Accounts | Enroll in developer programs | `READY_FOR_OWNER` |
 | Hosting | Staging & Production Host Infrastructure | Provide isolated hosting target & DB | `READY_FOR_OWNER` |
 | Secrets | Production JWT & HMAC Secret Generation | Configure 64-char high-entropy secret | `READY_FOR_OWNER` |

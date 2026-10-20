@@ -1,7 +1,7 @@
 export const openApiDocument = {
   openapi: "3.1.0",
   info: {
-    title: "Fix Hub local demonstration API",
+    title: "FixHub24 local demonstration API",
     version: "0.1.0",
     description:
       "Local demonstration endpoints only. This is not the approved production API. Booking notifications and payment collection are not active. Optional WhatsApp contact verification is disabled by default and requires explicit operator configuration.",
@@ -442,7 +442,7 @@ export const openApiDocument = {
       post: {
         summary: "Request an in-area service booking",
         description:
-          "Requires a verified, accepting merchant with an active matching service within its configured radius. A customer request, intended-offer records and outbox events are written atomically. An optional best-effort WhatsApp dispatcher runs only when FIXHUB_WHATSAPP_NOTIFICATIONS_ENABLED=true and required credentials/templates are configured; delivery never assigns a provider. Payment metadata is cash on completion only; this endpoint does not collect money.",
+          "Requires a verified, accepting merchant with an active matching service within its configured radius. A customer request, intended-offer records and outbox events are written atomically. An optional best-effort WhatsApp dispatcher runs only when FIXHUB24_WHATSAPP_NOTIFICATIONS_ENABLED=true and required credentials/templates are configured; delivery never assigns a provider. Payment metadata is cash on completion only; this endpoint does not collect money.",
         parameters: [
           {
             name: "Idempotency-Key",

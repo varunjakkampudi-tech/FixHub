@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ServicesPage } from "@/features/fixhub/services";
-import { meta } from "@/features/fixhub/context";
+import { ServicesPage } from "@/features/fixhub24/services";
+import { meta } from "@/features/fixhub24/context";
 export const Route = createFileRoute("/services_/$category_/$service")({
   head: () => meta("Services \u00b7 Category \u00b7 Service", false),
   component: Screen,

@@ -13,9 +13,9 @@
 During the audit of commit #21 (`dd1bc789ae372c80281a7e4f3d11768a48ccaaab`) and related commits (`a534af0`), a critical security vulnerability was identified:
 In `api/services/auth-service.ts` line 11:
 ```typescript
-const JWT_SECRET = process.env.JWT_SECRET || "fixhub-local-development-secret-key-min-32-chars-long";
+const JWT_SECRET = process.env.JWT_SECRET || "fixhub24-local-development-secret-key-min-32-chars-long";
 ```
-A hardcoded fallback secret (`fixhub-local-development-secret-key-min-32-chars-long`) was present in application source code. Any party with access to this public repository could forge valid HMAC SHA-256 JWT tokens for arbitrary user identifiers and arbitrary roles (including `admin`).
+A hardcoded fallback secret (`fixhub24-local-development-secret-key-min-32-chars-long`) was present in application source code. Any party with access to this public repository could forge valid HMAC SHA-256 JWT tokens for arbitrary user identifiers and arbitrary roles (including `admin`).
 
 This investigation determined the exposure scope, verified whether it was ever used or published in any deployment environment, implemented code-level safeguards requiring explicit secrets on startup in non-test modes, and created a `READY_FOR_OWNER` action item in `blocker.txt`.
 
@@ -54,7 +54,7 @@ An exhaustive forensic audit was performed across:
 
 ### 3.4 Historical Usage Audit
 - Comprehensive search was executed across all commit logs, build logs, and git history for active deployment URLs.
-- Confirmed that FixHub has never had a public staging or production server deployed to date (all runs were localhost demo and local CI).
+- Confirmed that FixHub24 has never had a public staging or production server deployed to date (all runs were localhost demo and local CI).
 - Any tokens generated during historical development or local developer testing were ephemeral.
 - However, as a formal defense-in-depth posture, any tokens signed prior to commit `1ded0fb` are considered compromised and revoked.
 
@@ -76,7 +76,7 @@ To satisfy FR-1 and eliminate this risk:
    - Tokens signed with the exposed fallback string are rejected.
 5. **Session Invalidation, Token Epoch & Rotation Playbook:**
    - **Cryptographic Key Invalidation:** When a new `JWT_SECRET` is provisioned, all previously issued tokens fail HMAC verification immediately and unconditionally.
-   - **Session Store Purge:** Any persisted server-side sessions (`auth_sessions` / `fixhub_session` cookies) must be truncated (`TRUNCATE auth_sessions;`) upon secret rotation.
+   - **Session Store Purge:** Any persisted server-side sessions (`auth_sessions` / `fixhub24_session` cookies) must be truncated (`TRUNCATE auth_sessions;`) upon secret rotation.
    - **User Token Epoch Revocation:** The user schema supports a `tokenEpoch` counter. Incrementing `tokenEpoch` instantly invalidates all existing issued tokens for a specific user or globally across all clients.
    - **Activity Review:** Before launching public staging, operations must inspect server logs and audit trails to verify zero anomalous admin actions or unrecognized bookings were created.
 

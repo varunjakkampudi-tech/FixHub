@@ -448,7 +448,7 @@ export function createMarketplaceHandlers(pool: Pick<Pool, "connect">) {
           eligibleProviderCandidates: eligible.length,
           notificationStatus: "not_dispatched",
           notice:
-            "Request and eligible offers are saved. WhatsApp delivery is attempted asynchronously only when enabled and permitted; an accepted offer in FixHub confirms assignment.",
+            "Request and eligible offers are saved. WhatsApp delivery is attempted asynchronously only when enabled and permitted; an accepted offer in FixHub24 confirms assignment.",
           createdAt: new Date().toISOString(),
         },
       };

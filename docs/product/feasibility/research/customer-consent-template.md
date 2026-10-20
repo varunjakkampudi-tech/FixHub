@@ -2,7 +2,7 @@
 
 DRAFT, not yet counsel/language-reviewed or used. Owner must supply real researcher/contact/withdrawal route privately before recruitment. Blank fields are intentionally unfilled; do not present this as executed consent.
 
-Study: Fix Hub feasibility under Viswatra; proposed service matching in Tanuku. Interview is voluntary and takes approximately 20–30 minutes. No service, merchant contract or employment is offered. Choosing not to participate has no penalty. You may skip questions or stop.
+Study: FixHub24 feasibility under Viswatra; proposed service matching in Tanuku. Interview is voluntary and takes approximately 20–30 minutes. No service, merchant contract or employment is offered. Choosing not to participate has no penalty. You may skip questions or stop.
 
 We propose collecting anonymous age-adult confirmation, broad zone/household or business category, recent service behavior, costs and opinions. Do not provide government IDs, exact home address, bank details or other people's personal information. No recording unless separately explained and affirmatively accepted. Consent to research is not consent to marketing or WhatsApp notifications.
 

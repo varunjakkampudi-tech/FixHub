@@ -1,14 +1,14 @@
 # Workspace guidance
 
-This repository holds product/governance documentation and a local-only Fix Hub demonstration UI/API. It is not a production service. Its canonical GitHub repository is `varunjakkampudi-tech/FixHub`, with `main` as the default branch. Read relevant documents and this file before changing project material.
+This repository holds product/governance documentation and a local-only FixHub24 demonstration UI/API. It is not a production service. Its canonical GitHub repository is `varunjakkampudi-tech/FixHub24`, with `main` as the default branch. Read relevant documents and this file before changing project material.
 
 ## Product and brand constraints
 
 - Viswatra is the confirmed parent brand.
-- Fix Hub is the owner-selected product name under Viswatra.
+- FixHub24 is the owner-selected product name under Viswatra.
 - “A–Z Services” and `viswatra-marketplace` are historical planning identifiers, not current product names.
 - Logo, visual identity, colors, typography, domain, and tagline remain OPEN.
-- `fixhub-platform` remains a recommended identifier only; the owner-selected repository currently uses `FixHub`. Do not rename this workspace or repository absent a separate owner decision.
+- `fixhub24-platform` remains a recommended identifier only; the owner-selected repository currently uses `FixHub24`. Do not rename this workspace or repository absent a separate owner decision.
 - Do not generate, select, approve, or implement a permanent logo or identity without owner approval.
 
 ## Tooling and implementation boundaries

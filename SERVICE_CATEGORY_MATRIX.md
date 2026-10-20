@@ -1,6 +1,6 @@
-# FixHub — Service Category & Readiness Matrix (EH-23)
+# FixHub24 — Service Category & Readiness Matrix (EH-23)
 
-**Project:** Fix Hub (Viswatra)  
+**Project:** FixHub24 (Viswatra)  
 **Launch Geography:** Tanuku Municipal Region, Andhra Pradesh  
 **Specification:** `FixHub-Product-Spec-v1.3.md` (Section 2 & EH-23)  
 **Audit Commit:** `554fde9`  

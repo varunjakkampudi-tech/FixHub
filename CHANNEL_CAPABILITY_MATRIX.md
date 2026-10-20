@@ -1,6 +1,6 @@
-# FixHub — Channel Capability Matrix (CH-01 to CH-08)
+# FixHub24 — Channel Capability Matrix (CH-01 to CH-08)
 
-**Project:** Fix Hub (Viswatra)  
+**Project:** FixHub24 (Viswatra)  
 **Spec Reference:** `FixHub-Product-Spec-v1.3.md` (Section 7, 18.2)  
 **Audit Commit:** `554fde9`  
 
@@ -25,7 +25,7 @@
 
 | Event Name | Recipient | Trigger Condition | Template Invariant |
 |---|---|---|---|
-| `BOOKING_CREATED` | Customer | Booking submitted by customer | "Your FixHub booking #{{id}} in Tanuku has been received." |
+| `BOOKING_CREATED` | Customer | Booking submitted by customer | "Your FixHub24 booking #{{id}} in Tanuku has been received." |
 | `LEAD_BROADCAST` | Eligible Merchants | Matching booking posted within radius | "New {{category}} job request in {{zone}}. Tap to accept." |
 | `LEAD_ACCEPTED` | Customer & Merchant | Atomic Redlock won by first merchant | "Merchant {{businessName}} has accepted your booking." |
 | `TECHNICIAN_DISPATCHED` | Customer | Merchant assigns technician | "Technician {{name}} is en route to your location." |

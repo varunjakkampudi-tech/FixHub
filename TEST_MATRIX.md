@@ -1,6 +1,6 @@
-# FixHub — Automated & Manual Test Matrix (QA-01 to QA-34)
+# FixHub24 — Automated & Manual Test Matrix (QA-01 to QA-34)
 
-**Project:** Fix Hub (Viswatra)  
+**Project:** FixHub24 (Viswatra)  
 **Baseline for this checkpoint:** main at `2383a109c35a1259a490db050929690db32c4bc7` (measured 2026-10-20)  
 **Total Vitest Suites:** 43 test files; 218 tests on main and 220 on the task branch; all passing on 2026-10-20  
 **Total Real Browser Playwright Tests:** 12 (6 per project: Desktop Chromium and Pixel 5); all passed on 2026-10-20  
@@ -38,22 +38,22 @@
 | QA-02 | Role-based authentication & session isolation | `api/test/auth.test.ts`, `src/test/real-auth.test.tsx` | TESTED_UNIT | PASS |
 | QA-03 | Security quarantine & defect regression (FR-1) | `api/test/security-quarantine-fr1.test.ts` | TESTED_UNIT_SECURITY | PASS |
 | QA-04 | Atomic single-winner dispatch & Redlock concurrency | `api/test/dispatch-and-race.test.ts`, `src/test/critical.test.ts` | TESTED_UNIT | PASS |
-| QA-05 | Service catalog, merchant zones & spatial filtering | `api/test/merchants.test.ts`, `src/test/fixhub-location.test.ts` | TESTED_UNIT | PASS |
+| QA-05 | Service catalog, merchant zones & spatial filtering | `api/test/merchants.test.ts`, `src/test/fixhub24-location.test.ts` | TESTED_UNIT | PASS |
 | QA-06 | Booking state machine & quote adjustment | `api/test/booking-lifecycle.test.ts`, `src/test/regression.test.ts` | TESTED_UNIT | PASS |
 | QA-07 | Cash on Completion (COD) disclosure & settlement | `src/test/demo-bill.test.ts`, `src/test/real-booking-price-preview.test.tsx` | TESTED_UNIT | PASS |
 | QA-08 | Completed booking service record download | `src/test/real-booking-service-record.test.tsx` | TESTED_UNIT | PASS |
 | QA-09 | 5-Star customer ratings & dynamic score update | `api/test/completion-review.test.ts` | TESTED_UNIT | PASS |
 | QA-10 | Support ticket dispute resolution | `src/test/support.test.tsx`, `api/test/disputes-and-notifications.test.ts` | TESTED_UNIT | PASS |
-| QA-11 | Bilingual English & Telugu communication strings | `src/test/fixhub-communications.test.ts` | TESTED_UNIT | PASS |
+| QA-11 | Bilingual English & Telugu communication strings | `src/test/fixhub24-communications.test.ts` | TESTED_UNIT | PASS |
 | QA-12 | Database migrations schema validation | `api/test/migrations.test.ts`, `api/test/database.test.ts` | TESTED_UNIT | PASS |
 | QA-13 | Notification outbox delivery & retry resilience | `api/test/notification-outbox.test.ts` | TESTED_UNIT | PASS |
 | QA-14 | Twilio & messaging adapter interfaces | `api/test/twilio.test.ts` | TESTED_UNIT | PASS |
 | QA-15 | WhatsApp contact verification & encryption keys | `api/test/whatsapp-contact.test.ts` | TESTED_UNIT | PASS |
 | QA-16 | Multi-role user journey API simulation | `src/test/e2e-journey-api.test.ts` | TESTED_API_CONTRACT | PASS |
-| QA-17 | Senior-friendly high-contrast UI controls | `src/test/fixhub-hardening.test.ts` | TESTED_UNIT | PASS |
+| QA-17 | Senior-friendly high-contrast UI controls | `src/test/fixhub24-hardening.test.ts` | TESTED_UNIT | PASS |
 | QA-18 | Address coordinates normalization & boundary check | `api/test/address-coordinates.test.ts` | TESTED_UNIT | PASS |
 | QA-19 | Redis distributed lock acquisition & TTL safety | `api/test/redis-lock.test.ts` | TESTED_UNIT | PASS |
-| QA-20 | Super Admin audit logs & real-time telemetry | `src/features/fixhub/registry-admin.tsx` | TESTED_UNIT | PASS |
+| QA-20 | Super Admin audit logs & real-time telemetry | `src/features/fixhub24/registry-admin.tsx` | TESTED_UNIT | PASS |
 | QA-21 | Sensitive data leakage prevention in logs | `api/test/auth.test.ts` | TESTED_UNIT | PASS |
 | QA-22 | Client bundle secret scanning & zero plaintext secrets | `scripts/lint.mjs` | TESTED_UNIT | PASS |
 | QA-23 | Real browser console error gate (CR-01) | `e2e/browser-validation.spec.ts` (Chromium) | TESTED_BROWSER | PASS |

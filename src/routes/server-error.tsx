@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { RecoveryPage } from "@/features/fixhub/recovery";
-import { meta } from "@/features/fixhub/context";
+import { RecoveryPage } from "@/features/fixhub24/recovery";
+import { meta } from "@/features/fixhub24/context";
 export const Route = createFileRoute("/server-error")({
   head: () => meta("Server Error", false),
   component: Screen,

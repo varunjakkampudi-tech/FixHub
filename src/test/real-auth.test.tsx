@@ -10,7 +10,7 @@ vi.mock("@tanstack/react-router", () => ({
   useNavigate: () => mocks.navigate,
 }));
 
-vi.mock("@/features/fixhub/api-client", () => ({
+vi.mock("@/features/fixhub24/api-client", () => ({
   ApiError: class ApiError extends Error {
     constructor(_status: number, _code: string, message: string) {
       super(message);
@@ -20,17 +20,17 @@ vi.mock("@/features/fixhub/api-client", () => ({
   resolveApiSessionMode: mocks.resolveMode,
 }));
 
-vi.mock("@/features/fixhub/context", () => ({ useFixHub: () => ({ locale: "en-IN" }) }));
+vi.mock("@/features/fixhub24/context", () => ({ useFixHub24: () => ({ locale: "en-IN" }) }));
 
-vi.mock("@/features/fixhub/shared", () => ({
+vi.mock("@/features/fixhub24/shared", () => ({
   PageShell: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   PageTop: ({ title }: { title: string }) => <h1>{title}</h1>,
   Notice: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
-import { RealAuth } from "@/features/fixhub/real-auth";
-import { AccountPage } from "@/features/fixhub/account";
-import { ApiError } from "@/features/fixhub/api-client";
+import { RealAuth } from "@/features/fixhub24/real-auth";
+import { AccountPage } from "@/features/fixhub24/account";
+import { ApiError } from "@/features/fixhub24/api-client";
 
 afterEach(() => {
   cleanup();

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { calculate, initialPolicy } from "@/features/fixhub/demo-model";
-import { demoBillLines, demoServiceRecordFile } from "@/features/fixhub/demo-bill";
+import { calculate, initialPolicy } from "@/features/fixhub24/demo-model";
+import { demoBillLines, demoServiceRecordFile } from "@/features/fixhub24/demo-bill";
 
 describe("demo service bill", () => {
   it("shows the complete customer price breakdown and marks tax as unconfigured", () => {
@@ -30,10 +30,10 @@ describe("demo service bill", () => {
       calculate(initialPolicy.plumbing),
       "en-IN",
     );
-    expect(file.filename).toBe("fixhub-demo-service-record-FH-123.txt");
+    expect(file.filename).toBe("fixhub24-demo-service-record-FH-123.txt");
     expect(file.href).toMatch(/^data:text\/plain;charset=utf-8,/);
     expect(decodeURIComponent(file.href.slice(file.href.indexOf(",") + 1))).toBe(file.content);
-    expect(file.content).toContain("FIX HUB — SERVICE RECORD · DEMO");
+    expect(file.content).toContain("FIXHUB2424 — SERVICE RECORD · DEMO");
     expect(file.content).toContain("Reference: FH-123");
     expect(file.content).toContain("Service: Electrical repair");
     expect(file.content).toContain("Visit charge: ₹149");
@@ -50,7 +50,7 @@ describe("demo service bill", () => {
       calculate(initialPolicy.electrician),
       "te-IN",
     );
-    expect(file.filename).toBe("fixhub-demo-service-record-FH-PAID.txt");
+    expect(file.filename).toBe("fixhub24-demo-service-record-FH-PAID.txt");
     expect(file.content).toContain("ఫిక్స్ హబ్ — సేవా రికార్డు · డెమో");
     expect(file.content).toContain("రిఫరెన్స్: ../FH PAID");
     expect(file.content).toContain("సేవ: Repair Paid");

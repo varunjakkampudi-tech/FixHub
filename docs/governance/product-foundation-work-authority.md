@@ -4,7 +4,7 @@
 
 The owner subsequently requested professional domain-based file, folder and test names; removal of superseded active locations/temporary tooling; and a file-by-file, line-by-line quality review through the design-system stage. This authorizes the structure and reviewed clarification amendment recorded in [document lineage](document-lineage.json), not new phase approvals, permanent identity selection, account/vendor access, spending or application implementation. Historical provenance remains in explicit commit-relative records and Git history rather than duplicate active source trees. G0–G5, the 20-stage sequence and required repository protections are unchanged.
 
-Recorded 2026-10-15 (Asia/Calcutta). Human owner supplied “FIXHUB — AUTONOMOUS CODEX GOAL: Complete Phases 01–05 on Main, Without Feature Branches or Pull Requests”. Source attachment SHA-256: `E4D7C34292DED7F06EAF49C2FCC9E80C7BC7C5CCA3BA1D4AAC07800C0DE784EC`. This records work authority, not acceptance of findings not yet produced.
+Recorded 2026-10-15 (Asia/Calcutta). Human owner supplied “FIXHUB24 — AUTONOMOUS CODEX GOAL: Complete Phases 01–05 on Main, Without Feature Branches or Pull Requests”. Source attachment SHA-256: `E4D7C34292DED7F06EAF49C2FCC9E80C7BC7C5CCA3BA1D4AAC07800C0DE784EC`. This records work authority, not acceptance of findings not yet produced.
 
 ## Scope and gates
 
@@ -14,7 +14,7 @@ Roadmap V4.1 sequence 00–19, G0–G5 and the single coordinated public release
 
 ## Verified starting publication
 
-PR #3 merged as `abf68d8b164468058eb0abcc0527390abf9238b3`; PR #4 merged as `aff098c143e44199160ed8e31801b0df57628702`. Main was fast-forwarded to the latter with a clean worktree. [Main CI](https://github.com/varunjakkampudi-tech/FixHub/actions/runs/38749208725) reports SUCCESS on that exact SHA. GitHub merge metadata is publication evidence, not proof of independent human review or Phase 01 exit approval.
+PR #3 merged as `abf68d8b164468058eb0abcc0527390abf9238b3`; PR #4 merged as `aff098c143e44199160ed8e31801b0df57628702`. Main was fast-forwarded to the latter with a clean worktree. [Main CI](https://github.com/varunjakkampudi-tech/FixHub24/actions/runs/38749208725) reports SUCCESS on that exact SHA. GitHub merge metadata is publication evidence, not proof of independent human review or Phase 01 exit approval.
 
 ## Proposed limited direct-main procedure
 

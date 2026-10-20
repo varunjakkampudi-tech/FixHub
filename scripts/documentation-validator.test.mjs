@@ -7,7 +7,7 @@ import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const sourceRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const tempRoot = await mkdtemp(path.join(os.tmpdir(), 'fixhub-doc-validator-'));
+const tempRoot = await mkdtemp(path.join(os.tmpdir(), 'fixhub24-doc-validator-'));
 const fixtureRoot = path.join(tempRoot, 'repo');
 
 function isExcludedName(name) {

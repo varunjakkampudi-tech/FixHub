@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { OnboardingPage } from "@/features/fixhub/workspaces";
-import { meta } from "@/features/fixhub/context";
+import { OnboardingPage } from "@/features/fixhub24/workspaces";
+import { meta } from "@/features/fixhub24/context";
 export const Route = createFileRoute("/merchant_/onboarding_/team")({
   head: () => meta("Merchant \u00b7 Onboarding \u00b7 Team", true),
   component: Screen,

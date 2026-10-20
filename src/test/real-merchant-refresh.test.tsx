@@ -19,21 +19,21 @@ vi.mock("@/components/ui/button", () => ({
   ),
 }));
 
-vi.mock("@/features/fixhub/api-client", () => ({
+vi.mock("@/features/fixhub24/api-client", () => ({
   ApiError: class ApiError extends Error {},
   apiRequest: mocks.request,
 }));
 
-vi.mock("@/features/fixhub/context", () => ({ useFixHub: () => ({ locale: "en-US" }) }));
+vi.mock("@/features/fixhub24/context", () => ({ useFixHub24: () => ({ locale: "en-US" }) }));
 
-vi.mock("@/features/fixhub/shared", () => ({
+vi.mock("@/features/fixhub24/shared", () => ({
   Notice: ({ children, error }: { children: React.ReactNode; error?: boolean }) => (
     <div role={error ? "alert" : "status"}>{children}</div>
   ),
   PageTop: ({ title }: { title: string }) => <h1>{title}</h1>,
 }));
 
-import { RealMerchantPage } from "@/features/fixhub/real-merchant";
+import { RealMerchantPage } from "@/features/fixhub24/real-merchant";
 
 afterEach(() => {
   cleanup();

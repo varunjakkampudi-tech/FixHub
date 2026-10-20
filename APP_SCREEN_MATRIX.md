@@ -1,6 +1,6 @@
-# FixHub — Application Screen & Responsive UI Matrix
+# FixHub24 — Application Screen & Responsive UI Matrix
 
-**Project:** Fix Hub (Viswatra)  
+**Project:** FixHub24 (Viswatra)  
 **Spec Reference:** `FixHub-Product-Spec-v1.3.md` (Section 3–6, 16A.2)  
 **Engineering Standards:** `FixHub-Engineering-Standards.md` (Breakpoints: Mobile <= 767px, Tablet 768px-1023px, Desktop >= 1024px)  
 **Audit Commit:** `554fde9`  
@@ -9,7 +9,7 @@
 
 ## 1. Screen Inventory & Role Mapping
 
-FixHub enforces strict role consolidation into 3 clean, unambiguous user workspaces:
+FixHub24 enforces strict role consolidation into 3 clean, unambiguous user workspaces:
 1. **Customer Workspace**
 2. **Merchant & Technician Workspace**
 3. **Super Admin Workspace (Platform Operations)**

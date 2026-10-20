@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { BookingHistory } from "@/features/fixhub/booking";
-import { meta } from "@/features/fixhub/context";
+import { BookingHistory } from "@/features/fixhub24/booking";
+import { meta } from "@/features/fixhub24/context";
 export const Route = createFileRoute("/customer_/bookings")({
   head: () => meta("Customer \u00b7 Bookings", true),
   component: Screen,

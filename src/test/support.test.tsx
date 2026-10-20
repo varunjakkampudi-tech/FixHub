@@ -7,7 +7,7 @@ vi.mock("@tanstack/react-router", () => ({
     <a href={to}>{children}</a>
   ),
 }));
-vi.mock("@/features/fixhub/api-client", () => ({
+vi.mock("@/features/fixhub24/api-client", () => ({
   resolveApiSession: mocks.session,
   apiRequest: mocks.request,
   ApiError: class ApiError extends Error {
@@ -20,14 +20,14 @@ vi.mock("@/features/fixhub/api-client", () => ({
     }
   },
 }));
-vi.mock("@/features/fixhub/context", () => ({ useFixHub: () => ({ locale: "en-IN" }) }));
-vi.mock("@/features/fixhub/shared", () => ({
+vi.mock("@/features/fixhub24/context", () => ({ useFixHub24: () => ({ locale: "en-IN" }) }));
+vi.mock("@/features/fixhub24/shared", () => ({
   PageShell: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   PageTop: ({ title }: { title: string }) => <h1>{title}</h1>,
   Notice: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
-import { SupportPage } from "@/features/fixhub/support";
-import { ApiError } from "@/features/fixhub/api-client";
+import { SupportPage } from "@/features/fixhub24/support";
+import { ApiError } from "@/features/fixhub24/api-client";
 
 const ticket = {
   id: "00000000-0000-4000-8000-000000000001",

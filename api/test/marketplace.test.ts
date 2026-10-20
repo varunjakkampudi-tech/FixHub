@@ -242,8 +242,8 @@ describe("marketplace boundaries", () => {
       .expect(200);
     const cookies = verified.headers["set-cookie"];
     const cookieList = Array.isArray(cookies) ? cookies : [cookies];
-    const csrfCookie = cookieList.find((cookie) => cookie.startsWith("fixhub_csrf="))!;
-    const sessionCookie = cookieList.find((cookie) => cookie.startsWith("fixhub_session="))!;
+    const csrfCookie = cookieList.find((cookie) => cookie.startsWith("fixhub24_csrf="))!;
+    const sessionCookie = cookieList.find((cookie) => cookie.startsWith("fixhub24_session="))!;
     const csrf = decodeURIComponent(csrfCookie.split(";", 1)[0].split("=", 2)[1]);
     const requestWithAuth = (method: "get" | "post", url: string) =>
       request(app)
@@ -310,7 +310,7 @@ describe("marketplace boundaries", () => {
       estimate: { visitPaise: 30000, laborFromPaise: 10000, totalFromPaise: 40000 },
     });
     expect(first.body.booking.notice).toBe(
-      "Request and eligible offers are saved. WhatsApp delivery is attempted asynchronously only when enabled and permitted; an accepted offer in FixHub confirms assignment.",
+      "Request and eligible offers are saved. WhatsApp delivery is attempted asynchronously only when enabled and permitted; an accepted offer in FixHub24 confirms assignment.",
     );
     expect(offerRows).toHaveLength(4);
     expect(outboxRows).toHaveLength(6);

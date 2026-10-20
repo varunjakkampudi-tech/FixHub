@@ -2,7 +2,7 @@
 
 ## Current authority
 
-Fix Hub is the owner-selected product name under Viswatra. Governing roadmap V4.1 retains its original 20-stage order, G0–G5 gates and one coordinated public release. The [foundation approval](../reviews/foundation-approval.md) records planning authority; [stage-gate policy](stage-gate-policy.md) distinguishes work, evidence, owner acceptance and publication. A professional filename or passing documentation check is not phase approval, implementation or production readiness.
+FixHub24 is the owner-selected product name under Viswatra. Governing roadmap V4.1 retains its original 20-stage order, G0–G5 gates and one coordinated public release. The [foundation approval](../reviews/foundation-approval.md) records planning authority; [stage-gate policy](stage-gate-policy.md) distinguishes work, evidence, owner acceptance and publication. A professional filename or passing documentation check is not phase approval, implementation or production readiness.
 
 ## Canonical evidence registers
 

@@ -39,7 +39,7 @@ Limits: one local Node process and loopback client only; no distributed/multi-in
 
 ## Location and directions boundary
 
-The customer address editor requests browser geolocation only after the user selects its location button; the browser permission prompt remains user-controlled. For a persisted job assigned to the signed-in verified merchant, the jobs page offers an explicit Google Maps directions link to the saved job coordinates. Opening that link sends the destination to Google Maps. It uses Google's keyless Maps URL handoff, not the paid Maps Platform API; it does not geocode addresses, search places, share location in the background, or provide FixHub-side live tracking. The demo screen's SAMPLE data must not be used as a real dispatch destination.
+The customer address editor requests browser geolocation only after the user selects its location button; the browser permission prompt remains user-controlled. For a persisted job assigned to the signed-in verified merchant, the jobs page offers an explicit Google Maps directions link to the saved job coordinates. Opening that link sends the destination to Google Maps. It uses Google's keyless Maps URL handoff, not the paid Maps Platform API; it does not geocode addresses, search places, share location in the background, or provide FixHub24-side live tracking. The demo screen's SAMPLE data must not be used as a real dispatch destination.
 
 ## First persisted identity increment — 2026-10-16
 

@@ -8,7 +8,7 @@
 
 | ID | Assumption or risk | Type | Impact | Mitigation / evidence | Owner | Status |
 |---|---|---|---|---|---|---|
-| RISK-001 | Historical planning identifiers may be mistaken for the current product name. | Governance | Public confusion, rework, legal risk. | Use Fix Hub for current product references; label “A–Z Services” and `viswatra-marketplace` as historical identifiers and retain them only in migration evidence/backups. | Product owner | Open |
+| RISK-001 | Historical planning identifiers may be mistaken for the current product name. | Governance | Public confusion, rework, legal risk. | Use FixHub24 for current product references; label “A–Z Services” and `viswatra-marketplace` as historical identifiers and retain them only in migration evidence/backups. | Product owner | Open |
 | RISK-002 | A permanent logo or brand system may be created before approval. | Governance | Brand rework and unauthorized commitment. | No logo, palette, typography, tagline, domain, or visual identity in Phase 00. | Product owner | Open |
 | RISK-003 | Lovable may not import or synchronize the existing repository. | Tooling | Source divergence, lost work, integration cost. | Treat standalone project/export/Codex integration as the only current plan; verify capability before initiation. | Engineering owner | Open |
 | RISK-004 | Lovable project may be started before design and requirements approval. | Governance | Premature implementation and scope lock-in. | DEC-007 gate; require approval record and screen specification first. | Product owner | Open |

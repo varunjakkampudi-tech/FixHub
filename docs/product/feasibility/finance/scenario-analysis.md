@@ -39,7 +39,7 @@ HIGH break-even at469 is mathematical under HIGH's stronger fee/conversion/coeff
 | Meta and Twilio message fees plus support unit costs doubled |−54,482|−9,951|165,185|
 | No free service-message allowance (same as conservative baseline) |−47,606|3,657|192,005|
 
-The “no free allowance” row equals the conservative model baseline because it applies zero Meta service allowance; it is not an independent stress. Twilio fee is a dated public list input, not a Fix Hub quote; assumed USD/INR and 11 messages/request are not verified. Acquisition/collection and support dominate these inputs; WhatsApp account eligibility, classifications, tax/BSP terms and the service-pricing source conflict remain mandatory dependencies. Fees, mix, tax and wage/safety costs may overturn BASE. Require observed demand, supply, collection and conservative all-in cost before any capital commitment.
+The “no free allowance” row equals the conservative model baseline because it applies zero Meta service allowance; it is not an independent stress. Twilio fee is a dated public list input, not a FixHub24 quote; assumed USD/INR and 11 messages/request are not verified. Acquisition/collection and support dominate these inputs; WhatsApp account eligibility, classifications, tax/BSP terms and the service-pricing source conflict remain mandatory dependencies. Fees, mix, tax and wage/safety costs may overturn BASE. Require observed demand, supply, collection and conservative all-in cost before any capital commitment.
 
 ## Resend email cost sensitivity (not included in base model)
 

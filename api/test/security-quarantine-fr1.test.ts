@@ -196,10 +196,10 @@ describe("FR-1 Security Quarantine & Defect Remediation Suite", () => {
   describe("Defect 5: Fictional privileged accounts are not seeded outside test mode", () => {
     it("seeds no accounts outside test mode unless local demo seeding is explicitly enabled", () => {
       process.env.NODE_ENV = "production";
-      delete process.env.FIXHUB_LOCAL_DEMO_SEED;
+      delete process.env.FIXHUB24_LOCAL_DEMO_SEED;
       expect(new Repository().users.size).toBe(0);
 
-      process.env.FIXHUB_LOCAL_DEMO_SEED = "true";
+      process.env.FIXHUB24_LOCAL_DEMO_SEED = "true";
       expect(new Repository().users.get("usr-admin-001")?.role).toBe("admin");
     });
   });

@@ -1,6 +1,6 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { AdminHealthDiagnostics } from "@/features/fixhub/admin-health";
+import { AdminHealthDiagnostics } from "@/features/fixhub24/admin-health";
 
 afterEach(() => {
   cleanup();

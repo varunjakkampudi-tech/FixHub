@@ -1,6 +1,6 @@
-# FixHub — Smart Dispatch & Booking State Machine Matrix
+# FixHub24 — Smart Dispatch & Booking State Machine Matrix
 
-**Project:** Fix Hub (Viswatra)  
+**Project:** FixHub24 (Viswatra)  
 **Spec Reference:** `FixHub-Product-Spec-v1.3.md` (FR-4 & Section 8)  
 **Concurrency Engine:** Redlock Distributed Lock Engine with atomic SETNX & token-verified release  
 **Audit Commit:** `554fde9`  

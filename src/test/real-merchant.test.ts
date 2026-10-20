@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   googleMapsAddressDirectionsUrl,
   googleMapsDirectionsUrl,
-} from "@/features/fixhub/real-merchant";
+} from "@/features/fixhub24/real-merchant";
 
 describe("merchant directions", () => {
   it("opens an explicit Google Maps route using assigned job coordinates", () => {

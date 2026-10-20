@@ -108,7 +108,7 @@ function fixture(role = "customer") {
   const auth = (method: "get" | "post", url: string) =>
     request(app)
       [method](url)
-      .set("Cookie", "fixhub_session=synthetic; fixhub_csrf=synthetic-csrf")
+      .set("Cookie", "fixhub24_session=synthetic; fixhub24_csrf=synthetic-csrf")
       .set("x-csrf-token", "synthetic-csrf");
   const body = { subject: "Sample service issue", message: "Synthetic service follow-up details." };
   return {
@@ -132,7 +132,7 @@ describe("private support request routes", () => {
     await request(f.app).get("/api/v1/support/requests").expect(401);
     await request(f.app)
       .post("/api/v1/support/requests")
-      .set("Cookie", "fixhub_session=x; fixhub_csrf=x")
+      .set("Cookie", "fixhub24_session=x; fixhub24_csrf=x")
       .send(f.body)
       .expect(401);
     await f.auth("get", "/api/v1/support/inbox").expect(403);

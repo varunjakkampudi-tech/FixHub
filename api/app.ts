@@ -8,7 +8,7 @@ import pinoHttp from "pino-http";
 import swaggerUi from "swagger-ui-express";
 import { z } from "zod";
 
-import { calculate, initialPolicy } from "../src/features/fixhub/demo-model";
+import { calculate, initialPolicy } from "../src/features/fixhub24/demo-model";
 import { openApiDocument } from "./openapi";
 import { authRouter } from "./routes/auth-router";
 import { bookingsRouter } from "./routes/bookings-router";
@@ -53,7 +53,7 @@ export type ApiAppOptions = {
 };
 
 function configuredOrigins(): string[] {
-  const configured = process.env.FIXHUB_WEB_ORIGINS;
+  const configured = process.env.FIXHUB24_WEB_ORIGINS;
   const values = configured
     ? configured
         .split(",")
@@ -62,7 +62,7 @@ function configuredOrigins(): string[] {
     : ["http://localhost:5173", "http://127.0.0.1:5173"];
   const checked = z.array(originSchema).min(1).safeParse(values);
   if (!checked.success)
-    throw new Error("FIXHUB_WEB_ORIGINS must be a comma-separated list of exact origins");
+    throw new Error("FIXHUB24_WEB_ORIGINS must be a comma-separated list of exact origins");
   return checked.data;
 }
 

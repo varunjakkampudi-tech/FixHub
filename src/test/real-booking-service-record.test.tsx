@@ -18,12 +18,12 @@ vi.mock("@tanstack/react-router", () => ({
   }) => select({ location: { pathname: mocks.routerPath } }),
 }));
 
-vi.mock("@/features/fixhub/api-client", () => ({
+vi.mock("@/features/fixhub24/api-client", () => ({
   ApiError: class ApiError extends Error {},
   apiRequest: mocks.request,
 }));
 
-vi.mock("@/features/fixhub/shared", () => ({
+vi.mock("@/features/fixhub24/shared", () => ({
   PageShell: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   PageTop: ({ title }: { title: string }) => <h1>{title}</h1>,
   Notice: ({ children, error }: { children: React.ReactNode; error?: boolean }) => (
@@ -31,8 +31,8 @@ vi.mock("@/features/fixhub/shared", () => ({
   ),
 }));
 
-import { RealBookingHistory } from "@/features/fixhub/real-booking";
-import { FixHubProvider } from "@/features/fixhub/context";
+import { RealBookingHistory } from "@/features/fixhub24/real-booking";
+import { FixHub24Provider } from "@/features/fixhub24/context";
 
 const completedBooking = {
   id: "00000000-0000-4000-8000-000000000001",
@@ -59,9 +59,9 @@ function renderBooking(accepted: boolean) {
     booking: { ...completedBooking, customer_quote_accepted: accepted },
   });
   return render(
-    <FixHubProvider>
+    <FixHub24Provider>
       <RealBookingHistory detail />
-    </FixHubProvider>,
+    </FixHub24Provider>,
   );
 }
 
@@ -92,7 +92,7 @@ describe("completed booking service record", () => {
     const download = within(record!).getByRole("link", { name: "Download service record (.txt)" });
     expect(download).toHaveAttribute(
       "download",
-      "fixhub-service-record-00000000-0000-4000-8000-000000000001.txt",
+      "fixhub24-service-record-00000000-0000-4000-8000-000000000001.txt",
     );
     const fileContents = decodeURIComponent(
       download.getAttribute("href")!.split(",").slice(1).join(","),
@@ -122,9 +122,9 @@ describe("completed booking service record", () => {
   it("explains that booking status is authoritative while provider notifications are best-effort", async () => {
     mocks.request.mockResolvedValue({ booking: { ...completedBooking, status: "offered" } });
     render(
-      <FixHubProvider>
+      <FixHub24Provider>
         <RealBookingHistory detail />
-      </FixHubProvider>,
+      </FixHub24Provider>,
     );
 
     expect(
@@ -143,9 +143,9 @@ describe("completed booking service record", () => {
       }),
     );
     render(
-      <FixHubProvider>
+      <FixHub24Provider>
         <RealBookingHistory detail />
-      </FixHubProvider>,
+      </FixHub24Provider>,
     );
 
     const loading = screen.getByRole("status");
@@ -167,9 +167,9 @@ describe("completed booking service record", () => {
     vi.spyOn(document, "visibilityState", "get").mockReturnValue("visible");
     mocks.request.mockResolvedValue({ booking: { ...completedBooking, status: "offered" } });
     render(
-      <FixHubProvider>
+      <FixHub24Provider>
         <RealBookingHistory detail />
-      </FixHubProvider>,
+      </FixHub24Provider>,
     );
 
     await act(async () => {
@@ -192,9 +192,9 @@ describe("completed booking service record", () => {
     vi.spyOn(document, "visibilityState", "get").mockReturnValue("hidden");
     mocks.request.mockResolvedValue({ booking: { ...completedBooking, status: "completed" } });
     render(
-      <FixHubProvider>
+      <FixHub24Provider>
         <RealBookingHistory detail />
-      </FixHubProvider>,
+      </FixHub24Provider>,
     );
 
     await act(async () => {
@@ -216,9 +216,9 @@ describe("completed booking service record", () => {
     );
     mocks.request.mockResolvedValue({ booking: { ...completedBooking, status: "offered" } });
     render(
-      <FixHubProvider>
+      <FixHub24Provider>
         <RealBookingHistory detail />
-      </FixHubProvider>,
+      </FixHub24Provider>,
     );
 
     await act(async () => {
@@ -266,9 +266,9 @@ describe("completed booking service record", () => {
         },
       });
     const view = render(
-      <FixHubProvider>
+      <FixHub24Provider>
         <RealBookingHistory detail />
-      </FixHubProvider>,
+      </FixHub24Provider>,
     );
 
     await act(async () => {
@@ -286,9 +286,9 @@ describe("completed booking service record", () => {
     await act(async () => {
       mocks.routerPath = `/customer/bookings/${bookingBId}`;
       view.rerender(
-        <FixHubProvider>
+        <FixHub24Provider>
           <RealBookingHistory detail />
-        </FixHubProvider>,
+        </FixHub24Provider>,
       );
       await Promise.resolve();
       await Promise.resolve();

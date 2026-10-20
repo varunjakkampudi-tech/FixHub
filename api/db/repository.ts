@@ -188,7 +188,7 @@ export function calculateDistanceKm(
 
 /** Fictional demo accounts are seeded only for automated tests or an explicit local demonstration. */
 function seedsDemoAccounts(): boolean {
-  return process.env.NODE_ENV === "test" || process.env.FIXHUB_LOCAL_DEMO_SEED === "true";
+  return process.env.NODE_ENV === "test" || process.env.FIXHUB24_LOCAL_DEMO_SEED === "true";
 }
 
 export class Repository {
@@ -230,7 +230,7 @@ export class Repository {
     const adminUser: User = {
       id: "usr-admin-001",
       phone: "+919999999999",
-      name: "FixHub Platform Operations",
+      name: "FixHub24 Platform Operations",
       email: "ops@fixhub.in",
       role: "admin",
       locale: "en",
@@ -242,7 +242,7 @@ export class Repository {
     const adminUserAlt: User = {
       id: "usr-admin-002",
       phone: "+919900000001",
-      name: "FixHub Operations Lead",
+      name: "FixHub24 Operations Lead",
       email: "lead.ops@fixhub.in",
       role: "admin",
       locale: "en",

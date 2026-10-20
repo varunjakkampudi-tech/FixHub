@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { AppProviders } from "@/features/fixhub/app-screens";
+import { AppProviders } from "@/features/fixhub24/app-screens";
 export const Route = createFileRoute("/app_/providers/$id")({
   head: () => ({
     meta: [
-      { title: "Available professionals · Fix Hub" },
+      { title: "Available professionals · FixHub24" },
       { name: "description", content: "Eligible fictional demo merchants for your service." },
-      { property: "og:title", content: "Available professionals · Fix Hub" },
+      { property: "og:title", content: "Available professionals · FixHub24" },
       {
         property: "og:description",
         content: "Eligible fictional demo merchants for your service.",

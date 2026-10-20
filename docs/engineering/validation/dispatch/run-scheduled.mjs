@@ -15,7 +15,7 @@ const bin = path.resolve(args[1]);
 const suffix = process.platform === 'win32' ? '.exe' : '';
 const executable = name => path.join(bin, name + suffix);
 for (const name of ['initdb', 'pg_ctl', 'psql']) await access(executable(name));
-const root = await mkdtemp(path.join(os.tmpdir(), 'fixhub-scheduled-proof-'));
+const root = await mkdtemp(path.join(os.tmpdir(), 'fixhub24-scheduled-proof-'));
 const data = path.join(root, 'cluster');
 const passwordFile = path.join(root, 'bootstrap-password');
 const log = path.join(root, 'postgres.log');
@@ -76,7 +76,7 @@ async function checked(name, arguments_, input = '', extraEnvironment = {}) {
   assert.equal(output.code, 0, sanitize(`${name}: ${output.stderr}\n${output.stdout}`));
   return output.stdout;
 }
-const connection = ['-X', '--no-password', '-h', '127.0.0.1', '-p', String(port), '-U', 'fixhub_proof', '-d', 'postgres', '-qAt', '-v', 'ON_ERROR_STOP=1'];
+const connection = ['-X', '--no-password', '-h', '127.0.0.1', '-p', String(port), '-U', 'fixhub24_proof', '-d', 'postgres', '-qAt', '-v', 'ON_ERROR_STOP=1'];
 const sql = (text, application = 'proof_case') => checked('psql', connection, text, { PGAPPNAME: application });
 const reserve = (request, merchant = 1, unit = 1, start = '2026-10-20T08:00:00Z', end = '2026-10-20T09:00:00Z', key = `job${request}`, application) =>
   sql(`SELECT reserve_interval(${merchant},${request},${unit},'${key}','${start}','${end}');`, application);
@@ -121,7 +121,7 @@ async function test(name, body) {
 let failure;
 try {
   await writeFile(passwordFile, password, { mode: 0o600, flag: 'wx' });
-  await checked('initdb', ['-D', data, '-U', 'fixhub_proof', '--auth=scram-sha-256', '--pwfile', passwordFile, '--no-locale', '-E', 'UTF8']);
+  await checked('initdb', ['-D', data, '-U', 'fixhub24_proof', '--auth=scram-sha-256', '--pwfile', passwordFile, '--no-locale', '-E', 'UTF8']);
   await unlink(passwordFile);
   await checked('pg_ctl', ['-D', data, '-l', log, '-o', `-h 127.0.0.1 -p ${port} -c max_connections=30`, '-w', '-t', '15', 'start']);
   started = true;

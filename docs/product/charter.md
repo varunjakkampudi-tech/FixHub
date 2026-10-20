@@ -5,10 +5,10 @@
 - Document ID: P00-CHARTER
 - Phase: 00, product foundation and governance
 - Status: Owner-delegated planning baseline approved 2026-10-15; see [approval record](../reviews/foundation-approval.md). Detailed implementation decisions remain separately gated.
-- Product name: Fix Hub, selected by the owner.
+- Product name: FixHub24, selected by the owner.
 - Historical planning identifier: “Viswatra A–Z Services”; retained in migration backups and historical records only.
 - Parent brand: Viswatra is confirmed. The eventual marketplace may use a distinct Viswatra ecosystem brand.
-- Governing planning reference: [Fix Hub Master Execution Roadmap V4.1](../roadmap/master-roadmap.md), approved through explicit owner delegation on 2026-10-15. Historical V4 remains unavailable/unverified; that limitation is accepted and retained.
+- Governing planning reference: [FixHub24 Master Execution Roadmap V4.1](../roadmap/master-roadmap.md), approved through explicit owner delegation on 2026-10-15. Historical V4 remains unavailable/unverified; that limitation is accepted and retained.
 
 ## Purpose
 

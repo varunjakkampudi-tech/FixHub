@@ -21,7 +21,7 @@ Retain the approved conceptual content of these six sources while updating links
 | P03-ADR-009 | One versioned JSON API/domain contract for web/PWA, WhatsApp adapters and mobile | Native features/background permissions still require platform-specific work. Wrapper versus native architecture remains gated by real device/store proof and Phase 08 portability |
 | P03-ADR-010 | Separate API/worker failure processes, one DB consistency boundary; region/vendor OPEN | No premature paid HA deployment. RPO/RTO, data policy, private-object backup and staffing determine topology; cost floor is not a production budget |
 
-Sources read 2026-10-15: PostgreSQL 17 [locking](https://www.postgresql.org/docs/17/explicit-locking.html), [isolation](https://www.postgresql.org/docs/17/transaction-iso.html), [isolated initialization](https://www.postgresql.org/docs/17/app-initdb.html); PostGIS [distance predicate](https://postgis.net/docs/ST_DWithin.html). Mechanism documentation is not FixHub runtime evidence. Actual local proof is separately bounded in the [proof record](../reviews/dispatch-proof-review.md).
+Sources read 2026-10-15: PostgreSQL 17 [locking](https://www.postgresql.org/docs/17/explicit-locking.html), [isolation](https://www.postgresql.org/docs/17/transaction-iso.html), [isolated initialization](https://www.postgresql.org/docs/17/app-initdb.html); PostGIS [distance predicate](https://postgis.net/docs/ST_DWithin.html). Mechanism documentation is not FixHub24 runtime evidence. Actual local proof is separately bounded in the [proof record](../reviews/dispatch-proof-review.md).
 
 ## Domain, identity and data contracts
 

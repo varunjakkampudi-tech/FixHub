@@ -55,7 +55,7 @@ export function createNotificationOutboxDispatcher(
 
   async function claim(): Promise<OutboxRecord | null> {
     return inTransaction(pool, async (client) => {
-      await client.query("SELECT pg_advisory_xact_lock(hashtext('fixhub-whatsapp-outbox-rate'))");
+      await client.query("SELECT pg_advisory_xact_lock(hashtext('fixhub24-whatsapp-outbox-rate'))");
       const recent = await client.query<{ attempts: number }>(
         "SELECT count(*)::int AS attempts FROM transactional_outbox WHERE last_attempt_at >= clock_timestamp() - interval '1 minute'",
       );

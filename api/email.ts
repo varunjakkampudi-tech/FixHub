@@ -32,8 +32,8 @@ export function createResendEmailSender(config: ResendConfig, fetchImpl: typeof 
         body: JSON.stringify({
           from: config.from,
           to: [recipient],
-          subject: "Your Fix Hub sign-in code",
-          text: `Your Fix Hub sign-in code is ${code}. It expires in 10 minutes. If you did not request this, you can ignore this message.`,
+          subject: "Your FixHub24 sign-in code",
+          text: `Your FixHub24 sign-in code is ${code}. It expires in 10 minutes. If you did not request this, you can ignore this message.`,
           tags: [{ name: "purpose", value: "sign-in" }],
         }),
       });

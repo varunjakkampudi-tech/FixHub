@@ -1,6 +1,6 @@
-# FixHub — Feature Matrix & Traceability Register
+# FixHub24 — Feature Matrix & Traceability Register
 
-**Project:** Fix Hub (Viswatra)  
+**Project:** FixHub24 (Viswatra)  
 **Spec Reference:** `FixHub-Product-Spec-v1.3.md` (Scope Frozen)  
 **Status Reference:** Spec Section 18.4 & Autonomous Goal Section 5  
 **Current Audit Commit:** `1ded0fbe89c6a43fb03c6d61371a6570b38d62b1`  
@@ -9,7 +9,7 @@
 
 ## 1. Feature Taxonomy & Identifiers
 
-This matrix inventories every feature requirement under FixHub v1.3 across all operational domains:
+This matrix inventories every feature requirement under FixHub24 v1.3 across all operational domains:
 - **CX:** Customer Experience (CX-01 to CX-14)
 - **MX:** Merchant Experience (MX-01 to MX-11)
 - **TX:** Technician Workflows (TX-01 to TX-09)

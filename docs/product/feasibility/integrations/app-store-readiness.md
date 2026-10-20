@@ -1,6 +1,6 @@
 # Mobile approach decision matrix
 
-Status: CONDITIONAL analytical comparison, no final stack/package approval. See [Android](android-feasibility.md), [iOS](ios-feasibility.md), [architecture](../technical/architecture-feasibility.md). Framework sources SRC-032/033 support capability, not FixHub performance.
+Status: CONDITIONAL analytical comparison, no final stack/package approval. See [Android](android-feasibility.md), [iOS](ios-feasibility.md), [architecture](../technical/architecture-feasibility.md). Framework sources SRC-032/033 support capability, not FixHub24 performance.
 
 | Approach | UX/native features | Performance / skill fit | Reuse / maintenance | Time to test / approval / scale |
 |---|---|---|---|---|

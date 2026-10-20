@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PublicPage } from "@/features/fixhub/public";
-import { meta } from "@/features/fixhub/context";
+import { PublicPage } from "@/features/fixhub24/public";
+import { meta } from "@/features/fixhub24/context";
 export const Route = createFileRoute("/refund-policy")({
   head: () => meta("Refund Policy", false),
   component: Screen,

@@ -1,6 +1,6 @@
-# FixHub — End-to-End User Journey Matrix (J01 to J30)
+# FixHub24 — End-to-End User Journey Matrix (J01 to J30)
 
-**Project:** Fix Hub (Viswatra)  
+**Project:** FixHub24 (Viswatra)  
 **Spec Reference:** `FixHub-Product-Spec-v1.3.md` (Section 10 & 18.2)  
 **Audit Commit:** `554fde9`  
 
@@ -25,12 +25,12 @@
 | J13 | Super Admin Health Monitoring | Super Admin | View liveness/readiness probes -> inspect DB & Redis latency | `src/test/admin-health.test.tsx` | **PASS** |
 | J14 | Merchant Dispute Response | Merchant | Customer raises issue -> merchant submits dispute evidence packet | `src/test/regression.test.ts` | **PASS** |
 | J15 | Admin Dispute Arbitration | Super Admin | Review customer claim & merchant counter-evidence -> issue final ruling | `src/test/support.test.tsx` | **PASS** |
-| J16 | Telugu-First Navigation | Telugu User | Toggle Telugu -> all screens, buttons, categories, and bills localize to Telugu | `src/test/fixhub-communications.test.ts` | **PASS** |
-| J17 | Network Offline & Reconnection | Mobile User | Client loses connectivity -> reconnection restores current step state | `src/test/fixhub-hardening.test.ts` | **PASS** |
+| J16 | Telugu-First Navigation | Telugu User | Toggle Telugu -> all screens, buttons, categories, and bills localize to Telugu | `src/test/fixhub24-communications.test.ts` | **PASS** |
+| J17 | Network Offline & Reconnection | Mobile User | Client loses connectivity -> reconnection restores current step state | `src/test/fixhub24-hardening.test.ts` | **PASS** |
 | J18 | Admin Merchant KYC Approval | Super Admin | Inspect business registration -> verify merchant -> merchant enters active pool | `api/test/merchants.test.ts` | **PASS** |
 | J19 | Outbox Delivery Retry Recovery | System SRE | Temporary webhook failure -> exponential retry backoff -> delivery confirmed | `api/test/notification-outbox.test.ts` | **PASS** |
 | J20 | Customer Privacy Data Erasure | Customer/Admin | Request data export -> admin triggers erasure -> identity records anonymized | `api/test/auth.test.ts` | **PASS** |
-| J21 | Senior Mode Accessibility | Senior Citizen | Toggle high contrast & large text -> enlarged touch targets activate | `src/test/fixhub-hardening.test.ts` | **PASS** |
+| J21 | Senior Mode Accessibility | Senior Citizen | Toggle high contrast & large text -> enlarged touch targets activate | `src/test/fixhub24-hardening.test.ts` | **PASS** |
 | J22 | Multi-Worker Concurrency Race | System Engine | 3 merchants accept simultaneous lead -> exactly 1 succeeds, 2 get rejected | `src/test/critical.test.ts`, `api/test/dispatch-and-race.test.ts` | **PASS** |
 | J23 | Merchant Capacity Exhaustion | Merchant | Merchant completes quota -> status toggles to Busy -> excluded from leads | `api/test/merchants.test.ts` | **PASS** |
 | J24 | Lead Broadcast Timeout | Customer/System| No merchant accepts within 15 min -> status updates to searching / rescue | `api/test/dispatch-and-race.test.ts` | **PASS** |

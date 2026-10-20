@@ -33,7 +33,7 @@ export async function applyMigrations(pool: Pick<Pool, "connect">): Promise<stri
         applied_at timestamptz NOT NULL DEFAULT clock_timestamp()
       )
     `);
-    await client.query("SELECT pg_advisory_xact_lock(hashtext('fixhub-schema-migrations'))");
+    await client.query("SELECT pg_advisory_xact_lock(hashtext('fixhub24-schema-migrations'))");
     const recorded = await client.query<{ name: string }>("SELECT name FROM schema_migration");
     const available = new Set(names);
     const missing = recorded.rows.map(({ name }) => name).filter((name) => !available.has(name));

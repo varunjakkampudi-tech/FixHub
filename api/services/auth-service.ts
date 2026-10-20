@@ -8,7 +8,7 @@ export interface TokenPayload {
   exp: number;
 }
 
-export const EXPOSED_LEAKED_JWT_SECRET = "fixhub-local-development-secret-key-min-32-chars-long";
+export const EXPOSED_LEAKED_JWT_SECRET = "fixhub24-local-development-secret-key-min-32-chars-long";
 
 /**
  * Validates and retrieves the active JWT HMAC secret.
@@ -35,7 +35,7 @@ export function getAuthJwtSecret(): string {
   }
 
   // Safe isolated test environment fallback
-  return secret || "fixhub-test-environment-jwt-secret-key-32chars";
+  return secret || "fixhub24-test-environment-jwt-secret-key-32chars";
 }
 
 export class AuthService {
@@ -147,7 +147,7 @@ export class AuthService {
       user = {
         id: `usr-${crypto.randomUUID()}`,
         phone: formattedPhone,
-        name: userName || "FixHub Customer",
+        name: userName || "FixHub24 Customer",
         role: "customer",
         locale: "en",
         isActive: true,

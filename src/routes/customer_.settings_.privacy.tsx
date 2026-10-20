@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { AccountPage } from "@/features/fixhub/account";
-import { meta } from "@/features/fixhub/context";
+import { AccountPage } from "@/features/fixhub24/account";
+import { meta } from "@/features/fixhub24/context";
 export const Route = createFileRoute("/customer_/settings_/privacy")({
   head: () => meta("Customer \u00b7 Settings \u00b7 Privacy", true),
   component: Screen,

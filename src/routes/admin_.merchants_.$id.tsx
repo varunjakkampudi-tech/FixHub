@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { RegistryAdmin } from "@/features/fixhub/registry-admin";
-import { meta } from "@/features/fixhub/context";
+import { RegistryAdmin } from "@/features/fixhub24/registry-admin";
+import { meta } from "@/features/fixhub24/context";
 export const Route = createFileRoute("/admin_/merchants_/$id")({
   head: () => meta("Admin \u00b7 Merchants \u00b7 Id", true),
   component: Screen,

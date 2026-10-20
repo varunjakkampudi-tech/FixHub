@@ -102,8 +102,8 @@
         "serviceLocality"
       ],
       "copy": {
-        "en": "A {serviceName} request near {serviceLocality} is available. Review details and accept or decline in FixHub.",
-        "te": "{serviceLocality} పరిసరాల్లో {serviceName} సేవా అభ్యర్థన అందుబాటులో ఉంది. FixHubలో వివరాలు చూసి అంగీకరించండి లేదా తిరస్కరించండి."
+        "en": "A {serviceName} request near {serviceLocality} is available. Review details and accept or decline in FixHub24.",
+        "te": "{serviceLocality} పరిసరాల్లో {serviceName} సేవా అభ్యర్థన అందుబాటులో ఉంది. FixHub24లో వివరాలు చూసి అంగీకరించండి లేదా తిరస్కరించండి."
       },
       "expiryRule": "Suppress when offer expired, invalidated, won/lost/declined or generation superseded",
       "consentRule": "Actual purpose-specific WhatsApp consent/window/template approval required; customer relationship is not assumed consent",

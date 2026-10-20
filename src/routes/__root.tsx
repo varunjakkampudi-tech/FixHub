@@ -11,8 +11,8 @@ import {
 import type { ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { FixHubProvider } from "../features/fixhub/context";
-import { DemoProvider } from "../features/fixhub/demo-provider";
+import { FixHub24Provider } from "../features/fixhub24/context";
+import { DemoProvider } from "../features/fixhub24/demo-provider";
 import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
@@ -77,13 +77,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Fix Hub · Local services in Tanuku" },
+      { title: "FixHub24 · Local services in Tanuku" },
       {
         name: "description",
-        content: "Fix Hub by Viswatra. Explore local household services in Tanuku.",
+        content: "FixHub24 by Viswatra. Explore local household services in Tanuku.",
       },
       { name: "author", content: "Viswatra" },
-      { property: "og:title", content: "Fix Hub · Local services in Tanuku" },
+      { property: "og:title", content: "FixHub24 · Local services in Tanuku" },
       {
         property: "og:description",
         content: "Local household services in Tanuku, in English and Telugu.",
@@ -116,12 +116,12 @@ function RootShell({ children }: { children: ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <FixHubProvider>
+        <FixHub24Provider>
           <DemoProvider>
             {children}
             <Toaster />
           </DemoProvider>
-        </FixHubProvider>
+        </FixHub24Provider>
         <Scripts />
       </body>
     </html>

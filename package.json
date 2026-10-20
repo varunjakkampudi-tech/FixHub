@@ -1,5 +1,5 @@
 {
-  "name": "fixhub-platform",
+  "name": "fixhub24-platform",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -25,7 +25,7 @@
     "test:api": "vitest run api/test",
     "test:security": "vitest run api/test/security-quarantine-fr1.test.ts",
     "test:concurrency": "vitest run api/test/dispatch-and-race.test.ts src/test/critical.test.ts",
-    "test:l10n": "vitest run src/test/fixhub-communications.test.ts",
+    "test:l10n": "vitest run src/test/fixhub24-communications.test.ts",
     "test:docs": "node --test scripts/documentation-validator.test.mjs",
     "format:check": "node ./node_modules/prettier/bin/prettier.cjs --check \"src/**/*.{ts,tsx}\" \"api/**/*.{ts,tsx}\" \"scripts/**/*.{js,mjs}\"",
     "test:all": "npm run lint && npm run test:smoke && npm run test:sanity && npm run test:critical && npm run test:regression && npm run test:journey && npm run test:security && npm test && npm run test:docs",

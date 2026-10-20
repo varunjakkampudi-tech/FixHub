@@ -30,7 +30,7 @@ export async function verifySupportRequests(pool, foreignBookingId) {
         .send({ email, code: codes.get(email) })
         .expect(200);
       const cookies = result.headers["set-cookie"];
-      const csrfCookie = cookies.find((value) => value.startsWith("fixhub_csrf="));
+      const csrfCookie = cookies.find((value) => value.startsWith("fixhub24_csrf="));
       const csrf = decodeURIComponent(csrfCookie.split(";", 1)[0].split("=", 2)[1]);
       return (method, url) =>
         call(method, url)

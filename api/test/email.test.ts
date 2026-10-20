@@ -16,9 +16,9 @@ describe("Resend adapter", () => {
     expect(
       resendConfigFromEnvironment({
         RESEND_API_KEY: "re_test",
-        RESEND_FROM_EMAIL: "Fix Hub <noreply@example.test>",
+        RESEND_FROM_EMAIL: "FixHub24 <noreply@example.test>",
       })?.from,
-    ).toBe("Fix Hub <noreply@example.test>");
+    ).toBe("FixHub24 <noreply@example.test>");
   });
 
   it("sends only a fixed-format sign-in email through the configured transport", async () => {
@@ -26,7 +26,7 @@ describe("Resend adapter", () => {
       .fn()
       .mockResolvedValue(new Response(JSON.stringify({ id: "email_123" }), { status: 200 }));
     const send = createResendEmailSender(
-      { apiKey: "test-secret", from: "Fix Hub <noreply@example.test>" },
+      { apiKey: "test-secret", from: "FixHub24 <noreply@example.test>" },
       fetch as unknown as typeof globalThis.fetch,
     );
     await send("customer@example.test", "012345");
@@ -34,9 +34,9 @@ describe("Resend adapter", () => {
     expect(url.href).toBe("https://api.resend.com/emails");
     expect((options.headers as Record<string, string>).authorization).toBe("Bearer test-secret");
     expect(JSON.parse(String(options.body))).toMatchObject({
-      from: "Fix Hub <noreply@example.test>",
+      from: "FixHub24 <noreply@example.test>",
       to: ["customer@example.test"],
-      subject: "Your Fix Hub sign-in code",
+      subject: "Your FixHub24 sign-in code",
     });
     expect(JSON.stringify(options)).not.toContain("re_test");
   });
@@ -46,7 +46,7 @@ describe("Resend adapter", () => {
       .fn()
       .mockResolvedValue(new Response('{"message":"private provider details"}', { status: 401 }));
     const send = createResendEmailSender(
-      { apiKey: "test-secret", from: "Fix Hub <noreply@example.test>" },
+      { apiKey: "test-secret", from: "FixHub24 <noreply@example.test>" },
       fetch as unknown as typeof globalThis.fetch,
     );
     await expect(send("customer@example.test", "012345")).rejects.toThrow("Email delivery failed");
@@ -64,7 +64,7 @@ describe("Resend adapter", () => {
           }),
       );
       const send = createResendEmailSender(
-        { apiKey: "test-secret", from: "Fix Hub <noreply@example.test>" },
+        { apiKey: "test-secret", from: "FixHub24 <noreply@example.test>" },
         fetch as unknown as typeof globalThis.fetch,
       );
       const sending = send("customer@example.test", "012345");

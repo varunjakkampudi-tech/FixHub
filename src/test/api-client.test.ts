@@ -5,13 +5,13 @@ import {
   ApiError,
   hasAuthenticatedApiSession,
   resolveApiSession,
-} from "@/features/fixhub/api-client";
+} from "@/features/fixhub24/api-client";
 
 afterEach(() => vi.unstubAllGlobals());
 
-describe("Fix Hub API client", () => {
+describe("FixHub24 API client", () => {
   it("uses cookie credentials and sends the CSRF token for mutations", async () => {
-    vi.stubGlobal("document", { cookie: "fixhub_csrf=csrf%2Ftoken" });
+    vi.stubGlobal("document", { cookie: "fixhub24_csrf=csrf%2Ftoken" });
     const fetch = vi
       .fn()
       .mockResolvedValue(new Response(JSON.stringify({ id: "booking-1" }), { status: 201 }));

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { seed } from "@/features/fixhub/demo-model";
-import { eligibleMerchants } from "@/features/fixhub/provider-availability";
+import { seed } from "@/features/fixhub24/demo-model";
+import { eligibleMerchants } from "@/features/fixhub24/provider-availability";
 
 describe("customer demo provider availability", () => {
   it("hides full-capacity providers and providers with active work at capacity", () => {

@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { AppBookAddress } from "@/features/fixhub/app-screens";
+import { AppBookAddress } from "@/features/fixhub24/app-screens";
 export const Route = createFileRoute("/app_/book/address")({
   head: () => ({
     meta: [
-      { title: "Address and time · Fix Hub" },
+      { title: "Address and time · FixHub24" },
       { name: "description", content: "Pick a sample address, date and time slot." },
-      { property: "og:title", content: "Address and time · Fix Hub" },
+      { property: "og:title", content: "Address and time · FixHub24" },
       { property: "og:description", content: "Pick a sample address, date and time slot." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

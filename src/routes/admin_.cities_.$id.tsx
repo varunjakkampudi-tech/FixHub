@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { RegistryAdmin } from "@/features/fixhub/registry-admin";
-import { meta } from "@/features/fixhub/context";
+import { RegistryAdmin } from "@/features/fixhub24/registry-admin";
+import { meta } from "@/features/fixhub24/context";
 export const Route = createFileRoute("/admin_/cities_/$id")({
-  head: () => meta("FixHub demo cities", true),
+  head: () => meta("FixHub24 demo cities", true),
   component: Screen,
 });
 function Screen() {

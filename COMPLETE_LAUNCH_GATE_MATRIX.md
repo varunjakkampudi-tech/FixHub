@@ -1,6 +1,6 @@
-# FixHub — Complete Launch Gate Matrix (G01 to G25 mapped to RG0–RG5)
+# FixHub24 — Complete Launch Gate Matrix (G01 to G25 mapped to RG0–RG5)
 
-**Project:** Fix Hub (Viswatra)  
+**Project:** FixHub24 (Viswatra)  
 **Spec Reference:** `FixHub-Product-Spec-v1.3.md` (Section 15.1, 18.4) & `FixHub-Autonomous-Goal.md` (Section 21)  
 **Status Vocabulary:** `PASS`, `FAIL`, `BLOCKED`, `NOT_ASSESSED`, `NOT_APPLICABLE`  
 **Audit Commit:** `554fde9`  
@@ -21,7 +21,7 @@ In accordance with Section 21 of `FixHub-Autonomous-Goal.md`:
 
 | Gate ID | Roadmap Map | Gate Name & Scope | Required Evidence | Current Level | Gate Status | Responsible Owner / Blocker |
 |---|---|---|---|---|---|---|
-| **G01** | RG0 | Foundation Governance & Brand Integrity | Approved brand name (Fix Hub under Viswatra); stable ID matrices | TESTED_UNIT | **PASS** | Governance Baseline |
+| **G01** | RG0 | Foundation Governance & Brand Integrity | Approved brand name (FixHub24 under Viswatra); stable ID matrices | TESTED_UNIT | **PASS** | Governance Baseline |
 | **G02** | RG0 | Security Quarantine & Zero Hardcoded Secrets | Remediation of 4 commit #21 defects; no default JWT secrets | TESTED_UNIT | **PASS** | `docs/investigations/fr-1-jwt-secret.md` |
 | **G03** | RG1 | Tanuku Service Catalog & Category Readiness | 4 verified categories (Electrician, AC, Plumbing, Appliance) | TESTED_UNIT | **PASS** | `SERVICE_CATEGORY_MATRIX.md` |
 | **G04** | RG1 | Tanuku Merchant Supply & Licensed Technicians | Real physical merchant contracts in Tanuku | FIELD_VALIDATED | **BLOCKED** | Owner Field Outreach (G04) |
@@ -33,16 +33,16 @@ In accordance with Section 21 of `FixHub-Autonomous-Goal.md`:
 | **G10** | RG3 | WhatsApp Business Platform Channel Activation | Verified Meta System User token, approved templates | VERIFIED_PROVIDER | **BLOCKED** | BLOCKER-004 (`READY_FOR_OWNER`) |
 | **G11** | RG3 | Tanuku Customer Support & Dispute Desk | Dedicated dispute inbox, staff response SLA | TESTED_UNIT | **PASS** | `src/test/support.test.tsx` |
 | **G12** | RG3 | Bilingual English/Telugu Native Validation | 100% key parity; native speaker linguistic audit | TESTED_UNIT | **PASS (Technical)** / **BLOCKED (Native)** | BLOCKER-008 (`READY_FOR_OWNER`) |
-| **G13** | RG3 | Senior-Friendly Accessibility (WCAG 2.1 AA) | High-contrast palette, 48px touch targets, Senior Mode | TESTED_UNIT | **PASS** | `src/test/fixhub-hardening.test.ts` |
+| **G13** | RG3 | Senior-Friendly Accessibility (WCAG 2.1 AA) | High-contrast palette, 48px touch targets, Senior Mode | TESTED_UNIT | **PASS** | `src/test/fixhub24-hardening.test.ts` |
 | **G14** | RG4 | Responsive Viewports & Performance Gate | Desktop, Tablet, Mobile layout; bundle load < 1s | TESTED_BROWSER | **PASS** | `QUALITY_AUDIT.md` |
 | **G15** | RG4 | CR-01 Runtime, Console & Sensitive Leakage | Zero console errors, zero sensitive secrets in logs or client | TESTED_BROWSER | **PASS** | `QUALITY_AUDIT.md` Section 1 |
 | **G16** | RG4 | Staging Deployment & Real Database Migration | Deployment on isolated staging host with PostgreSQL 16 | TESTED_STAGING | **BLOCKED** | BLOCKER-007 (`READY_FOR_OWNER`) |
 | **G17** | RG4 | Mobile App Store Accounts (Apple & Google) | Active Apple Developer Program & Google Play Console accounts | LIVE (Store) | **BLOCKED** | BLOCKER-006 (`READY_FOR_OWNER`) |
 | **G18** | RG4 | Observability, Structured Logging & Health | Pino JSON structured logs, `/health/live`, `/health/ready` | TESTED_UNIT | **PASS** | `api/test/app.test.ts` |
-| **G19** | RG4 | Super Admin Telemetry & Real-Time Audit Viewer | Searchable logs, GMV metrics, live job kanban board | TESTED_UNIT | **PASS** | `src/features/fixhub/registry-admin.tsx` |
+| **G19** | RG4 | Super Admin Telemetry & Real-Time Audit Viewer | Searchable logs, GMV metrics, live job kanban board | TESTED_UNIT | **PASS** | `src/features/fixhub24/registry-admin.tsx` |
 | **G20** | RG5 | Verified Baseline Backup & Recovery Drill | Git bundle backup verified with SHA-256 and clone fsck | TESTED_UNIT | **PASS** | `PROGRESS.md` Section 2 |
 | **G21** | RG5 | Production Cryptographic Secret Provisioning | 64-char high-entropy JWT_SECRET in production env | LIVE (DevSecOps) | **BLOCKED** | BLOCKER-002 (`READY_FOR_OWNER`) |
-| **G22** | RG5 | Emergency Kill-Switch & Maintenance Mode | Platform-wide maintenance toggle to pause bookings safely | TESTED_UNIT | **PASS** | `src/features/fixhub/registry-admin.tsx` |
+| **G22** | RG5 | Emergency Kill-Switch & Maintenance Mode | Platform-wide maintenance toggle to pause bookings safely | TESTED_UNIT | **PASS** | `src/features/fixhub24/registry-admin.tsx` |
 | **G23** | RG5 | System Resilience & Offline Network Recovery | Reconnection handling, outbox retries, dead-letter storage | TESTED_UNIT | **PASS** | `api/test/notification-outbox.test.ts` |
 | **G24** | RG5 | Independent Technical Product Audit Sign-off | Multi-perspective audit report and test validation | TESTED_UNIT | **PASS** | `QUALITY_AUDIT.md` |
 | **G25** | RG5 | Final Owner GO / Coordinated Public Launch | Single public launch decision committed by Human Owner | LIVE (Owner Only)| **BLOCKED** | Owner Launch Decision (D16) |

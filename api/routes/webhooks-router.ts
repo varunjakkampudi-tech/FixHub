@@ -8,7 +8,7 @@ webhooksRouter.get("/whatsapp", (req, res) => {
   const token = req.query["hub.verify_token"];
   const challenge = req.query["hub.challenge"];
 
-  const VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN || "fixhub-whatsapp-verify-token";
+  const VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN || "fixhub24-whatsapp-verify-token";
 
   if (mode === "subscribe" && token === VERIFY_TOKEN) {
     return res.status(200).send(challenge);

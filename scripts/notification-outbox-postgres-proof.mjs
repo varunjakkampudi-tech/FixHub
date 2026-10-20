@@ -35,7 +35,7 @@ const executable = (name) =>
 for (const name of ["initdb", "pg_ctl"]) await access(executable(name));
 
 const temporaryParent = await realpath(os.tmpdir());
-const temporaryRoot = await mkdtemp(path.join(temporaryParent, "fixhub-whatsapp-outbox-proof-"));
+const temporaryRoot = await mkdtemp(path.join(temporaryParent, "fixhub24-whatsapp-outbox-proof-"));
 const clusterPath = path.join(temporaryRoot, "cluster");
 const postgresLog = path.join(temporaryRoot, "postgres.log");
 let clusterMayBeRunning = false;
@@ -116,7 +116,7 @@ try {
     "-D",
     clusterPath,
     "-U",
-    "fixhub_proof",
+    "fixhub24_proof",
     "--auth=trust",
     "--no-locale",
     "-E",
@@ -144,10 +144,10 @@ try {
   pool = new Pool({
     host: "127.0.0.1",
     port,
-    user: "fixhub_proof",
+    user: "fixhub24_proof",
     database: "postgres",
     max: 10,
-    application_name: "fixhub-notification-proof",
+    application_name: "fixhub24-notification-proof",
     connectionTimeoutMillis: 3_000,
   });
 
@@ -363,7 +363,7 @@ try {
     updater = await pool.connect();
     await updater.query("SELECT set_config($1, $2, false)", [
       "application_name",
-      "fixhub-proof-updater",
+      "fixhub24-proof-updater",
     ]);
     const pendingUpdate = updater.query(
       "UPDATE service_booking SET customer_note = $1 WHERE id = $2",
@@ -373,7 +373,7 @@ try {
     while (Date.now() < deadline) {
       const state = await pool.query(
         "SELECT count(*)::int AS count FROM pg_stat_activity WHERE application_name = $1 AND wait_event_type = $2",
-        ["fixhub-proof-updater", "Lock"],
+        ["fixhub24-proof-updater", "Lock"],
       );
       if (state.rows[0].count === 1) {
         lockObserved = true;
@@ -477,7 +477,7 @@ try {
   const resolvedRoot = await realpath(temporaryRoot);
   if (
     path.dirname(resolvedRoot) !== temporaryParent ||
-    !path.basename(resolvedRoot).startsWith("fixhub-whatsapp-outbox-proof-")
+    !path.basename(resolvedRoot).startsWith("fixhub24-whatsapp-outbox-proof-")
   ) {
     throw new Error("Refusing cleanup of an unexpected temporary path");
   }

@@ -1,4 +1,4 @@
-name: FixHub CI Quality & Validation Pipeline
+name: FixHub24 CI Quality & Validation Pipeline
 
 on:
   push:
@@ -32,12 +32,12 @@ permissions:
   contents: read
 
 concurrency:
-  group: fixhub-ci-${{ github.event.pull_request.number || github.ref }}
+  group: fixhub24-ci-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
   validate-and-test:
-    name: FixHub Comprehensive Verification
+    name: FixHub24 Comprehensive Verification
     runs-on: ubuntu-latest
     timeout-minutes: 25
 

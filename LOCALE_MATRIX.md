@@ -1,6 +1,6 @@
-# FixHub — Bilingual Locale & Key Completeness Matrix (FR-9, L10N-01 to L10N-14)
+# FixHub24 — Bilingual Locale & Key Completeness Matrix (FR-9, L10N-01 to L10N-14)
 
-**Project:** Fix Hub (Viswatra)  
+**Project:** FixHub24 (Viswatra)  
 **Spec Reference:** `FixHub-Product-Spec-v1.3.md` (FR-9, L10N-01 to L10N-14)  
 **Languages Approved:** English (`en`), Telugu (`te`) strictly.  
 **Prohibited Languages:** Hindi (`hi`) and unapproved locales are strictly excluded from the launch catalog.  
@@ -21,12 +21,12 @@
 
 | Namespace | Key Count (EN) | Key Count (TE) | Parity Status | Verification Test |
 |---|---|---|---|---|
-| `auth` | 14 | 14 | 100% MATCH | `src/test/fixhub-communications.test.ts` |
-| `categories` | 12 | 12 | 100% MATCH | `src/test/fixhub-communications.test.ts` |
+| `auth` | 14 | 14 | 100% MATCH | `src/test/fixhub24-communications.test.ts` |
+| `categories` | 12 | 12 | 100% MATCH | `src/test/fixhub24-communications.test.ts` |
 | `booking` | 22 | 22 | 100% MATCH | `src/test/demo-price-display.test.tsx` |
 | `pricing` | 16 | 16 | 100% MATCH | `src/test/demo-price-display.test.tsx` |
-| `timeline` | 18 | 18 | 100% MATCH | `src/test/fixhub-communications.test.ts` |
-| `actions` | 24 | 24 | 100% MATCH | `src/test/fixhub-communications.test.ts` |
+| `timeline` | 18 | 18 | 100% MATCH | `src/test/fixhub24-communications.test.ts` |
+| `actions` | 24 | 24 | 100% MATCH | `src/test/fixhub24-communications.test.ts` |
 | `disputes` | 15 | 15 | 100% MATCH | `src/test/notice-support-reference.test.tsx` |
 | `admin` | 30 | 30 | 100% MATCH | `src/test/admin-health.test.tsx` |
 | `errors` | 20 | 20 | 100% MATCH | `api/test/app.test.ts` |
@@ -38,7 +38,7 @@
 
 | Conceptual Term | English (`en`) | Telugu (`te`) | Context / Usage |
 |---|---|---|---|
-| Product Name | Fix Hub | ఫిక్స్ హబ్ | Header, brand identification |
+| Product Name | FixHub24 | ఫిక్స్ హబ్ | Header, brand identification |
 | Service | Service | సేవ | Catalog headings |
 | Electrician | Electrician | ఎలక్ట్రీషియన్ | Category listing |
 | Plumbing | Plumbing | ప్లంబింగ్ | Category listing |

@@ -15,19 +15,19 @@ vi.mock("@tanstack/react-router", () => ({
   }) => select({ location: { pathname: "/customer/book/new" } }),
 }));
 
-vi.mock("@/features/fixhub/api-client", () => ({
+vi.mock("@/features/fixhub24/api-client", () => ({
   ApiError: class ApiError extends Error {},
   apiRequest: mocks.request,
 }));
 
-vi.mock("@/features/fixhub/shared", () => ({
+vi.mock("@/features/fixhub24/shared", () => ({
   PageShell: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   PageTop: ({ title }: { title: string }) => <h1>{title}</h1>,
   Notice: ({ children }: { children: React.ReactNode }) => <div role="status">{children}</div>,
 }));
 
-import { RealBookingPage } from "@/features/fixhub/real-booking";
-import { FixHubProvider } from "@/features/fixhub/context";
+import { RealBookingPage } from "@/features/fixhub24/real-booking";
+import { FixHub24Provider } from "@/features/fixhub24/context";
 
 const serviceId = "10000000-0000-4000-8000-000000000001";
 const addressId = "20000000-0000-4000-8000-000000000001";
@@ -75,9 +75,9 @@ function setupPricePreview(available: boolean) {
     throw new Error(`Unexpected request: ${path}`);
   });
   return render(
-    <FixHubProvider>
+    <FixHub24Provider>
       <RealBookingPage />
-    </FixHubProvider>,
+    </FixHub24Provider>,
   );
 }
 
@@ -233,9 +233,9 @@ describe("customer booking price preview", () => {
     });
 
     render(
-      <FixHubProvider>
+      <FixHub24Provider>
         <RealBookingPage />
-      </FixHubProvider>,
+      </FixHub24Provider>,
     );
     expect(screen.getByRole("status", { name: "Loading services" })).toHaveAttribute(
       "aria-busy",
@@ -358,9 +358,9 @@ describe("customer booking price preview", () => {
     });
 
     render(
-      <FixHubProvider>
+      <FixHub24Provider>
         <RealBookingPage />
-      </FixHubProvider>,
+      </FixHub24Provider>,
     );
     const submit = await screen.findByRole("button", { name: "Find eligible providers" });
     expect(screen.getByLabelText("Full address")).toHaveValue("Private address");

@@ -91,7 +91,7 @@ describe("Disputes, Notifications & Webhooks API", () => {
     defaultRepository.notifications.set(notifId, {
       id: notifId,
       userId: customer.id,
-      title: "Welcome to FixHub Tanuku",
+      title: "Welcome to FixHub24 Tanuku",
       message: "Find verified local electricians and plumbers.",
       channel: "in_app",
       status: "sent",
@@ -117,7 +117,7 @@ describe("Disputes, Notifications & Webhooks API", () => {
     // Challenge verification (GET)
     const challengeRes = await request(app)
       .get(
-        "/api/v1/webhooks/whatsapp?hub.mode=subscribe&hub.challenge=test_challenge_12345&hub.verify_token=fixhub-whatsapp-verify-token",
+        "/api/v1/webhooks/whatsapp?hub.mode=subscribe&hub.challenge=test_challenge_12345&hub.verify_token=fixhub24-whatsapp-verify-token",
       )
       .expect(200);
 

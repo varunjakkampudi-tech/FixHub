@@ -1,6 +1,6 @@
-# FixHub — Comprehensive Risk Register
+# FixHub24 — Comprehensive Risk Register
 
-**Project:** Fix Hub (Viswatra)  
+**Project:** FixHub24 (Viswatra)  
 **Standard:** `Viswatra-Global-Engineering-Quality-Standard-v1.1.md` (Category 22)  
 **Review Reference:** Solo-Maintainer Governance & Spec Section 16A.4  
 **Audit Commit:** `554fde9`  

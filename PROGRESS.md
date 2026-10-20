@@ -1,6 +1,6 @@
-# FixHub — Autonomous Execution and Progress Register
+# FixHub24 — Autonomous Execution and Progress Register
 
-**Project:** Fix Hub (Viswatra)
+**Project:** FixHub24 (Viswatra)
 **Governing documents (tracked copies, checksum-verified on 2026-10-20):**
 - `docs/specs/FixHub-Product-Spec-v1.3.md` — `F549D93B52E1EB8A08CC1426F6B4244DA4C9A4EE569DE9D7031316923DEBC52D`
 - `docs/specs/FixHub-Engineering-Standards.md` — `FCC1760BC72D38221EBB153538CEB35DB9040D0E8DBB952985000C9D4666ED55`
@@ -52,7 +52,7 @@ The four commit #21 defects were remediated in code and tested. Status is **RESO
 4. **False delivery claim.** The message says the code was dispatched to the outbox, not that it was sent.
 5. **Additional fixes on the task branch:**
    - Token signatures are compared with `crypto.timingSafeEqual` (`api/services/auth-service.ts`).
-   - Fictional admin and merchant accounts are seeded only in test mode or when `FIXHUB_LOCAL_DEMO_SEED=true` (`api/db/repository.ts`). Before this change they were seeded in every environment, including `usr-admin-001` with a published phone number (`blocker.txt` BLOCKER-023).
+   - Fictional admin and merchant accounts are seeded only in test mode or when `FIXHUB24_LOCAL_DEMO_SEED=true` (`api/db/repository.ts`). Before this change they were seeded in every environment, including `usr-admin-001` with a published phone number (`blocker.txt` BLOCKER-023).
 
 **Not done:** the phone-OTP path, the in-memory routers and the two sign-in paths remain mounted on main (`blocker.txt` BLOCKER-010 and BLOCKER-011).
 
@@ -132,17 +132,17 @@ Status for this checkpoint:
 These changes are on the task branch `claude/fixhub-code-review-cleanup-22b476`. Owner review is required before promotion (`blocker.txt` BLOCKER-016 and BLOCKER-017).
 
 - **Unused declarations removed** (TypeScript `noUnusedLocals`/`noUnusedParameters` findings, all resolved):
-  - Dead `Legacy*` page components in `src/features/fixhub/account.tsx`, `booking.tsx`, `public.tsx`, `workspaces.tsx`.
-  - Unused imports and variables in `src/routes/__root.tsx`, `src/features/fixhub/services.tsx`, `shared.tsx`, `registry-admin.tsx`, `booking.tsx`, and an unused `crypto` import in `api/db/repository.ts` and `api/redis/client.ts`.
+  - Dead `Legacy*` page components in `src/features/fixhub24/account.tsx`, `booking.tsx`, `public.tsx`, `workspaces.tsx`.
+  - Unused imports and variables in `src/routes/__root.tsx`, `src/features/fixhub24/services.tsx`, `shared.tsx`, `registry-admin.tsx`, `booking.tsx`, and an unused `crypto` import in `api/db/repository.ts` and `api/redis/client.ts`.
   - An unused `existingKey` variable in `api/services/dispatch-service.ts`.
-- **Unreferenced exports removed** (no file in `api/`, `src/`, `scripts/` or `e2e/` imports them): `optionalAuthenticate` in `api/middleware/auth-middleware.ts`; `disabledTwilioProvider` in `src/features/fixhub/communications-model.ts`; `liveMapsSetup` in `src/features/fixhub/map-adapter.ts`; `hindiEnabled`, `localeResources`, `localeMetadata`, `futureLanguageOverrides` and `resolveTranslation` in `src/features/fixhub/locales.ts`. The removed locale block contained Kannada strings, which are outside the English and Telugu scope (FR-9).
+- **Unreferenced exports removed** (no file in `api/`, `src/`, `scripts/` or `e2e/` imports them): `optionalAuthenticate` in `api/middleware/auth-middleware.ts`; `disabledTwilioProvider` in `src/features/fixhub24/communications-model.ts`; `liveMapsSetup` in `src/features/fixhub24/map-adapter.ts`; `hindiEnabled`, `localeResources`, `localeMetadata`, `futureLanguageOverrides` and `resolveTranslation` in `src/features/fixhub24/locales.ts`. The removed locale block contained Kannada strings, which are outside the English and Telugu scope (FR-9).
 - **Duplicate API client removed:** `src/lib/api-client.ts` had no importers. The features use their own `./api-client`, which is kept.
 - **Unused shadcn UI components removed:** 28 files under `src/components/ui/` had no importers (list in `git show 2383a10 --stat` or the branch diff).
 - **Unused dependencies removed** (`npm uninstall`; no source file imports them): 16 `@radix-ui/*` packages, `cmdk`, `embla-carousel-react`, `input-otp`, `react-resizable-panels`, `recharts`, `vaul`. `react-dom` is kept (runtime dependency of the framework; no direct import).
-- **Temporary QA scripts removed:** `tools/qa/fixhub_e2e.py`, `fixhub_focused.py`, `fixhub_route_audit.py`. They were one-off Python scripts with hard-coded `/tmp` paths and no references from `package.json`, CI or documentation. They remain in Git history.
+- **Temporary QA scripts removed:** `tools/qa/fixhub24_e2e.py`, `fixhub24_focused.py`, `fixhub24_route_audit.py`. They were one-off Python scripts with hard-coded `/tmp` paths and no references from `package.json`, CI or documentation. They remain in Git history.
 - **Constant-time token comparison** in `api/services/auth-service.ts` (`crypto.timingSafeEqual`). The change is behaviour-preserving for valid tokens. A regression test checks that an altered signature is rejected. The test would pass with or without the fix, so it does not prove the timing property.
 - **Ignored `role` field removed** from the phone-OTP request schema (`api/routes/auth-router.ts`). The field was already ignored by the handler.
-- **Fictional accounts gated** to test mode or `FIXHUB_LOCAL_DEMO_SEED=true` (`api/db/repository.ts`, `.env.example`), with a regression test ("Defect 5").
+- **Fictional accounts gated** to test mode or `FIXHUB24_LOCAL_DEMO_SEED=true` (`api/db/repository.ts`, `.env.example`), with a regression test ("Defect 5").
 
 Restore any removed file from the baseline with `git show 2383a109c35a1259a490db050929690db32c4bc7:<path>`.
 

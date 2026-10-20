@@ -177,8 +177,8 @@ async function signIn(app: ReturnType<typeof customerApp>["app"]) {
     .expect(200);
   const header = verified.headers["set-cookie"];
   const cookies = Array.isArray(header) ? header : [header ?? ""];
-  const session = cookies.find((value) => value.startsWith("fixhub_session="))!;
-  const csrfCookie = cookies.find((value) => value.startsWith("fixhub_csrf="))!;
+  const session = cookies.find((value) => value.startsWith("fixhub24_session="))!;
+  const csrfCookie = cookies.find((value) => value.startsWith("fixhub24_csrf="))!;
   return {
     cookie: `${session.split(";", 1)[0]}; ${csrfCookie.split(";", 1)[0]}`,
     csrf: decodeURIComponent(csrfCookie.split(";", 1)[0].split("=", 2)[1]),

@@ -1,6 +1,6 @@
 # Documentation index
 
-This tree contains product foundation and governance documents for Fix Hub, the owner-selected product name under parent company Viswatra. `A–Z Services` and `viswatra-marketplace` are historical planning identifiers. `fixhub-platform` is a recommended identifier; the current public repository uses `main` as its default branch. Logo, visual identity, colors, typography, domain, and tagline remain OPEN.
+This tree contains product foundation and governance documents for FixHub24, the owner-selected product name under parent company Viswatra. `A–Z Services` and `viswatra-marketplace` are historical planning identifiers. `fixhub24-platform` is a recommended identifier; the current public repository uses `main` as its default branch. Logo, visual identity, colors, typography, domain, and tagline remain OPEN.
 
 ## Product
 
@@ -49,7 +49,7 @@ Current status: Phase 00 planning publication verified at main `ff6425ac1a4436bb
 
 ## Roadmap and design
 
-- [Fix Hub Master Execution Roadmap V4.1](roadmap/master-roadmap.md) (APPROVED governing planning roadmap through explicit owner delegation, 2026-10-15; future execution separately gated)
+- [FixHub24 Master Execution Roadmap V4.1](roadmap/master-roadmap.md) (APPROVED governing planning roadmap through explicit owner delegation, 2026-10-15; future execution separately gated)
 - Historical V4 source and SHA-256 remain unavailable and unverified; see the [provenance ledger](governance/document-provenance.md).
 - `design/` contains a proposed design system and visual concepts; permanent brand identity remains OPEN. `engineering/` contains candidate contracts and bounded proofs. `src/` contains a local-only demo; `api/` contains a limited, non-production API foundation. Neither is production implementation or evidence of phase exit.
 

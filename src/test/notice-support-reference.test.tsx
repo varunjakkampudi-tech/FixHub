@@ -1,9 +1,9 @@
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("@/features/fixhub/context", () => ({ useFixHub: () => ({ locale: "en-IN" }) }));
+vi.mock("@/features/fixhub24/context", () => ({ useFixHub24: () => ({ locale: "en-IN" }) }));
 
-import { Notice } from "@/features/fixhub/shared";
+import { Notice } from "@/features/fixhub24/shared";
 
 afterEach(() => {
   cleanup();

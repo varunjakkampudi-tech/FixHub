@@ -7,7 +7,7 @@ import { describe, expect, it } from "vitest";
 
 import { createApiApp } from "../app";
 
-describe("Fix Hub demo API foundation", () => {
+describe("FixHub24 demo API foundation", () => {
   it("sets security headers and provides liveness and OpenAPI docs", async () => {
     const app = createApiApp({ environment: "test", allowedOrigins: ["http://localhost:5173"] });
     const live = await request(app).get("/health/live").expect(200);

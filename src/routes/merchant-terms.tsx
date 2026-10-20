@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PublicPage } from "@/features/fixhub/public";
-import { meta } from "@/features/fixhub/context";
+import { PublicPage } from "@/features/fixhub24/public";
+import { meta } from "@/features/fixhub24/context";
 export const Route = createFileRoute("/merchant-terms")({
   head: () => meta("Merchant Terms", false),
   component: Screen,

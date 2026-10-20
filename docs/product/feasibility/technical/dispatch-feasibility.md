@@ -1,6 +1,6 @@
 # Dispatch and scheduled-capacity feasibility
 
-Status: CONDITIONAL mechanism review, no concurrency experiment executed. [Existing acceptance flow](../../../flows/atomic-acceptance.md) and [states](../../../flows/state-machines.md) unchanged. PostgreSQL locking/isolation sources SRC-029/030 support available mechanisms, not FixHub proof.
+Status: CONDITIONAL mechanism review, no concurrency experiment executed. [Existing acceptance flow](../../../flows/atomic-acceptance.md) and [states](../../../flows/state-machines.md) unchanged. PostgreSQL locking/isolation sources SRC-029/030 support available mechanisms, not FixHub24 proof.
 
 Candidate transaction: authorize actor/tenant; bind idempotency payload; lock request/generation then relevant capacity records in deterministic order; recheck live offer/expiry/verification/zone; conditional reservation and unique current assignment; save command result+outbox; commit; return receipt only after commit. Losing/replayed/expired commands cannot reserve again. Deadlock/serialization retry repeats the entire transaction within a bounded retry policy, not isolated last statement.
 

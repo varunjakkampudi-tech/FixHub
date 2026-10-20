@@ -12,8 +12,8 @@ const emailSchema = z
   .max(254)
   .transform((value) => value.toLowerCase());
 const codeSchema = z.string().regex(/^\d{6}$/);
-const cookieName = "fixhub_session";
-const csrfCookieName = "fixhub_csrf";
+const cookieName = "fixhub24_session";
+const csrfCookieName = "fixhub24_csrf";
 const challengeLifetimeMs = 10 * 60 * 1000;
 const sessionLifetimeSeconds = 60 * 60 * 24 * 14;
 
@@ -31,7 +31,7 @@ export function authConfigFromEnvironment(environment: NodeJS.ProcessEnv): AuthC
   if (Buffer.byteLength(secret, "utf8") < 32 || !secret.trim())
     throw new Error("AUTH_HMAC_SECRET must contain at least 32 non-whitespace bytes");
   const webOrigins = (
-    environment.FIXHUB_WEB_ORIGINS ?? "http://localhost:5173,http://127.0.0.1:5173"
+    environment.FIXHUB24_WEB_ORIGINS ?? "http://localhost:5173,http://127.0.0.1:5173"
   )
     .split(",")
     .map((origin) => origin.trim())
@@ -116,7 +116,9 @@ export function createAuthHandlers(
       let released = false;
       try {
         await client.query("BEGIN");
-        await client.query("SELECT pg_advisory_xact_lock(hashtext($1))", [`fixhub-login:${email}`]);
+        await client.query("SELECT pg_advisory_xact_lock(hashtext($1))", [
+          `fixhub24-login:${email}`,
+        ]);
         const recent = await client.query<{ count: string }>(
           "SELECT count(*)::text AS count FROM email_login_challenge WHERE email_normalized = $1 AND issued_at > clock_timestamp() - interval '1 hour'",
           [email],
@@ -195,7 +197,7 @@ export function createAuthHandlers(
     let roles: string[] = [];
     try {
       await client.query("BEGIN");
-      await client.query("SELECT pg_advisory_xact_lock(hashtext($1))", [`fixhub-login:${email}`]);
+      await client.query("SELECT pg_advisory_xact_lock(hashtext($1))", [`fixhub24-login:${email}`]);
       const challenges = await client.query<{
         id: string;
         code_hmac: Buffer;

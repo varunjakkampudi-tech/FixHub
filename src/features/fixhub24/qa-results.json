@@ -1,0 +1,136 @@
+{
+  "currentPriorityDemo": {
+    "method": "Chromium browser emulation",
+    "screens": 16,
+    "widths": [
+      320,
+      360,
+      375,
+      390,
+      412,
+      430,
+      600,
+      768,
+      820,
+      1024,
+      1180,
+      1280,
+      1440,
+      1920
+    ],
+    "languages": [
+      "en-IN",
+      "te-IN"
+    ],
+    "checks": 448,
+    "layoutFailures": 0,
+    "runtimeErrors": [],
+    "routeSmokeCount": 185,
+    "testsPassed": 10,
+    "flows": [
+      "4 same-origin tabs: customer create, merchant notification+toast, first acceptance, losing merchant stale acceptance conflict, assignment, travel, arrival, inspection, quote, approval, start, completion",
+      "mock registration, bad/good mock OTP, full Telugu booking, language switching preserves input",
+      "merchant nine-step onboarding and submission readback",
+      "forgot password and session expiry",
+      "admin price edit -> other tab service price -> audit"
+    ],
+    "realDevices": "NOT TESTED",
+    "WCAG22AA": "NOT TESTED: partial accessibility checks only",
+    "nativeTeluguEditorialReview": "NOT TESTED",
+    "allRouteAllStateAcceptance": "NOT TESTED"
+  },
+  "locationAddendum": {
+    "testsPassed": 18,
+    "testFiles": 4,
+    "layoutScreens": 12,
+    "widths": [
+      320,
+      360,
+      390,
+      430,
+      768,
+      820,
+      1024,
+      1280,
+      1440
+    ],
+    "languages": [
+      "en-IN",
+      "te-IN"
+    ],
+    "layoutChecks": 216,
+    "layoutFailures": 0,
+    "runtimeErrors": [],
+    "crossRole": "PASS: Eluru address, locale draft, Bhimavaram catalog, Tanuku \u20b9799 request, two merchant tabs, private offers, first acceptance, technician assignment/status, fresh \u20b9899 approval/completion",
+    "adminCrud": "PASS: suspension and category creation UI readback; other entity guards covered by pure tests, not every UI state",
+    "gpsDenied": "PASS",
+    "googleMaps": "NOT TESTED: authorization/billing/keys pending; no live integration",
+    "allRoutes": "NOT TESTED this addendum; earlier reports historical",
+    "fullAccessibility": "NOT TESTED",
+    "nativeDevices": "NOT TESTED",
+    "report": "/fixhub24-demo-guide.md"
+  },
+  "communicationsAddendum": {
+    "testsPassed": 28,
+    "testFiles": 5,
+    "newScenarioTests": 10,
+    "layoutChecks": 160,
+    "layoutScreens": 10,
+    "widths": [
+      360,
+      390,
+      430,
+      768,
+      820,
+      1024,
+      1280,
+      1440
+    ],
+    "languages": [
+      "en-IN",
+      "te-IN"
+    ],
+    "layoutFailures": 0,
+    "runtimeErrors": [],
+    "otpUI": "PASS: incorrect/correct code, persona continuation, opt-in",
+    "crossRoleUI": "PASS: city address/catalog regression, Tanuku booking, SMS failure to WhatsApp fallback, merchant reply acceptance/closed peer, assignment, quote \u20b9899 approval/completion, inbox/opt-out/admin logs",
+    "adminUI": "PASS: template create readback and assumed USD rate/Unicode segment costs",
+    "realTwilio": "BLOCKED \u2014 ACCOUNT/KEY/CONSENT/PRICING/BACKEND; no real provider transport implemented",
+    "webhookSignature": "NOT TESTED: no real webhook deployed",
+    "populatedMobile": "PARTIAL: 390px log overflow/screenshot; full scrolled detail acceptance NOT TESTED",
+    "report": "/fixhub24-communications-guide.md"
+  },
+  "finalQualityGate": {
+    "date": "2026-10-15 UTC",
+    "unitTests": 34,
+    "testFiles": 6,
+    "newHardeningTests": 6,
+    "contentRoutes": 201,
+    "measuredRouteLanguageWidths": 3618,
+    "widths": [
+      320,
+      360,
+      390,
+      430,
+      768,
+      820,
+      1024,
+      1280,
+      1440
+    ],
+    "languages": [
+      "en-IN",
+      "te-IN"
+    ],
+    "measuredFailures": 0,
+    "pageErrors": [],
+    "lintErrors": 0,
+    "lintWarnings": 13,
+    "automaticBuildAndTypecheck": "PASS; see docs/qa/automatic-build.txt",
+    "mobilePopulatedJourney": "PASS: 390px customer/address/booking/merchant WhatsApp acceptance/closed peer/assignment/quote approval/completion/opt-out/admin CRUD/logs",
+    "functionalSharedSourceVariants": 146,
+    "genericIncompleteVariants": 55,
+    "fullAcceptance": "NOT CERTIFIED: every substate, contrast, touch, real devices and native Telugu review remain open",
+    "report": "docs/QA_REPORT.md"
+  }
+}

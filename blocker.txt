@@ -1,5 +1,5 @@
 ================================================================================
-FIX HUB (VISWATRA) - MASTER ACTIONABLE BLOCKER REGISTER
+FIXHUB2424 (VISWATRA) - MASTER ACTIONABLE BLOCKER REGISTER
 ================================================================================
 Document:            blocker.txt
 Governing rules:     docs/specs/FixHub-Autonomous-Goal.md (sections 0.1, 17, 20)
@@ -27,7 +27,7 @@ No approval entry is recorded in this file as of 2026-10-20.
 Agents never create, edit, backdate, or remove approval entries here.
 
 Consequence while no entry exists:
-- FixHub Autonomous Goal status: AWAITING_OWNER_APPROVAL (Goal section 0.1).
+- FixHub24 Autonomous Goal status: AWAITING_OWNER_APPROVAL (Goal section 0.1).
 - Product implementation beyond pre-activation work is not authorized.
 - The 2026-10-15 work authority (docs/governance/product-foundation-work-authority.md)
   permits research, requirements, architecture, interaction specifications,
@@ -62,7 +62,7 @@ BLOCKER-016  P1    READY_FOR_OWNER    Cleanup commits on task branch need owner 
 BLOCKER-017  P1    OPEN               Independent review not performed for this checkpoint
 BLOCKER-018  P1    OPEN               Format, lint and coverage gates are not met (tooling)
 BLOCKER-019  P2    OPEN               Browser run: API not reachable during the Playwright web server start
-BLOCKER-020  P2    OPEN               Scope classification of features beyond FixHub spec v1.3
+BLOCKER-020  P2    OPEN               Scope classification of features beyond FixHub24 spec v1.3
 BLOCKER-021  P2    OPEN               Naming and folder structure follow-up (documents)
 BLOCKER-022  P1    READY_FOR_OWNER    Open owner decisions D02-D27 (consolidated list and external dependencies)
 
@@ -155,7 +155,7 @@ BLOCKER-002: JWT signing secret rotation and investigation follow-up
     The session table in api/migrations/001_identity.sql is identity_session.
   - Earlier step 7 referred to an audit_logs table. No table with that name exists in
     api/migrations. Audit storage is not implemented yet.
-  - The investigation record says FixHub "has never had a public staging or production
+  - The investigation record says FixHub24 "has never had a public staging or production
     server deployed". That is a statement from repository search only. The agent cannot
     check hosting accounts, provider consoles or deployment logs. The owner must confirm it.
 
@@ -335,7 +335,7 @@ BLOCKER-006: Mobile store accounts
   - Store fees and D-U-N-S requirements in the earlier text are assumptions. Confirm them on
     the vendors' own pages.
   - Mobile technology is undecided (D06). This blocker should not be acted on before D06.
-  - The evidence cited earlier (src/test/fixhub-hardening.test.ts) does not test store
+  - The evidence cited earlier (src/test/fixhub24-hardening.test.ts) does not test store
     accounts. It is not evidence for this blocker.
   - The earlier statement that the web app is "fully responsive ... tested in Playwright"
     is partly true: the browser suite covers two projects (desktop Chromium and Pixel 5),
@@ -373,7 +373,7 @@ BLOCKER-007: Staging host, backups, domain and TLS
   - Environment variable names STAGING_DATABASE_URL, STAGING_REDIS_URL, STAGING_HOST are not
     read by any code (verified). Planned names only.
   - Owner-side amendment v1.3-C (pending approval) says the existing Hostinger VPS is not a
-    FixHub staging host. Confirm this when approving the amendment.
+    FixHub24 staging host. Confirm this when approving the amendment.
 
 - Current state: Local development and ephemeral CI are the only environments.
 - Exact owner action: Choose a hosting provider under D12 (non-AWS per CR-02), provision a
@@ -403,12 +403,12 @@ BLOCKER-008: Native Telugu review
 - Problem: Telugu copy for money, consent and safety must be checked by a native reviewer.
 
 - Corrections in this checkpoint:
-  - The file src/features/fixhub/locale-context.tsx named earlier does not exist (verified).
-    Telugu strings are spread across src/features/fixhub (for example communications-copy.ts,
+  - The file src/features/fixhub24/locale-context.tsx named earlier does not exist (verified).
+    Telugu strings are spread across src/features/fixhub24 (for example communications-copy.ts,
     account.tsx and booking.tsx).
   - The earlier claim of "100% key parity" was not re-verified on 2026-10-20. No automated
     key-completeness script exists in package.json.
-  - A Kannada override block in src/features/fixhub/locales.ts was unused and outside the
+  - A Kannada override block in src/features/fixhub24/locales.ts was unused and outside the
     English and Telugu scope (FR-9). It was removed on the task branch (see PROGRESS.md section 7).
 
 - Exact owner action: Arrange a native Tanuku or West Godavari reviewer. Record reviewer,
@@ -423,7 +423,7 @@ BLOCKER-008: Native Telugu review
 - Expected result: Recorded review for every money, consent and safety string.
 - Verification: QUALITY_AUDIT.md entry with reviewer, date and string version.
 - Tests to rerun: npm run test:l10n
-- Evidence: src/test/fixhub-communications.test.ts
+- Evidence: src/test/fixhub24-communications.test.ts
 
 ================================================================================
 BLOCKER-009: FR-1 commit #21 security defects (RESOLVED, not system-verified)
@@ -593,7 +593,7 @@ BLOCKER-012: Owner-side source documents changed; amendments await approval
      - Quality Standard Appendix D (CR-03): PROPOSED_AMENDMENT, not in force.
      - Quality Standard CR-02 rules (no AWS; no repository names or links) appear in the
        owner-side copy as numbered rules. The tracked copy has the CR-02 section only.
-  5. The Goal and the Standards now say "the FixHub repository" where the tracked copy names
+  5. The Goal and the Standards now say "the FixHub24 repository" where the tracked copy names
      the repository. The owner-side copy of the Completion Program removes the repository
      link from its Source line.
 
@@ -685,7 +685,7 @@ BLOCKER-014: Portfolio adoption matrix removed from this repository
   repository). Reset the statuses, starting from NOT_ASSESSED, when the new location is set.
 
 - Step-by-step instructions: 1) choose a private location; 2) copy the file from the backup
-  folder; 3) set its FixHub column statuses to what the evidence supports.
+  folder; 3) set its FixHub24 column statuses to what the evidence supports.
 
 - Environment variable names: none.
 - Dependencies: owner decision.
@@ -713,7 +713,7 @@ BLOCKER-015: Direct-to-main publication and branch protection
      repository. Direct-main compatibility is "PROPOSED; ENFORCEMENT COMPATIBILITY NOT PROVEN".
   3. The documentation-only checkpoint was pushed to main with a normal push (no force):
      2383a109c35a1259a490db050929690db32c4bc7..28bf5126b2b9a25864d9353f3ba92f5a16899ad3.
-     Hosted CI run 39365885589 (FixHub CI Quality & Validation Pipeline) completed with
+     Hosted CI run 39365885589 (FixHub24 CI Quality & Validation Pipeline) completed with
      conclusion success on 28bf512. The owner must decide whether this path stays allowed.
 
 - Exact owner action: Decide whether future documentation checkpoints go direct to main, or
@@ -751,7 +751,7 @@ BLOCKER-016: Cleanup commits on the task branch need owner review
     removal of temporary QA scripts under tools/ (three Python files); a constant-time
     token-signature comparison and removal of an ignored role field (identity area);
     a seed guard that creates fictional accounts (including an admin) only in test mode or when
-    FIXHUB_LOCAL_DEMO_SEED=true (BLOCKER-023), with a regression test; and formatting changes if
+    FIXHUB24_LOCAL_DEMO_SEED=true (BLOCKER-023), with a regression test; and formatting changes if
     they are part of the branch.
   - Restore path for any removed file: git show 2383a109c35a1259a490db050929690db32c4bc7:<path>
 
@@ -863,7 +863,7 @@ BLOCKER-019: Browser run reports API connection refused (OPEN)
 - Evidence: playwright.config.ts; e2e/browser-validation.spec.ts
 
 ================================================================================
-BLOCKER-020: Scope classification of features beyond FixHub spec v1.3 (OPEN)
+BLOCKER-020: Scope classification of features beyond FixHub24 spec v1.3 (OPEN)
 ================================================================================
 - ID: BLOCKER-020
 - Title: Classify features that exist in code but may be outside the frozen scope
@@ -873,10 +873,10 @@ BLOCKER-020: Scope classification of features beyond FixHub spec v1.3 (OPEN)
 - Status: OPEN
 
 - Verified facts that need classification:
-  - Demo personas and browser-stored demo records (src/features/fixhub/demo-*.ts(x)).
-  - Google Maps URL links in src/features/fixhub (no SDK is loaded).
+  - Demo personas and browser-stored demo records (src/features/fixhub24/demo-*.ts(x)).
+  - Google Maps URL links in src/features/fixhub24 (no SDK is loaded).
   - Hindi locale type and disabled flag: the Locale type still includes "hi-IN" in
-    src/features/fixhub/locales.ts. Hindi is off by default under FR-9.
+    src/features/fixhub24/locales.ts. Hindi is off by default under FR-9.
   - An in-memory Redis stand-in: api/redis/client.ts (Standards section 1.2).
   - Duplicate sign-in and booking UI paths (see BLOCKER-010 and BLOCKER-011).
   - Many Lovable references in governance and planning documents (no Lovable configuration
@@ -986,18 +986,18 @@ BLOCKER-023: Fictional privileged accounts were seeded in every environment
   account on every running API instance.
 
 - Fix on the task branch:
-  - seedInitialData() returns early unless NODE_ENV is "test" or FIXHUB_LOCAL_DEMO_SEED is "true"
+  - seedInitialData() returns early unless NODE_ENV is "test" or FIXHUB24_LOCAL_DEMO_SEED is "true"
     (function seedsDemoAccounts() in api/db/repository.ts).
-  - .env.example documents FIXHUB_LOCAL_DEMO_SEED as local-development only.
+  - .env.example documents FIXHUB24_LOCAL_DEMO_SEED as local-development only.
   - Regression test: api/test/security-quarantine-fr1.test.ts, "Defect 5".
 
 - Side effect for owners: local API runs (npm run dev) start with no seeded accounts unless
-  FIXHUB_LOCAL_DEMO_SEED=true is set in the local, untracked environment file.
+  FIXHUB24_LOCAL_DEMO_SEED=true is set in the local, untracked environment file.
 
 - Exact owner action: Review the branch change. Decide whether local demonstration seeding
   should stay behind the flag. Confirm that no deployed environment ever ran the old seeds
   (BLOCKER-002 step 1 covers the same question).
-- Environment variable names: FIXHUB_LOCAL_DEMO_SEED (local development only; never shared or production)
+- Environment variable names: FIXHUB24_LOCAL_DEMO_SEED (local development only; never shared or production)
 - Dependencies: BLOCKER-016; BLOCKER-011.
 - Tests to rerun: npm run test:security; npm test
 - Evidence: api/db/repository.ts; api/test/security-quarantine-fr1.test.ts ("Defect 5")

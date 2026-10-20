@@ -36,8 +36,8 @@ const databasePool = createDatabasePool(process.env, (code) =>
 );
 const authConfig = authConfigFromEnvironment(process.env);
 const resendConfig = resendConfigFromEnvironment(process.env);
-const verificationEnabled = process.env.FIXHUB_WHATSAPP_VERIFICATION_ENABLED === "true";
-const notificationsEnabled = process.env.FIXHUB_WHATSAPP_NOTIFICATIONS_ENABLED === "true";
+const verificationEnabled = process.env.FIXHUB24_WHATSAPP_VERIFICATION_ENABLED === "true";
+const notificationsEnabled = process.env.FIXHUB24_WHATSAPP_NOTIFICATIONS_ENABLED === "true";
 const whatsappEnabled = verificationEnabled || notificationsEnabled;
 const twilioConfig = whatsappEnabled ? twilioConfigFromEnvironment(process.env) : null;
 const whatsappEncryptionKey = whatsappEnabled
@@ -106,7 +106,7 @@ const app = createApiApp({
   },
 });
 const server = app.listen(port.data, host, () =>
-  logger.info({ host, port: port.data }, "Fix Hub API listening"),
+  logger.info({ host, port: port.data }, "FixHub24 API listening"),
 );
 const dispatcher =
   notificationsEnabled &&

@@ -21,7 +21,7 @@ describe("database foundation", () => {
     ).toThrow();
 
     const config = databaseConfigFromEnvironment({
-      DATABASE_URL: "postgres://user:secret@localhost/fixhub",
+      DATABASE_URL: "postgres://user:secret@localhost/fixhub24",
       DATABASE_POOL_MAX: "12",
       NODE_ENV: "production",
     }) as PoolConfig;
