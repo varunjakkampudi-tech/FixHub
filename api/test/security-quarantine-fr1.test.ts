@@ -2,7 +2,7 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import request from "supertest";
 import { createApiApp } from "../app";
-import { defaultRepository } from "../db/repository";
+import { Repository, defaultRepository } from "../db/repository";
 import {
   AuthService,
   getAuthJwtSecret,
@@ -152,6 +152,26 @@ describe("FR-1 Security Quarantine & Defect Remediation Suite", () => {
 
       expect(verified).toBeNull();
     });
+
+    it("rejects a token whose signature has been altered in place", () => {
+      process.env.NODE_ENV = "test";
+      process.env.JWT_SECRET = "real-production-secret-with-proper-length-and-entropy-32b";
+      const auth = new AuthService(defaultRepository);
+      const token = auth.generateToken({
+        id: "usr-tamper-001",
+        phone: "+919999999998",
+        name: "Tamper",
+        role: "customer",
+        locale: "en",
+        isActive: true,
+        createdAt: new Date().toISOString(),
+      });
+      const [header, payload, signature] = token.split(".");
+      const alteredSignature = `${signature.slice(0, -1)}${signature.endsWith("A") ? "B" : "A"}`;
+
+      expect(auth.verifyToken(`${header}.${payload}.${alteredSignature}`)).toBeNull();
+      expect(auth.verifyToken(token)).not.toBeNull();
+    });
   });
 
   describe("Defect 4: Truthful Delivery Status Messages", () => {
@@ -170,6 +190,17 @@ describe("FR-1 Security Quarantine & Defect Remediation Suite", () => {
       const prodRes = await authService.requestOtp("+919876543210");
       expect(prodRes.message).not.toContain("SMS and WhatsApp");
       expect(prodRes.message).toContain("Verification code required");
+    });
+  });
+
+  describe("Defect 5: Fictional privileged accounts are not seeded outside test mode", () => {
+    it("seeds no accounts outside test mode unless local demo seeding is explicitly enabled", () => {
+      process.env.NODE_ENV = "production";
+      delete process.env.FIXHUB_LOCAL_DEMO_SEED;
+      expect(new Repository().users.size).toBe(0);
+
+      process.env.FIXHUB_LOCAL_DEMO_SEED = "true";
+      expect(new Repository().users.get("usr-admin-001")?.role).toBe("admin");
     });
   });
 });

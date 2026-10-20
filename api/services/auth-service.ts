@@ -184,7 +184,12 @@ export class AuthService {
         .update(`${header}.${payload}`)
         .digest("base64url");
 
-      if (signature !== expectedSig) return null;
+      // Constant-time comparison so the signature cannot be recovered through timing differences.
+      const providedSignature = Buffer.from(signature);
+      const computedSignature = Buffer.from(expectedSig);
+      if (providedSignature.length !== computedSignature.length || !crypto.timingSafeEqual(providedSignature, computedSignature)) {
+        return null;
+      }
 
       const decoded: TokenPayload = JSON.parse(Buffer.from(payload, "base64url").toString("utf8"));
       if (decoded.exp < Math.floor(Date.now() / 1000)) return null;

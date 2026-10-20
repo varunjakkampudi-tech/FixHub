@@ -8,7 +8,6 @@ export const authRouter = Router();
 
 const requestOtpSchema = z.object({
   phone: z.string().min(10).max(15),
-  role: z.enum(["customer", "merchant", "technician", "admin"]).optional(),
 });
 
 const verifyOtpSchema = z.object({

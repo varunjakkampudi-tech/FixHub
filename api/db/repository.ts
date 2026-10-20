@@ -1,4 +1,3 @@
-import crypto from "node:crypto";
 
 export type UserRole = "customer" | "merchant" | "technician" | "admin";
 export type BookingStatus =
@@ -180,6 +179,11 @@ export function calculateDistanceKm(lat1: number, lon1: number, lat2: number, lo
   return R * c;
 }
 
+/** Fictional demo accounts are seeded only for automated tests or an explicit local demonstration. */
+function seedsDemoAccounts(): boolean {
+  return process.env.NODE_ENV === "test" || process.env.FIXHUB_LOCAL_DEMO_SEED === "true";
+}
+
 export class Repository {
   public users = new Map<string, User>();
   public merchants = new Map<string, Merchant>();
@@ -213,6 +217,8 @@ export class Repository {
   }
 
   private seedInitialData(): void {
+    if (!seedsDemoAccounts()) return;
+
     // 1. Admin Users (Operational + Test)
     const adminUser: User = {
       id: "usr-admin-001",
