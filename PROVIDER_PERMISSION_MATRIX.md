@@ -1,7 +1,7 @@
 # FixHub24 — Provider & External Integration Permission Matrix
 
 **Project:** FixHub24 (Viswatra)  
-**Spec Reference:** `FixHub-Product-Spec-v1.3.md` (Section 14 & 18.4)  
+**Spec Reference:** `FixHub24-Product-Spec-v1.3.md` (Section 14 & 18.4)  
 **Standard:** `Viswatra-Global-Engineering-Quality-Standard-v1.1.md` (Category 12, 13, 22)  
 **Audit Commit:** `554fde9`  
 

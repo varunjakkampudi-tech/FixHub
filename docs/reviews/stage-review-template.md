@@ -4,7 +4,7 @@ Copy this template for each phase. Replace every prompt; use NOT ASSESSED or NOT
 
 ## Document control
 
-- Product / parent: Fix Hub / Viswatra
+- Product / parent: FixHub24 / Viswatra
 - Phase and title:
 - Review date and reviewer(s):
 - Review status: DRAFT / FINAL FOR OWNER REVIEW

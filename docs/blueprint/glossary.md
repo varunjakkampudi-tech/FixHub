@@ -1,6 +1,6 @@
 # Blueprint glossary
 
-| Term | Fix Hub meaning |
+| Term | FixHub24 meaning |
 |---|---|
 | Authoritative backend | The authenticated system that validates and commits business decisions across every channel. |
 | Canonical ID | Stable backend request/merchant/user identity, distinct from a provider message or push token. |

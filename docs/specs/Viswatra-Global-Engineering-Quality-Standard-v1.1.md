@@ -1,6 +1,6 @@
 # Viswatra — Global Engineering and Quality Standard v1.1
 
-**Applies to:** every Viswatra product (OraOne, CareerScope, FixHub, AI smart glasses, and future products), every repository, every person and every AI agent.
+**Applies to:** every Viswatra product (OraOne, CareerScope, FixHub24, AI smart glasses, and future products), every repository, every person and every AI agent.
 **Version:** 1.1 (19 October 2026), with final consistency corrections. **Status: FROZEN.** New global requirements only through a change request that names a concrete gap, risk or approved change. **Applied change requests:** CR-01 Browser, runtime and data-leakage quality gate (19 October 2026), mapped into categories 11, 12, 13, 22, 25, 26, 27 and 30; it changes no product scope and resets no approval. Supersedes `Viswatra-Global-Engineering-Baseline.md` v1.0; all v1.0 rules are kept and reorganized into 30 numbered categories, with additions from the Global Engineering Completion Program.
 **Purpose:** one reusable floor for engineering, security, testing, operations, documentation and release readiness. It does not replace product requirements. Each product keeps its own Product Spec, Engineering Standards and Autonomous Goal.
 
@@ -13,7 +13,7 @@
 2. The product's Engineering Standards and Autonomous Goal decide **how** that product is built.
 3. This standard applies wherever those are silent.
 4. Where they differ, the **stricter** rule wins. A product may loosen a rule here only with a written owner exception in its decision register.
-5. **Scope rule:** this standard governs engineering quality. It never adds product features to a product whose scope is frozen (for example FixHub v1.3). Where a category here needs a capability the product spec does not include (for example an admin log viewer), record it as a gap in `GAP_MATRIX.md` and `blocker.txt` as READY_FOR_OWNER for a scope amendment; do not build it silently.
+5. **Scope rule:** this standard governs engineering quality. It never adds product features to a product whose scope is frozen (for example FixHub24 v1.3). Where a category here needs a capability the product spec does not include (for example an admin log viewer), record it as a gap in `GAP_MATRIX.md` and `blocker.txt` as READY_FOR_OWNER for a scope amendment; do not build it silently.
 
 Categories 1, 22, 23 and 24 are floors that no product document, deadline or agent decision may weaken.
 
@@ -151,7 +151,7 @@ Reference layout (adapt per stack and record differences in the Product Profile)
 | C firmware | `snake_case` with module prefix (`audio_init`) |
 | Database | tables plural `snake_case`; `id`, `created_at`, `updated_at`; foreign keys `<entity>_id` |
 | API paths | `/v1/` prefix, plural nouns, `kebab-case` |
-| Env variables | `UPPER_SNAKE_CASE` with product prefix (`FIXHUB_DB_URL`) |
+| Env variables | `UPPER_SNAKE_CASE` with product prefix (`FIXHUB24_DB_URL`) |
 | Analytics events | `object_action`, past tense (`booking_created`) |
 | Feature flags | `ff_<area>_<feature>` with owner and expiry |
 | Branches | `dev` (integration), `task/<id>-<slug>` |
@@ -633,7 +633,7 @@ Per-change rules (30.1) keep quality from getting worse. A repository is complet
 
 One row per category (1–30) and one column per product. Each cell: status (NOT_ASSESSED, NOT_APPLICABLE_WITH_REASON, PLANNED, IMPLEMENTED, TESTED, VERIFIED, BLOCKED, READY_FOR_OWNER), evidence link, SHA and date. A product's cells are never updated from another product's evidence.
 
-| # | Category | OraOne | CareerScope | FixHub | AI smart glasses |
+| # | Category | OraOne | CareerScope | FixHub24 | AI smart glasses |
 |---|---|---|---|---|---|
 | 1 | Non-negotiables and authority | NOT_ASSESSED | NOT_ASSESSED | NOT_ASSESSED | NOT_ASSESSED |
 | … | … | … | … | … | … |
@@ -645,5 +645,5 @@ One row per category (1–30) and one column per product. Each cell: status (NOT
 |---|---|---|
 | OraOne (v2.1) | Scope, FastAPI/React stack, Hostinger deploy, D01–D20 | Hostinger rules apply here |
 | CareerScope (v12) | Scope, D1–D14, proposed stack | Fill the Product Profile before the stack is approved |
-| FixHub (v1.3, frozen) | Scope, QA-01–QA-34, G01–G25, D01–D27 | Gaps needing new features go to READY_FOR_OWNER, not into the build |
+| FixHub24 (v1.3, frozen) | Scope, QA-01–QA-34, G01–G25, D01–D27 | Gaps needing new features go to READY_FOR_OWNER, not into the build |
 | AI smart glasses (v9) | Profiles, broker, evidence levels, P-1 schedule | Categories 20 and 15 web parts apply only to its public site; 22 mobile/firmware and 23 AI apply |

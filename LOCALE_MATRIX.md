@@ -1,7 +1,7 @@
 # FixHub24 — Bilingual Locale & Key Completeness Matrix (FR-9, L10N-01 to L10N-14)
 
 **Project:** FixHub24 (Viswatra)  
-**Spec Reference:** `FixHub-Product-Spec-v1.3.md` (FR-9, L10N-01 to L10N-14)  
+**Spec Reference:** `FixHub24-Product-Spec-v1.3.md` (FR-9, L10N-01 to L10N-14)  
 **Languages Approved:** English (`en`), Telugu (`te`) strictly.  
 **Prohibited Languages:** Hindi (`hi`) and unapproved locales are strictly excluded from the launch catalog.  
 **Audit Commit:** `554fde9`  

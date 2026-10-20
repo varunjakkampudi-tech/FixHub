@@ -1,6 +1,6 @@
-# Fix Hub blueprint reader guide
+# FixHub24 blueprint reader guide
 
-This is the conceptual planning baseline for Fix Hub under Viswatra, initially Tanuku. It documents proposed behavior and future work, without claiming a finished application. Name approval does not approve a logo, identity, domain, vendor or technology. Read [owner-delegated approval](../reviews/foundation-approval.md) for exact scope and closure publication status.
+This is the conceptual planning baseline for FixHub24 under Viswatra, initially Tanuku. It documents proposed behavior and future work, without claiming a finished application. Name approval does not approve a logo, identity, domain, vendor or technology. Read [owner-delegated approval](../reviews/foundation-approval.md) for exact scope and closure publication status.
 
 ## Choose a reading path
 

@@ -1,7 +1,7 @@
 # FixHub24 — End-to-End User Journey Matrix (J01 to J30)
 
 **Project:** FixHub24 (Viswatra)  
-**Spec Reference:** `FixHub-Product-Spec-v1.3.md` (Section 10 & 18.2)  
+**Spec Reference:** `FixHub24-Product-Spec-v1.3.md` (Section 10 & 18.2)  
 **Audit Commit:** `554fde9`  
 
 ---

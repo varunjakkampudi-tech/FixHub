@@ -1,8 +1,8 @@
 # FixHub24 — Application Screen & Responsive UI Matrix
 
 **Project:** FixHub24 (Viswatra)  
-**Spec Reference:** `FixHub-Product-Spec-v1.3.md` (Section 3–6, 16A.2)  
-**Engineering Standards:** `FixHub-Engineering-Standards.md` (Breakpoints: Mobile <= 767px, Tablet 768px-1023px, Desktop >= 1024px)  
+**Spec Reference:** `FixHub24-Product-Spec-v1.3.md` (Section 3–6, 16A.2)  
+**Engineering Standards:** `FixHub24-Engineering-Standards.md` (Breakpoints: Mobile <= 767px, Tablet 768px-1023px, Desktop >= 1024px)  
 **Audit Commit:** `554fde9`  
 
 ---

@@ -1,11 +1,11 @@
-# Fix Hub — Autonomous Build and Validation Goal
+# FixHub24 — Autonomous Build and Validation Goal
 
-**Project:** Fix Hub (Viswatra)
-**Repository:** `varunjakkampudi-tech/FixHub`, baseline `main` at `dd1bc789ae372c80281a7e4f3d11768a48ccaaab` (re-verify at start)
-**Product specification:** FixHub-Product-Spec-v1.3.md (scope frozen; activation requires the recorded approval in section 0.1)
-**Engineering baseline:** FixHub-Engineering-Standards.md, plus the frozen Viswatra Global Engineering and Quality Standard v1.1 (`Viswatra-Global-Engineering-Quality-Standard-v1.1.md`) including approved CR-01
+**Project:** FixHub24 (Viswatra)
+**Repository:** `varunjakkampudi-tech/FixHub24`, baseline `main` at `dd1bc789ae372c80281a7e4f3d11768a48ccaaab` (re-verify at start)
+**Product specification:** FixHub24-Product-Spec-v1.3.md (scope frozen; activation requires the recorded approval in section 0.1)
+**Engineering baseline:** FixHub24-Engineering-Standards.md, plus the frozen Viswatra Global Engineering and Quality Standard v1.1 (`Viswatra-Global-Engineering-Quality-Standard-v1.1.md`) including approved CR-01
 **Execution mode:** Autonomous development and testing on a development integration branch; `main`, production, and all external actions are owner-only
-**Objective:** Make the existing code safe and consistent, then build the complete Fix Hub launch scope toward gates G01–G25, with honest evidence levels and every owner or external dependency recorded. One coordinated public launch remains an owner decision (D16).
+**Objective:** Make the existing code safe and consistent, then build the complete FixHub24 launch scope toward gates G01–G25, with honest evidence levels and every owner or external dependency recorded. One coordinated public launch remains an owner decision (D16).
 
 ---
 
@@ -18,7 +18,7 @@
 - **Needs the authorization currently governing the repository:** creating or modifying tracked files, committing approval records, changing `AGENTS.md` or the work-authority record, pushing branches, and changing GitHub settings.
 - **Approval integrity:** agents may draft proposed approval records and governance amendments, but never create, backdate, impersonate or self-certify owner approval. `PROGRESS.md` keeps an auditable reference to the actual owner approval record and the exact governance-transition commit SHA.
 - All security, testing, backup and production restrictions remain in force.
-- Activation rule: this goal becomes active only after the owner approves, in writing: FixHub-Product-Spec-v1.3.md, decision D01 (one-launch scope as successor to phased implementation), and D17 (development-branch workflow and the matching `AGENTS.md` and work-authority update). The owner records the approval date, versions and approver in `PROGRESS.md` or the decision register
+- Activation rule: this goal becomes active only after the owner approves, in writing: FixHub24-Product-Spec-v1.3.md, decision D01 (one-launch scope as successor to phased implementation), and D17 (development-branch workflow and the matching `AGENTS.md` and work-authority update). The owner records the approval date, versions and approver in `PROGRESS.md` or the decision register
 - After activation, safe internal engineering proceeds. Each other open decision (D02–D27) blocks only the capability that depends on it, never unrelated work (spec 19.11)
 - Product scope is frozen at v1.3. Do not add product features; anything new needs a written owner scope amendment
 - Until then, `AGENTS.md` and `docs/governance/product-foundation-work-authority.md` remain the only authority, so there is no gap
@@ -164,7 +164,7 @@ Do not: push to `main`; deploy or change production; send real WhatsApp, SMS, em
 
 ## 10–11. Standards and testing
 
-Apply FixHub-Engineering-Standards.md in full, including the definition of done in Standards section 7.3 and coverage rules in 7.2. Record exact commands, exit codes, test names, coverage, SHAs, and CI run IDs.
+Apply FixHub24-Engineering-Standards.md in full, including the definition of done in Standards section 7.3 and coverage rules in 7.2. Record exact commands, exit codes, test names, coverage, SHAs, and CI run IDs.
 
 ---
 
@@ -283,8 +283,8 @@ Executive summary; Stage 0 security fixes with evidence; baseline inventory; all
 
 ## 24. Final execution instruction
 
-**After the owner activates this goal (section 0.1), fix the commit #21 security defects first, reconcile the codebase into one identity and one persistence model, then build and validate the complete Fix Hub launch scope autonomously on the development branch.**
+**After the owner activates this goal (section 0.1), fix the commit #21 security defects first, reconcile the codebase into one identity and one persistence model, then build and validate the complete FixHub24 launch scope autonomously on the development branch.**
 
 Do not push to `main`, deploy, send real messages, contact anyone, spend money, submit apps, mark roadmap gates passed, or invent evidence.
 
-**The desired outcome is one safe, consistent, tested, bilingual Fix Hub codebase moving toward a single coordinated launch, with every owner, field, provider, and legal dependency clearly recorded.**
+**The desired outcome is one safe, consistent, tested, bilingual FixHub24 codebase moving toward a single coordinated launch, with every owner, field, provider, and legal dependency clearly recorded.**

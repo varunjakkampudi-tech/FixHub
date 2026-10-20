@@ -8,7 +8,7 @@ Reference reconciliation note (2026-10-16): command/link paths displayed in this
 
 - Document ID: P00-REVIEW
 - Review date: 2026-10-14 (Asia/Calcutta)
-- Review basis: all current workspace planning documents and the complete owner-supplied inline Fix Hub roadmap specification.
+- Review basis: all current workspace planning documents and the complete owner-supplied inline FixHub24 roadmap specification.
 - Scope: documentation-only review. No code, dependencies, infrastructure, Git repository, Lovable project, or external service was created or tested.
 - Phase result: **CONDITIONAL — NOT CLOSED; owner decisions and evidence gates remain.**
 
@@ -30,11 +30,11 @@ Additional governance and planning references: [documentation index](../README.m
 
 ## Owner identity and scope constraints
 
-- Viswatra is the confirmed parent; **Fix Hub** is owner-selected and DEC-003 remains LOCKED.
+- Viswatra is the confirmed parent; **FixHub24** is owner-selected and DEC-003 remains LOCKED.
 - Logo, colors, typography, visual identity, tagline, domain, and trademark availability remain OPEN / unverified. No brand asset was generated or approved.
-- `fixhub-platform` remains a proposed future repository identifier only. The workspace was not renamed and no repository was initialized.
+- `fixhub24-platform` remains a proposed future repository identifier only. The workspace was not renamed and no repository was initialized.
 - Lovable was not started; repository access/import is not assumed. Any standalone-to-export workflow remains subject to separate verification and approval.
-- Historical “A–Z Services” and `viswatra-marketplace` references are retained only where needed for provenance; current-facing product references use Fix Hub.
+- Historical “A–Z Services” and `viswatra-marketplace` references are retained only where needed for provenance; current-facing product references use FixHub24.
 - One coordinated complete public release remains a locked constraint; internal and private gates remain allowed.
 
 ## Roadmap reconstruction and provenance
@@ -65,7 +65,7 @@ The proposal enumerates exactly 20 phases, PHASE 00 through PHASE 19, and includ
 
 ## Governance reconciliation and open risks
 
-- **DEC-003:** remains LOCKED for the owner-selected product name Fix Hub.
+- **DEC-003:** remains LOCKED for the owner-selected product name FixHub24.
 - **DEC-004/005:** remain OPEN for logo and identity elements.
 - **DEC-006/007:** workflow remains OPEN and Lovable gate remains LOCKED; no project was initiated.
 - **DEC-009:** remains LOCKED for one complete coordinated public production release.
@@ -95,7 +95,7 @@ The [phase review policy](../governance/stage-gate-policy.md) defines these as e
 |---|---|---|
 | Nine foundation documents present and indexed | PASS | 9/9 current locations verified. |
 | 27 FR and 14 NFR IDs preserved and indexed | PASS | 41/41 current IDs found in index. |
-| Fix Hub naming and open identity decisions | PASS | DEC-003 locked; DEC-004/005 open; historical terms are provenance-only. |
+| FixHub24 naming and open identity decisions | PASS | DEC-003 locked; DEC-004/005 open; historical terms are provenance-only. |
 | Proposed roadmap contains phases 00–19 and release policy | PASS | 20 phases and one-release statement checked against owner-pasted specification. |
 | Historical V4 source and checksum | FAIL / unavailable | Source file absent; no historical hash can be asserted. |
 | V4.1 supersession confirmation | CONDITIONAL | Awaiting explicit owner decision; DEC-016 remains PROPOSED. |
@@ -122,7 +122,7 @@ The [phase review policy](../governance/stage-gate-policy.md) defines these as e
 
 ### Scope and baseline
 
-This section amends repository-specific observations in the preceding review, which accurately described the workspace before GitHub repository creation. On 2026-10-14, the current checkout was inspected read-only before edits: branch `main`, clean working tree, `origin` set to `https://github.com/varunjakkampudi-tech/FixHub`, HEAD `da0661bfc709e9aba31e364c4459b7b129cf92e2`. GitHub reported a public repository with default branch `main`. Repository existence and documentation changes do not close Phase 00 or start Phase 01.
+This section amends repository-specific observations in the preceding review, which accurately described the workspace before GitHub repository creation. On 2026-10-14, the current checkout was inspected read-only before edits: branch `main`, clean working tree, `origin` set to `https://github.com/varunjakkampudi-tech/FixHub24`, HEAD `da0661bfc709e9aba31e364c4459b7b129cf92e2`. GitHub reported a public repository with default branch `main`. Repository existence and documentation changes do not close Phase 00 or start Phase 01.
 
 ### Findings addressed in repository content
 
@@ -177,7 +177,7 @@ Roadmap hashes provide integrity comparison against the manifest, not independen
 
 The current checkout was refreshed from `origin`; the working branch is `docs/audit-settings-evidence`, and the validator/recovery changes described below were audited on PR head `37011be4212f63c6868e7526677bb817f312eab5`. All 25 tracked repository files and all 9 files in PR #1 were enumerated and reviewed. The PR contains documentation, governance, a JSON requirements inventory, a documentation validator, its tests, and a read-only validation workflow; no application code, infrastructure, or implementation trees were introduced. This review addendum is a documentation-only follow-up and its own commit requires the same hosted validation.
 
-On Node `v22.23.2`, `node scripts/validate-documentation.mjs` passed: 18 Markdown files, 20 roadmap phases, all 27 FR and 14 NFR IDs present exactly once and indexed, current roadmap checksum matching its manifest, and the single coordinated public-release rule present. The regression suite has 33 scenarios: 32 passed locally with 0 failures, and its symlink-creation scenario was skipped locally because Windows returned `EPERM`. Hosted run [38606517275](https://github.com/varunjakkampudi-tech/FixHub/actions/runs/38606517275) passed validation and all 33 scenarios on Ubuntu, including `PASS Markdown link symlink escape`; no hosted case was skipped.
+On Node `v22.23.2`, `node scripts/validate-documentation.mjs` passed: 18 Markdown files, 20 roadmap phases, all 27 FR and 14 NFR IDs present exactly once and indexed, current roadmap checksum matching its manifest, and the single coordinated public-release rule present. The regression suite has 33 scenarios: 32 passed locally with 0 failures, and its symlink-creation scenario was skipped locally because Windows returned `EPERM`. Hosted run [38606517275](https://github.com/varunjakkampudi-tech/FixHub24/actions/runs/38606517275) passed validation and all 33 scenarios on Ubuntu, including `PASS Markdown link symlink escape`; no hosted case was skipped.
 
 The validator now rejects undefined explicit full and collapsed Markdown references, while a regression confirms ordinary bracketed prose and valid references remain accepted. It resolves the canonical repository root once and retains lexical traversal and real-path symlink containment checks. This is a focused Markdown validator, not complete CommonMark support; deeper nested destinations and other unsupported constructs remain documented limitations. No product test, runtime, performance, application-security, or production-readiness evidence is implied.
 
@@ -191,11 +191,11 @@ Phase progress remains **14/17 applicable documented DOD criteria = 82.4%**, the
 
 ### Revision, scope and technical integrity
 
-Audit evidence collected 2026-10-14, approximately 18:22 UTC. [PR #1](https://github.com/varunjakkampudi-tech/FixHub/pull/1) merged at 18:09:53 UTC into `main` as `281e3d5551b3be070d26947129fcd84798b9d07b`; GitHub identifies `varunjakkampudi-tech` as the merger. Its first parent is `424dede7371cd7a3c592f3ace3bde91573e939d2` and second parent is the reviewed PR head `ffe01fae41f5ec1cda51b30521b1b2c0a63e5353`. The merge and PR head have identical tree `ec31a9ae16bd42bf17346001d70a9d551bdb4a9e`. Thus all 25 previously inspected tracked files and the complete reviewed PR diff are represented unchanged on post-merge main: 25/25 file coverage and 9/9 changed-file coverage, each 100% inspection coverage. The diff has 592 additions and 36 deletions, with no additional merge-resolution changes. These ratios describe inspection scope, not defect detection or product completion.
+Audit evidence collected 2026-10-14, approximately 18:22 UTC. [PR #1](https://github.com/varunjakkampudi-tech/FixHub24/pull/1) merged at 18:09:53 UTC into `main` as `281e3d5551b3be070d26947129fcd84798b9d07b`; GitHub identifies `varunjakkampudi-tech` as the merger. Its first parent is `424dede7371cd7a3c592f3ace3bde91573e939d2` and second parent is the reviewed PR head `ffe01fae41f5ec1cda51b30521b1b2c0a63e5353`. The merge and PR head have identical tree `ec31a9ae16bd42bf17346001d70a9d551bdb4a9e`. Thus all 25 previously inspected tracked files and the complete reviewed PR diff are represented unchanged on post-merge main: 25/25 file coverage and 9/9 changed-file coverage, each 100% inspection coverage. The diff has 592 additions and 36 deletions, with no additional merge-resolution changes. These ratios describe inspection scope, not defect detection or product completion.
 
-The complete reviewer packet is the [merged PR file diff](https://github.com/varunjakkampudi-tech/FixHub/pull/1/files), [base-to-merge comparison](https://github.com/varunjakkampudi-tech/FixHub/compare/424dede7371cd7a3c592f3ace3bde91573e939d2...281e3d5551b3be070d26947129fcd84798b9d07b), this review, the [requirements inventory](../product/requirements/id-inventory.json), [roadmap provenance manifest](../governance/roadmap-provenance.json), and the hosted logs below. A genuine independent reviewer should record their identity, review date, exact base/merge SHAs, scope, findings, and disposition. A retrospective review supplies additional assurance; it cannot become historical pre-merge approval.
+The complete reviewer packet is the [merged PR file diff](https://github.com/varunjakkampudi-tech/FixHub24/pull/1/files), [base-to-merge comparison](https://github.com/varunjakkampudi-tech/FixHub24/compare/424dede7371cd7a3c592f3ace3bde91573e939d2...281e3d5551b3be070d26947129fcd84798b9d07b), this review, the [requirements inventory](../product/requirements/id-inventory.json), [roadmap provenance manifest](../governance/roadmap-provenance.json), and the hosted logs below. A genuine independent reviewer should record their identity, review date, exact base/merge SHAs, scope, findings, and disposition. A retrospective review supplies additional assurance; it cannot become historical pre-merge approval.
 
-Local validation on post-merge main passed all 18 Markdown files, all 27 functional and 14 non-functional requirements, exactly 20 ordered roadmap phases, the checksum manifest, and the single-public-release policy. Local regression execution: 32 PASS, 0 FAIL, 1 SKIP because Windows symlink creation returned `EPERM`. [Post-merge hosted run 38612820612](https://github.com/varunjakkampudi-tech/FixHub/actions/runs/38612820612) succeeded on exactly `281e3d5551b3be070d26947129fcd84798b9d07b`: 33 PASS, 0 FAIL, 0 SKIP, including symlink escape. These tests include requirement completeness/uniqueness/index checks, reference links and fragments, fence handling, malformed encoding, lexical traversal and real-path containment. Full merge-diff whitespace validation passed. No reproducible blocking implementation defect was identified; the focused Markdown checker retains its documented syntax boundaries.
+Local validation on post-merge main passed all 18 Markdown files, all 27 functional and 14 non-functional requirements, exactly 20 ordered roadmap phases, the checksum manifest, and the single-public-release policy. Local regression execution: 32 PASS, 0 FAIL, 1 SKIP because Windows symlink creation returned `EPERM`. [Post-merge hosted run 38612820612](https://github.com/varunjakkampudi-tech/FixHub24/actions/runs/38612820612) succeeded on exactly `281e3d5551b3be070d26947129fcd84798b9d07b`: 33 PASS, 0 FAIL, 0 SKIP, including symlink escape. These tests include requirement completeness/uniqueness/index checks, reference links and fragments, fence handling, malformed encoding, lexical traversal and real-path containment. Full merge-diff whitespace validation passed. No reproducible blocking implementation defect was identified; the focused Markdown checker retains its documented syntax boundaries.
 
 The current roadmap hash remains `089E73B14BA797FC1518B4ECE9C3852D20EADCEA360DCEC9BBEFA48A782D3E48`; both recorded revision hashes were recomputed from Git and matched. V4.1 remains PROPOSED. Historical V4 remains unavailable/unverified. The three retained local bundles again passed `git bundle verify` and matched their manifests. They are older repository recovery snapshots on this device, not the nine historical originals and not backups of the final merge. Historical original revalidation remains 0/9. Off-device storage and a new final-state recovery baseline require a separate owner disposition; no upload or history rewrite occurred.
 
@@ -221,7 +221,7 @@ The [phase-review policy](../governance/stage-gate-policy.md) and [definition of
 | DOD-002 | PASS | Reviewed inventory, requirement sources and index contain all 41 stable IDs. |
 | DOD-003 | PASS | Decision register records statuses, rationale/alternatives, dependencies, owners, risks and resolution timing. |
 | DOD-004 | PASS | Charter, requirements, registers and proposed roadmap distinguish intent, facts, assumptions and evidence. |
-| DOD-005 | PASS | Fix Hub name decision is separate from OPEN identity and Lovable workflow decisions. |
+| DOD-005 | PASS | FixHub24 name decision is separate from OPEN identity and Lovable workflow decisions. |
 | DOD-006 | PASS | Manifest and migration ledger distinguish unavailable V4 from reconstructed V4.1. |
 | DOD-007 | PASS | Scope, functional requirements and access matrix map customer, merchant, staff and cross-channel capabilities. |
 | DOD-008 | PASS | Functional requirements state acceptance intent; no execution of product acceptance tests is claimed. |

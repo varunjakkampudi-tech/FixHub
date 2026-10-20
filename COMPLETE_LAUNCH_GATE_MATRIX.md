@@ -1,7 +1,7 @@
 # FixHub24 — Complete Launch Gate Matrix (G01 to G25 mapped to RG0–RG5)
 
 **Project:** FixHub24 (Viswatra)  
-**Spec Reference:** `FixHub-Product-Spec-v1.3.md` (Section 15.1, 18.4) & `FixHub-Autonomous-Goal.md` (Section 21)  
+**Spec Reference:** `FixHub24-Product-Spec-v1.3.md` (Section 15.1, 18.4) & `FixHub24-Autonomous-Goal.md` (Section 21)  
 **Status Vocabulary:** `PASS`, `FAIL`, `BLOCKED`, `NOT_ASSESSED`, `NOT_APPLICABLE`  
 **Audit Commit:** `554fde9`  
 
@@ -9,7 +9,7 @@
 
 ## 1. Governance Rules for Launch Gates
 
-In accordance with Section 21 of `FixHub-Autonomous-Goal.md`:
+In accordance with Section 21 of `FixHub24-Autonomous-Goal.md`:
 - The AI agent can produce `TESTED_UNIT`, `TESTED_INTEGRATION_REAL_DB`, and `TESTED_BROWSER` evidence.
 - Gates requiring real field supply, live third-party accounts, app-store accounts, corporate legal status, or public launch remain **`BLOCKED`** with exact owner actions recorded in `blocker.txt`.
 - No simulated evidence or documentation claim can mark an owner or real-world gate as `PASS`.

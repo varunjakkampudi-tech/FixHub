@@ -2,7 +2,7 @@
 
 ## Publication reconciliation 2026-10-16
 
-Phase 00 planning was subsequently published closed at `ff6425ac1a4436bbe36aa119df1f95fed9e26592`; [post-merge CI](https://github.com/varunjakkampudi-tech/FixHub/actions/runs/38628997301) passed on that exact revision. Published closed planning phases: **1/20**. The approval scope and 21/21 applicable planning evidence below are retained. Pending-publication, 0/20 and next-phase-unauthorized statements in the original snapshot below describe that earlier context, not current publication status. Later feasibility work and draft preparation follow the [separate current authority](../governance/product-foundation-work-authority.md); no later exit or permanent brand approval is granted here.
+Phase 00 planning was subsequently published closed at `ff6425ac1a4436bbe36aa119df1f95fed9e26592`; [post-merge CI](https://github.com/varunjakkampudi-tech/FixHub24/actions/runs/38628997301) passed on that exact revision. Published closed planning phases: **1/20**. The approval scope and 21/21 applicable planning evidence below are retained. Pending-publication, 0/20 and next-phase-unauthorized statements in the original snapshot below describe that earlier context, not current publication status. Later feasibility work and draft preparation follow the [separate current authority](../governance/product-foundation-work-authority.md); no later exit or permanent brand approval is granted here.
 
 ## Historical approval snapshot
 
@@ -12,8 +12,8 @@ Current status: **PHASE 00 — OWNER-DELEGATED PLANNING APPROVAL RECORDED; REPOS
 
 ## Authorization and exact scope
 
-- Source: “FIXHUB — FINAL MASTER PROMPT: COMPLETE AND CLOSE PHASE 00”; supplied attachment SHA-256 `D90CBB995F78AC73F478E87E94D13A9BF055851513DBB5DC013FE1A2E034887E`.
-- Scope expansion: “FIXHUB — FINAL PHASE 00 MASTER EXECUTION PROMPT”; supplied attachment SHA-256 `A2AE17D0A4B409137F55AAD6123894F821FFFAA2598D4C23E843FEC10100A902`.
+- Source: “FIXHUB24 — FINAL MASTER PROMPT: COMPLETE AND CLOSE PHASE 00”; supplied attachment SHA-256 `D90CBB995F78AC73F478E87E94D13A9BF055851513DBB5DC013FE1A2E034887E`.
+- Scope expansion: “FIXHUB24 — FINAL PHASE 00 MASTER EXECUTION PROMPT”; supplied attachment SHA-256 `A2AE17D0A4B409137F55AAD6123894F821FFFAA2598D4C23E843FEC10100A902`.
 - Initial reviewed foundation revision: main `281e3d5551b3be070d26947129fcd84798b9d07b`; preserved audit commit `5da44a198009aa235e04ff482e1f9ab94740f825` is carried intact.
 - Approved roadmap bytes first occur in commit `96ea4d94cc44440918b36573d84e7ef77520bea3`, SHA-256 `6053CC821FC3697BE1038E5D1402B5690FF4620B4B02068C8DE0EAD82AB36919`. Both earlier revision hashes remain immutable in the [provenance manifest](../governance/roadmap-provenance.json).
 - [Approval-scope manifest](../governance/foundation-approval-scope.json) identifies the original nine-document hashes and exact generated blueprint bytes. It excludes itself and this record to avoid circular hashes. Git history identifies their final committed revisions. Hashes establish consistency, not independent authenticity.
@@ -26,7 +26,7 @@ The existing nine-document intent and all 41 requirement IDs/acceptance intentio
 | Decision | Recorded disposition | Limits and residual risk |
 |---|---|---|
 | A: roadmap | APPROVED; DEC-016 LOCKED; V4.1 supersedes unavailable V4 for planning | 00–19, G0–G5 and one coordinated Phase 19 public release unchanged; no automatic phase advancement |
-| B: foundation | APPROVED as planning/governance baseline | Fix Hub/Viswatra, all roles/channels, bilingual service, free listings, single backend, atomic dispatch, privacy; no feasibility/legal/implementation assurance |
+| B: foundation | APPROVED as planning/governance baseline | FixHub24/Viswatra, all roles/channels, bilingual service, free listings, single backend, atomic dispatch, privacy; no feasibility/legal/implementation assurance |
 | C: requirements | APPROVED initial 27 FR + 14 NFR, 41 stable IDs | Phase 02 refinement uses reviewed change control; not an exhaustive final implementation specification |
 | D: historical documents | ACCEPTED residual limitation under RISK-005 | Historical V4 and nine originals unavailable; no fabricated recovery or bundle substitution; searches do not indefinitely block closure |
 | E: licensing | APPROVED temporary proprietary/no-license posture; DEC-017 LOCKED | No new reuse license or commercial terms; revisit before external contributions, redistribution or licensing commitments |

@@ -15,7 +15,7 @@ Also read each product's approved Product Specification, Engineering Standards, 
 The global standard is a reusable engineering baseline, not a replacement for product-specific requirements.
 
 ### Precedence and scope
-1. Each product's approved Product Spec decides scope. This program improves engineering quality; it **never adds product features**. For a product with frozen scope (FixHub v1.3), anything in the standard that needs a new capability (for example an admin log viewer the spec does not include) is recorded in `GAP_MATRIX.md` and `blocker.txt` as READY_FOR_OWNER for a scope amendment, not built.
+1. Each product's approved Product Spec decides scope. This program improves engineering quality; it **never adds product features**. For a product with frozen scope (FixHub24 v1.3), anything in the standard that needs a new capability (for example an admin log viewer the spec does not include) is recorded in `GAP_MATRIX.md` and `blocker.txt` as READY_FOR_OWNER for a scope amendment, not built.
 2. Each product's Engineering Standards and Autonomous Goal decide how that product is built; where they and the global standard differ, the stricter rule wins.
 3. This program does not replace a product's active Autonomous Goal. It is run **inside** that product's existing agent loop as an additional audit and adoption track, or after it, never as a second agent on the same branch at the same time.
 
@@ -40,7 +40,7 @@ Apply to:
 
 - OraOne
 - CareerScope
-- FixHub
+- FixHub24
 - AI Smart Glasses
 - Other existing and future Viswatra products authorized by the owner.
 
@@ -51,7 +51,7 @@ Work on one repository at a time, with a separate scope, evidence record, qualit
 **Activation evidence rule (all products):** a product's autonomous implementation is ACTIVE only when its activation approval is recorded, with date and approver, in that repository's `PROGRESS.md` or decision register (standard 2.4). Otherwise it is AWAITING_OWNER_APPROVAL: read-only auditing and work already authorized under current governance may proceed; implementation may not.
 
 **Order:**
-1. **FixHub:** Verify whether the owner has explicitly approved Product Specification v1.3, D01 (complete single-launch scope) and D17 (development-branch governance), and whether that approval is recorded in the repository's `PROGRESS.md` or decision register with date and approver.
+1. **FixHub24:** Verify whether the owner has explicitly approved Product Specification v1.3, D01 (complete single-launch scope) and D17 (development-branch governance), and whether that approval is recorded in the repository's `PROGRESS.md` or decision register with date and approver.
    - Do not infer approval merely from a document's title, proposed status, conversation summary or an agent's statement.
    - If approval evidence is missing, mark AWAITING_OWNER_APPROVAL. Do not create or backdate an approval record.
    - Proceed only with read-only assessment and work already permitted by current repository governance.
@@ -122,7 +122,7 @@ Use appropriate tools: ESLint, Prettier, TypeScript strict checks, Knip, Ruff, m
 
 Do not delete historical database migrations, security evidence, license files or required operational scripts.
 
-In FixHub, code from commit #21 is not deleted or merged until owner decision D18. Code in an approved product's open decisions is left in place and recorded.
+In FixHub24, code from commit #21 is not deleted or merged until owner decision D18. Code in an approved product's open decisions is left in place and recorded.
 
 ### AI-tool file policy
 

@@ -2,7 +2,7 @@
 FIXHUB2424 (VISWATRA) - MASTER ACTIONABLE BLOCKER REGISTER
 ================================================================================
 Document:            blocker.txt
-Governing rules:     docs/specs/FixHub-Autonomous-Goal.md (sections 0.1, 17, 20)
+Governing rules:     docs/specs/FixHub24-Autonomous-Goal.md (sections 0.1, 17, 20)
                      docs/specs/Viswatra-Global-Engineering-Quality-Standard-v1.1.md (section 3, item 11)
 Repository:          this repository; default branch main
 Last updated:        2026-10-20 (cleanup checkpoint, see PROGRESS.md section 7)
@@ -111,7 +111,7 @@ BLOCKER-001: Governance activation (spec v1.3, D01, D17)
   1. Open blocker.txt on main.
   2. Above the SUMMARY TABLE, add:
        OWNER-APPROVAL-1 | RESOLVED | YYYY-MM-DD | Approver: <name> |
-       Approved: FixHub-Product-Spec-v1.3.md (version/checksum: <value>), D01, D17
+       Approved: FixHub24-Product-Spec-v1.3.md (version/checksum: <value>), D01, D17
   3. Confirm AGENTS.md and docs/governance/product-foundation-work-authority.md contain the
      D17 wording you approve. Those files are owner-governed; agents do not edit them.
   4. Commit the entry. The agent will re-read the file at the next session and update
@@ -366,7 +366,7 @@ BLOCKER-007: Staging host, backups, domain and TLS
 
 - Corrections in this checkpoint:
   - Removed: the earlier example that listed AWS as a provider (CR-02 forbids AWS).
-  - Removed: the domain staging.fixhub.in and the sizing "2 vCPU / 4 GB". Those were
+  - Removed: the domain staging.fixhub24.com and the sizing "2 vCPU / 4 GB". Those were
     invented. Any staging name and size must be chosen by the owner.
   - Removed: "in-memory spatial repositories passing 100%". Runtime still uses in-memory
     repositories (BLOCKER-010). That is not acceptable for staging.
@@ -572,15 +572,15 @@ BLOCKER-012: Owner-side source documents changed; amendments await approval
      tracked copies in docs/specs/, which still match the values in
      docs/archive/ARCHIVE_MANIFEST.md.
   2. Tracked copies (unchanged by this checkpoint):
-       FixHub-Product-Spec-v1.3.md                    F549D93B52E1EB8A08CC1426F6B4244DA4C9A4EE569DE9D7031316923DEBC52D
-       FixHub-Autonomous-Goal.md                      514380767025A1A18D12338225AF331A420AAC11E1AD840A19514F38C990E298
-       FixHub-Engineering-Standards.md                FCC1760BC72D38221EBB153538CEB35DB9040D0E8DBB952985000C9D4666ED55
+       FixHub24-Product-Spec-v1.3.md                    F549D93B52E1EB8A08CC1426F6B4244DA4C9A4EE569DE9D7031316923DEBC52D
+       FixHub24-Autonomous-Goal.md                      514380767025A1A18D12338225AF331A420AAC11E1AD840A19514F38C990E298
+       FixHub24-Engineering-Standards.md                FCC1760BC72D38221EBB153538CEB35DB9040D0E8DBB952985000C9D4666ED55
        Viswatra-Global-Engineering-Completion-Program-v1.1.md   9421280DAC8D38DACCD26378D378A862751F7DCC9BB0D8392A408CB50A1F90EC
        Viswatra-Global-Engineering-Quality-Standard-v1.1.md     429B54C2003D8E5BF4A2949507F5A8A2C5284820F6588C4B1E3266FE18112066
   3. Owner-side copies at the time of this checkpoint (not approved; may change again):
-       FixHub-Product-Spec-v1.3.md                    D61268053840235C9B0F5216D606A5B4E820C0FFDEC7E1FF8A34F6B87977A5AA
-       FixHub-Autonomous-Goal.md                      DBB790793D89DD68A497E6E7D4D2FE472B0D4CE4A29E41F51234BA8BA34A41F5
-       FixHub-Engineering-Standards.md                171CD128468C1442351ABCE6C4982D13ED91AD3CFD170AA16F29EB2BC3EBB23A
+       FixHub24-Product-Spec-v1.3.md                    D61268053840235C9B0F5216D606A5B4E820C0FFDEC7E1FF8A34F6B87977A5AA
+       FixHub24-Autonomous-Goal.md                      DBB790793D89DD68A497E6E7D4D2FE472B0D4CE4A29E41F51234BA8BA34A41F5
+       FixHub24-Engineering-Standards.md                171CD128468C1442351ABCE6C4982D13ED91AD3CFD170AA16F29EB2BC3EBB23A
        Viswatra-Global-Engineering-Completion-Program-v1.1.md   EF678997840F0BCFB34BED86A163E66F4F38AA0D75D6F12678977368DF7508C0
        Viswatra-Global-Engineering-Quality-Standard-v1.1.md     F3D122A02AD56BBBB0B6468C8589393B19146C01CC8BBC0546689FDC7D03B4BD
   4. Differences include these PROPOSED items, each labelled PENDING_OWNER_APPROVAL:
@@ -630,9 +630,9 @@ BLOCKER-013: Repository name and links in governance and historical documents (C
 - Verified facts: this checkpoint removed the repository name from README.md and
   docs/README.md, and from the archive manifest and this file. The name still appears in:
     AGENTS.md
-    docs/specs/FixHub-Autonomous-Goal.md          (checksum-tracked canonical copy)
-    docs/specs/FixHub-Engineering-Standards.md    (checksum-tracked canonical copy)
-    docs/specs/FixHub-Product-Spec-v1.3.md        (checksum-tracked canonical copy)
+    docs/specs/FixHub24-Autonomous-Goal.md          (checksum-tracked canonical copy)
+    docs/specs/FixHub24-Engineering-Standards.md    (checksum-tracked canonical copy)
+    docs/specs/FixHub24-Product-Spec-v1.3.md        (checksum-tracked canonical copy)
     docs/governance/product-foundation-work-authority.md
     docs/governance/solo-maintainer-policy.md
     docs/product/feasibility/research-authority.md

@@ -1,8 +1,8 @@
-# Fix Hub — Master Execution Roadmap V4.1
+# FixHub24 — Master Execution Roadmap V4.1
 
 ## Document control and status
 
-- Product: Fix Hub, under parent company Viswatra.
+- Product: FixHub24, under parent company Viswatra.
 - Version: V4.1.
 - Status: **APPROVED governing planning roadmap — owner-delegated decision recorded 2026-10-15.**
 - Approval authority: the owner's final Phase 00 master prompts explicitly approve V4.1 supersession; see the [delegated approval record](../reviews/foundation-approval.md). Subsequent phase execution still needs separate authorization.
@@ -63,7 +63,7 @@ Specify customer, merchant, technician, operations, and Super Admin journeys. Co
 
 ### PHASE 05 — Product Branding & Design System
 
-Finalize Fix Hub’s visual identity, logo, typography, colors, icons, accessibility requirements, English/Telugu support, responsive navigation, and reusable component system only after explicit owner decisions.
+Finalize FixHub24’s visual identity, logo, typography, colors, icons, accessibility requirements, English/Telugu support, responsive navigation, and reusable component system only after explicit owner decisions.
 
 **Exit:** explicit owner approval of branding and global UX direction. Until then all identity elements remain OPEN.
 

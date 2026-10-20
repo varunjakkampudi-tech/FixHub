@@ -1,7 +1,7 @@
 # FixHub24 — Feature Matrix & Traceability Register
 
 **Project:** FixHub24 (Viswatra)  
-**Spec Reference:** `FixHub-Product-Spec-v1.3.md` (Scope Frozen)  
+**Spec Reference:** `FixHub24-Product-Spec-v1.3.md` (Scope Frozen)  
 **Status Reference:** Spec Section 18.4 & Autonomous Goal Section 5  
 **Current Audit Commit:** `1ded0fbe89c6a43fb03c6d61371a6570b38d62b1`  
 

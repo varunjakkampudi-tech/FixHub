@@ -1,14 +1,14 @@
-# Fix Hub system context
+# FixHub24 system context
 
 Status: CONCEPTUAL PHASE 00 BLUEPRINT. Prepared 2026-10-15 under owner-delegated scope expansion. Detailed contracts and technical approval belong to Phases 03 and 04. These are proposed responsibilities, not implemented services.
 
-Fix Hub coordinates local services in Tanuku. Customers request help; verified merchants offer capacity; assigned technicians perform work. Operations handle exceptions, reviewers verify merchants, and Super Admin governs privileged configuration. A merchant manager acts only within the owner's explicit delegation.
+FixHub24 coordinates local services in Tanuku. Customers request help; verified merchants offer capacity; assigned technicians perform work. Operations handle exceptions, reviewers verify merchants, and Super Admin governs privileged configuration. A merchant manager acts only within the owner's explicit delegation.
 
 ## Context diagram
 
 ```mermaid
 flowchart LR
-  C["Customer: web, Android, iOS, WhatsApp"] --> F["Fix Hub authoritative platform"]
+  C["Customer: web, Android, iOS, WhatsApp"] --> F["FixHub24 authoritative platform"]
   M["Merchant owner and manager"] --> F
   T["Technician: assigned jobs"] --> F
   O["Operations and verification staff"] --> F

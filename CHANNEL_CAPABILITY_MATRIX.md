@@ -1,7 +1,7 @@
 # FixHub24 — Channel Capability Matrix (CH-01 to CH-08)
 
 **Project:** FixHub24 (Viswatra)  
-**Spec Reference:** `FixHub-Product-Spec-v1.3.md` (Section 7, 18.2)  
+**Spec Reference:** `FixHub24-Product-Spec-v1.3.md` (Section 7, 18.2)  
 **Audit Commit:** `554fde9`  
 
 ---

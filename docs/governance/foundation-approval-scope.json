@@ -43,7 +43,7 @@
   "conceptualBlueprints": [
     {
       "document": "docs/architecture/system-context.md",
-      "sha256": "D69209B2412D51853838398749917044CD8844802A20A359BC2990C27F495998"
+      "sha256": "0F4662F13965300A947836B33721AECC3427D52853A87813D1A88BF57448E6DC"
     },
     {
       "document": "docs/architecture/platform-overview.md",
@@ -123,7 +123,7 @@
     },
     {
       "document": "docs/journeys/customer-journey.md",
-      "sha256": "07AF2E3655F0038E2986A877BFA614627C82E6517D544745173DD9AF886E39A4"
+      "sha256": "D1CB8DF91D8043111F04CFE704EC99CBCEEDA1E3ADDB846DF8460C2235E98598"
     },
     {
       "document": "docs/journeys/merchant-journey.md",
@@ -227,7 +227,7 @@
     },
     {
       "document": "docs/blueprint/README.md",
-      "sha256": "5316CFC363F3E9E6D26BB76A9101257B8A05E2D7E0F0281BC0E30D03FC5503F3"
+      "sha256": "EFC6F6D423B066AF914027AE83EB6164FA7ABE9A78A9527A2E2F5551CA0712A5"
     },
     {
       "document": "docs/blueprint/traceability-matrix.md",
@@ -239,7 +239,7 @@
     },
     {
       "document": "docs/blueprint/glossary.md",
-      "sha256": "F631801041DDA23E553878C6E8166677A9B0BF1EE022F051919C9330F87C8A13"
+      "sha256": "6E1C17E7A7D32F66DA2D4F68248D5021CB35F02A43AEF7BBA08194FA8A89A6B6"
     }
   ],
   "limit": "Owner-delegated planning scope; no personal owner review, implementation evidence or independent GitHub approval. Self and approval record excluded to avoid circular hashes.",
@@ -554,7 +554,7 @@
           "historicalPath": "docs/blueprint/glossary.md",
           "currentPath": "docs/blueprint/glossary.md",
           "priorSha256": "0CC934AB77FEF29F07EC335B50BB54ABFAC3C39A331849303C264222CBD9E698",
-          "currentSha256": "F631801041DDA23E553878C6E8166677A9B0BF1EE022F051919C9330F87C8A13"
+          "currentSha256": "6E1C17E7A7D32F66DA2D4F68248D5021CB35F02A43AEF7BBA08194FA8A89A6B6"
         }
       ],
       "scope": "Reference relocation, diagram-specific captions, read versus uncertain-write recovery and requested-window versus confirmed-assignment clarification; conceptual intent and historical hashes retained, not new owner approval"
@@ -603,7 +603,7 @@
         {
           "document": "docs/blueprint/README.md",
           "priorSha256": "FFC9CF9453EDA8D9CDE5E8F262E98A5EE512F138722D37CBDA8AEE4E7D4C3505",
-          "currentSha256": "5316CFC363F3E9E6D26BB76A9101257B8A05E2D7E0F0281BC0E30D03FC5503F3"
+          "currentSha256": "EFC6F6D423B066AF914027AE83EB6164FA7ABE9A78A9527A2E2F5551CA0712A5"
         },
         {
           "document": "docs/blueprint/traceability-matrix.md",

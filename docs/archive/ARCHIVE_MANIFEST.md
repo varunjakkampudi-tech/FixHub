@@ -1,4 +1,4 @@
-# FixHub Archival Manifest and Asset Inventory
+# FixHub24 Archival Manifest and Asset Inventory
 
 **Date of record:** 2026-10-20 (updated by the cleanup checkpoint recorded in `PROGRESS.md`)
 **Repository:** this repository (remote default branch `main`)
@@ -29,9 +29,9 @@ The five authoritative specifications live under `docs/specs/`. Checksums below 
 
 | Canonical document | Repository path | SHA-256 | Status |
 | :--- | :--- | :--- | :---: |
-| `FixHub-Autonomous-Goal.md` | `docs/specs/FixHub-Autonomous-Goal.md` | `514380767025A1A18D12338225AF331A420AAC11E1AD840A19514F38C990E298` | Checksum matches |
-| `FixHub-Engineering-Standards.md` | `docs/specs/FixHub-Engineering-Standards.md` | `FCC1760BC72D38221EBB153538CEB35DB9040D0E8DBB952985000C9D4666ED55` | Checksum matches |
-| `FixHub-Product-Spec-v1.3.md` | `docs/specs/FixHub-Product-Spec-v1.3.md` | `F549D93B52E1EB8A08CC1426F6B4244DA4C9A4EE569DE9D7031316923DEBC52D` | Checksum matches |
+| `FixHub24-Autonomous-Goal.md` | `docs/specs/FixHub24-Autonomous-Goal.md` | `514380767025A1A18D12338225AF331A420AAC11E1AD840A19514F38C990E298` | Checksum matches |
+| `FixHub24-Engineering-Standards.md` | `docs/specs/FixHub24-Engineering-Standards.md` | `FCC1760BC72D38221EBB153538CEB35DB9040D0E8DBB952985000C9D4666ED55` | Checksum matches |
+| `FixHub24-Product-Spec-v1.3.md` | `docs/specs/FixHub24-Product-Spec-v1.3.md` | `F549D93B52E1EB8A08CC1426F6B4244DA4C9A4EE569DE9D7031316923DEBC52D` | Checksum matches |
 | `Viswatra-Global-Engineering-Completion-Program-v1.1.md` | `docs/specs/Viswatra-Global-Engineering-Completion-Program-v1.1.md` | `9421280DAC8D38DACCD26378D378A862751F7DCC9BB0D8392A408CB50A1F90EC` | Checksum matches |
 | `Viswatra-Global-Engineering-Quality-Standard-v1.1.md` | `docs/specs/Viswatra-Global-Engineering-Quality-Standard-v1.1.md` | `429B54C2003D8E5BF4A2949507F5A8A2C5284820F6588C4B1E3266FE18112066` | Checksum matches |
 

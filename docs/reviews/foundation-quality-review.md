@@ -41,7 +41,7 @@ The above findings were MEDIUM or LOW in their bounded documentation/tooling sco
 | Visual evidence | Final 1440×1200 concept PNG inspected; vector/raster/token hashes retained. Candidate fonts and fluent Telugu review NOT ASSESSED |
 | Mermaid | Source structure/reference checks and source review performed. Rendered Mermaid layout/syntax on a real renderer NOT ASSESSED; no renderer installation authorized or performed |
 
-The regression run above preceded final provenance/report wording; standalone validation and staged whitespace/hash reconciliation are separate final checks. Hosted Linux execution on the new local revision is NOT EXECUTED. [Existing main CI](https://github.com/varunjakkampudi-tech/FixHub/actions/runs/38749208725) succeeded only on `aff098c143e44199160ed8e31801b0df57628702`.
+The regression run above preceded final provenance/report wording; standalone validation and staged whitespace/hash reconciliation are separate final checks. Hosted Linux execution on the new local revision is NOT EXECUTED. [Existing main CI](https://github.com/varunjakkampudi-tech/FixHub24/actions/runs/38749208725) succeeded only on `aff098c143e44199160ed8e31801b0df57628702`.
 
 ## Initial checkpoint review coverage and remaining work
 

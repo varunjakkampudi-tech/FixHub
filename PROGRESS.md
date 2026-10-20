@@ -2,9 +2,9 @@
 
 **Project:** FixHub24 (Viswatra)
 **Governing documents (tracked copies, checksum-verified on 2026-10-20):**
-- `docs/specs/FixHub-Product-Spec-v1.3.md` — `F549D93B52E1EB8A08CC1426F6B4244DA4C9A4EE569DE9D7031316923DEBC52D`
-- `docs/specs/FixHub-Engineering-Standards.md` — `FCC1760BC72D38221EBB153538CEB35DB9040D0E8DBB952985000C9D4666ED55`
-- `docs/specs/FixHub-Autonomous-Goal.md` — `514380767025A1A18D12338225AF331A420AAC11E1AD840A19514F38C990E298`
+- `docs/specs/FixHub24-Product-Spec-v1.3.md` — `F549D93B52E1EB8A08CC1426F6B4244DA4C9A4EE569DE9D7031316923DEBC52D`
+- `docs/specs/FixHub24-Engineering-Standards.md` — `FCC1760BC72D38221EBB153538CEB35DB9040D0E8DBB952985000C9D4666ED55`
+- `docs/specs/FixHub24-Autonomous-Goal.md` — `514380767025A1A18D12338225AF331A420AAC11E1AD840A19514F38C990E298`
 - `docs/specs/Viswatra-Global-Engineering-Quality-Standard-v1.1.md` — `429B54C2003D8E5BF4A2949507F5A8A2C5284820F6588C4B1E3266FE18112066`
 - `docs/specs/Viswatra-Global-Engineering-Completion-Program-v1.1.md` — `9421280DAC8D38DACCD26378D378A862751F7DCC9BB0D8392A408CB50A1F90EC`
 
@@ -170,3 +170,18 @@ See the table in section 5. All checks listed there as exit 0 passed on the task
 - **Automated and tool-based checks covered all tracked source files:** typecheck, unused-declaration analysis, unreferenced-export scan, orphan-module scan, dependency import analysis, secret and private-path scans, documentation validator.
 - **Manually read in full in this checkpoint:** `api/services/auth-service.ts`, `api/routes/auth-router.ts`, `api/app.ts` (route mounts), `api/db/repository.ts` (seeding), `blocker.txt` (full), `docs/archive/ARCHIVE_MANIFEST.md` (full), `README.md` (full), `PROGRESS.md` (full), and the owner-side specification diffs.
 - **Not manually read:** the remaining source and test files, the 148 documents under `docs/`, and the generated route tree. The planned full review is part of BLOCKER-018 and BLOCKER-021.
+
+## Reference-only rename: FixHub to FixHub24 (2026-10-20)
+
+- Scope: product identifier, file and directory names, specification file names, and
+  domain references were changed from the previous name to the owner-selected name
+  `FixHub24`, with domain `fixhub24.com`. This includes the canonical specification files
+  under `docs/specs/`, which are now named `FixHub24-*.md`.
+- Recorded hashes: where a checksum-recorded reference document changed, its recorded
+  hash was updated in the governance records that already track it (roadmap provenance,
+  document lineage, foundation approval scope). These are reference-only changes.
+- Not an approval: this rename does not create, backdate or imply any owner approval,
+  phase exit, roadmap completion or implementation claim.
+- Protected (real external or historical names, unchanged): the external backup bundle file
+  names (`fixhub-baseline-…`, `fixhub-integrated-…`, `fixhub-all-branches-backup…`) and the
+  existing branch name `claude/fixhub-code-review-cleanup-22b476`.

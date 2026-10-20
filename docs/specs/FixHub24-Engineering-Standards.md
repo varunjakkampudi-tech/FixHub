@@ -1,9 +1,9 @@
-# Fix Hub — Engineering Standards
+# FixHub24 — Engineering Standards
 
 Company: Viswatra
-Product: Fix Hub — local services discovery, booking, dispatch, and fulfilment (Tanuku first; English and Telugu)
-Status: Aligned with spec v1.3. Applies to autonomous work only after the Autonomous Build Goal's Section 0.1 prerequisites are satisfied and verified. Product behaviour comes only from FixHub-Product-Spec-v1.3.md. This file covers how the code is built, tested, secured, and shipped.
-Baseline: repository `varunjakkampudi-tech/FixHub`, `main` at commit `dd1bc789ae372c80281a7e4f3d11768a48ccaaab` (19 October 2026). Facts marked OBSERVED were read from that commit; nothing here certifies they work.
+Product: FixHub24 — local services discovery, booking, dispatch, and fulfilment (Tanuku first; English and Telugu)
+Status: Aligned with spec v1.3. Applies to autonomous work only after the Autonomous Build Goal's Section 0.1 prerequisites are satisfied and verified. Product behaviour comes only from FixHub24-Product-Spec-v1.3.md. This file covers how the code is built, tested, secured, and shipped.
+Baseline: repository `varunjakkampudi-tech/FixHub24`, `main` at commit `dd1bc789ae372c80281a7e4f3d11768a48ccaaab` (19 October 2026). Facts marked OBSERVED were read from that commit; nothing here certifies they work.
 Applies to: every change, by a person or an AI agent.
 Global standard: the frozen Viswatra Global Engineering and Quality Standard v1.1 (`Viswatra-Global-Engineering-Quality-Standard-v1.1.md`), including approved change request CR-01, also applies. Where it and this file differ, the stricter rule wins; it adds no product functionality beyond spec v1.3 (section 7.1a and spec section 19).
 
@@ -76,7 +76,7 @@ Global standard: the frozen Viswatra Global Engineering and Quality Standard v1.
 - Formatting: Indian date and time, INR, phone normalization; server stores timezone-aware canonical values
 - Senior-friendly Telugu-first mode (spec EH-05): large type, guided steps, no compulsory GPS or app install; assisted booking only after D20
 - Price Clarity Card, Trust Passport, Service Evidence Timeline, and no-provider rescue (EH-01 to EH-04) never display unknown values as zero or imply checks that were not done
-- Rescue, safety, and incident screens (EH-19, EH-21) show only real state in English and Telugu; emergency guidance points to 112 and never implies FixHub responds to emergencies
+- Rescue, safety, and incident screens (EH-19, EH-21) show only real state in English and Telugu; emergency guidance points to 112 and never implies FixHub24 responds to emergencies
 - Localization release rule (spec L10N-14): a missing Telugu key or placeholder text on a launch-critical screen fails CI; each native review records reviewer, date, and string version, and editing a reviewed string resets its review
 - Low-end Android devices from the D22 matrix, dynamic text scaling, and long Telugu strings are tested (L10N-13); Telugu search variants and locality names come from the reviewed list (D27)
 - Design: shared tokens and components; brand identity, logo, and colours remain owner decision D02 — use neutral tokens until approved; no fake providers, ratings, prices, maps, or testimonials
@@ -124,7 +124,7 @@ Global standard: the frozen Viswatra Global Engineering and Quality Standard v1.
 - Secret scanning on every push, including history; any found secret is revoked
 - `npm audit` and SBOM on every integration; high or critical findings block integration until fixed and independently retested. Risk exceptions follow the Viswatra Global Engineering and Quality Standard v1.1, Category 22: an independent security assessment, documented severity, exploitation conditions, affected data, compensating controls, expiry and re-evaluation dates, the owner's recorded decision and compliance confirmation in `RISK_EXCEPTIONS.md`. There is no generic waiver; an unresolved exploitable critical vulnerability is never declared production-ready; an exception never replaces legal or regulatory compliance; agents cannot create or approve exceptions
 - OWASP Top 10, OWASP API Security Top 10, and OWASP Mobile Top 10 (when apps exist)
-- Specific checks: role self-assignment, fixed or returned codes, default secrets (spec FR-1), IDOR on bookings, addresses, quotes, and photos, upload type and size checks and malware scanning, CSRF for cookie sessions, CSP and security headers (helmet), CORS allowlist from `FIXHUB_WEB_ORIGINS`, rate limits, webhook signatures and replay, SSRF where URLs are fetched
+- Specific checks: role self-assignment, fixed or returned codes, default secrets (spec FR-1), IDOR on bookings, addresses, quotes, and photos, upload type and size checks and malware scanning, CSRF for cookie sessions, CSP and security headers (helmet), CORS allowlist from `FIXHUB24_WEB_ORIGINS`, rate limits, webhook signatures and replay, SSRF where URLs are fetched
 - Public endpoints never expose exact addresses, phone numbers, evidence images, or documents (SR-02)
 - The repository is public: no personal data, private paths, or confidential material in tracked files
 - Sessions and recovery (SR-09): device and session list with revocation; MFA and step-up for staff; recovery responses identical whether or not an account exists; OTP sends limited per number, device, and IP with a spend cap against SMS-pumping fraud
@@ -144,7 +144,7 @@ Global standard: the frozen Viswatra Global Engineering and Quality Standard v1.
 - `AGENTS.md` currently directs direct-to-`main` publication. Changing that is owner decision D17
 - Release protections in spec section 19.6 are proven with negative fixtures on temporary branches. The production branch guard is proven by configuration review and a guard test; the real production workflow is never dispatched by an agent, even to see it fail. A summary job treats a skipped mandatory job as a failure
 
-Autonomous mode (when FixHub-Autonomous-Goal.md runs an agent loop and D17 is approved):
+Autonomous mode (when FixHub24-Autonomous-Goal.md runs an agent loop and D17 is approved):
 - Pull-request requirements apply as development-branch integration requirements, using the mapping in Goal section 4.2. Every applicable check runs; no threshold is reduced
 - Per-change human approval is replaced by an independent review in a separate agent session (Goal section 16). If it cannot run, it is never claimed; the limitation is recorded in `blocker.txt`
 - The agent never pushes to `main`, never dispatches a production workflow, and never changes production configuration
@@ -196,7 +196,7 @@ Every test is recorded in `TEST_MATRIX.md` with the spec section 18.2 columns pl
 ### 7.1a Global standard CR-01 inside the existing QA categories
 CR-01 controls are applied through QA-01–QA-34, `TEST_MATRIX.md` and G01–G25; there is no separate QA framework.
 
-| CR-01 control (global category) | FixHub QA categories | Gates |
+| CR-01 control (global category) | FixHub24 QA categories | Gates |
 |---|---|---|
 | Browser runtime gate: shared Playwright fixture capturing console errors and warnings, `pageerror`, unhandled rejections, hydration errors, failed requests and unsuccessful critical responses; fails on anything not in `EXPECTED_RUNTIME_MESSAGES.md`; runs on development and production builds (25.4) | QA-07–QA-11, QA-12, QA-14 | G02, G03, G15 |
 | Mobile device-log capture (25.4) | QA-17, QA-18 | G09 |
@@ -252,7 +252,7 @@ Keep the existing documentation structure and validators. Add or update: `FEATUR
 
 ## 10. Owner-only decisions
 
-- Approval of FixHub-Product-Spec-v1.3.md and D01–D27. Approval of v1.3, D01, and D17 activates safe internal engineering; each other open decision blocks only the capability it affects (spec 19.11)
+- Approval of FixHub24-Product-Spec-v1.3.md and D01–D27. Approval of v1.3, D01, and D17 activates safe internal engineering; each other open decision blocks only the capability it affects (spec 19.11)
 - Product scope is frozen at v1.3; changes need a written owner scope amendment
 - `AGENTS.md`, work-authority, and roadmap amendments (D01, D17)
 - Brand identity (D02); launch categories and policies (D03); identity channels (D04); WhatsApp provider (D05); mobile technology and stores (D06); geography (D07); merchant verification (D08); payments and invoices (D09); privacy (D10); support staffing (D11); hosting and budgets (D12); performance targets (D13); beta participants (D14); monetization (D15); launch GO (D16); commit #21 disposition (D18); enhancement classification (D19); assisted booking (D20); maintenance reminders (D21); quality thresholds, device matrix, and field sample sizes (D22); classification of EH-19 to EH-25 (D23); reliability signals affecting dispatch (D24); separation of duties for config publishing (D25); file storage, malware scanning, and backup key custody (D26); native Telugu reviewers and the locality reference list (D27)
