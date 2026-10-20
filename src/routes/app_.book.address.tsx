@@ -11,7 +11,11 @@ export const Route = createFileRoute("/app_/book/address")({
       { name: "twitter:card", content: "summary" },
     ],
   }),
-  validateSearch: (s: Record<string, unknown>) => ({ category: String(s["category"] ?? "electrician"), merchant: String(s["merchant"] ?? ""), date: String(s["date"] ?? "") }),
+  validateSearch: (s: Record<string, unknown>) => ({
+    category: String(s["category"] ?? "electrician"),
+    merchant: String(s["merchant"] ?? ""),
+    date: String(s["date"] ?? ""),
+  }),
   component: Screen,
 });
 function Screen() {

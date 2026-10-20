@@ -8,15 +8,18 @@ export function resendConfigFromEnvironment(environment: NodeJS.ProcessEnv): Res
   const apiKey = environment.RESEND_API_KEY;
   const from = environment.RESEND_FROM_EMAIL;
   if (!apiKey && !from) return null;
-  if (!apiKey || !from) throw new Error("RESEND_API_KEY and RESEND_FROM_EMAIL must be configured together");
-  if (!/^.+<[^<>\s@]+@[^<>\s@]+>$/.test(from)) throw new Error("RESEND_FROM_EMAIL must use the format Name <address@example.com>");
+  if (!apiKey || !from)
+    throw new Error("RESEND_API_KEY and RESEND_FROM_EMAIL must be configured together");
+  if (!/^.+<[^<>\s@]+@[^<>\s@]+>$/.test(from))
+    throw new Error("RESEND_FROM_EMAIL must use the format Name <address@example.com>");
   return { apiKey, from, apiBaseUrl: environment.RESEND_API_BASE_URL };
 }
 
 export function createResendEmailSender(config: ResendConfig, fetchImpl: typeof fetch = fetch) {
   const base = config.apiBaseUrl ?? "https://api.resend.com";
   const endpoint = new URL("/emails", base);
-  if (endpoint.protocol !== "https:" && endpoint.hostname !== "localhost") throw new Error("Resend endpoint must use HTTPS");
+  if (endpoint.protocol !== "https:" && endpoint.hostname !== "localhost")
+    throw new Error("Resend endpoint must use HTTPS");
 
   return async (recipient: string, code: string): Promise<void> => {
     const controller = new AbortController();
@@ -35,7 +38,8 @@ export function createResendEmailSender(config: ResendConfig, fetchImpl: typeof 
         }),
       });
       const body = await result.json().catch(() => null);
-      if (!result.ok || !resendResponse.safeParse(body).success) throw new Error("Email delivery failed");
+      if (!result.ok || !resendResponse.safeParse(body).success)
+        throw new Error("Email delivery failed");
     } finally {
       clearTimeout(timeout);
     }

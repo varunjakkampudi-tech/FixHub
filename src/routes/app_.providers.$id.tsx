@@ -6,7 +6,10 @@ export const Route = createFileRoute("/app_/providers/$id")({
       { title: "Available professionals · Fix Hub" },
       { name: "description", content: "Eligible fictional demo merchants for your service." },
       { property: "og:title", content: "Available professionals · Fix Hub" },
-      { property: "og:description", content: "Eligible fictional demo merchants for your service." },
+      {
+        property: "og:description",
+        content: "Eligible fictional demo merchants for your service.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],

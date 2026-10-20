@@ -131,7 +131,10 @@ describe("Complete Booking & Service Lifecycle", () => {
     const reviewRes = await request(app)
       .post(`/api/v1/bookings/${bookingId}/review`)
       .set("Authorization", `Bearer ${custToken}`)
-      .send({ rating: 5, comment: "Excellent timely work by Prasad Rao. Problem solved professionally." })
+      .send({
+        rating: 5,
+        comment: "Excellent timely work by Prasad Rao. Problem solved professionally.",
+      })
       .expect(201);
 
     expect(reviewRes.body.review.rating).toBe(5);

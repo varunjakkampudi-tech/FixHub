@@ -124,7 +124,13 @@ const publicNav: [string, MessageKey][] = [
   ["/partners", "partners"],
   ["/help", "support"],
 ];
-export function Header({ functionalPreview = false, authState = "signed-out" }: { functionalPreview?: boolean; authState?: "signed-in" | "signed-out" }) {
+export function Header({
+  functionalPreview = false,
+  authState = "signed-out",
+}: {
+  functionalPreview?: boolean;
+  authState?: "signed-in" | "signed-out";
+}) {
   const { t, locale, draft } = useFixHub();
   const demo = useDemo();
   const path = useRouterState({ select: (s) => s.location.pathname });
@@ -152,7 +158,11 @@ export function Header({ functionalPreview = false, authState = "signed-out" }: 
           </nav>
           <div className="header-actions">
             {functionalPreview ? (
-              <span className="desktop-location location-label"><MapPin className="text-orange" />{cityLabel}<small>{t("state")}</small></span>
+              <span className="desktop-location location-label">
+                <MapPin className="text-orange" />
+                {cityLabel}
+                <small>{t("state")}</small>
+              </span>
             ) : (
               <Button
                 variant="ghost"
@@ -161,14 +171,33 @@ export function Header({ functionalPreview = false, authState = "signed-out" }: 
                 aria-label={t("changeLocation")}
               >
                 <MapPin className="text-orange" />
-                <span className="location-label">{cityLabel}<small>{t("state")}</small></span>
+                <span className="location-label">
+                  {cityLabel}
+                  <small>{t("state")}</small>
+                </span>
                 <ChevronDown />
               </Button>
             )}
             <LocaleControl />
             <Button asChild className="header-signin">
-              <Link to={functionalPreview ? (authState === "signed-in" ? "/customer/bookings" : "/sign-in") : demo.persona ? "/demo" : "/sign-in"}>
-                {functionalPreview ? (authState === "signed-in" ? t("bookings") : t("signin")) : demo.persona ? "SAMPLE" : t("signin")}
+              <Link
+                to={
+                  functionalPreview
+                    ? authState === "signed-in"
+                      ? "/customer/bookings"
+                      : "/sign-in"
+                    : demo.persona
+                      ? "/demo"
+                      : "/sign-in"
+                }
+              >
+                {functionalPreview
+                  ? authState === "signed-in"
+                    ? t("bookings")
+                    : t("signin")
+                  : demo.persona
+                    ? "SAMPLE"
+                    : t("signin")}
               </Link>
             </Button>
             <Button
@@ -182,15 +211,23 @@ export function Header({ functionalPreview = false, authState = "signed-out" }: 
             </Button>
           </div>
         </div>
-        {!functionalPreview && <div className="wrap mobile-location">
-          <Button variant="ghost" onClick={() => setLocation(true)}>
-            <MapPin className="text-primary" />{cityLabel}<ChevronDown />
-          </Button>
-          <span className="text-muted-foreground">{t("by")}</span>
-        </div>}
+        {!functionalPreview && (
+          <div className="wrap mobile-location">
+            <Button variant="ghost" onClick={() => setLocation(true)}>
+              <MapPin className="text-primary" />
+              {cityLabel}
+              <ChevronDown />
+            </Button>
+            <span className="text-muted-foreground">{t("by")}</span>
+          </div>
+        )}
       </header>
       {functionalPreview ? (
-        <div className="preview-strip">{locale === "te-IN" ? "ఫంక్షనల్ ప్రివ్యూ · స్వయంచాలక కేటాయింపు, ఆన్‌లైన్ చెల్లింపులు సక్రియంగా లేవు. WhatsApp సందేశాలు సక్రియం చేసినా అవి ఉత్తమ ప్రయత్నంతో మాత్రమే అందుతాయి." : "Functional preview · Automated assignment and online payments are not active. WhatsApp messages, if enabled, are best-effort."}</div>
+        <div className="preview-strip">
+          {locale === "te-IN"
+            ? "ఫంక్షనల్ ప్రివ్యూ · స్వయంచాలక కేటాయింపు, ఆన్‌లైన్ చెల్లింపులు సక్రియంగా లేవు. WhatsApp సందేశాలు సక్రియం చేసినా అవి ఉత్తమ ప్రయత్నంతో మాత్రమే అందుతాయి."
+            : "Functional preview · Automated assignment and online payments are not active. WhatsApp messages, if enabled, are best-effort."}
+        </div>
       ) : (
         <>
           <div className="preview-strip">{t("preview")}</div>
@@ -213,19 +250,27 @@ export function Header({ functionalPreview = false, authState = "signed-out" }: 
           <Button asChild onClick={() => setMenu(false)}>
             <Link to="/sign-in">{t("signin")}</Link>
           </Button>
-          {!functionalPreview && <>
-            <h2 className="mt-5 text-xs font-bold text-muted-foreground">{t("previewRoles")}</h2>
-            {[
-              ["/customer", "customer"],
-              ["/merchant", "merchant"],
-              ["/technician", "technician"],
-              ["/admin", "admin"],
-            ].map(([to, key]) => (
-              <Button asChild variant="ghost" key={to} onClick={() => setMenu(false)} className="justify-start">
-                <Link to={to ?? "/"}>{t(key as MessageKey)}</Link>
-              </Button>
-            ))}
-          </>}
+          {!functionalPreview && (
+            <>
+              <h2 className="mt-5 text-xs font-bold text-muted-foreground">{t("previewRoles")}</h2>
+              {[
+                ["/customer", "customer"],
+                ["/merchant", "merchant"],
+                ["/technician", "technician"],
+                ["/admin", "admin"],
+              ].map(([to, key]) => (
+                <Button
+                  asChild
+                  variant="ghost"
+                  key={to}
+                  onClick={() => setMenu(false)}
+                  className="justify-start"
+                >
+                  <Link to={to ?? "/"}>{t(key as MessageKey)}</Link>
+                </Button>
+              ))}
+            </>
+          )}
         </nav>
       </Modal>
       <Modal
@@ -298,10 +343,20 @@ export function Footer({ functionalPreview = false }: { functionalPreview?: bool
           <div>
             <h3>{t("language")}</h3>
             <LocaleControl />
-            {functionalPreview ? <p>{locale === "te-IN" ? "సేవా ప్రదాతల సందేశాలు ఇంకా సక్రియంగా లేవు" : "Provider dispatch is not active"}</p> : <>
-              <p>{t("demo")}</p>
-              <Link to="/customer">{t("previewRoles")} <ArrowRight size={13} /></Link>
-            </>}
+            {functionalPreview ? (
+              <p>
+                {locale === "te-IN"
+                  ? "సేవా ప్రదాతల సందేశాలు ఇంకా సక్రియంగా లేవు"
+                  : "Provider dispatch is not active"}
+              </p>
+            ) : (
+              <>
+                <p>{t("demo")}</p>
+                <Link to="/customer">
+                  {t("previewRoles")} <ArrowRight size={13} />
+                </Link>
+              </>
+            )}
           </div>
         </div>
         <div className="footer-bottom">
@@ -312,48 +367,55 @@ export function Footer({ functionalPreview = false }: { functionalPreview?: bool
     </footer>
   );
 }
-export function BottomNav({ role = "customer", functionalPreview = false }: { role?: string; functionalPreview?: boolean }) {
+export function BottomNav({
+  role = "customer",
+  functionalPreview = false,
+}: {
+  role?: string;
+  functionalPreview?: boolean;
+}) {
   const { t } = useFixHub();
   const path = useRouterState({ select: (s) => s.location.pathname });
-  const items = functionalPreview && role === "customer"
-    ? [
-        [Home, "/", "home"],
-        [Grid2X2, "/services", "services"],
-        [CalendarDays, "/customer/bookings", "bookings"],
-        [CircleHelp, "/contact", "contact"],
-        [UserRound, "/customer/settings/delete-account", "settings"],
-      ]
-    : role === "merchant"
+  const items =
+    functionalPreview && role === "customer"
       ? [
-          [LayoutDashboard, "/merchant", "home"],
-          [ClipboardList, "/merchant/requests", "incoming"],
-          [CalendarDays, "/merchant/calendar", "calendar"],
-          [CircleHelp, "/merchant/support", "help"],
-          [UserRound, "/merchant/profile", "profile"],
+          [Home, "/", "home"],
+          [Grid2X2, "/services", "services"],
+          [CalendarDays, "/customer/bookings", "bookings"],
+          [CircleHelp, "/contact", "contact"],
+          [UserRound, "/customer/settings/delete-account", "settings"],
         ]
-      : role === "technician"
+      : role === "merchant"
         ? [
-            [Home, "/technician", "home"],
-            [ClipboardList, "/technician/jobs", "jobs"],
-            [CalendarDays, "/technician/upcoming", "upcoming"],
-            [CircleHelp, "/technician/support", "help"],
-            [UserRound, "/technician/profile", "profile"],
+            [LayoutDashboard, "/merchant", "home"],
+            [ClipboardList, "/merchant/requests", "incoming"],
+            [CalendarDays, "/merchant/calendar", "calendar"],
+            [CircleHelp, "/merchant/support", "help"],
+            [UserRound, "/merchant/profile", "profile"],
           ]
-        : role === "admin"
+        : role === "technician"
           ? [
-              [LayoutDashboard, "/admin", "home"],
-              [ClipboardList, "/admin/bookings", "bookings"],
-              [Users, "/admin/merchants", "merchants"],
-              [CircleHelp, "/admin/support", "help"],
-              [Settings, "/admin/settings", "settings"],
+              [Home, "/technician", "home"],
+              [ClipboardList, "/technician/jobs", "jobs"],
+              [CalendarDays, "/technician/upcoming", "upcoming"],
+              [CircleHelp, "/technician/support", "help"],
+              [UserRound, "/technician/profile", "profile"],
             ]
-          : [
-              [Home, "/", "home"],
-              [Grid2X2, "/services", "services"],
-              [CalendarDays, "/customer/bookings", "bookings"],
-              [CircleHelp, "/help", "help"],
-              [UserRound, "/customer/profile", "profile"],
-            ];
+          : role === "admin"
+            ? [
+                [LayoutDashboard, "/admin", "home"],
+                [ClipboardList, "/admin/bookings", "bookings"],
+                [Users, "/admin/merchants", "merchants"],
+                [CircleHelp, "/admin/support", "help"],
+                [Settings, "/admin/settings", "settings"],
+              ]
+            : [
+                [Home, "/", "home"],
+                [Grid2X2, "/services", "services"],
+                [CalendarDays, "/customer/bookings", "bookings"],
+                [CircleHelp, "/help", "help"],
+                [UserRound, "/customer/profile", "profile"],
+              ];
   return (
     <nav className="bottom-nav" aria-label={t("menu")}>
       {items.map(([Icon, to, key]) => {
@@ -373,7 +435,17 @@ export function BottomNav({ role = "customer", functionalPreview = false }: { ro
     </nav>
   );
 }
-export function PageShell({ children, role, functionalPreview = false, authState = "signed-out" }: { children: ReactNode; role?: string; functionalPreview?: boolean; authState?: "signed-in" | "signed-out" }) {
+export function PageShell({
+  children,
+  role,
+  functionalPreview = false,
+  authState = "signed-out",
+}: {
+  children: ReactNode;
+  role?: string;
+  functionalPreview?: boolean;
+  authState?: "signed-in" | "signed-out";
+}) {
   return (
     <>
       <Header functionalPreview={functionalPreview} authState={authState} />
@@ -470,10 +542,13 @@ export function Notice({
   error?: boolean;
 }) {
   const { locale } = useFixHub();
-  const [referenceCopyState, setReferenceCopyState] = useState<"idle" | "copied" | "unavailable">("idle");
-  const supportReference = error && typeof children === "string"
-    ? children.match(/\(Reference: ([\da-f]{8}-(?:[\da-f]{4}-){3}[\da-f]{12})\)/i)?.[1]
-    : undefined;
+  const [referenceCopyState, setReferenceCopyState] = useState<"idle" | "copied" | "unavailable">(
+    "idle",
+  );
+  const supportReference =
+    error && typeof children === "string"
+      ? children.match(/\(Reference: ([\da-f]{8}-(?:[\da-f]{4}-){3}[\da-f]{12})\)/i)?.[1]
+      : undefined;
 
   async function copySupportReference() {
     if (!supportReference) return;
@@ -494,13 +569,25 @@ export function Notice({
       <ShieldCheck aria-hidden="true" />
       <div>
         {children}
-        {supportReference && <button type="button" className="mt-2 min-h-11 rounded-md px-2 text-sm font-semibold text-primary underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" onClick={() => void copySupportReference()}>
-          {referenceCopyState === "copied"
-            ? (locale === "te-IN" ? "సూచన సంఖ్య కాపీ అయింది" : "Reference copied")
-            : referenceCopyState === "unavailable"
-              ? (locale === "te-IN" ? "కాపీ చేయలేకపోయాం — పై సూచన సంఖ్యను ఎంచుకోండి" : "Copy unavailable — select the reference above")
-              : (locale === "te-IN" ? "సహాయ సూచన సంఖ్యను కాపీ చేయండి" : "Copy support reference")}
-        </button>}
+        {supportReference && (
+          <button
+            type="button"
+            className="mt-2 min-h-11 rounded-md px-2 text-sm font-semibold text-primary underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            onClick={() => void copySupportReference()}
+          >
+            {referenceCopyState === "copied"
+              ? locale === "te-IN"
+                ? "సూచన సంఖ్య కాపీ అయింది"
+                : "Reference copied"
+              : referenceCopyState === "unavailable"
+                ? locale === "te-IN"
+                  ? "కాపీ చేయలేకపోయాం — పై సూచన సంఖ్యను ఎంచుకోండి"
+                  : "Copy unavailable — select the reference above"
+                : locale === "te-IN"
+                  ? "సహాయ సూచన సంఖ్యను కాపీ చేయండి"
+                  : "Copy support reference"}
+          </button>
+        )}
       </div>
     </div>
   );

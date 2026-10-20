@@ -8,7 +8,7 @@ export class ReviewService {
     bookingId: string,
     customerId: string,
     rating: number,
-    comment?: string
+    comment?: string,
   ): Promise<Review> {
     const booking = this.repo.bookings.get(bookingId);
     if (!booking) throw new Error("Booking not found");
@@ -36,7 +36,8 @@ export class ReviewService {
     if (merchant) {
       const currentScoreSum = merchant.rating * merchant.totalReviews;
       merchant.totalReviews += 1;
-      merchant.rating = Math.round(((currentScoreSum + review.rating) / merchant.totalReviews) * 100) / 100;
+      merchant.rating =
+        Math.round(((currentScoreSum + review.rating) / merchant.totalReviews) * 100) / 100;
     }
 
     return review;

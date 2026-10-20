@@ -15,5 +15,5 @@ export const Route = createFileRoute("/app_/profile")({
   component: Screen,
 });
 function Screen() {
-  return <AppProfile  />;
+  return <AppProfile />;
 }

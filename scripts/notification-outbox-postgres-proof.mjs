@@ -15,14 +15,23 @@ import { Pool } from "pg";
 
 import { applyMigrations } from "../api/migrations.ts";
 import { createNotificationOutboxDispatcher } from "../api/notification-outbox.ts";
-import { encryptPhone, phoneLookupHmac, transactionalWhatsappPolicyVersion } from "../api/whatsapp-contact.ts";
+import {
+  encryptPhone,
+  phoneLookupHmac,
+  transactionalWhatsappPolicyVersion,
+} from "../api/whatsapp-contact.ts";
 import { verifySupportRequests } from "./support-postgres-cases.mjs";
 
 const args = process.argv.slice(2);
-assert.equal(args.length, 2, "Usage: node scripts/notification-outbox-postgres-proof.mjs --pg-bin <existing PostgreSQL bin directory>");
+assert.equal(
+  args.length,
+  2,
+  "Usage: node scripts/notification-outbox-postgres-proof.mjs --pg-bin <existing PostgreSQL bin directory>",
+);
 assert.equal(args[0], "--pg-bin");
 const pgBin = path.resolve(args[1]);
-const executable = (name) => path.join(pgBin, `${name}${process.platform === "win32" ? ".exe" : ""}`);
+const executable = (name) =>
+  path.join(pgBin, `${name}${process.platform === "win32" ? ".exe" : ""}`);
 for (const name of ["initdb", "pg_ctl"]) await access(executable(name));
 
 const temporaryParent = await realpath(os.tmpdir());
@@ -61,8 +70,12 @@ function run(command, commandArgs, { quiet = false, timeoutMs = 30_000 } = {}) {
       resolve(result);
     };
     if (!quiet) {
-      child.stdout.on("data", (chunk) => { stdout += chunk; });
-      child.stderr.on("data", (chunk) => { stderr += chunk; });
+      child.stdout.on("data", (chunk) => {
+        stdout += chunk;
+      });
+      child.stderr.on("data", (chunk) => {
+        stderr += chunk;
+      });
     }
     child.once("error", (error) => {
       if (settled) return;
@@ -77,29 +90,55 @@ function run(command, commandArgs, { quiet = false, timeoutMs = 30_000 } = {}) {
 
 async function checked(command, commandArgs, options) {
   const result = await run(command, commandArgs, options);
-  if (result.code !== 0) throw new Error(`${path.basename(command)} exited ${result.code}: ${result.stderr.slice(-3000)}`);
+  if (result.code !== 0)
+    throw new Error(
+      `${path.basename(command)} exited ${result.code}: ${result.stderr.slice(-3000)}`,
+    );
   return result;
 }
 
 async function availableLoopbackPort() {
   const server = net.createServer();
-  await new Promise((resolve, reject) => server.once("error", reject).listen(0, "127.0.0.1", resolve));
+  await new Promise((resolve, reject) =>
+    server.once("error", reject).listen(0, "127.0.0.1", resolve),
+  );
   const { port } = server.address();
-  await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
+  await new Promise((resolve, reject) =>
+    server.close((error) => (error ? reject(error) : resolve())),
+  );
   return port;
 }
 
 let pool;
 try {
   const port = await availableLoopbackPort();
-  await checked(executable("initdb"), ["-D", clusterPath, "-U", "fixhub_proof", "--auth=trust", "--no-locale", "-E", "UTF8"]);
+  await checked(executable("initdb"), [
+    "-D",
+    clusterPath,
+    "-U",
+    "fixhub_proof",
+    "--auth=trust",
+    "--no-locale",
+    "-E",
+    "UTF8",
+  ]);
   clusterMayBeRunning = true;
-  await checked(executable("pg_ctl"), [
-    "-D", clusterPath,
-    "-l", postgresLog,
-    "-o", `-h 127.0.0.1 -p ${port} -c max_connections=30`,
-    "-w", "-t", "20", "start",
-  ], { quiet: true, timeoutMs: 25_000 });
+  await checked(
+    executable("pg_ctl"),
+    [
+      "-D",
+      clusterPath,
+      "-l",
+      postgresLog,
+      "-o",
+      `-h 127.0.0.1 -p ${port} -c max_connections=30`,
+      "-w",
+      "-t",
+      "20",
+      "start",
+    ],
+    { quiet: true, timeoutMs: 25_000 },
+  );
   if (interrupted) throw new Error("Proof interrupted before database setup");
 
   pool = new Pool({
@@ -146,8 +185,13 @@ try {
   let releaseSend;
   let signalSend;
   let pauseFirst = true;
-  const sendStarted = new Promise((resolve) => { signalSend = resolve; });
-  const sendGate = new Promise((resolve) => { releaseSend = resolve; releaseFakeSend = resolve; });
+  const sendStarted = new Promise((resolve) => {
+    signalSend = resolve;
+  });
+  const sendGate = new Promise((resolve) => {
+    releaseSend = resolve;
+    releaseFakeSend = resolve;
+  });
   const dispatcher = createNotificationOutboxDispatcher(pool, key, async (phone, variables) => {
     sent.push({ phone, variables });
     if (pauseFirst) {
@@ -169,8 +213,15 @@ try {
        (subject_id, phone_ciphertext, phone_iv, phone_auth_tag, phone_hmac, phone_last_four,
         phone_verified_at, consent_granted_at, consent_policy_version)
        VALUES ($1, $2, $3, $4, $5, $6, clock_timestamp(), clock_timestamp(), $7)`,
-      [id, encrypted.ciphertext, encrypted.iv, encrypted.authTag,
-        phoneLookupHmac(hmacSecret, phone), phone.slice(-4), transactionalWhatsappPolicyVersion],
+      [
+        id,
+        encrypted.ciphertext,
+        encrypted.iv,
+        encrypted.authTag,
+        phoneLookupHmac(hmacSecret, phone),
+        phone.slice(-4),
+        transactionalWhatsappPolicyVersion,
+      ],
     );
   }
 
@@ -194,7 +245,15 @@ try {
     `INSERT INTO service_booking
      (id, customer_id, service_id, address_id, status, visit_price_paise, labor_estimate_paise)
      VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-    [bookingId, customerId, "10000000-0000-4000-8000-000000000002", addressId, "offered", 10_000, 20_000],
+    [
+      bookingId,
+      customerId,
+      "10000000-0000-4000-8000-000000000002",
+      addressId,
+      "offered",
+      10_000,
+      20_000,
+    ],
   );
   await pool.query(
     `INSERT INTO booking_offer (id, booking_id, merchant_id, visit_price_paise, labor_price_paise, expires_at)
@@ -209,7 +268,14 @@ try {
   await pool.query(
     `INSERT INTO transactional_outbox (id, event_type, aggregate_id, payload, idempotency_key, available_at)
      VALUES ($1, $2, $3, $4::jsonb, $5, clock_timestamp() - $6::interval)`,
-    [randomUUID(), "merchant.booking_offer", bookingId, JSON.stringify({ bookingId, merchantId, offerId }), "proof-merchant-offer", "1 second"],
+    [
+      randomUUID(),
+      "merchant.booking_offer",
+      bookingId,
+      JSON.stringify({ bookingId, merchantId, offerId }),
+      "proof-merchant-offer",
+      "1 second",
+    ],
   );
   await pool.query(
     `INSERT INTO booking_offer (id, booking_id, merchant_id, visit_price_paise, labor_price_paise, expires_at)
@@ -219,7 +285,12 @@ try {
   await pool.query(
     `INSERT INTO transactional_outbox (id, event_type, aggregate_id, payload, idempotency_key)
      VALUES ($1, 'merchant.booking_offer', $2, $3::jsonb, $4)`,
-    [randomUUID(), bookingId, JSON.stringify({ bookingId, merchantId: secondMerchantId, offerId: secondOfferId }), "proof-merchant-offer-two"],
+    [
+      randomUUID(),
+      bookingId,
+      JSON.stringify({ bookingId, merchantId: secondMerchantId, offerId: secondOfferId }),
+      "proof-merchant-offer-two",
+    ],
   );
   await pool.query(
     "INSERT INTO customer_address (id, customer_id, label, address_text, locality) VALUES ($1, $2, $3, $4, $5)",
@@ -229,7 +300,15 @@ try {
     `INSERT INTO service_booking
      (id, customer_id, service_id, address_id, status, visit_price_paise, labor_estimate_paise)
      VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-    [staleBookingId, staleCustomerId, "10000000-0000-4000-8000-000000000002", staleAddressId, "accepted", 10_000, 20_000],
+    [
+      staleBookingId,
+      staleCustomerId,
+      "10000000-0000-4000-8000-000000000002",
+      staleAddressId,
+      "accepted",
+      10_000,
+      20_000,
+    ],
   );
   await pool.query(
     "INSERT INTO transactional_outbox (id, event_type, aggregate_id, payload, idempotency_key) VALUES ($1, $2, $3, $4::jsonb, $5)",
@@ -239,18 +318,36 @@ try {
     `INSERT INTO service_booking
      (id, customer_id, service_id, address_id, status, visit_price_paise, labor_estimate_paise)
      VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-    [foreignAddressBookingId, staleCustomerId, "10000000-0000-4000-8000-000000000002", addressId, "offered", 10_000, 20_000],
+    [
+      foreignAddressBookingId,
+      staleCustomerId,
+      "10000000-0000-4000-8000-000000000002",
+      addressId,
+      "offered",
+      10_000,
+      20_000,
+    ],
   );
   await pool.query(
     "INSERT INTO transactional_outbox (id, event_type, aggregate_id, payload, idempotency_key) VALUES ($1, $2, $3, $4::jsonb, $5)",
-    [randomUUID(), "request.created", foreignAddressBookingId, "{}", "proof-foreign-address-request"],
+    [
+      randomUUID(),
+      "request.created",
+      foreignAddressBookingId,
+      "{}",
+      "proof-foreign-address-request",
+    ],
   );
 
   const pendingOfferCount = await pool.query(
     "SELECT count(*)::int AS count FROM booking_offer WHERE booking_id = $1 AND status = 'pending'",
     [bookingId],
   );
-  assert.equal(pendingOfferCount.rows[0]?.count, 2, "Both eligible merchants must have a pending offer for the booking");
+  assert.equal(
+    pendingOfferCount.rows[0]?.count,
+    2,
+    "Both eligible merchants must have a pending offer for the booking",
+  );
 
   let updater;
   let firstDispatch;
@@ -259,10 +356,15 @@ try {
     firstDispatch = dispatcher.dispatchBatch(1);
     await Promise.race([
       sendStarted,
-      new Promise((_, reject) => setTimeout(() => reject(new Error("Fake sender did not start")), 5_000)),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Fake sender did not start")), 5_000),
+      ),
     ]);
     updater = await pool.connect();
-    await updater.query("SELECT set_config($1, $2, false)", ["application_name", "fixhub-proof-updater"]);
+    await updater.query("SELECT set_config($1, $2, false)", [
+      "application_name",
+      "fixhub-proof-updater",
+    ]);
     const pendingUpdate = updater.query(
       "UPDATE service_booking SET customer_note = $1 WHERE id = $2",
       ["concurrent update", bookingId],
@@ -284,7 +386,11 @@ try {
     await pendingUpdate;
     updater.release();
     updater = undefined;
-    assert.equal(lockObserved, true, "A concurrent booking update must wait while the message is sent");
+    assert.equal(
+      lockObserved,
+      true,
+      "A concurrent booking update must wait while the message is sent",
+    );
     assert.equal(firstResult.sent, 1);
   } finally {
     releaseSend?.();
@@ -299,46 +405,80 @@ try {
   assert.equal(secondMerchantResult.sent, 1);
   assert.equal(staleResult.suppressed, 1);
   assert.equal(foreignAddressResult.suppressed, 1);
-  assert.equal((await pool.query("SELECT status FROM transactional_outbox WHERE idempotency_key = $1", ["proof-foreign-address-request"])).rows[0]?.status, "suppressed");
+  assert.equal(
+    (
+      await pool.query("SELECT status FROM transactional_outbox WHERE idempotency_key = $1", [
+        "proof-foreign-address-request",
+      ])
+    ).rows[0]?.status,
+    "suppressed",
+  );
   assert.equal(sent.length, 3);
   assert.equal(sent[0].phone, customerPhone);
   assert.deepEqual(sent[0].variables, {
-    "1": "Your request is recorded. No provider is assigned yet.", "2": "General plumbing service", "3": "Tanuku",
+    1: "Your request is recorded. No provider is assigned yet.",
+    2: "General plumbing service",
+    3: "Tanuku",
   });
   assert.equal(sent[1].phone, merchantPhone);
-  assert.deepEqual(sent[1].variables, { "1": "New service request", "2": "General plumbing service", "3": "Tanuku" });
+  assert.deepEqual(sent[1].variables, {
+    1: "New service request",
+    2: "General plumbing service",
+    3: "Tanuku",
+  });
   assert.equal(sent[2].phone, secondMerchantPhone);
-  assert.deepEqual(sent[2].variables, { "1": "New service request", "2": "General plumbing service", "3": "Tanuku" });
+  assert.deepEqual(sent[2].variables, {
+    1: "New service request",
+    2: "General plumbing service",
+    3: "Tanuku",
+  });
 
-  const outcomes = (await pool.query(
-    "SELECT status, count(*)::int AS count FROM transactional_outbox GROUP BY status ORDER BY status",
-  )).rows;
-  assert.deepEqual(outcomes, [{ status: "sent", count: 3 }, { status: "suppressed", count: 2 }]);
+  const outcomes = (
+    await pool.query(
+      "SELECT status, count(*)::int AS count FROM transactional_outbox GROUP BY status ORDER BY status",
+    )
+  ).rows;
+  assert.deepEqual(outcomes, [
+    { status: "sent", count: 3 },
+    { status: "suppressed", count: 2 },
+  ]);
   const supportProof = await verifySupportRequests(pool, bookingId);
-  console.log(JSON.stringify({
-    server: (await pool.query("SHOW server_version")).rows[0].server_version,
-    migrationsApplied: applied.length,
-    customerAndMerchantNotifications: sent.length,
-    eligibleMerchantsNotified: 2,
-    staleNotificationSuppressed: staleResult.suppressed,
-    foreignCustomerAddressNotificationSuppressed: foreignAddressResult.suppressed,
-    realPostgresBookingLockHeldThroughSend: lockObserved,
-    syntheticRecipientLastFour: sent.map(({ phone }) => phone.slice(-4)),
-    supportProof,
-  }));
+  console.log(
+    JSON.stringify({
+      server: (await pool.query("SHOW server_version")).rows[0].server_version,
+      migrationsApplied: applied.length,
+      customerAndMerchantNotifications: sent.length,
+      eligibleMerchantsNotified: 2,
+      staleNotificationSuppressed: staleResult.suppressed,
+      foreignCustomerAddressNotificationSuppressed: foreignAddressResult.suppressed,
+      realPostgresBookingLockHeldThroughSend: lockObserved,
+      syntheticRecipientLastFour: sent.map(({ phone }) => phone.slice(-4)),
+      supportProof,
+    }),
+  );
 } finally {
   await pool?.end();
   if (clusterMayBeRunning) {
     const status = await run(executable("pg_ctl"), ["-D", clusterPath, "status"], { quiet: true });
     if (status.code === 0) {
-      const stop = await run(executable("pg_ctl"), ["-D", clusterPath, "-m", "fast", "-w", "-t", "20", "stop"], { quiet: true, timeoutMs: 25_000 });
-      if (stop.code !== 0) throw new Error("Temporary PostgreSQL cluster stop failed; preserving its temp directory");
+      const stop = await run(
+        executable("pg_ctl"),
+        ["-D", clusterPath, "-m", "fast", "-w", "-t", "20", "stop"],
+        { quiet: true, timeoutMs: 25_000 },
+      );
+      if (stop.code !== 0)
+        throw new Error("Temporary PostgreSQL cluster stop failed; preserving its temp directory");
     } else if (status.code !== 3) {
-      throw new Error("Could not verify temporary PostgreSQL stopped; preserving its temp directory");
+      throw new Error(
+        "Could not verify temporary PostgreSQL stopped; preserving its temp directory",
+      );
     }
   }
   const resolvedRoot = await realpath(temporaryRoot);
-  if (path.dirname(resolvedRoot) !== temporaryParent || !path.basename(resolvedRoot).startsWith("fixhub-whatsapp-outbox-proof-")) {
+  if (
+    path.dirname(resolvedRoot) !== temporaryParent ||
+    !path.basename(resolvedRoot).startsWith("fixhub-whatsapp-outbox-proof-")
+  ) {
     throw new Error("Refusing cleanup of an unexpected temporary path");
   }
   await rm(resolvedRoot, { recursive: true, force: true });

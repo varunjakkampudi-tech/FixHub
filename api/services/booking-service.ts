@@ -18,7 +18,7 @@ export interface CreateBookingInput {
 export class BookingService {
   constructor(
     private repo: Repository = defaultRepository,
-    private dispatch: DispatchService = defaultDispatchService
+    private dispatch: DispatchService = defaultDispatchService,
   ) {}
 
   /**
@@ -85,7 +85,9 @@ export class BookingService {
     }
 
     if (role === "customer") {
-      return all.filter((b) => b.customerId === userId).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+      return all
+        .filter((b) => b.customerId === userId)
+        .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
     }
 
     if (role === "merchant") {
@@ -121,10 +123,15 @@ export class BookingService {
   /**
    * Assigns a technician from merchant's staff to the accepted booking.
    */
-  async assignTechnician(bookingId: string, merchantId: string, technicianId: string): Promise<Booking> {
+  async assignTechnician(
+    bookingId: string,
+    merchantId: string,
+    technicianId: string,
+  ): Promise<Booking> {
     const booking = this.repo.bookings.get(bookingId);
     if (!booking) throw new Error("Booking not found");
-    if (booking.merchantId !== merchantId) throw new Error("Unauthorized: booking not assigned to this merchant");
+    if (booking.merchantId !== merchantId)
+      throw new Error("Unauthorized: booking not assigned to this merchant");
 
     const tech = this.repo.technicians.get(technicianId);
     if (!tech || tech.merchantId !== merchantId) throw new Error("Invalid technician selected");
@@ -150,7 +157,10 @@ export class BookingService {
   /**
    * Technician marks on the way or arrived.
    */
-  async updateTechnicianProgress(bookingId: string, status: "on_the_way" | "arrived"): Promise<Booking> {
+  async updateTechnicianProgress(
+    bookingId: string,
+    status: "on_the_way" | "arrived",
+  ): Promise<Booking> {
     const booking = this.repo.bookings.get(bookingId);
     if (!booking) throw new Error("Booking not found");
 
@@ -184,7 +194,7 @@ export class BookingService {
     technicianId: string,
     items: Array<{ description: string; amount: number }>,
     laborAmount: number,
-    partsAmount: number
+    partsAmount: number,
   ): Promise<Quote> {
     const booking = this.repo.bookings.get(bookingId);
     if (!booking) throw new Error("Booking not found");
@@ -272,7 +282,10 @@ export class BookingService {
   /**
    * Records payment settlement (Cash on completion or online UPI).
    */
-  async recordPayment(bookingId: string, paymentMethod: "cash_on_completion" | "online_upi" | "online_card"): Promise<Booking> {
+  async recordPayment(
+    bookingId: string,
+    paymentMethod: "cash_on_completion" | "online_upi" | "online_card",
+  ): Promise<Booking> {
     const booking = this.repo.bookings.get(bookingId);
     if (!booking) throw new Error("Booking not found");
 
@@ -296,7 +309,11 @@ export class BookingService {
   /**
    * Cancels a booking.
    */
-  async cancelBooking(bookingId: string, cancelledByUserId: string, reason: string): Promise<Booking> {
+  async cancelBooking(
+    bookingId: string,
+    cancelledByUserId: string,
+    reason: string,
+  ): Promise<Booking> {
     const booking = this.repo.bookings.get(bookingId);
     if (!booking) throw new Error("Booking not found");
 

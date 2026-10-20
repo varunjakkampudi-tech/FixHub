@@ -428,7 +428,9 @@ const placeSeed = registrySeed();
 export function placeLabel(text: string, locale: string) {
   if (locale !== "te-IN" || !text) return text;
   let out = text;
-  for (const p of [...placeSeed.localities, ...placeSeed.cities].sort((a, b) => b.names["en-IN"].length - a.names["en-IN"].length))
+  for (const p of [...placeSeed.localities, ...placeSeed.cities].sort(
+    (a, b) => b.names["en-IN"].length - a.names["en-IN"].length,
+  ))
     out = out.split(p.names["en-IN"]).join(p.names["te-IN"]);
   return out;
 }

@@ -53,7 +53,8 @@ describe("Disputes, Notifications & Webhooks API", () => {
       .send({
         bookingId: booking.id,
         reason: "Overcharged for minor wiring fix",
-        details: "Technician spent only 5 minutes but charged 200 labor for just flipping the breaker.",
+        details:
+          "Technician spent only 5 minutes but charged 200 labor for just flipping the breaker.",
       })
       .expect(201);
 
@@ -115,7 +116,9 @@ describe("Disputes, Notifications & Webhooks API", () => {
   it("handles WhatsApp Cloud API webhook challenge and event delivery", async () => {
     // Challenge verification (GET)
     const challengeRes = await request(app)
-      .get("/api/v1/webhooks/whatsapp?hub.mode=subscribe&hub.challenge=test_challenge_12345&hub.verify_token=fixhub-whatsapp-verify-token")
+      .get(
+        "/api/v1/webhooks/whatsapp?hub.mode=subscribe&hub.challenge=test_challenge_12345&hub.verify_token=fixhub-whatsapp-verify-token",
+      )
       .expect(200);
 
     expect(challengeRes.text).toBe("test_challenge_12345");

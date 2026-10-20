@@ -13,8 +13,12 @@ function fakeClient(query: (sql: string) => Promise<unknown> = async () => ({ ro
 describe("database foundation", () => {
   it("requires PostgreSQL URLs and bounds pool configuration", () => {
     expect(databaseConfigFromEnvironment({})).toBeNull();
-    expect(() => databaseConfigFromEnvironment({ DATABASE_URL: "https://db.example.test" })).toThrow();
-    expect(() => databaseConfigFromEnvironment({ DATABASE_URL: "postgres://db", DATABASE_POOL_MAX: "51" })).toThrow();
+    expect(() =>
+      databaseConfigFromEnvironment({ DATABASE_URL: "https://db.example.test" }),
+    ).toThrow();
+    expect(() =>
+      databaseConfigFromEnvironment({ DATABASE_URL: "postgres://db", DATABASE_POOL_MAX: "51" }),
+    ).toThrow();
 
     const config = databaseConfigFromEnvironment({
       DATABASE_URL: "postgres://user:secret@localhost/fixhub",
@@ -47,7 +51,11 @@ describe("database foundation", () => {
     const pool = { connect: vi.fn().mockResolvedValue(client) } as unknown as Pick<Pool, "connect">;
     const failure = new Error("operation failed");
 
-    await expect(inTransaction(pool, async () => { throw failure; })).rejects.toBe(failure);
+    await expect(
+      inTransaction(pool, async () => {
+        throw failure;
+      }),
+    ).rejects.toBe(failure);
     expect(query.mock.calls.map(([sql]) => sql)).toEqual(["BEGIN", "ROLLBACK"]);
     expect(release).toHaveBeenCalledTimes(1);
     expect(release).toHaveBeenCalledWith();
@@ -61,7 +69,11 @@ describe("database foundation", () => {
     const pool = { connect: vi.fn().mockResolvedValue(client) } as unknown as Pick<Pool, "connect">;
     const failure = new Error("operation failed");
 
-    await expect(inTransaction(pool, async () => { throw failure; })).rejects.toBe(failure);
+    await expect(
+      inTransaction(pool, async () => {
+        throw failure;
+      }),
+    ).rejects.toBe(failure);
     expect(query.mock.calls.map(([sql]) => sql)).toEqual(["BEGIN", "ROLLBACK"]);
     expect(release).toHaveBeenCalledTimes(1);
     expect(release).toHaveBeenCalledWith(true);

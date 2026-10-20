@@ -21,7 +21,12 @@ export function canOpenAssignedDirections(
   booking: Pick<Booking, "location" | "merchantId" | "technicianId" | "status">,
   actor: Pick<Persona, "id" | "role" | "merchantId"> | null,
 ): boolean {
-  if (!actor || !booking.location || !booking.merchantId || !activeAssignmentStatuses.has(booking.status)) {
+  if (
+    !actor ||
+    !booking.location ||
+    !booking.merchantId ||
+    !activeAssignmentStatuses.has(booking.status)
+  ) {
     return false;
   }
   if (actor.role === "merchant") return actor.merchantId === booking.merchantId;

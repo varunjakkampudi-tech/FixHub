@@ -1,5 +1,10 @@
 import crypto from "node:crypto";
-import { type Booking, type BookingOffer, type Repository, defaultRepository } from "../db/repository";
+import {
+  type Booking,
+  type BookingOffer,
+  type Repository,
+  defaultRepository,
+} from "../db/repository";
 import { type DistributedLock, defaultDistributedLock } from "../redis/lock";
 
 export interface DispatchResult {
@@ -11,7 +16,7 @@ export interface DispatchResult {
 export class DispatchService {
   constructor(
     private repo: Repository = defaultRepository,
-    private lock: DistributedLock = defaultDistributedLock
+    private lock: DistributedLock = defaultDistributedLock,
   ) {}
 
   /**
@@ -27,7 +32,7 @@ export class DispatchService {
       booking.category,
       booking.latitude,
       booking.longitude,
-      radiusKm
+      radiusKm,
     );
 
     let offersCreated = 0;
@@ -77,7 +82,11 @@ export class DispatchService {
     return {
       bookingId,
       offersCreated,
-      eligibleMerchants: eligible.map((m) => ({ id: m.id, name: m.businessName, distanceKm: m.distanceKm })),
+      eligibleMerchants: eligible.map((m) => ({
+        id: m.id,
+        name: m.businessName,
+        distanceKm: m.distanceKm,
+      })),
     };
   }
 
@@ -96,7 +105,9 @@ export class DispatchService {
 
       // Check if booking is still available for acceptance
       if (booking.status !== "offered" && booking.status !== "requested") {
-        throw new Error(`Booking ${booking.bookingReference} is no longer available (current status: ${booking.status})`);
+        throw new Error(
+          `Booking ${booking.bookingReference} is no longer available (current status: ${booking.status})`,
+        );
       }
 
       const merchant = this.repo.merchants.get(merchantId);
@@ -153,4 +164,7 @@ export class DispatchService {
   }
 }
 
-export const defaultDispatchService = new DispatchService(defaultRepository, defaultDistributedLock);
+export const defaultDispatchService = new DispatchService(
+  defaultRepository,
+  defaultDistributedLock,
+);

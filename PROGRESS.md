@@ -88,6 +88,8 @@ Measured on 2026-10-20 with Node v22.23.2 and npm 11.19.0. Exit code 0 means suc
 | Browser | `npm run test:playwright` | not run before | exit 0; **12 tests passed** (run before the seed-guard commit; to rerun before promotion) |
 | Dependency audit | `npm audit` | pending | pending |
 
+**Final verification on the formatted task branch (2026-10-20):** typecheck 0; lint 0; format:check 0 (after excluding the validator scripts that tests read as text, see .prettierignore); test:docs 0; Vitest 0 with 220 tests; build 0. Browser: `npm run test:playwright` exited 1 with "Timed out waiting 60000ms from config.webServer" on port 5173 in this environment; the same 12 tests passed (exit 0) against a preview server on port 5175 using a temporary config outside the repository. The port 5173 failure is unexplained and recorded in blocker.txt BLOCKER-019.
+
 **Test-count notes.** The earlier documents said "53 documentation validator tests" and "6 Playwright tests". Both were wrong. `test:docs` runs one `node:test` test whose internal assertions were not counted. The browser suite has 6 tests per project, 12 in total. Earlier totals of "283 automated tests" combined counts that are not comparable and are withdrawn.
 
 ---

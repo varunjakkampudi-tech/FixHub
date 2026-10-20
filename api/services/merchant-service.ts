@@ -1,5 +1,10 @@
 import crypto from "node:crypto";
-import { type Merchant, type Repository, type Technician, defaultRepository } from "../db/repository";
+import {
+  type Merchant,
+  type Repository,
+  type Technician,
+  defaultRepository,
+} from "../db/repository";
 
 export interface MerchantOnboardingInput {
   userId: string;
@@ -15,7 +20,11 @@ export interface MerchantOnboardingInput {
 export class MerchantService {
   constructor(private repo: Repository = defaultRepository) {}
 
-  async listMerchants(filter?: { category?: string; zone?: string; activeOnly?: boolean }): Promise<Merchant[]> {
+  async listMerchants(filter?: {
+    category?: string;
+    zone?: string;
+    activeOnly?: boolean;
+  }): Promise<Merchant[]> {
     let list = Array.from(this.repo.merchants.values());
     if (filter?.activeOnly !== false) {
       list = list.filter((m) => m.isActive);
@@ -32,7 +41,9 @@ export class MerchantService {
   async getMerchant(id: string): Promise<{ merchant: Merchant; technicians: Technician[] } | null> {
     const merchant = this.repo.merchants.get(id);
     if (!merchant) return null;
-    const technicians = Array.from(this.repo.technicians.values()).filter((t) => t.merchantId === id && t.isActive);
+    const technicians = Array.from(this.repo.technicians.values()).filter(
+      (t) => t.merchantId === id && t.isActive,
+    );
     return { merchant, technicians };
   }
 
@@ -66,7 +77,12 @@ export class MerchantService {
     return merchant;
   }
 
-  async addTechnician(merchantId: string, name: string, phone: string, skills: string[]): Promise<Technician> {
+  async addTechnician(
+    merchantId: string,
+    name: string,
+    phone: string,
+    skills: string[],
+  ): Promise<Technician> {
     const merchant = this.repo.merchants.get(merchantId);
     if (!merchant) throw new Error("Merchant not found");
 

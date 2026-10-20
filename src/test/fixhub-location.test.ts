@@ -14,7 +14,11 @@ import {
   offerState,
   type SampleAddress,
 } from "@/features/fixhub/location-model";
-import { canOpenAssignedDirections, googleMapsDirectionsUrl, googleMapsPinUrl } from "@/features/fixhub/map-adapter";
+import {
+  canOpenAssignedDirections,
+  googleMapsDirectionsUrl,
+  googleMapsPinUrl,
+} from "@/features/fixhub/map-adapter";
 const now = Date.parse("2026-10-15T19:00:00Z");
 function act(
   s: DemoState,
@@ -60,8 +64,16 @@ describe("three-city registry and precise sample location", () => {
     const url = new URL(googleMapsPinUrl({ lat: 0, lng: -180 }));
     expect(url.origin).toBe("https://www.google.com");
     expect(url.pathname).toBe("/maps/search/");
-    expect([...url.searchParams]).toEqual([["api", "1"], ["query", "0,-180"]]);
-    for (const pin of [{ lat: NaN, lng: 81 }, { lat: 16, lng: Infinity }, { lat: 91, lng: 0 }, { lat: 0, lng: -181 }]) {
+    expect([...url.searchParams]).toEqual([
+      ["api", "1"],
+      ["query", "0,-180"],
+    ]);
+    for (const pin of [
+      { lat: NaN, lng: 81 },
+      { lat: 16, lng: Infinity },
+      { lat: 91, lng: 0 },
+      { lat: 0, lng: -181 },
+    ]) {
       expect(() => googleMapsPinUrl(pin)).toThrow(RangeError);
     }
   });
@@ -89,7 +101,9 @@ describe("three-city registry and precise sample location", () => {
     expect(canOpenAssignedDirections(withLocation, otherMerchant)).toBe(false);
     expect(canOpenAssignedDirections(withLocation, customer)).toBe(false);
     expect(canOpenAssignedDirections(withLocation, null)).toBe(false);
-    expect(canOpenAssignedDirections({ ...withLocation, status: "complete" }, merchant)).toBe(false);
+    expect(canOpenAssignedDirections({ ...withLocation, status: "complete" }, merchant)).toBe(
+      false,
+    );
     expect(canOpenAssignedDirections({ ...booking, location: undefined }, merchant)).toBe(false);
   });
   it("limits city service visibility and explains unavailable coverage", () => {

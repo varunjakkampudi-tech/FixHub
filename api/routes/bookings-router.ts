@@ -40,7 +40,9 @@ const quoteRespondSchema = z.object({
 });
 
 const paymentSchema = z.object({
-  paymentMethod: z.enum(["cash_on_completion", "online_upi", "online_card"]).default("cash_on_completion"),
+  paymentMethod: z
+    .enum(["cash_on_completion", "online_upi", "online_card"])
+    .default("cash_on_completion"),
 });
 
 const cancelSchema = z.object({
@@ -88,9 +90,15 @@ bookingsRouter.get("/:id", authenticate, (req, res) => {
     });
   }
 
-  const merchant = booking.merchantId ? defaultRepository.merchants.get(booking.merchantId) : undefined;
-  const technician = booking.technicianId ? defaultRepository.technicians.get(booking.technicianId) : undefined;
-  const quotes = Array.from(defaultRepository.quotes.values()).filter((q) => q.bookingId === booking.id);
+  const merchant = booking.merchantId
+    ? defaultRepository.merchants.get(booking.merchantId)
+    : undefined;
+  const technician = booking.technicianId
+    ? defaultRepository.technicians.get(booking.technicianId)
+    : undefined;
+  const quotes = Array.from(defaultRepository.quotes.values()).filter(
+    (q) => q.bookingId === booking.id,
+  );
 
   return res.status(200).json({
     booking,
@@ -102,115 +110,146 @@ bookingsRouter.get("/:id", authenticate, (req, res) => {
 });
 
 // Atomic First Acceptance (Dispatch Engine)
-bookingsRouter.post("/:id/accept", authenticate, requireRole("merchant", "admin"), async (req, res) => {
-  const id = String(req.params.id);
-  let merchantId = req.body.merchantId;
-  if (!merchantId) {
-    // Look up merchant for this user
-    for (const m of defaultRepository.merchants.values()) {
-      if (m.userId === req.user!.userId) {
-        merchantId = m.id;
-        break;
+bookingsRouter.post(
+  "/:id/accept",
+  authenticate,
+  requireRole("merchant", "admin"),
+  async (req, res) => {
+    const id = String(req.params.id);
+    let merchantId = req.body.merchantId;
+    if (!merchantId) {
+      // Look up merchant for this user
+      for (const m of defaultRepository.merchants.values()) {
+        if (m.userId === req.user!.userId) {
+          merchantId = m.id;
+          break;
+        }
       }
     }
-  }
 
-  if (!merchantId) {
-    return res.status(400).json({
-      error: { code: "MERCHANT_REQUIRED", message: "Merchant ID not found for authenticated user." },
-      requestId: req.id,
-    });
-  }
+    if (!merchantId) {
+      return res.status(400).json({
+        error: {
+          code: "MERCHANT_REQUIRED",
+          message: "Merchant ID not found for authenticated user.",
+        },
+        requestId: req.id,
+      });
+    }
 
-  try {
-    const booking = await defaultDispatchService.acceptBookingOffer(id, merchantId);
-    return res.status(200).json({ booking, message: "Booking accepted successfully.", requestId: req.id });
-  } catch (err: any) {
-    return res.status(409).json({
-      error: { code: "ACCEPTANCE_CONFLICT", message: err.message },
-      requestId: req.id,
-    });
-  }
-});
+    try {
+      const booking = await defaultDispatchService.acceptBookingOffer(id, merchantId);
+      return res
+        .status(200)
+        .json({ booking, message: "Booking accepted successfully.", requestId: req.id });
+    } catch (err: any) {
+      return res.status(409).json({
+        error: { code: "ACCEPTANCE_CONFLICT", message: err.message },
+        requestId: req.id,
+      });
+    }
+  },
+);
 
 // Assign Technician
-bookingsRouter.post(["/:id/assign-technician", "/:id/assign"], authenticate, requireRole("merchant", "admin"), async (req, res) => {
-  const id = String(req.params.id);
-  const parsed = assignTechSchema.safeParse(req.body);
-  if (!parsed.success) {
-    return res.status(400).json({
-      error: { code: "INVALID_INPUT", message: "technicianId is required." },
-      requestId: req.id,
-    });
-  }
+bookingsRouter.post(
+  ["/:id/assign-technician", "/:id/assign"],
+  authenticate,
+  requireRole("merchant", "admin"),
+  async (req, res) => {
+    const id = String(req.params.id);
+    const parsed = assignTechSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({
+        error: { code: "INVALID_INPUT", message: "technicianId is required." },
+        requestId: req.id,
+      });
+    }
 
-  const booking = defaultRepository.bookings.get(id);
-  if (!booking) return res.status(404).json({ error: { code: "NOT_FOUND", message: "Booking not found." }, requestId: req.id });
+    const booking = defaultRepository.bookings.get(id);
+    if (!booking)
+      return res
+        .status(404)
+        .json({ error: { code: "NOT_FOUND", message: "Booking not found." }, requestId: req.id });
 
-  try {
-    const updated = await defaultBookingService.assignTechnician(
-      id,
-      booking.merchantId!,
-      parsed.data.technicianId
-    );
-    return res.status(200).json({ booking: updated, requestId: req.id });
-  } catch (err: any) {
-    return res.status(400).json({
-      error: { code: "ASSIGNMENT_FAILED", message: err.message },
-      requestId: req.id,
-    });
-  }
-});
+    try {
+      const updated = await defaultBookingService.assignTechnician(
+        id,
+        booking.merchantId!,
+        parsed.data.technicianId,
+      );
+      return res.status(200).json({ booking: updated, requestId: req.id });
+    } catch (err: any) {
+      return res.status(400).json({
+        error: { code: "ASSIGNMENT_FAILED", message: err.message },
+        requestId: req.id,
+      });
+    }
+  },
+);
 
 // Technician progress (on the way / arrived)
-bookingsRouter.post(["/:id/progress", "/:id/status"], authenticate, requireRole("technician", "merchant", "admin"), async (req, res) => {
-  const id = String(req.params.id);
-  const parsed = progressSchema.safeParse(req.body);
-  if (!parsed.success) {
-    return res.status(400).json({
-      error: { code: "INVALID_INPUT", message: "status must be on_the_way or arrived." },
-      requestId: req.id,
-    });
-  }
+bookingsRouter.post(
+  ["/:id/progress", "/:id/status"],
+  authenticate,
+  requireRole("technician", "merchant", "admin"),
+  async (req, res) => {
+    const id = String(req.params.id);
+    const parsed = progressSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({
+        error: { code: "INVALID_INPUT", message: "status must be on_the_way or arrived." },
+        requestId: req.id,
+      });
+    }
 
-  try {
-    const updated = await defaultBookingService.updateTechnicianProgress(id, parsed.data.status);
-    return res.status(200).json({ booking: updated, requestId: req.id });
-  } catch (err: any) {
-    return res.status(400).json({
-      error: { code: "PROGRESS_FAILED", message: err.message },
-      requestId: req.id,
-    });
-  }
-});
+    try {
+      const updated = await defaultBookingService.updateTechnicianProgress(id, parsed.data.status);
+      return res.status(200).json({ booking: updated, requestId: req.id });
+    } catch (err: any) {
+      return res.status(400).json({
+        error: { code: "PROGRESS_FAILED", message: err.message },
+        requestId: req.id,
+      });
+    }
+  },
+);
 
 // Submit quote
-bookingsRouter.post("/:id/quote", authenticate, requireRole("technician", "merchant", "admin"), async (req, res) => {
-  const id = String(req.params.id);
-  const parsed = quoteSchema.safeParse(req.body);
-  if (!parsed.success) {
-    return res.status(400).json({
-      error: { code: "INVALID_INPUT", message: "Quote items, technicianId, labor and parts amount required." },
-      requestId: req.id,
-    });
-  }
+bookingsRouter.post(
+  "/:id/quote",
+  authenticate,
+  requireRole("technician", "merchant", "admin"),
+  async (req, res) => {
+    const id = String(req.params.id);
+    const parsed = quoteSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({
+        error: {
+          code: "INVALID_INPUT",
+          message: "Quote items, technicianId, labor and parts amount required.",
+        },
+        requestId: req.id,
+      });
+    }
 
-  try {
-    const quote = await defaultBookingService.submitQuote(
-      id,
-      parsed.data.technicianId,
-      parsed.data.items,
-      parsed.data.laborAmount,
-      parsed.data.partsAmount
-    );
-    return res.status(201).json({ quote, requestId: req.id });
-  } catch (err: any) {
-    return res.status(400).json({
-      error: { code: "QUOTE_FAILED", message: err.message },
-      requestId: req.id,
-    });
-  }
-});
+    try {
+      const quote = await defaultBookingService.submitQuote(
+        id,
+        parsed.data.technicianId,
+        parsed.data.items,
+        parsed.data.laborAmount,
+        parsed.data.partsAmount,
+      );
+      return res.status(201).json({ quote, requestId: req.id });
+    } catch (err: any) {
+      return res.status(400).json({
+        error: { code: "QUOTE_FAILED", message: err.message },
+        requestId: req.id,
+      });
+    }
+  },
+);
 
 // Customer respond to quote
 bookingsRouter.post("/:id/quote/respond", authenticate, async (req, res) => {
@@ -226,7 +265,7 @@ bookingsRouter.post("/:id/quote/respond", authenticate, async (req, res) => {
     const booking = await defaultBookingService.respondToQuote(
       parsed.data.quoteId,
       req.user!.userId,
-      parsed.data.accept
+      parsed.data.accept,
     );
     return res.status(200).json({ booking, requestId: req.id });
   } catch (err: any) {
@@ -238,18 +277,23 @@ bookingsRouter.post("/:id/quote/respond", authenticate, async (req, res) => {
 });
 
 // Complete work
-bookingsRouter.post("/:id/complete", authenticate, requireRole("technician", "merchant", "admin"), async (req, res) => {
-  const id = String(req.params.id);
-  try {
-    const booking = await defaultBookingService.completeWork(id);
-    return res.status(200).json({ booking, requestId: req.id });
-  } catch (err: any) {
-    return res.status(400).json({
-      error: { code: "COMPLETION_FAILED", message: err.message },
-      requestId: req.id,
-    });
-  }
-});
+bookingsRouter.post(
+  "/:id/complete",
+  authenticate,
+  requireRole("technician", "merchant", "admin"),
+  async (req, res) => {
+    const id = String(req.params.id);
+    try {
+      const booking = await defaultBookingService.completeWork(id);
+      return res.status(200).json({ booking, requestId: req.id });
+    } catch (err: any) {
+      return res.status(400).json({
+        error: { code: "COMPLETION_FAILED", message: err.message },
+        requestId: req.id,
+      });
+    }
+  },
+);
 
 // Record Payment
 bookingsRouter.post("/:id/payment", authenticate, async (req, res) => {
@@ -264,7 +308,9 @@ bookingsRouter.post("/:id/payment", authenticate, async (req, res) => {
 
   try {
     const booking = await defaultBookingService.recordPayment(id, parsed.data.paymentMethod);
-    return res.status(200).json({ booking, message: "Payment recorded successfully.", requestId: req.id });
+    return res
+      .status(200)
+      .json({ booking, message: "Payment recorded successfully.", requestId: req.id });
   } catch (err: any) {
     return res.status(400).json({
       error: { code: "PAYMENT_FAILED", message: err.message },
@@ -285,8 +331,14 @@ bookingsRouter.post("/:id/cancel", authenticate, async (req, res) => {
   }
 
   try {
-    const booking = await defaultBookingService.cancelBooking(id, req.user!.userId, parsed.data.reason);
-    return res.status(200).json({ booking, message: "Booking cancelled successfully.", requestId: req.id });
+    const booking = await defaultBookingService.cancelBooking(
+      id,
+      req.user!.userId,
+      parsed.data.reason,
+    );
+    return res
+      .status(200)
+      .json({ booking, message: "Booking cancelled successfully.", requestId: req.id });
   } catch (err: any) {
     return res.status(400).json({
       error: { code: "CANCELLATION_FAILED", message: err.message },
@@ -299,7 +351,10 @@ bookingsRouter.post("/:id/cancel", authenticate, async (req, res) => {
 bookingsRouter.get("/:id/invoice", authenticate, (req, res) => {
   const id = String(req.params.id);
   const booking = defaultRepository.bookings.get(id);
-  if (!booking) return res.status(404).json({ error: { code: "NOT_FOUND", message: "Booking not found." }, requestId: req.id });
+  if (!booking)
+    return res
+      .status(404)
+      .json({ error: { code: "NOT_FOUND", message: "Booking not found." }, requestId: req.id });
 
   const invoice = {
     invoiceNumber: `INV-${booking.bookingReference}`,
@@ -308,13 +363,34 @@ bookingsRouter.get("/:id/invoice", authenticate, (req, res) => {
     category: booking.category,
     currency: "INR",
     items: [
-      { code: "inspection_fee", description: "Standard Inspection / Visit Fee", amount: booking.inspectionFee },
-      { code: "labor_charge", description: "Technician Labor & Service", amount: booking.laborCharge },
+      {
+        code: "inspection_fee",
+        description: "Standard Inspection / Visit Fee",
+        amount: booking.inspectionFee,
+      },
+      {
+        code: "labor_charge",
+        description: "Technician Labor & Service",
+        amount: booking.laborCharge,
+      },
       { code: "parts_charge", description: "Replacement Spare Parts", amount: booking.partsCharge },
-      { code: "platform_fee", description: "Platform Facilitation & Insurance", amount: booking.platformFee },
-      { code: "discount", description: "Introductory Promotional Discount", amount: -booking.discount },
+      {
+        code: "platform_fee",
+        description: "Platform Facilitation & Insurance",
+        amount: booking.platformFee,
+      },
+      {
+        code: "discount",
+        description: "Introductory Promotional Discount",
+        amount: -booking.discount,
+      },
     ],
-    subtotal: booking.inspectionFee + booking.laborCharge + booking.partsCharge + booking.platformFee - booking.discount,
+    subtotal:
+      booking.inspectionFee +
+      booking.laborCharge +
+      booking.partsCharge +
+      booking.platformFee -
+      booking.discount,
     taxes: 0,
     totalPayable: booking.totalAmount,
     paymentMethod: booking.paymentMethod,

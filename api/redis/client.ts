@@ -1,4 +1,3 @@
-
 export interface RedisClientInterface {
   get(key: string): Promise<string | null>;
   set(key: string, value: string, mode?: "PX" | "EX", duration?: number): Promise<"OK" | null>;
@@ -71,7 +70,10 @@ class InMemoryRedisClient implements RedisClientInterface {
   async eval(script: string, _keyCount: number, ...args: string[]): Promise<unknown> {
     // Atomic release lock script emulation:
     // if redis.call("get",KEYS[1]) == ARGV[1] then return redis.call("del",KEYS[1]) else return 0 end
-    if (script.includes("redis.call('get', KEYS[1]) == ARGV[1]") || script.includes('redis.call("get", KEYS[1]) == ARGV[1]')) {
+    if (
+      script.includes("redis.call('get', KEYS[1]) == ARGV[1]") ||
+      script.includes('redis.call("get", KEYS[1]) == ARGV[1]')
+    ) {
       const [key, expectedValue] = args;
       const current = await this.get(key);
       if (current === expectedValue) {

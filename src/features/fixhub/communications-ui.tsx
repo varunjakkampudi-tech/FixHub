@@ -24,11 +24,27 @@ import {
   type Message,
 } from "./communications-model";
 const OPTION_TE: Record<string, string> = {
-  sms: "SMS", whatsapp: "WhatsApp", queued: "క్యూలో ఉంది", accepted: "అంగీకరించబడింది", sent: "పంపబడింది",
-  delivered: "చేరింది", read: "చదివారు", replied: "జవాబిచ్చారు", failed: "విఫలమైంది", suppressed: "నిలిపివేయబడింది",
-  created: "సృష్టించబడింది", offer_reminder: "ఆఫర్ రిమైండర్", expired: "గడువు ముగిసింది", declined: "తిరస్కరించబడింది",
-  closed: "మూసివేయబడింది", assigned: "కేటాయించబడింది", travel: "ప్రయాణంలో", arrived: "చేరుకున్నారు",
-  quote: "కోట్", completed: "పూర్తయింది", cancelled: "రద్దు చేయబడింది",
+  sms: "SMS",
+  whatsapp: "WhatsApp",
+  queued: "క్యూలో ఉంది",
+  accepted: "అంగీకరించబడింది",
+  sent: "పంపబడింది",
+  delivered: "చేరింది",
+  read: "చదివారు",
+  replied: "జవాబిచ్చారు",
+  failed: "విఫలమైంది",
+  suppressed: "నిలిపివేయబడింది",
+  created: "సృష్టించబడింది",
+  offer_reminder: "ఆఫర్ రిమైండర్",
+  expired: "గడువు ముగిసింది",
+  declined: "తిరస్కరించబడింది",
+  closed: "మూసివేయబడింది",
+  assigned: "కేటాయించబడింది",
+  travel: "ప్రయాణంలో",
+  arrived: "చేరుకున్నారు",
+  quote: "కోట్",
+  completed: "పూర్తయింది",
+  cancelled: "రద్దు చేయబడింది",
 };
 export function PhoneVerification() {
   const demo = useDemo();

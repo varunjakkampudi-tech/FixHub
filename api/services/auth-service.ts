@@ -22,10 +22,14 @@ export function getAuthJwtSecret(): string {
 
   if (!isTest) {
     if (!secret || secret.trim().length < 32) {
-      throw new Error("FATAL_SECURITY_ERROR: JWT_SECRET or AUTH_HMAC_SECRET must contain at least 32 non-whitespace characters.");
+      throw new Error(
+        "FATAL_SECURITY_ERROR: JWT_SECRET or AUTH_HMAC_SECRET must contain at least 32 non-whitespace characters.",
+      );
     }
     if (secret === EXPOSED_LEAKED_JWT_SECRET) {
-      throw new Error("FATAL_SECURITY_ERROR: Known leaked default JWT_SECRET is strictly forbidden. Configure a secure, high-entropy secret.");
+      throw new Error(
+        "FATAL_SECURITY_ERROR: Known leaked default JWT_SECRET is strictly forbidden. Configure a secure, high-entropy secret.",
+      );
     }
     return secret;
   }
@@ -44,7 +48,9 @@ export class AuthService {
    * - No fixed or returned codes outside test mode.
    * - Truthful delivery messages: dispatches to persistent outbox with full event lineage.
    */
-  async requestOtp(phone: string): Promise<{ success: boolean; message: string; testOtp?: string }> {
+  async requestOtp(
+    phone: string,
+  ): Promise<{ success: boolean; message: string; testOtp?: string }> {
     const formattedPhone = phone.trim();
     if (!/^\+?[0-9]{10,15}$/.test(formattedPhone)) {
       throw new Error("Invalid phone number format");
@@ -65,7 +71,7 @@ export class AuthService {
       otp,
       expiresAt,
       attempts: 0,
-      channel: isTestMode ? "outbox_dev" : (process.env.SMS_DLT_KEY ? "sms" : "outbox_dev"),
+      channel: isTestMode ? "outbox_dev" : process.env.SMS_DLT_KEY ? "sms" : "outbox_dev",
       dispatchedAt: new Date().toISOString(),
       consumed: false,
     });
@@ -78,7 +84,7 @@ export class AuthService {
       eventType: "otp_dispatched",
       payload: {
         phone: formattedPhone,
-        channel: isTestMode ? "outbox_dev" : (process.env.SMS_DLT_KEY ? "sms" : "outbox_dev"),
+        channel: isTestMode ? "outbox_dev" : process.env.SMS_DLT_KEY ? "sms" : "outbox_dev",
         expiresAt,
       },
       status: "pending",
@@ -101,7 +107,11 @@ export class AuthService {
    * - If new registration, role is unconditionally set to "customer".
    * - Admin/merchant privilege escalation via client parameter is impossible.
    */
-  async verifyOtp(phone: string, otp: string, userName?: string): Promise<{ user: User; token: string }> {
+  async verifyOtp(
+    phone: string,
+    otp: string,
+    userName?: string,
+  ): Promise<{ user: User; token: string }> {
     const formattedPhone = phone.trim();
     const entry = this.repo.otpChallenges.get(formattedPhone);
 
@@ -187,7 +197,10 @@ export class AuthService {
       // Constant-time comparison so the signature cannot be recovered through timing differences.
       const providedSignature = Buffer.from(signature);
       const computedSignature = Buffer.from(expectedSig);
-      if (providedSignature.length !== computedSignature.length || !crypto.timingSafeEqual(providedSignature, computedSignature)) {
+      if (
+        providedSignature.length !== computedSignature.length ||
+        !crypto.timingSafeEqual(providedSignature, computedSignature)
+      ) {
         return null;
       }
 

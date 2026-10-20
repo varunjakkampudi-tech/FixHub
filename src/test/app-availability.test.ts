@@ -11,15 +11,18 @@ describe("customer demo provider availability", () => {
     if (!firstBooking || !firstMerchant) throw new Error("Expected sample marketplace fixtures");
 
     firstMerchant.capacity = 1;
-    state.bookings = [{
-      ...firstBooking,
-      id: "active-capacity-fixture",
-      merchantId: firstMerchant.id,
-      status: "accepted",
-    }];
+    state.bookings = [
+      {
+        ...firstBooking,
+        id: "active-capacity-fixture",
+        merchantId: firstMerchant.id,
+        status: "accepted",
+      },
+    ];
 
-    const providers = eligibleMerchants(state, "tanuku", "electrician", "2026-10-16")
-      .map((merchant) => merchant.id);
+    const providers = eligibleMerchants(state, "tanuku", "electrician", "2026-10-16").map(
+      (merchant) => merchant.id,
+    );
     expect(providers).not.toContain("sample-m1");
     expect(providers).not.toContain("sample-m8");
     expect(providers).toContain("sample-m2");
@@ -32,16 +35,19 @@ describe("customer demo provider availability", () => {
     if (!firstBooking || !firstMerchant) throw new Error("Expected sample marketplace fixtures");
 
     firstMerchant.capacity = 1;
-    state.bookings = [{
-      ...firstBooking,
-      id: "completed-capacity-fixture",
-      merchantId: firstMerchant.id,
-      status: "complete",
-    }];
+    state.bookings = [
+      {
+        ...firstBooking,
+        id: "completed-capacity-fixture",
+        merchantId: firstMerchant.id,
+        status: "complete",
+      },
+    ];
 
     expect(
-      eligibleMerchants(state, "tanuku", "electrician", "2026-10-16")
-        .map((merchant) => merchant.id),
+      eligibleMerchants(state, "tanuku", "electrician", "2026-10-16").map(
+        (merchant) => merchant.id,
+      ),
     ).toContain("sample-m1");
   });
 
@@ -54,8 +60,9 @@ describe("customer demo provider availability", () => {
     first.workDays = [0];
     second.blackouts = ["2026-10-16"];
 
-    const providers = eligibleMerchants(state, "tanuku", "electrician", "2026-10-16")
-      .map((merchant) => merchant.id);
+    const providers = eligibleMerchants(state, "tanuku", "electrician", "2026-10-16").map(
+      (merchant) => merchant.id,
+    );
     expect(providers).not.toContain(first.id);
     expect(providers).not.toContain(second.id);
     expect(eligibleMerchants(state, "tanuku", "electrician", "not-a-date")).toEqual([]);

@@ -47,7 +47,11 @@ authRouter.post("/verify-otp", async (req, res) => {
   }
 
   try {
-    const result = await defaultAuthService.verifyOtp(parsed.data.phone, parsed.data.otp, parsed.data.name);
+    const result = await defaultAuthService.verifyOtp(
+      parsed.data.phone,
+      parsed.data.otp,
+      parsed.data.name,
+    );
     return res.status(200).json({ ...result, requestId: req.id });
   } catch (err: any) {
     return res.status(401).json({

@@ -6,7 +6,10 @@ export const Route = createFileRoute("/app_/home")({
       { title: "Home · Fix Hub" },
       { name: "description", content: "Find home services near you in the Fix Hub demo app." },
       { property: "og:title", content: "Home · Fix Hub" },
-      { property: "og:description", content: "Find home services near you in the Fix Hub demo app." },
+      {
+        property: "og:description",
+        content: "Find home services near you in the Fix Hub demo app.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -15,5 +18,5 @@ export const Route = createFileRoute("/app_/home")({
   component: Screen,
 });
 function Screen() {
-  return <AppHome  />;
+  return <AppHome />;
 }

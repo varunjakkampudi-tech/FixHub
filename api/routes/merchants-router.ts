@@ -69,49 +69,59 @@ merchantsRouter.post("/onboarding", authenticate, async (req, res) => {
   }
 });
 
-merchantsRouter.patch("/:id/availability", authenticate, requireRole("merchant", "admin"), async (req, res) => {
-  const id = String(req.params.id);
-  const parsed = availabilitySchema.safeParse(req.body);
-  if (!parsed.success) {
-    return res.status(400).json({
-      error: { code: "INVALID_INPUT", message: "isAvailable must be boolean." },
-      requestId: req.id,
-    });
-  }
+merchantsRouter.patch(
+  "/:id/availability",
+  authenticate,
+  requireRole("merchant", "admin"),
+  async (req, res) => {
+    const id = String(req.params.id);
+    const parsed = availabilitySchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({
+        error: { code: "INVALID_INPUT", message: "isAvailable must be boolean." },
+        requestId: req.id,
+      });
+    }
 
-  try {
-    const merchant = await defaultMerchantService.setAvailability(id, parsed.data.isAvailable);
-    return res.status(200).json({ merchant, requestId: req.id });
-  } catch (err: any) {
-    return res.status(400).json({
-      error: { code: "UPDATE_FAILED", message: err.message },
-      requestId: req.id,
-    });
-  }
-});
+    try {
+      const merchant = await defaultMerchantService.setAvailability(id, parsed.data.isAvailable);
+      return res.status(200).json({ merchant, requestId: req.id });
+    } catch (err: any) {
+      return res.status(400).json({
+        error: { code: "UPDATE_FAILED", message: err.message },
+        requestId: req.id,
+      });
+    }
+  },
+);
 
-merchantsRouter.post("/:id/technicians", authenticate, requireRole("merchant", "admin"), async (req, res) => {
-  const id = String(req.params.id);
-  const parsed = technicianSchema.safeParse(req.body);
-  if (!parsed.success) {
-    return res.status(400).json({
-      error: { code: "INVALID_INPUT", message: "Technician name, phone, and skills required." },
-      requestId: req.id,
-    });
-  }
+merchantsRouter.post(
+  "/:id/technicians",
+  authenticate,
+  requireRole("merchant", "admin"),
+  async (req, res) => {
+    const id = String(req.params.id);
+    const parsed = technicianSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({
+        error: { code: "INVALID_INPUT", message: "Technician name, phone, and skills required." },
+        requestId: req.id,
+      });
+    }
 
-  try {
-    const tech = await defaultMerchantService.addTechnician(
-      id,
-      parsed.data.name,
-      parsed.data.phone,
-      parsed.data.skills
-    );
-    return res.status(201).json({ technician: tech, requestId: req.id });
-  } catch (err: any) {
-    return res.status(400).json({
-      error: { code: "CREATION_FAILED", message: err.message },
-      requestId: req.id,
-    });
-  }
-});
+    try {
+      const tech = await defaultMerchantService.addTechnician(
+        id,
+        parsed.data.name,
+        parsed.data.phone,
+        parsed.data.skills,
+      );
+      return res.status(201).json({ technician: tech, requestId: req.id });
+    } catch (err: any) {
+      return res.status(400).json({
+        error: { code: "CREATION_FAILED", message: err.message },
+        requestId: req.id,
+      });
+    }
+  },
+);

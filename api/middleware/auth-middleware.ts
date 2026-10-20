@@ -44,7 +44,10 @@ export function requireRole(...roles: string[]) {
     }
     if (!roles.includes(req.user.role)) {
       res.status(403).json({
-        error: { code: "FORBIDDEN", message: `Access denied. Requires one of roles: ${roles.join(", ")}` },
+        error: {
+          code: "FORBIDDEN",
+          message: `Access denied. Requires one of roles: ${roles.join(", ")}`,
+        },
         requestId: req.id,
       });
       return;

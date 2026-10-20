@@ -5,7 +5,12 @@ import { z } from "zod";
 
 import { inTransaction } from "./database";
 
-const emailSchema = z.string().trim().email().max(254).transform((value) => value.toLowerCase());
+const emailSchema = z
+  .string()
+  .trim()
+  .email()
+  .max(254)
+  .transform((value) => value.toLowerCase());
 const codeSchema = z.string().regex(/^\d{6}$/);
 const cookieName = "fixhub_session";
 const csrfCookieName = "fixhub_csrf";
@@ -23,8 +28,11 @@ export type EmailSender = (email: string, code: string) => Promise<void>;
 export function authConfigFromEnvironment(environment: NodeJS.ProcessEnv): AuthConfig | null {
   const secret = environment.AUTH_HMAC_SECRET;
   if (!secret) return null;
-  if (Buffer.byteLength(secret, "utf8") < 32 || !secret.trim()) throw new Error("AUTH_HMAC_SECRET must contain at least 32 non-whitespace bytes");
-  const webOrigins = (environment.FIXHUB_WEB_ORIGINS ?? "http://localhost:5173,http://127.0.0.1:5173")
+  if (Buffer.byteLength(secret, "utf8") < 32 || !secret.trim())
+    throw new Error("AUTH_HMAC_SECRET must contain at least 32 non-whitespace bytes");
+  const webOrigins = (
+    environment.FIXHUB_WEB_ORIGINS ?? "http://localhost:5173,http://127.0.0.1:5173"
+  )
     .split(",")
     .map((origin) => origin.trim())
     .filter(Boolean);
@@ -44,32 +52,57 @@ function readCookie(request: Request, name: string): string | undefined {
   for (const part of (request.headers.cookie ?? "").split(";")) {
     const item = part.trim();
     if (item.startsWith(prefix)) {
-      try { return decodeURIComponent(item.slice(prefix.length)); } catch { return undefined; }
+      try {
+        return decodeURIComponent(item.slice(prefix.length));
+      } catch {
+        return undefined;
+      }
     }
   }
   return undefined;
 }
 
-function setAuthCookies(response: Response, sessionToken: string, csrfToken: string, production: boolean) {
+function setAuthCookies(
+  response: Response,
+  sessionToken: string,
+  csrfToken: string,
+  production: boolean,
+) {
   const secure = production ? "; Secure" : "";
   const sessionName = production ? `__Host-${cookieName}` : cookieName;
   const csrfName = production ? `__Host-${csrfCookieName}` : csrfCookieName;
-  response.append("Set-Cookie", `${sessionName}=${encodeURIComponent(sessionToken)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${sessionLifetimeSeconds}${secure}`);
-  response.append("Set-Cookie", `${csrfName}=${encodeURIComponent(csrfToken)}; Path=/; SameSite=Lax; Max-Age=${sessionLifetimeSeconds}${secure}`);
+  response.append(
+    "Set-Cookie",
+    `${sessionName}=${encodeURIComponent(sessionToken)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${sessionLifetimeSeconds}${secure}`,
+  );
+  response.append(
+    "Set-Cookie",
+    `${csrfName}=${encodeURIComponent(csrfToken)}; Path=/; SameSite=Lax; Max-Age=${sessionLifetimeSeconds}${secure}`,
+  );
 }
 
 function clearAuthCookies(response: Response, production: boolean) {
   const secure = production ? "; Secure" : "";
   const sessionName = production ? `__Host-${cookieName}` : cookieName;
   const csrfName = production ? `__Host-${csrfCookieName}` : csrfCookieName;
-  response.append("Set-Cookie", `${sessionName}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${secure}`);
+  response.append(
+    "Set-Cookie",
+    `${sessionName}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${secure}`,
+  );
   response.append("Set-Cookie", `${csrfName}=; Path=/; SameSite=Lax; Max-Age=0${secure}`);
 }
 
-export function createAuthHandlers(pool: Pick<Pool, "connect">, config: AuthConfig, sendEmail: EmailSender) {
+export function createAuthHandlers(
+  pool: Pick<Pool, "connect">,
+  config: AuthConfig,
+  sendEmail: EmailSender,
+) {
   async function requestCode(request: Request, response: Response) {
     const parsed = z.object({ email: emailSchema }).strict().safeParse(request.body);
-    if (!parsed.success) return response.status(400).json({ error: { code: "INVALID_INPUT", message: "Enter a valid email address." } });
+    if (!parsed.success)
+      return response
+        .status(400)
+        .json({ error: { code: "INVALID_INPUT", message: "Enter a valid email address." } });
 
     const email = parsed.data.email;
     const code = String(randomInt(0, 1_000_000)).padStart(6, "0");
@@ -99,31 +132,61 @@ export function createAuthHandlers(pool: Pick<Pool, "connect">, config: AuthConf
         );
         await client.query("COMMIT");
       } catch (error) {
-        try { await client.query("ROLLBACK"); } catch { client.release(true); released = true; throw error; }
+        try {
+          await client.query("ROLLBACK");
+        } catch {
+          client.release(true);
+          released = true;
+          throw error;
+        }
         throw error;
       } finally {
         // release(true) is used only when rollback fails; callers never inspect pg internals.
         if (!released) client.release();
       }
     });
-    if (rateLimited) return response.status(429).json({ error: { code: "RATE_LIMITED", message: "Too many sign-in attempts. Please try again later." } });
+    if (rateLimited)
+      return response.status(429).json({
+        error: {
+          code: "RATE_LIMITED",
+          message: "Too many sign-in attempts. Please try again later.",
+        },
+      });
 
     try {
       await sendEmail(email, code);
     } catch {
       await pool.connect().then(async (client) => {
         try {
-          await client.query("UPDATE email_login_challenge SET consumed_at = clock_timestamp() WHERE id = $1 AND consumed_at IS NULL", [challengeId]);
-        } finally { client.release(); }
+          await client.query(
+            "UPDATE email_login_challenge SET consumed_at = clock_timestamp() WHERE id = $1 AND consumed_at IS NULL",
+            [challengeId],
+          );
+        } finally {
+          client.release();
+        }
       });
-      return response.status(503).json({ error: { code: "DELIVERY_UNAVAILABLE", message: "Sign-in email could not be sent. Please try again later." } });
+      return response.status(503).json({
+        error: {
+          code: "DELIVERY_UNAVAILABLE",
+          message: "Sign-in email could not be sent. Please try again later.",
+        },
+      });
     }
-    return response.status(202).json({ message: "If this address can receive sign-in messages, a code has been sent." });
+    return response
+      .status(202)
+      .json({ message: "If this address can receive sign-in messages, a code has been sent." });
   }
 
   async function verifyCode(request: Request, response: Response) {
-    const parsed = z.object({ email: emailSchema, code: codeSchema }).strict().safeParse(request.body);
-    if (!parsed.success) return response.status(400).json({ error: { code: "INVALID_INPUT", message: "Enter a valid email and six-digit code." } });
+    const parsed = z
+      .object({ email: emailSchema, code: codeSchema })
+      .strict()
+      .safeParse(request.body);
+    if (!parsed.success)
+      return response.status(400).json({
+        error: { code: "INVALID_INPUT", message: "Enter a valid email and six-digit code." },
+      });
     const { email, code } = parsed.data;
     const client = await pool.connect();
     let released = false;
@@ -133,7 +196,11 @@ export function createAuthHandlers(pool: Pick<Pool, "connect">, config: AuthConf
     try {
       await client.query("BEGIN");
       await client.query("SELECT pg_advisory_xact_lock(hashtext($1))", [`fixhub-login:${email}`]);
-      const challenges = await client.query<{ id: string; code_hmac: Buffer; attempt_count: number }>(
+      const challenges = await client.query<{
+        id: string;
+        code_hmac: Buffer;
+        attempt_count: number;
+      }>(
         `SELECT id, code_hmac, attempt_count FROM email_login_challenge
          WHERE email_normalized = $1 AND consumed_at IS NULL AND expires_at > clock_timestamp() AND attempt_count < 5
          ORDER BY issued_at DESC LIMIT 5 FOR UPDATE`,
@@ -141,10 +208,15 @@ export function createAuthHandlers(pool: Pick<Pool, "connect">, config: AuthConf
       );
       if (!challenges.rows.length) {
         await client.query("ROLLBACK");
-        return response.status(401).json({ error: { code: "INVALID_CODE", message: "The code is invalid or expired." } });
+        return response
+          .status(401)
+          .json({ error: { code: "INVALID_CODE", message: "The code is invalid or expired." } });
       }
       const matchingChallenge = challenges.rows.find((challenge) =>
-        equalDigest(challenge.code_hmac, digest(config.hmacSecret, `login-code:${challenge.id}:${email}`, code)),
+        equalDigest(
+          challenge.code_hmac,
+          digest(config.hmacSecret, `login-code:${challenge.id}:${email}`, code),
+        ),
       );
       if (!matchingChallenge) {
         await client.query(
@@ -155,7 +227,9 @@ export function createAuthHandlers(pool: Pick<Pool, "connect">, config: AuthConf
           [email],
         );
         await client.query("COMMIT");
-        return response.status(401).json({ error: { code: "INVALID_CODE", message: "The code is invalid or expired." } });
+        return response
+          .status(401)
+          .json({ error: { code: "INVALID_CODE", message: "The code is invalid or expired." } });
       }
 
       // Multiple concurrent email sends can arrive out of order. Accept any live code,
@@ -174,15 +248,15 @@ export function createAuthHandlers(pool: Pick<Pool, "connect">, config: AuthConf
       );
       if (!subject.rows.length) {
         await client.query("ROLLBACK");
-        return response.status(403).json({ error: { code: "ACCOUNT_UNAVAILABLE", message: "This account cannot sign in." } });
+        return response.status(403).json({
+          error: { code: "ACCOUNT_UNAVAILABLE", message: "This account cannot sign in." },
+        });
       }
       const existingRoles = await client.query<{ role: string }>(
         "SELECT role FROM identity_role WHERE subject_id = $1 ORDER BY role",
         [subject.rows[0].id],
       );
-      roles = existingRoles.rows.length
-        ? existingRoles.rows.map(({ role }) => role)
-        : ["customer"];
+      roles = existingRoles.rows.length ? existingRoles.rows.map(({ role }) => role) : ["customer"];
       if (!existingRoles.rows.length) {
         await client.query(
           "INSERT INTO identity_role (subject_id, role) VALUES ($1, 'customer') ON CONFLICT DO NOTHING",
@@ -195,11 +269,22 @@ export function createAuthHandlers(pool: Pick<Pool, "connect">, config: AuthConf
       await client.query(
         `INSERT INTO identity_session (id, subject_id, token_hmac, csrf_hmac, expires_at)
          VALUES ($1, $2, $3, $4, clock_timestamp() + interval '14 days')`,
-        [randomUUID(), subject.rows[0].id, digest(config.hmacSecret, "session", token), digest(config.hmacSecret, "csrf", csrf)],
+        [
+          randomUUID(),
+          subject.rows[0].id,
+          digest(config.hmacSecret, "session", token),
+          digest(config.hmacSecret, "csrf", csrf),
+        ],
       );
       await client.query("COMMIT");
     } catch (error) {
-      try { await client.query("ROLLBACK"); } catch { client.release(true); released = true; throw error; }
+      try {
+        await client.query("ROLLBACK");
+      } catch {
+        client.release(true);
+        released = true;
+        throw error;
+      }
       throw error;
     } finally {
       if (!released) client.release();
@@ -211,12 +296,17 @@ export function createAuthHandlers(pool: Pick<Pool, "connect">, config: AuthConf
 
   const requireSession: RequestHandler = async (request, response, next) => {
     const token = readCookie(request, config.production ? `__Host-${cookieName}` : cookieName);
-    const csrfCookie = readCookie(request, config.production ? `__Host-${csrfCookieName}` : csrfCookieName);
+    const csrfCookie = readCookie(
+      request,
+      config.production ? `__Host-${csrfCookieName}` : csrfCookieName,
+    );
     const csrfHeader = request.get("x-csrf-token");
     const safeMethod = request.method === "GET" || request.method === "HEAD";
     if (!token || !csrfCookie || (!safeMethod && (!csrfHeader || csrfCookie !== csrfHeader))) {
       clearAuthCookies(response, config.production);
-      return response.status(401).json({ error: { code: "AUTH_REQUIRED", message: "Sign in to continue." } });
+      return response
+        .status(401)
+        .json({ error: { code: "AUTH_REQUIRED", message: "Sign in to continue." } });
     }
     const client = await pool.connect();
     try {
@@ -229,43 +319,82 @@ export function createAuthHandlers(pool: Pick<Pool, "connect">, config: AuthConf
          WHERE s.token_hmac = $1 AND s.csrf_hmac = $2
            AND s.revoked_at IS NULL AND s.expires_at > clock_timestamp()
          GROUP BY s.subject_id`,
-        [digest(config.hmacSecret, "session", token), digest(config.hmacSecret, "csrf", csrfCookie)],
+        [
+          digest(config.hmacSecret, "session", token),
+          digest(config.hmacSecret, "csrf", csrfCookie),
+        ],
       );
       if (!result.rows.length) {
         clearAuthCookies(response, config.production);
-        return response.status(401).json({ error: { code: "AUTH_REQUIRED", message: "Sign in to continue." } });
+        return response
+          .status(401)
+          .json({ error: { code: "AUTH_REQUIRED", message: "Sign in to continue." } });
       }
       response.locals.auth = { subjectId: result.rows[0].subject_id, roles: result.rows[0].roles };
       next();
-    } catch (error) { next(error); }
-    finally { client.release(); }
+    } catch (error) {
+      next(error);
+    } finally {
+      client.release();
+    }
   };
 
-  const requireAnyRole = (...allowedRoles: string[]): RequestHandler => (_request, response, next) => {
-    const auth = response.locals.auth as { roles?: unknown } | undefined;
-    const roles = Array.isArray(auth?.roles) ? auth.roles : [];
-    if (allowedRoles.some((role) => roles.includes(role))) return next();
-    return response.status(403).json({ error: { code: "ROLE_REQUIRED", message: "This account is not authorized for that workspace." } });
-  };
+  const requireAnyRole =
+    (...allowedRoles: string[]): RequestHandler =>
+    (_request, response, next) => {
+      const auth = response.locals.auth as { roles?: unknown } | undefined;
+      const roles = Array.isArray(auth?.roles) ? auth.roles : [];
+      if (allowedRoles.some((role) => roles.includes(role))) return next();
+      return response.status(403).json({
+        error: {
+          code: "ROLE_REQUIRED",
+          message: "This account is not authorized for that workspace.",
+        },
+      });
+    };
 
   async function logout(request: Request, response: Response) {
     const token = readCookie(request, config.production ? `__Host-${cookieName}` : cookieName);
     if (token) {
       const client = await pool.connect();
       try {
-        await client.query("UPDATE identity_session SET revoked_at = clock_timestamp() WHERE token_hmac = $1 AND revoked_at IS NULL", [digest(config.hmacSecret, "session", token)]);
-      } finally { client.release(); }
+        await client.query(
+          "UPDATE identity_session SET revoked_at = clock_timestamp() WHERE token_hmac = $1 AND revoked_at IS NULL",
+          [digest(config.hmacSecret, "session", token)],
+        );
+      } finally {
+        client.release();
+      }
     }
     clearAuthCookies(response, config.production);
     return response.status(204).end();
   }
 
   async function requestAccountDeletion(request: Request, response: Response) {
-    const parsed = z.object({ confirm: z.literal(true) }).strict().safeParse(request.body);
-    if (!parsed.success) return response.status(400).json({ error: { code: "CONFIRMATION_REQUIRED", message: "Confirm that you want to request account deletion." } });
+    const parsed = z
+      .object({ confirm: z.literal(true) })
+      .strict()
+      .safeParse(request.body);
+    if (!parsed.success)
+      return response.status(400).json({
+        error: {
+          code: "CONFIRMATION_REQUIRED",
+          message: "Confirm that you want to request account deletion.",
+        },
+      });
     const auth = response.locals.auth as { subjectId?: unknown; roles?: unknown } | undefined;
-    if (typeof auth?.subjectId !== "string" || !Array.isArray(auth.roles) || !auth.roles.includes("customer") || auth.roles.some((role) => role !== "customer")) {
-      return response.status(403).json({ error: { code: "ACTION_DENIED", message: "This account must use the appropriate privacy-support process." } });
+    if (
+      typeof auth?.subjectId !== "string" ||
+      !Array.isArray(auth.roles) ||
+      !auth.roles.includes("customer") ||
+      auth.roles.some((role) => role !== "customer")
+    ) {
+      return response.status(403).json({
+        error: {
+          code: "ACTION_DENIED",
+          message: "This account must use the appropriate privacy-support process.",
+        },
+      });
     }
     const subjectId = auth.subjectId;
     const privacyRequest = await inTransaction(pool, async (client) => {
@@ -275,21 +404,39 @@ export function createAuthHandlers(pool: Pick<Pool, "connect">, config: AuthConf
          WHERE subject_id = $1 AND kind = 'account_deletion' AND status IN ('requested', 'under_review')`,
         [subjectId],
       );
-      const requestId = existing.rows[0]?.id ?? (await client.query<{ id: string }>(
-          "INSERT INTO privacy_request (id, subject_id, kind) VALUES ($1, $2, 'account_deletion') RETURNING id",
-          [randomUUID(), subjectId],
-        )).rows[0].id;
-      await client.query("UPDATE identity_subject SET status = 'deletion_pending', updated_at = clock_timestamp() WHERE id = $1 AND status = 'active'", [subjectId]);
-      await client.query("UPDATE identity_session SET revoked_at = clock_timestamp() WHERE subject_id = $1 AND revoked_at IS NULL", [subjectId]);
+      const requestId =
+        existing.rows[0]?.id ??
+        (
+          await client.query<{ id: string }>(
+            "INSERT INTO privacy_request (id, subject_id, kind) VALUES ($1, $2, 'account_deletion') RETURNING id",
+            [randomUUID(), subjectId],
+          )
+        ).rows[0].id;
+      await client.query(
+        "UPDATE identity_subject SET status = 'deletion_pending', updated_at = clock_timestamp() WHERE id = $1 AND status = 'active'",
+        [subjectId],
+      );
+      await client.query(
+        "UPDATE identity_session SET revoked_at = clock_timestamp() WHERE subject_id = $1 AND revoked_at IS NULL",
+        [subjectId],
+      );
       return { id: requestId, status: existing.rows[0]?.status ?? "requested" };
     });
     clearAuthCookies(response, config.production);
     return response.status(202).json({
       requestId: privacyRequest.id,
       status: privacyRequest.status,
-      message: "The deletion request is recorded and access is disabled. This is not confirmation that all records have been deleted; retention and legal holds must be reviewed.",
+      message:
+        "The deletion request is recorded and access is disabled. This is not confirmation that all records have been deleted; retention and legal holds must be reviewed.",
     });
   }
 
-  return { requestCode, verifyCode, requireSession, requireAnyRole, logout, requestAccountDeletion };
+  return {
+    requestCode,
+    verifyCode,
+    requireSession,
+    requireAnyRole,
+    logout,
+    requestAccountDeletion,
+  };
 }

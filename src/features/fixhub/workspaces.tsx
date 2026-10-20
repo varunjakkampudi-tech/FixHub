@@ -58,7 +58,15 @@ const technicianNav: [string, MessageKey, typeof LayoutDashboard][] = [
   ["/technician/profile", "profile", Users],
   ["/technician/support", "help", CircleHelp],
 ];
-function Workspace({ role, children, functionalPreview = false }: { role: string; children: ReactNode; functionalPreview?: boolean }) {
+function Workspace({
+  role,
+  children,
+  functionalPreview = false,
+}: {
+  role: string;
+  children: ReactNode;
+  functionalPreview?: boolean;
+}) {
   const { t } = useFixHub();
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [collapsed, setCollapsed] = useState(false);
@@ -96,18 +104,65 @@ export function MerchantPage({ page = "overview" }: { page?: string }) {
   const [roles, setRoles] = useState<string[]>([]);
   useEffect(() => {
     let active = true;
-    void resolveApiSession().then((value) => { if (active) { setMode(value.mode); setRoles(value.roles); } });
-    return () => { active = false; };
+    void resolveApiSession().then((value) => {
+      if (active) {
+        setMode(value.mode);
+        setRoles(value.roles);
+      }
+    });
+    return () => {
+      active = false;
+    };
   }, []);
-  if (mode === "checking") return <PageShell functionalPreview><main id="main" className="wrap"><p role="status" className="animate-pulse motion-reduce:animate-none">Checking merchant access…</p></main></PageShell>;
+  if (mode === "checking")
+    return (
+      <PageShell functionalPreview>
+        <main id="main" className="wrap">
+          <p role="status" className="animate-pulse motion-reduce:animate-none">
+            Checking merchant access…
+          </p>
+        </main>
+      </PageShell>
+    );
   if (mode === "demo") return <DemoRolePage role="merchant" page={page} />;
-  if (mode !== "authenticated") return <PageShell functionalPreview><main id="main" className="wrap"><Notice warning>{mode === "unauthenticated" ? <Link to="/sign-in">Sign in with a provisioned merchant account</Link> : "Merchant services are temporarily unavailable."}</Notice></main></PageShell>;
-  if (!roles.includes("merchant")) return <PageShell functionalPreview><main id="main" className="wrap"><Notice error>This account is not authorized for the merchant workspace.</Notice></main></PageShell>;
+  if (mode !== "authenticated")
+    return (
+      <PageShell functionalPreview>
+        <main id="main" className="wrap">
+          <Notice warning>
+            {mode === "unauthenticated" ? (
+              <Link to="/sign-in">Sign in with a provisioned merchant account</Link>
+            ) : (
+              "Merchant services are temporarily unavailable."
+            )}
+          </Notice>
+        </main>
+      </PageShell>
+    );
+  if (!roles.includes("merchant"))
+    return (
+      <PageShell functionalPreview>
+        <main id="main" className="wrap">
+          <Notice error>This account is not authorized for the merchant workspace.</Notice>
+        </main>
+      </PageShell>
+    );
   if (page === "requests" || page === "jobs") {
-    return <Workspace role="merchant" functionalPreview><RealMerchantPage page={page} /></Workspace>;
+    return (
+      <Workspace role="merchant" functionalPreview>
+        <RealMerchantPage page={page} />
+      </Workspace>
+    );
   }
   if (page === "notifications") return <WhatsAppPreferencesGate role="merchant" />;
-  return <Workspace role="merchant" functionalPreview><PageTop title={page === "overview" ? "Merchant workspace" : "Merchant settings"} /><Notice warning>This merchant workspace section is not connected to live account settings yet.</Notice></Workspace>;
+  return (
+    <Workspace role="merchant" functionalPreview>
+      <PageTop title={page === "overview" ? "Merchant workspace" : "Merchant settings"} />
+      <Notice warning>
+        This merchant workspace section is not connected to live account settings yet.
+      </Notice>
+    </Workspace>
+  );
 }
 export function TechnicianPage({ page = "overview" }: { page?: string }) {
   return <DemoRolePage role="technician" page={page} />;

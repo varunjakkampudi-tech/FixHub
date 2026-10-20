@@ -4,7 +4,12 @@ import { type Dispute, type Repository, defaultRepository } from "../db/reposito
 export class DisputeService {
   constructor(private repo: Repository = defaultRepository) {}
 
-  async raiseDispute(bookingId: string, raisedByUserId: string, reason: string, details: string): Promise<Dispute> {
+  async raiseDispute(
+    bookingId: string,
+    raisedByUserId: string,
+    reason: string,
+    details: string,
+  ): Promise<Dispute> {
     const booking = this.repo.bookings.get(bookingId);
     if (!booking) throw new Error("Booking not found");
 
@@ -33,10 +38,16 @@ export class DisputeService {
     if (role === "admin" || !userId) {
       return all.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
     }
-    return all.filter((d) => d.raisedBy === userId).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    return all
+      .filter((d) => d.raisedBy === userId)
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   }
 
-  async resolveDispute(disputeId: string, resolvedByAdminId: string, resolutionNotes: string): Promise<Dispute> {
+  async resolveDispute(
+    disputeId: string,
+    resolvedByAdminId: string,
+    resolutionNotes: string,
+  ): Promise<Dispute> {
     const dispute = this.repo.disputes.get(disputeId);
     if (!dispute) throw new Error("Dispute not found");
 

@@ -3,11 +3,7 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import request from "supertest";
 import { createApiApp } from "../app";
 import { Repository, defaultRepository } from "../db/repository";
-import {
-  AuthService,
-  getAuthJwtSecret,
-  EXPOSED_LEAKED_JWT_SECRET,
-} from "../services/auth-service";
+import { AuthService, getAuthJwtSecret, EXPOSED_LEAKED_JWT_SECRET } from "../services/auth-service";
 
 describe("FR-1 Security Quarantine & Defect Remediation Suite", () => {
   const app = createApiApp({ environment: "test", allowedOrigins: ["http://localhost:5173"] });
@@ -95,7 +91,7 @@ describe("FR-1 Security Quarantine & Defect Remediation Suite", () => {
 
       // Trying 123456 should fail
       await expect(authService.verifyOtp("+919876540000", "123456")).rejects.toThrow(
-        "Incorrect OTP entered. Please try again."
+        "Incorrect OTP entered. Please try again.",
       );
     });
   });
@@ -113,7 +109,9 @@ describe("FR-1 Security Quarantine & Defect Remediation Suite", () => {
       process.env.NODE_ENV = "production";
       process.env.JWT_SECRET = EXPOSED_LEAKED_JWT_SECRET;
 
-      expect(() => getAuthJwtSecret()).toThrow(/Known leaked default JWT_SECRET is strictly forbidden/);
+      expect(() => getAuthJwtSecret()).toThrow(
+        /Known leaked default JWT_SECRET is strictly forbidden/,
+      );
     });
 
     it("rejects secrets shorter than 32 characters in non-test environments", () => {
@@ -127,7 +125,9 @@ describe("FR-1 Security Quarantine & Defect Remediation Suite", () => {
       process.env.NODE_ENV = "production";
       process.env.JWT_SECRET = "valid-cryptographically-secure-production-secret-min-32-bytes";
 
-      expect(getAuthJwtSecret()).toBe("valid-cryptographically-secure-production-secret-min-32-bytes");
+      expect(getAuthJwtSecret()).toBe(
+        "valid-cryptographically-secure-production-secret-min-32-bytes",
+      );
     });
 
     it("rejects tokens forged using the leaked fallback secret when a valid secret is configured", () => {

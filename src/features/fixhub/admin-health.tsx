@@ -21,11 +21,16 @@ export function AdminHealthDiagnostics({ locale }: { locale: string }) {
     const check = async (path: string): Promise<Check> => {
       try {
         const response = await apiRequest<HealthResponse>(path, { signal: controller.signal });
-        const detail = [response.status, response.mode, response.reason].filter(Boolean).join(" · ");
+        const detail = [response.status, response.mode, response.reason]
+          .filter(Boolean)
+          .join(" · ");
         return { state: "ok", detail };
       } catch (error) {
         if (controller.signal.aborted) return checking;
-        return { state: "error", requestId: error instanceof ApiError ? error.requestId : undefined };
+        return {
+          state: "error",
+          requestId: error instanceof ApiError ? error.requestId : undefined,
+        };
       }
     };
 
@@ -41,12 +46,20 @@ export function AdminHealthDiagnostics({ locale }: { locale: string }) {
   const label = (name: string, check: Check) => (
     <article className="summary-panel space-y-2" key={name}>
       <h2 className="font-semibold">{name}</h2>
-      <p role={check.state === "error" ? "alert" : "status"} aria-live="polite" aria-busy={check.state === "checking"}>
+      <p
+        role={check.state === "error" ? "alert" : "status"}
+        aria-live="polite"
+        aria-busy={check.state === "checking"}
+      >
         {check.state === "checking"
-          ? (te ? "పరిశీలిస్తోంది…" : "Checking…")
+          ? te
+            ? "పరిశీలిస్తోంది…"
+            : "Checking…"
           : check.state === "ok"
             ? check.detail
-            : (te ? "పరిశీలన అందుబాటులో లేదు." : "Check unavailable.")}
+            : te
+              ? "పరిశీలన అందుబాటులో లేదు."
+              : "Check unavailable."}
       </p>
       {check.state === "error" && check.requestId && (
         <p className="text-sm text-muted-foreground">
@@ -60,12 +73,21 @@ export function AdminHealthDiagnostics({ locale }: { locale: string }) {
     <section className="space-y-5" aria-busy={busy}>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-xl font-semibold">{te ? "API ఆరోగ్య తనిఖీలు" : "API health checks"}</h2>
+          <h2 className="text-xl font-semibold">
+            {te ? "API ఆరోగ్య తనిఖీలు" : "API health checks"}
+          </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            {te ? "ఇవి చదవడానికి మాత్రమే చేసే తనిఖీలు." : "These are read-only checks; they do not change service data."}
+            {te
+              ? "ఇవి చదవడానికి మాత్రమే చేసే తనిఖీలు."
+              : "These are read-only checks; they do not change service data."}
           </p>
         </div>
-        <Button type="button" variant="outline" disabled={busy} onClick={() => setRefresh((value) => value + 1)}>
+        <Button
+          type="button"
+          variant="outline"
+          disabled={busy}
+          onClick={() => setRefresh((value) => value + 1)}
+        >
           {te ? "మళ్లీ తనిఖీ చేయి" : "Refresh checks"}
         </Button>
       </div>

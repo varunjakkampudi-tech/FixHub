@@ -1,4 +1,12 @@
-import { createCipheriv, createDecipheriv, createHmac, randomBytes, randomInt, timingSafeEqual, randomUUID } from "node:crypto";
+import {
+  createCipheriv,
+  createDecipheriv,
+  createHmac,
+  randomBytes,
+  randomInt,
+  timingSafeEqual,
+  randomUUID,
+} from "node:crypto";
 import type { Request, Response } from "express";
 import type { Pool } from "pg";
 import { z } from "zod";
@@ -18,7 +26,9 @@ export type WhatsAppContactConfig = {
 export type EncryptedPhone = { ciphertext: Buffer; iv: Buffer; authTag: Buffer };
 export type SendWhatsAppVerification = (recipientE164: string, code: string) => Promise<void>;
 
-export function whatsappContactEncryptionKeyFromEnvironment(environment: NodeJS.ProcessEnv): Buffer | null {
+export function whatsappContactEncryptionKeyFromEnvironment(
+  environment: NodeJS.ProcessEnv,
+): Buffer | null {
   const encoded = environment.WHATSAPP_CONTACT_ENCRYPTION_KEY;
   if (!encoded) return null;
   const key = Buffer.from(encoded, "base64");
@@ -50,7 +60,9 @@ export function decryptPhone(encrypted: EncryptedPhone, subjectId: string, key: 
   const decipher = createDecipheriv("aes-256-gcm", key, encrypted.iv);
   decipher.setAAD(Buffer.from(subjectId, "utf8"));
   decipher.setAuthTag(encrypted.authTag);
-  const phone = Buffer.concat([decipher.update(encrypted.ciphertext), decipher.final()]).toString("utf8");
+  const phone = Buffer.concat([decipher.update(encrypted.ciphertext), decipher.final()]).toString(
+    "utf8",
+  );
   return phoneSchema.parse(phone);
 }
 
@@ -72,7 +84,9 @@ function subjectId(response: Response): string | undefined {
 }
 
 function invalid(response: Response) {
-  return response.status(400).json({ error: { code: "INVALID_INPUT", message: "Check the submitted information." } });
+  return response
+    .status(400)
+    .json({ error: { code: "INVALID_INPUT", message: "Check the submitted information." } });
 }
 
 function maskedPhone(lastFour: string) {
@@ -84,14 +98,21 @@ export function createWhatsAppContactHandlers(
   config: WhatsAppContactConfig,
   sendVerification: SendWhatsAppVerification,
 ) {
-  if (config.encryptionKey.length !== 32 || !config.hmacSecret.trim() || Buffer.byteLength(config.hmacSecret, "utf8") < 32) {
+  if (
+    config.encryptionKey.length !== 32 ||
+    !config.hmacSecret.trim() ||
+    Buffer.byteLength(config.hmacSecret, "utf8") < 32
+  ) {
     throw new Error("WhatsApp contact protection is not configured");
   }
 
   async function getContact(_request: Request, response: Response) {
     response.setHeader("Cache-Control", "no-store");
     const owner = subjectId(response);
-    if (!owner) return response.status(403).json({ error: { code: "ROLE_REQUIRED", message: "A customer or merchant account is required." } });
+    if (!owner)
+      return response.status(403).json({
+        error: { code: "ROLE_REQUIRED", message: "A customer or merchant account is required." },
+      });
     const client = await pool.connect();
     try {
       const result = await client.query<{
@@ -121,13 +142,21 @@ export function createWhatsAppContactHandlers(
           consentPolicyVersion: contact.consent_policy_version,
         },
       });
-    } finally { client.release(); }
+    } finally {
+      client.release();
+    }
   }
 
   async function requestVerification(request: Request, response: Response) {
     const owner = subjectId(response);
-    if (!owner) return response.status(403).json({ error: { code: "ROLE_REQUIRED", message: "A customer or merchant account is required." } });
-    const parsed = z.object({ phoneE164: phoneSchema, consent: z.literal(true) }).strict().safeParse(request.body);
+    if (!owner)
+      return response.status(403).json({
+        error: { code: "ROLE_REQUIRED", message: "A customer or merchant account is required." },
+      });
+    const parsed = z
+      .object({ phoneE164: phoneSchema, consent: z.literal(true) })
+      .strict()
+      .safeParse(request.body);
     if (!parsed.success) return invalid(response);
     const { phoneE164 } = parsed.data;
     const phoneHmac = phoneLookupHmac(config.hmacSecret, phoneE164);
@@ -141,15 +170,24 @@ export function createWhatsAppContactHandlers(
         "SELECT status FROM identity_subject WHERE id = $1 FOR UPDATE",
         [owner],
       );
-      if (identity.rows[0]?.status !== "active") return { status: 403 as const, reason: "ACCOUNT_UNAVAILABLE" };
+      if (identity.rows[0]?.status !== "active")
+        return { status: 403 as const, reason: "ACCOUNT_UNAVAILABLE" };
 
       const current = await client.query<{
         phone_hmac: Buffer;
         phone_verified_at: Date | null;
         consent_revoked_at: Date | null;
-      }>("SELECT phone_hmac, phone_verified_at, consent_revoked_at FROM whatsapp_contact WHERE subject_id = $1 FOR UPDATE", [owner]);
-      const samePhone = current.rows.length > 0 && equalDigest(current.rows[0].phone_hmac, phoneHmac);
-      if (samePhone && current.rows[0].phone_verified_at && current.rows[0].consent_revoked_at === null) {
+      }>(
+        "SELECT phone_hmac, phone_verified_at, consent_revoked_at FROM whatsapp_contact WHERE subject_id = $1 FOR UPDATE",
+        [owner],
+      );
+      const samePhone =
+        current.rows.length > 0 && equalDigest(current.rows[0].phone_hmac, phoneHmac);
+      if (
+        samePhone &&
+        current.rows[0].phone_verified_at &&
+        current.rows[0].consent_revoked_at === null
+      ) {
         return { status: 200 as const, verified: true, lastFour: phoneE164.slice(-4) };
       }
 
@@ -157,7 +195,10 @@ export function createWhatsAppContactHandlers(
         "SELECT last_sent_at FROM whatsapp_verification_challenge WHERE subject_id = $1 FOR UPDATE",
         [owner],
       );
-      if (previousChallenge.rows[0] && now.getTime() - new Date(previousChallenge.rows[0].last_sent_at).getTime() < resendDelayMs) {
+      if (
+        previousChallenge.rows[0] &&
+        now.getTime() - new Date(previousChallenge.rows[0].last_sent_at).getTime() < resendDelayMs
+      ) {
         return { status: 429 as const, reason: "RESEND_TOO_SOON" };
       }
 
@@ -177,7 +218,16 @@ export function createWhatsAppContactHandlers(
            consent_policy_version = EXCLUDED.consent_policy_version,
            consent_revoked_at = NULL,
            updated_at = EXCLUDED.updated_at`,
-        [owner, encrypted.ciphertext, encrypted.iv, encrypted.authTag, phoneHmac, phoneE164.slice(-4), now, transactionalWhatsappPolicyVersion],
+        [
+          owner,
+          encrypted.ciphertext,
+          encrypted.iv,
+          encrypted.authTag,
+          phoneHmac,
+          phoneE164.slice(-4),
+          now,
+          transactionalWhatsappPolicyVersion,
+        ],
       );
 
       if (current.rows.length && !samePhone && current.rows[0].consent_revoked_at === null) {
@@ -204,25 +254,54 @@ export function createWhatsAppContactHandlers(
       return { status: 202 as const, lastFour: phoneE164.slice(-4), challengeDigest };
     });
 
-    if (outcome.status === 403) return response.status(403).json({ error: { code: outcome.reason, message: "This account cannot update messaging preferences." } });
-    if (outcome.status === 429) return response.status(429).json({ error: { code: "RATE_LIMITED", message: "Wait before requesting another verification code." } });
-    if (outcome.status === 200) return response.status(200).json({ contact: { phone: maskedPhone(outcome.lastFour), verified: true, consented: true } });
+    if (outcome.status === 403)
+      return response.status(403).json({
+        error: {
+          code: outcome.reason,
+          message: "This account cannot update messaging preferences.",
+        },
+      });
+    if (outcome.status === 429)
+      return response.status(429).json({
+        error: {
+          code: "RATE_LIMITED",
+          message: "Wait before requesting another verification code.",
+        },
+      });
+    if (outcome.status === 200)
+      return response.status(200).json({
+        contact: { phone: maskedPhone(outcome.lastFour), verified: true, consented: true },
+      });
 
     let verificationSent = false;
     try {
       verificationSent = await inTransaction(pool, async (client) => {
-        const identity = await client.query<{ status: string }>("SELECT status FROM identity_subject WHERE id = $1 FOR SHARE", [owner]);
+        const identity = await client.query<{ status: string }>(
+          "SELECT status FROM identity_subject WHERE id = $1 FOR SHARE",
+          [owner],
+        );
         const contact = await client.query<{ phone_hmac: Buffer; consent_revoked_at: Date | null }>(
           "SELECT phone_hmac, consent_revoked_at FROM whatsapp_contact WHERE subject_id = $1 FOR SHARE",
           [owner],
         );
-        const challenge = await client.query<{ phone_hmac: Buffer; code_hmac: Buffer; consumed_at: Date | null }>(
+        const challenge = await client.query<{
+          phone_hmac: Buffer;
+          code_hmac: Buffer;
+          consumed_at: Date | null;
+        }>(
           "SELECT phone_hmac, code_hmac, consumed_at FROM whatsapp_verification_challenge WHERE subject_id = $1 FOR SHARE",
           [owner],
         );
-        if (identity.rows[0]?.status !== "active" || !contact.rows[0] || contact.rows[0].consent_revoked_at !== null ||
-            !challenge.rows[0] || challenge.rows[0].consumed_at || !equalDigest(contact.rows[0].phone_hmac, phoneHmac) ||
-            !equalDigest(challenge.rows[0].phone_hmac, phoneHmac) || !equalDigest(challenge.rows[0].code_hmac, outcome.challengeDigest)) {
+        if (
+          identity.rows[0]?.status !== "active" ||
+          !contact.rows[0] ||
+          contact.rows[0].consent_revoked_at !== null ||
+          !challenge.rows[0] ||
+          challenge.rows[0].consumed_at ||
+          !equalDigest(contact.rows[0].phone_hmac, phoneHmac) ||
+          !equalDigest(challenge.rows[0].phone_hmac, phoneHmac) ||
+          !equalDigest(challenge.rows[0].code_hmac, outcome.challengeDigest)
+        ) {
           return false;
         }
         await sendVerification(phoneE164, code);
@@ -231,21 +310,44 @@ export function createWhatsAppContactHandlers(
     } catch {
       const client = await pool.connect();
       try {
-        await client.query("UPDATE whatsapp_verification_challenge SET consumed_at = clock_timestamp() WHERE subject_id = $1 AND code_hmac = $2 AND consumed_at IS NULL", [owner, outcome.challengeDigest]);
-      } finally { client.release(); }
-      return response.status(503).json({ error: { code: "DELIVERY_UNAVAILABLE", message: "WhatsApp verification could not be sent. Please try again later." } });
+        await client.query(
+          "UPDATE whatsapp_verification_challenge SET consumed_at = clock_timestamp() WHERE subject_id = $1 AND code_hmac = $2 AND consumed_at IS NULL",
+          [owner, outcome.challengeDigest],
+        );
+      } finally {
+        client.release();
+      }
+      return response.status(503).json({
+        error: {
+          code: "DELIVERY_UNAVAILABLE",
+          message: "WhatsApp verification could not be sent. Please try again later.",
+        },
+      });
     }
-    if (!verificationSent) return response.status(409).json({ error: { code: "CONTACT_CHANGED", message: "The contact or consent changed. Start verification again." } });
+    if (!verificationSent)
+      return response.status(409).json({
+        error: {
+          code: "CONTACT_CHANGED",
+          message: "The contact or consent changed. Start verification again.",
+        },
+      });
     return response.status(202).json({
       contact: { phone: maskedPhone(outcome.lastFour), verified: false, consented: true },
-      message: "A WhatsApp verification code was sent. Booking messages remain unavailable until verification succeeds.",
+      message:
+        "A WhatsApp verification code was sent. Booking messages remain unavailable until verification succeeds.",
     });
   }
 
   async function verifyContact(request: Request, response: Response) {
     const owner = subjectId(response);
-    if (!owner) return response.status(403).json({ error: { code: "ROLE_REQUIRED", message: "A customer or merchant account is required." } });
-    const parsed = z.object({ code: z.string().regex(/^\d{6}$/) }).strict().safeParse(request.body);
+    if (!owner)
+      return response.status(403).json({
+        error: { code: "ROLE_REQUIRED", message: "A customer or merchant account is required." },
+      });
+    const parsed = z
+      .object({ code: z.string().regex(/^\d{6}$/) })
+      .strict()
+      .safeParse(request.body);
     if (!parsed.success) return invalid(response);
     const result = await inTransaction(pool, async (client) => {
       const identity = await client.query<{ status: string }>(
@@ -257,7 +359,10 @@ export function createWhatsAppContactHandlers(
         phone_hmac: Buffer;
         phone_last_four: string;
         consent_revoked_at: Date | null;
-      }>("SELECT phone_hmac, phone_last_four, consent_revoked_at FROM whatsapp_contact WHERE subject_id = $1 FOR UPDATE", [owner]);
+      }>(
+        "SELECT phone_hmac, phone_last_four, consent_revoked_at FROM whatsapp_contact WHERE subject_id = $1 FOR UPDATE",
+        [owner],
+      );
       if (!contact.rows.length) return { status: 401 as const };
       const challenge = await client.query<{
         phone_hmac: Buffer;
@@ -270,8 +375,14 @@ export function createWhatsAppContactHandlers(
         [owner],
       );
       const row = challenge.rows[0];
-      if (!row || row.consumed_at || row.expires_at.getTime() <= Date.now() || row.attempt_count >= 5 ||
-          contact.rows[0].consent_revoked_at !== null || !equalDigest(row.phone_hmac, contact.rows[0].phone_hmac)) {
+      if (
+        !row ||
+        row.consumed_at ||
+        row.expires_at.getTime() <= Date.now() ||
+        row.attempt_count >= 5 ||
+        contact.rows[0].consent_revoked_at !== null ||
+        !equalDigest(row.phone_hmac, contact.rows[0].phone_hmac)
+      ) {
         return { status: 401 as const };
       }
       const candidate = codeHmac(config.hmacSecret, owner, row.phone_hmac, parsed.data.code);
@@ -291,7 +402,10 @@ export function createWhatsAppContactHandlers(
         [owner, row.phone_hmac],
       );
       if (updated.rowCount !== 1) return { status: 409 as const };
-      await client.query("UPDATE whatsapp_verification_challenge SET consumed_at = clock_timestamp() WHERE subject_id = $1", [owner]);
+      await client.query(
+        "UPDATE whatsapp_verification_challenge SET consumed_at = clock_timestamp() WHERE subject_id = $1",
+        [owner],
+      );
       await client.query(
         `INSERT INTO whatsapp_consent_event (id, subject_id, event_type, phone_hmac, consent_policy_version)
          SELECT $1, $2, 'phone_verified', $3, consent_policy_version FROM whatsapp_contact WHERE subject_id = $2`,
@@ -299,26 +413,64 @@ export function createWhatsAppContactHandlers(
       );
       return { status: 200 as const, lastFour: contact.rows[0].phone_last_four };
     });
-    if (result.status === 401) return response.status(401).json({ error: { code: "INVALID_CODE", message: "The code is invalid, expired, or no longer applicable." } });
-    if (result.status === 409) return response.status(409).json({ error: { code: "CONTACT_CHANGED", message: "The contact changed. Request a new verification code." } });
-    return response.status(200).json({ contact: { phone: maskedPhone(result.lastFour), verified: true, consented: true } });
+    if (result.status === 401)
+      return response.status(401).json({
+        error: {
+          code: "INVALID_CODE",
+          message: "The code is invalid, expired, or no longer applicable.",
+        },
+      });
+    if (result.status === 409)
+      return response.status(409).json({
+        error: {
+          code: "CONTACT_CHANGED",
+          message: "The contact changed. Request a new verification code.",
+        },
+      });
+    return response
+      .status(200)
+      .json({ contact: { phone: maskedPhone(result.lastFour), verified: true, consented: true } });
   }
 
   async function revokeConsent(request: Request, response: Response) {
     const owner = subjectId(response);
-    if (!owner) return response.status(403).json({ error: { code: "ROLE_REQUIRED", message: "A customer or merchant account is required." } });
-    const parsed = z.object({ confirm: z.literal(true) }).strict().safeParse(request.body);
-    if (!parsed.success) return response.status(400).json({ error: { code: "CONFIRMATION_REQUIRED", message: "Confirm that you want to stop WhatsApp updates." } });
+    if (!owner)
+      return response.status(403).json({
+        error: { code: "ROLE_REQUIRED", message: "A customer or merchant account is required." },
+      });
+    const parsed = z
+      .object({ confirm: z.literal(true) })
+      .strict()
+      .safeParse(request.body);
+    if (!parsed.success)
+      return response.status(400).json({
+        error: {
+          code: "CONFIRMATION_REQUIRED",
+          message: "Confirm that you want to stop WhatsApp updates.",
+        },
+      });
     const client = await pool.connect();
     let destroyClient = false;
     try {
       await client.query("BEGIN");
-      const identity = await client.query<{ status: string }>("SELECT status FROM identity_subject WHERE id = $1 FOR UPDATE", [owner]);
+      const identity = await client.query<{ status: string }>(
+        "SELECT status FROM identity_subject WHERE id = $1 FOR UPDATE",
+        [owner],
+      );
       if (identity.rows[0]?.status !== "active") {
         await client.query("COMMIT");
-        return response.status(403).json({ error: { code: "ACCOUNT_UNAVAILABLE", message: "This account cannot update messaging preferences." } });
+        return response.status(403).json({
+          error: {
+            code: "ACCOUNT_UNAVAILABLE",
+            message: "This account cannot update messaging preferences.",
+          },
+        });
       }
-      const contact = await client.query<{ phone_hmac: Buffer; consent_policy_version: string; consent_revoked_at: Date | null }>(
+      const contact = await client.query<{
+        phone_hmac: Buffer;
+        consent_policy_version: string;
+        consent_revoked_at: Date | null;
+      }>(
         "SELECT phone_hmac, consent_policy_version, consent_revoked_at FROM whatsapp_contact WHERE subject_id = $1 FOR UPDATE",
         [owner],
       );
@@ -327,8 +479,14 @@ export function createWhatsAppContactHandlers(
         return response.status(200).json({ consented: false });
       }
       if (contact.rows[0].consent_revoked_at === null) {
-        await client.query("UPDATE whatsapp_contact SET consent_revoked_at = clock_timestamp(), updated_at = clock_timestamp() WHERE subject_id = $1", [owner]);
-        await client.query("UPDATE whatsapp_verification_challenge SET consumed_at = clock_timestamp() WHERE subject_id = $1 AND consumed_at IS NULL", [owner]);
+        await client.query(
+          "UPDATE whatsapp_contact SET consent_revoked_at = clock_timestamp(), updated_at = clock_timestamp() WHERE subject_id = $1",
+          [owner],
+        );
+        await client.query(
+          "UPDATE whatsapp_verification_challenge SET consumed_at = clock_timestamp() WHERE subject_id = $1 AND consumed_at IS NULL",
+          [owner],
+        );
         await client.query(
           `INSERT INTO whatsapp_consent_event (id, subject_id, event_type, phone_hmac, consent_policy_version)
            VALUES ($1, $2, 'consent_revoked', $3, $4)`,
@@ -338,9 +496,15 @@ export function createWhatsAppContactHandlers(
       await client.query("COMMIT");
       return response.status(200).json({ consented: false });
     } catch (error) {
-      try { await client.query("ROLLBACK"); } catch { destroyClient = true; }
+      try {
+        await client.query("ROLLBACK");
+      } catch {
+        destroyClient = true;
+      }
       throw error;
-    } finally { client.release(destroyClient); }
+    } finally {
+      client.release(destroyClient);
+    }
   }
 
   return { getContact, requestVerification, verifyContact, revokeConsent };

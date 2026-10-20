@@ -82,13 +82,22 @@ export function DemoControls() {
             >
               <option value="">—</option>
               <optgroup label={locale === "te-IN" ? "3 ప్రాథమిక పాత్రలు" : "3 Primary Roles"}>
-                <option value="sample-c1">Customer · {locale === "te-IN" ? "కస్టమర్" : "Customer"}</option>
-                <option value="sample-m1">Merchant · {locale === "te-IN" ? "వ్యాపారి" : "Merchant"}</option>
-                <option value="sample-admin">Admin (Me) · {locale === "te-IN" ? "అడ్మిన్ (నేను)" : "Admin (Me)"}</option>
+                <option value="sample-c1">
+                  Customer · {locale === "te-IN" ? "కస్టమర్" : "Customer"}
+                </option>
+                <option value="sample-m1">
+                  Merchant · {locale === "te-IN" ? "వ్యాపారి" : "Merchant"}
+                </option>
+                <option value="sample-admin">
+                  Admin (Me) · {locale === "te-IN" ? "అడ్మిన్ (నేను)" : "Admin (Me)"}
+                </option>
               </optgroup>
               <optgroup label={locale === "te-IN" ? "ఇతర నమూనా ప్రొఫైల్స్" : "Other Test Fixtures"}>
                 {demo.state.personas
-                  .filter((p) => !["sample-c1", "sample-m1", "sample-admin"].includes(p.id) && !p.deactivated)
+                  .filter(
+                    (p) =>
+                      !["sample-c1", "sample-m1", "sample-admin"].includes(p.id) && !p.deactivated,
+                  )
                   .map((p) => (
                     <option key={p.id} value={p.id}>
                       {p.name} · {d(p.role)}

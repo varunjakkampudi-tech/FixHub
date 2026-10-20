@@ -17,7 +17,10 @@ const knownHistoricalChecksums: Record<string, ReadonlySet<string>> = {
 
 export async function applyMigrations(pool: Pick<Pool, "connect">): Promise<string[]> {
   const names = (await readdir(migrationDirectory)).filter((name) => name.endsWith(".sql")).sort();
-  if (names.some((name) => !migrationNamePattern.test(name)) || new Set(names).size !== names.length) {
+  if (
+    names.some((name) => !migrationNamePattern.test(name)) ||
+    new Set(names).size !== names.length
+  ) {
     throw new Error("Database migration filenames must be unique and follow NNN_name.sql");
   }
 
@@ -34,7 +37,10 @@ export async function applyMigrations(pool: Pick<Pool, "connect">): Promise<stri
     const recorded = await client.query<{ name: string }>("SELECT name FROM schema_migration");
     const available = new Set(names);
     const missing = recorded.rows.map(({ name }) => name).filter((name) => !available.has(name));
-    if (missing.length) throw new Error(`Recorded database migrations are missing from source: ${missing.join(", ")}`);
+    if (missing.length)
+      throw new Error(
+        `Recorded database migrations are missing from source: ${missing.join(", ")}`,
+      );
 
     for (const name of names) {
       const sql = await readFile(new URL(`./migrations/${name}`, import.meta.url), "utf8");
@@ -45,13 +51,19 @@ export async function applyMigrations(pool: Pick<Pool, "connect">): Promise<stri
       );
       if (previous.rows.length) {
         const recordedChecksum = previous.rows[0].checksum;
-        if (recordedChecksum !== checksum && !knownHistoricalChecksums[name]?.has(recordedChecksum)) {
+        if (
+          recordedChecksum !== checksum &&
+          !knownHistoricalChecksums[name]?.has(recordedChecksum)
+        ) {
           throw new Error(`Applied migration checksum changed: ${name}`);
         }
         continue;
       }
       await client.query(sql);
-      await client.query("INSERT INTO schema_migration (name, checksum) VALUES ($1, $2)", [name, checksum]);
+      await client.query("INSERT INTO schema_migration (name, checksum) VALUES ($1, $2)", [
+        name,
+        checksum,
+      ]);
       applied.push(name);
     }
   });

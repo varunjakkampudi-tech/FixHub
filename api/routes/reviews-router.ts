@@ -25,7 +25,7 @@ reviewsRouter.post("/bookings/:id/review", authenticate, async (req, res) => {
       id,
       req.user!.userId,
       parsed.data.rating,
-      parsed.data.comment
+      parsed.data.comment,
     );
     return res.status(201).json({ review, requestId: req.id });
   } catch (err: any) {

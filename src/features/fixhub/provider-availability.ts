@@ -16,18 +16,20 @@ export function eligibleMerchants(
     if (
       !booking.merchantId ||
       ["complete", "cancelled", "expired", "disputed"].includes(booking.status)
-    ) continue;
+    )
+      continue;
     activeByMerchant.set(booking.merchantId, (activeByMerchant.get(booking.merchantId) ?? 0) + 1);
   }
 
   const weekday = dateValue.getDay();
   return state.merchants.filter(
-    (merchant) => merchant.skills.includes(category)
-      && (merchant.cityIds ?? ["tanuku"]).includes(cityId)
-      && merchant.status === "active"
-      && (merchant.verification ?? "approved") === "approved"
-      && merchant.capacity > (activeByMerchant.get(merchant.id) ?? 0)
-      && (merchant.workDays ?? [0, 1, 2, 3, 4, 5, 6]).includes(weekday)
-      && !(merchant.blackouts ?? []).includes(date),
+    (merchant) =>
+      merchant.skills.includes(category) &&
+      (merchant.cityIds ?? ["tanuku"]).includes(cityId) &&
+      merchant.status === "active" &&
+      (merchant.verification ?? "approved") === "approved" &&
+      merchant.capacity > (activeByMerchant.get(merchant.id) ?? 0) &&
+      (merchant.workDays ?? [0, 1, 2, 3, 4, 5, 6]).includes(weekday) &&
+      !(merchant.blackouts ?? []).includes(date),
   );
 }

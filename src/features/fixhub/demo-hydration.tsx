@@ -16,10 +16,7 @@ export function DemoHydration({ locale }: { locale: Locale }) {
         : "Loading your language and demo session.";
 
   return (
-    <main
-      className="min-h-screen bg-background px-4 py-8 sm:px-6"
-      aria-busy="true"
-    >
+    <main className="min-h-screen bg-background px-4 py-8 sm:px-6" aria-busy="true">
       <div className="sr-only" role="status" aria-live="polite">
         {message}. {detail}
       </div>

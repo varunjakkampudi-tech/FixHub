@@ -34,7 +34,7 @@ describe("Smart Dispatch & Atomic First Acceptance", () => {
 
     // Check offers created in repository
     const offers = Array.from(defaultRepository.bookingOffers.values()).filter(
-      (o) => o.bookingId === booking.id
+      (o) => o.bookingId === booking.id,
     );
     expect(offers.length).toBeGreaterThanOrEqual(1);
     expect(offers[0].status).toBe("offered");

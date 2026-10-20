@@ -1,10 +1,13 @@
 import { Pool, type PoolClient, type PoolConfig } from "pg";
 import { z } from "zod";
 
-const databaseUrlSchema = z.string().url().refine((value) => {
-  const protocol = new URL(value).protocol;
-  return protocol === "postgres:" || protocol === "postgresql:";
-}, "DATABASE_URL must use the postgres or postgresql protocol");
+const databaseUrlSchema = z
+  .string()
+  .url()
+  .refine((value) => {
+    const protocol = new URL(value).protocol;
+    return protocol === "postgres:" || protocol === "postgresql:";
+  }, "DATABASE_URL must use the postgres or postgresql protocol");
 
 const positiveInteger = (fallback: number, maximum: number) =>
   z.coerce.number().int().min(1).max(maximum).default(fallback);

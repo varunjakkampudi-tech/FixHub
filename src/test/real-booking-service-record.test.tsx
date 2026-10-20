@@ -7,9 +7,15 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock("@tanstack/react-router", () => ({
-  Link: ({ children, to }: { children: React.ReactNode; to?: string }) => <a href={to ?? "#"}>{children}</a>,
+  Link: ({ children, to }: { children: React.ReactNode; to?: string }) => (
+    <a href={to ?? "#"}>{children}</a>
+  ),
   useNavigate: () => vi.fn(),
-  useRouterState: ({ select }: { select: (state: { location: { pathname: string } }) => unknown }) => select({ location: { pathname: mocks.routerPath } }),
+  useRouterState: ({
+    select,
+  }: {
+    select: (state: { location: { pathname: string } }) => unknown;
+  }) => select({ location: { pathname: mocks.routerPath } }),
 }));
 
 vi.mock("@/features/fixhub/api-client", () => ({
@@ -20,7 +26,9 @@ vi.mock("@/features/fixhub/api-client", () => ({
 vi.mock("@/features/fixhub/shared", () => ({
   PageShell: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   PageTop: ({ title }: { title: string }) => <h1>{title}</h1>,
-  Notice: ({ children, error }: { children: React.ReactNode; error?: boolean }) => <div role={error ? "alert" : "status"}>{children}</div>,
+  Notice: ({ children, error }: { children: React.ReactNode; error?: boolean }) => (
+    <div role={error ? "alert" : "status"}>{children}</div>
+  ),
 }));
 
 import { RealBookingHistory } from "@/features/fixhub/real-booking";
@@ -47,8 +55,14 @@ const completedBooking = {
 };
 
 function renderBooking(accepted: boolean) {
-  mocks.request.mockResolvedValue({ booking: { ...completedBooking, customer_quote_accepted: accepted } });
-  return render(<FixHubProvider><RealBookingHistory detail /></FixHubProvider>);
+  mocks.request.mockResolvedValue({
+    booking: { ...completedBooking, customer_quote_accepted: accepted },
+  });
+  return render(
+    <FixHubProvider>
+      <RealBookingHistory detail />
+    </FixHubProvider>,
+  );
 }
 
 afterEach(() => {
@@ -72,10 +86,17 @@ describe("completed booking service record", () => {
     expect(screen.getByText(/Separate quote required/i)).toBeInTheDocument();
     const record = screen.getByRole("heading", { name: "Service record" }).closest("section");
     expect(record).not.toBeNull();
-    expect(within(record!).queryByText(/Private street address must not appear/)).not.toBeInTheDocument();
+    expect(
+      within(record!).queryByText(/Private street address must not appear/),
+    ).not.toBeInTheDocument();
     const download = within(record!).getByRole("link", { name: "Download service record (.txt)" });
-    expect(download).toHaveAttribute("download", "fixhub-service-record-00000000-0000-4000-8000-000000000001.txt");
-    const fileContents = decodeURIComponent(download.getAttribute("href")!.split(",").slice(1).join(","));
+    expect(download).toHaveAttribute(
+      "download",
+      "fixhub-service-record-00000000-0000-4000-8000-000000000001.txt",
+    );
+    const fileContents = decodeURIComponent(
+      download.getAttribute("href")!.split(",").slice(1).join(","),
+    );
     expect(fileContents).toContain("Service: Electrical repair");
     expect(fileContents).toContain("Provider: Example Electrician");
     expect(fileContents).toContain("Visit charge: ₹400");
@@ -92,15 +113,23 @@ describe("completed booking service record", () => {
     renderBooking(false);
     expect(await screen.findByText("Electrical repair")).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Service record" })).not.toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: "Download service record (.txt)" })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: "Download service record (.txt)" }),
+    ).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Print / save as PDF" })).not.toBeInTheDocument();
   });
 
   it("explains that booking status is authoritative while provider notifications are best-effort", async () => {
     mocks.request.mockResolvedValue({ booking: { ...completedBooking, status: "offered" } });
-    render(<FixHubProvider><RealBookingHistory detail /></FixHubProvider>);
+    render(
+      <FixHubProvider>
+        <RealBookingHistory detail />
+      </FixHubProvider>,
+    );
 
-    expect(await screen.findByText(/notifications to eligible providers may be delayed or unavailable/i)).toBeInTheDocument();
+    expect(
+      await screen.findByText(/notifications to eligible providers may be delayed or unavailable/i),
+    ).toBeInTheDocument();
     expect(screen.getByText(/no provider is assigned until one accepts/i)).toBeInTheDocument();
     expect(screen.getByText("Status: Waiting for a provider")).toBeInTheDocument();
     expect(screen.queryByText(/they have not been notified/i)).not.toBeInTheDocument();
@@ -108,13 +137,23 @@ describe("completed booking service record", () => {
 
   it("shows an accessible booking-shaped skeleton until detail data arrives", async () => {
     let resolveBooking!: (value: { booking: typeof completedBooking }) => void;
-    mocks.request.mockReturnValue(new Promise((resolve) => { resolveBooking = resolve; }));
-    render(<FixHubProvider><RealBookingHistory detail /></FixHubProvider>);
+    mocks.request.mockReturnValue(
+      new Promise((resolve) => {
+        resolveBooking = resolve;
+      }),
+    );
+    render(
+      <FixHubProvider>
+        <RealBookingHistory detail />
+      </FixHubProvider>,
+    );
 
     const loading = screen.getByRole("status");
     expect(loading).toHaveAttribute("aria-busy", "true");
     expect(screen.getByText("Loading booking details…")).toBeInTheDocument();
-    expect(loading.querySelectorAll('[aria-hidden="true"] .animate-pulse').length).toBeGreaterThan(0);
+    expect(loading.querySelectorAll('[aria-hidden="true"] .animate-pulse').length).toBeGreaterThan(
+      0,
+    );
 
     await act(async () => {
       resolveBooking({ booking: { ...completedBooking, status: "offered" } });
@@ -127,13 +166,24 @@ describe("completed booking service record", () => {
     vi.useFakeTimers();
     vi.spyOn(document, "visibilityState", "get").mockReturnValue("visible");
     mocks.request.mockResolvedValue({ booking: { ...completedBooking, status: "offered" } });
-    render(<FixHubProvider><RealBookingHistory detail /></FixHubProvider>);
+    render(
+      <FixHubProvider>
+        <RealBookingHistory detail />
+      </FixHubProvider>,
+    );
 
-    await act(async () => { await Promise.resolve(); await Promise.resolve(); });
+    await act(async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+    });
     expect(mocks.request).toHaveBeenCalledTimes(1);
-    expect(screen.getByText(/status checks every 30 seconds while this page is open/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/status checks every 30 seconds while this page is open/i),
+    ).toBeInTheDocument();
 
-    await act(async () => { await vi.advanceTimersByTimeAsync(30_000); });
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(30_000);
+    });
     expect(mocks.request).toHaveBeenCalledTimes(2);
   });
 
@@ -141,25 +191,47 @@ describe("completed booking service record", () => {
     vi.useFakeTimers();
     vi.spyOn(document, "visibilityState", "get").mockReturnValue("hidden");
     mocks.request.mockResolvedValue({ booking: { ...completedBooking, status: "completed" } });
-    render(<FixHubProvider><RealBookingHistory detail /></FixHubProvider>);
+    render(
+      <FixHubProvider>
+        <RealBookingHistory detail />
+      </FixHubProvider>,
+    );
 
-    await act(async () => { await Promise.resolve(); await Promise.resolve(); });
+    await act(async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+    });
     expect(mocks.request).toHaveBeenCalledTimes(1);
-    await act(async () => { await vi.advanceTimersByTimeAsync(60_000); });
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(60_000);
+    });
     expect(mocks.request).toHaveBeenCalledTimes(1);
   });
 
   it("refreshes the active customer booking as soon as a hidden tab becomes visible", async () => {
     vi.useFakeTimers();
     let visible = false;
-    vi.spyOn(document, "visibilityState", "get").mockImplementation(() => visible ? "visible" : "hidden");
+    vi.spyOn(document, "visibilityState", "get").mockImplementation(() =>
+      visible ? "visible" : "hidden",
+    );
     mocks.request.mockResolvedValue({ booking: { ...completedBooking, status: "offered" } });
-    render(<FixHubProvider><RealBookingHistory detail /></FixHubProvider>);
+    render(
+      <FixHubProvider>
+        <RealBookingHistory detail />
+      </FixHubProvider>,
+    );
 
-    await act(async () => { await Promise.resolve(); await Promise.resolve(); });
+    await act(async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+    });
     expect(mocks.request).toHaveBeenCalledTimes(1);
     visible = true;
-    await act(async () => { document.dispatchEvent(new Event("visibilitychange")); await Promise.resolve(); await Promise.resolve(); });
+    await act(async () => {
+      document.dispatchEvent(new Event("visibilitychange"));
+      await Promise.resolve();
+      await Promise.resolve();
+    });
     expect(mocks.request).toHaveBeenCalledTimes(2);
   });
 
@@ -171,19 +243,53 @@ describe("completed booking service record", () => {
     let resolveRefreshA!: (value: { booking: typeof completedBooking }) => void;
     mocks.routerPath = `/customer/bookings/${bookingAId}`;
     mocks.request
-      .mockResolvedValueOnce({ booking: { ...completedBooking, id: bookingAId, service_name: "Service A", status: "offered" } })
-      .mockImplementationOnce(() => new Promise((resolve) => { resolveRefreshA = resolve; }))
-      .mockResolvedValueOnce({ booking: { ...completedBooking, id: bookingBId, service_name: "Service B", status: "offered" } });
-    const view = render(<FixHubProvider><RealBookingHistory detail /></FixHubProvider>);
+      .mockResolvedValueOnce({
+        booking: {
+          ...completedBooking,
+          id: bookingAId,
+          service_name: "Service A",
+          status: "offered",
+        },
+      })
+      .mockImplementationOnce(
+        () =>
+          new Promise((resolve) => {
+            resolveRefreshA = resolve;
+          }),
+      )
+      .mockResolvedValueOnce({
+        booking: {
+          ...completedBooking,
+          id: bookingBId,
+          service_name: "Service B",
+          status: "offered",
+        },
+      });
+    const view = render(
+      <FixHubProvider>
+        <RealBookingHistory detail />
+      </FixHubProvider>,
+    );
 
-    await act(async () => { await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); });
+    await act(async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
+    });
     expect(screen.getByText("Service A")).toBeInTheDocument();
-    await act(async () => { await vi.advanceTimersByTimeAsync(30_000); });
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(30_000);
+    });
     expect(mocks.request).toHaveBeenCalledTimes(2);
 
     await act(async () => {
       mocks.routerPath = `/customer/bookings/${bookingBId}`;
-      view.rerender(<FixHubProvider><RealBookingHistory detail /></FixHubProvider>);
+      view.rerender(
+        <FixHubProvider>
+          <RealBookingHistory detail />
+        </FixHubProvider>,
+      );
       await Promise.resolve();
       await Promise.resolve();
       await Promise.resolve();
@@ -192,7 +298,14 @@ describe("completed booking service record", () => {
     expect(screen.getByText("Service B")).toBeInTheDocument();
 
     await act(async () => {
-      resolveRefreshA({ booking: { ...completedBooking, id: bookingAId, service_name: "Service A stale", status: "offered" } });
+      resolveRefreshA({
+        booking: {
+          ...completedBooking,
+          id: bookingAId,
+          service_name: "Service A stale",
+          status: "offered",
+        },
+      });
       await Promise.resolve();
       await Promise.resolve();
     });

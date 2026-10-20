@@ -25,6 +25,8 @@ describe("support reference notice", () => {
 
   it("does not offer copying for malformed reference text", () => {
     render(<Notice error>{"Booking failed (Reference: <script>)"}</Notice>);
-    expect(screen.queryByRole("button", { name: /copy support reference/i })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /copy support reference/i }),
+    ).not.toBeInTheDocument();
   });
 });

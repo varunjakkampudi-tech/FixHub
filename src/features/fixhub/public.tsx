@@ -129,7 +129,9 @@ export function PublicPage({ page }: { page: string }) {
                 )}
               </>
             ) : page === "contact" ? (
-              <Button asChild><Link to="/customer/support">{t("help")}</Link></Button>
+              <Button asChild>
+                <Link to="/customer/support">{t("help")}</Link>
+              </Button>
             ) : page === "download" ? (
               <>
                 <h2>{t("appTitle")}</h2>

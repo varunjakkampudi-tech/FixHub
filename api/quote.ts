@@ -13,7 +13,8 @@ export function bookingQuoteHash(quote: BookingQuote): Buffer {
   const canonical = JSON.stringify({
     visitPricePaise: Number(quote.visit_price_paise),
     laborEstimatePaise: Number(quote.labor_estimate_paise),
-    partsEstimatePaise: quote.parts_estimate_paise === null ? null : Number(quote.parts_estimate_paise),
+    partsEstimatePaise:
+      quote.parts_estimate_paise === null ? null : Number(quote.parts_estimate_paise),
     currency: quote.currency,
     paymentMethod: quote.payment_method,
   });

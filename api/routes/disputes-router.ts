@@ -29,7 +29,7 @@ disputesRouter.post("/", authenticate, async (req, res) => {
       parsed.data.bookingId,
       req.user!.userId,
       parsed.data.reason,
-      parsed.data.details
+      parsed.data.details,
     );
     return res.status(201).json({ dispute, requestId: req.id });
   } catch (err: any) {
@@ -59,9 +59,11 @@ disputesRouter.post("/:id/resolve", authenticate, requireRole("admin"), async (r
     const dispute = await defaultDisputeService.resolveDispute(
       id,
       req.user!.userId,
-      parsed.data.resolutionNotes
+      parsed.data.resolutionNotes,
     );
-    return res.status(200).json({ dispute, message: "Dispute resolved successfully.", requestId: req.id });
+    return res
+      .status(200)
+      .json({ dispute, message: "Dispute resolved successfully.", requestId: req.id });
   } catch (err: any) {
     return res.status(400).json({
       error: { code: "RESOLVE_FAILED", message: err.message },

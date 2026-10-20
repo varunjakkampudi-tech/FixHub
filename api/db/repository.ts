@@ -1,4 +1,3 @@
-
 export type UserRole = "customer" | "merchant" | "technician" | "admin";
 export type BookingStatus =
   | "requested"
@@ -168,13 +167,21 @@ export interface OtpChallenge {
   consumed: boolean;
 }
 
-export function calculateDistanceKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
+export function calculateDistanceKm(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number,
+): number {
   const R = 6371; // Earth's radius in km
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLon = ((lon2 - lon1) * Math.PI) / 180;
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
 }
@@ -286,7 +293,8 @@ export class Repository {
       id: "mch-001",
       userId: merchantUser1.id,
       businessName: "Sri Lakshmi Electricals & Solar",
-      description: "Certified electricians with 12+ years experience in domestic wiring and repairs.",
+      description:
+        "Certified electricians with 12+ years experience in domestic wiring and repairs.",
       categories: ["electrician", "ac"],
       coverageZones: ["Tanuku-Central", "Tanuku-East", "Tetali"],
       address: "Main Road, Near Clock Tower, Tanuku, AP 534211",
@@ -330,7 +338,8 @@ export class Repository {
       id: "mch-002",
       userId: merchantUser2.id,
       businessName: "Tanuku Premier Plumbing & Pipe Fitting",
-      description: "Quick pipe leak fixes, bathroom fittings, motor installation, and sanitary work.",
+      description:
+        "Quick pipe leak fixes, bathroom fittings, motor installation, and sanitary work.",
       categories: ["plumbing"],
       coverageZones: ["Tanuku-Central", "Tanuku-West", "Rashtrapathy Road"],
       address: "Rashtrapathy Road, Tanuku, AP 534211",
@@ -416,7 +425,7 @@ export class Repository {
     category: string,
     latitude: number,
     longitude: number,
-    maxDistanceKm: number = 10
+    maxDistanceKm: number = 10,
   ): Array<Merchant & { distanceKm: number }> {
     const results: Array<Merchant & { distanceKm: number }> = [];
     for (const merchant of this.merchants.values()) {
@@ -424,7 +433,12 @@ export class Repository {
         continue;
       }
       if (merchant.categories.includes(category)) {
-        const dist = calculateDistanceKm(latitude, longitude, merchant.latitude, merchant.longitude);
+        const dist = calculateDistanceKm(
+          latitude,
+          longitude,
+          merchant.latitude,
+          merchant.longitude,
+        );
         if (dist <= maxDistanceKm) {
           results.push({ ...merchant, distanceKm: Math.round(dist * 100) / 100 });
         }

@@ -21,7 +21,11 @@ import { createAuthHandlers, type AuthConfig, type EmailSender } from "./auth";
 import { createMarketplaceHandlers } from "./marketplace";
 import { createMerchantHandlers } from "./merchant";
 import { createSupportHandlers } from "./support";
-import { createWhatsAppContactHandlers, type SendWhatsAppVerification, type WhatsAppContactConfig } from "./whatsapp-contact";
+import {
+  createWhatsAppContactHandlers,
+  type SendWhatsAppVerification,
+  type WhatsAppContactConfig,
+} from "./whatsapp-contact";
 import type { Pool } from "pg";
 
 const categories = ["electrician", "plumbing", "ac", "appliance"] as const;
@@ -51,10 +55,14 @@ export type ApiAppOptions = {
 function configuredOrigins(): string[] {
   const configured = process.env.FIXHUB_WEB_ORIGINS;
   const values = configured
-    ? configured.split(",").map((value) => value.trim()).filter(Boolean)
+    ? configured
+        .split(",")
+        .map((value) => value.trim())
+        .filter(Boolean)
     : ["http://localhost:5173", "http://127.0.0.1:5173"];
   const checked = z.array(originSchema).min(1).safeParse(values);
-  if (!checked.success) throw new Error("FIXHUB_WEB_ORIGINS must be a comma-separated list of exact origins");
+  if (!checked.success)
+    throw new Error("FIXHUB_WEB_ORIGINS must be a comma-separated list of exact origins");
   return checked.data;
 }
 
@@ -79,8 +87,10 @@ function requestLogger(logger: Logger): RequestHandler {
       if (res.statusCode >= 400) return "warn";
       return "info";
     },
-    customSuccessMessage: (req, res) => `${req.method} ${req.route?.path ?? "unmatched"} ${res.statusCode}`,
-    customErrorMessage: (req, res) => `${req.method} ${req.route?.path ?? "unmatched"} ${res.statusCode}`,
+    customSuccessMessage: (req, res) =>
+      `${req.method} ${req.route?.path ?? "unmatched"} ${res.statusCode}`,
+    customErrorMessage: (req, res) =>
+      `${req.method} ${req.route?.path ?? "unmatched"} ${res.statusCode}`,
     redact: {
       paths: [
         "req.headers.authorization",
@@ -99,9 +109,12 @@ function requestLogger(logger: Logger): RequestHandler {
 
 export function createApiApp(options: ApiAppOptions = {}) {
   const app = express();
-  const environment = options.environment ?? (process.env.NODE_ENV === "production" ? "production" : "development");
+  const environment =
+    options.environment ?? (process.env.NODE_ENV === "production" ? "production" : "development");
   const origins = options.allowedOrigins ?? configuredOrigins();
-  const logger = options.logger ?? pino({ level: environment === "test" ? "silent" : process.env.LOG_LEVEL ?? "info" });
+  const logger =
+    options.logger ??
+    pino({ level: environment === "test" ? "silent" : (process.env.LOG_LEVEL ?? "info") });
 
   app.disable("x-powered-by");
   app.use(requestLogger(logger));
@@ -122,14 +135,22 @@ export function createApiApp(options: ApiAppOptions = {}) {
     }),
   );
 
-  app.get("/health/live", (_req, res) => res.status(200).json({ status: "alive", mode: "local-demo" }));
+  app.get("/health/live", (_req, res) =>
+    res.status(200).json({ status: "alive", mode: "local-demo" }),
+  );
   app.get("/health/ready", async (_req, res) => {
     let ready = options.runtimeDependenciesReady === true;
     if (typeof options.runtimeDependenciesReady === "function") {
-      try { ready = await options.runtimeDependenciesReady(); } catch { ready = false; }
+      try {
+        ready = await options.runtimeDependenciesReady();
+      } catch {
+        ready = false;
+      }
     }
     if (environment === "production" && (!ready || options.productionApproval !== true)) {
-      return res.status(503).json({ status: "not_ready", reason: "production_release_gates_unverified" });
+      return res
+        .status(503)
+        .json({ status: "not_ready", reason: "production_release_gates_unverified" });
     }
     return res.status(200).json({ status: "ready", mode: "local-demo" });
   });
@@ -159,20 +180,32 @@ export function createApiApp(options: ApiAppOptions = {}) {
   app.use("/api/v1/webhooks", webhooksRouter);
 
   if (options.databasePool && options.authConfig && options.sendAuthEmail) {
-    const auth = createAuthHandlers(options.databasePool, options.authConfig, options.sendAuthEmail);
-    const authLimiter = (limit: number) => rateLimit({
-      windowMs: 15 * 60_000,
-      limit,
-      standardHeaders: "draft-8",
-      legacyHeaders: false,
-      keyGenerator(req) {
-        const email = typeof req.body?.email === "string" ? req.body.email.trim().toLowerCase() : "invalid";
-        return `${ipKeyGenerator(req.ip ?? "unknown")}:${createHash("sha256").update(email).digest("hex")}`;
-      },
-      handler(req, res) {
-        res.status(429).json({ error: { code: "RATE_LIMITED", message: "Too many sign-in attempts. Please try again later." }, requestId: req.id });
-      },
-    });
+    const auth = createAuthHandlers(
+      options.databasePool,
+      options.authConfig,
+      options.sendAuthEmail,
+    );
+    const authLimiter = (limit: number) =>
+      rateLimit({
+        windowMs: 15 * 60_000,
+        limit,
+        standardHeaders: "draft-8",
+        legacyHeaders: false,
+        keyGenerator(req) {
+          const email =
+            typeof req.body?.email === "string" ? req.body.email.trim().toLowerCase() : "invalid";
+          return `${ipKeyGenerator(req.ip ?? "unknown")}:${createHash("sha256").update(email).digest("hex")}`;
+        },
+        handler(req, res) {
+          res.status(429).json({
+            error: {
+              code: "RATE_LIMITED",
+              message: "Too many sign-in attempts. Please try again later.",
+            },
+            requestId: req.id,
+          });
+        },
+      });
     app.post("/api/v1/auth/code", authLimiter(5), auth.requestCode);
     app.post("/api/v1/auth/verify", authLimiter(10), auth.verifyCode);
     app.get("/api/v1/auth/me", auth.requireSession, (_req, res) =>
@@ -182,45 +215,167 @@ export function createApiApp(options: ApiAppOptions = {}) {
     const customerRole = auth.requireAnyRole("customer");
     const merchantRole = auth.requireAnyRole("merchant");
     const customerOrMerchantRole = auth.requireAnyRole("customer", "merchant");
-    app.post("/api/v1/customer/account-deletion", auth.requireSession, customerRole, auth.requestAccountDeletion);
+    app.post(
+      "/api/v1/customer/account-deletion",
+      auth.requireSession,
+      customerRole,
+      auth.requestAccountDeletion,
+    );
 
     if (options.marketplacePool && options.whatsappContact) {
-      const contact = createWhatsAppContactHandlers(options.marketplacePool, options.whatsappContact.config, options.whatsappContact.sendVerification);
-      const verificationLimiter = rateLimit({ windowMs: 15 * 60_000, limit: 5, standardHeaders: "draft-8", legacyHeaders: false });
-      app.get("/api/v1/account/whatsapp", auth.requireSession, customerOrMerchantRole, contact.getContact);
-      app.post("/api/v1/account/whatsapp/verification", auth.requireSession, customerOrMerchantRole, verificationLimiter, contact.requestVerification);
-      app.post("/api/v1/account/whatsapp/verify", auth.requireSession, customerOrMerchantRole, verificationLimiter, contact.verifyContact);
-      app.post("/api/v1/account/whatsapp/consent/revoke", auth.requireSession, customerOrMerchantRole, contact.revokeConsent);
+      const contact = createWhatsAppContactHandlers(
+        options.marketplacePool,
+        options.whatsappContact.config,
+        options.whatsappContact.sendVerification,
+      );
+      const verificationLimiter = rateLimit({
+        windowMs: 15 * 60_000,
+        limit: 5,
+        standardHeaders: "draft-8",
+        legacyHeaders: false,
+      });
+      app.get(
+        "/api/v1/account/whatsapp",
+        auth.requireSession,
+        customerOrMerchantRole,
+        contact.getContact,
+      );
+      app.post(
+        "/api/v1/account/whatsapp/verification",
+        auth.requireSession,
+        customerOrMerchantRole,
+        verificationLimiter,
+        contact.requestVerification,
+      );
+      app.post(
+        "/api/v1/account/whatsapp/verify",
+        auth.requireSession,
+        customerOrMerchantRole,
+        verificationLimiter,
+        contact.verifyContact,
+      );
+      app.post(
+        "/api/v1/account/whatsapp/consent/revoke",
+        auth.requireSession,
+        customerOrMerchantRole,
+        contact.revokeConsent,
+      );
     }
 
     if (options.marketplacePool) {
       const support = createSupportHandlers(options.marketplacePool);
-      app.use("/api/v1/support", (_req, res, next) => { res.setHeader("Cache-Control", "no-store"); next(); });
-      const supportStaff = auth.requireAnyRole("support", "admin");
-      const supportLimiter = rateLimit({ windowMs: 15 * 60_000, limit: 5, standardHeaders: "draft-8", legacyHeaders: false,
-        keyGenerator: (_req, res) => String(res.locals.auth.subjectId),
-        handler: (req, res) => { res.status(429).json({ error: { code: "RATE_LIMITED", message: "Please wait before submitting more support requests." }, requestId: req.id }); },
+      app.use("/api/v1/support", (_req, res, next) => {
+        res.setHeader("Cache-Control", "no-store");
+        next();
       });
-      app.get("/api/v1/support/requests", auth.requireSession, customerOrMerchantRole, support.listMine);
-      app.post("/api/v1/support/requests", auth.requireSession, customerOrMerchantRole, supportLimiter, support.create);
+      const supportStaff = auth.requireAnyRole("support", "admin");
+      const supportLimiter = rateLimit({
+        windowMs: 15 * 60_000,
+        limit: 5,
+        standardHeaders: "draft-8",
+        legacyHeaders: false,
+        keyGenerator: (_req, res) => String(res.locals.auth.subjectId),
+        handler: (req, res) => {
+          res.status(429).json({
+            error: {
+              code: "RATE_LIMITED",
+              message: "Please wait before submitting more support requests.",
+            },
+            requestId: req.id,
+          });
+        },
+      });
+      app.get(
+        "/api/v1/support/requests",
+        auth.requireSession,
+        customerOrMerchantRole,
+        support.listMine,
+      );
+      app.post(
+        "/api/v1/support/requests",
+        auth.requireSession,
+        customerOrMerchantRole,
+        supportLimiter,
+        support.create,
+      );
       app.get("/api/v1/support/inbox", auth.requireSession, supportStaff, support.listInbox);
-      app.post("/api/v1/support/requests/:id/response", auth.requireSession, supportStaff, support.respond);
+      app.post(
+        "/api/v1/support/requests/:id/response",
+        auth.requireSession,
+        supportStaff,
+        support.respond,
+      );
       const marketplace = createMarketplaceHandlers(options.marketplacePool);
       app.get("/api/v1/services", marketplace.listServices);
-      app.get("/api/v1/customer/addresses", auth.requireSession, customerRole, marketplace.listAddresses);
-      app.get("/api/v1/customer/pricing-preview", auth.requireSession, customerRole, marketplace.previewPrice);
-      app.post("/api/v1/customer/addresses", auth.requireSession, customerRole, marketplace.createAddress);
-      app.get("/api/v1/customer/bookings", auth.requireSession, customerRole, marketplace.listBookings);
-      app.post("/api/v1/customer/bookings", auth.requireSession, customerRole, marketplace.createBooking);
-      app.get("/api/v1/customer/bookings/:id", auth.requireSession, customerRole, marketplace.getBooking);
-      app.post("/api/v1/customer/bookings/:id/quote-approval", auth.requireSession, customerRole, marketplace.approveQuote);
-      app.post("/api/v1/customer/bookings/:id/complete", auth.requireSession, customerRole, marketplace.confirmCompletion);
-      app.post("/api/v1/customer/bookings/:id/review", auth.requireSession, customerRole, marketplace.createReview);
+      app.get(
+        "/api/v1/customer/addresses",
+        auth.requireSession,
+        customerRole,
+        marketplace.listAddresses,
+      );
+      app.get(
+        "/api/v1/customer/pricing-preview",
+        auth.requireSession,
+        customerRole,
+        marketplace.previewPrice,
+      );
+      app.post(
+        "/api/v1/customer/addresses",
+        auth.requireSession,
+        customerRole,
+        marketplace.createAddress,
+      );
+      app.get(
+        "/api/v1/customer/bookings",
+        auth.requireSession,
+        customerRole,
+        marketplace.listBookings,
+      );
+      app.post(
+        "/api/v1/customer/bookings",
+        auth.requireSession,
+        customerRole,
+        marketplace.createBooking,
+      );
+      app.get(
+        "/api/v1/customer/bookings/:id",
+        auth.requireSession,
+        customerRole,
+        marketplace.getBooking,
+      );
+      app.post(
+        "/api/v1/customer/bookings/:id/quote-approval",
+        auth.requireSession,
+        customerRole,
+        marketplace.approveQuote,
+      );
+      app.post(
+        "/api/v1/customer/bookings/:id/complete",
+        auth.requireSession,
+        customerRole,
+        marketplace.confirmCompletion,
+      );
+      app.post(
+        "/api/v1/customer/bookings/:id/review",
+        auth.requireSession,
+        customerRole,
+        marketplace.createReview,
+      );
       const merchant = createMerchantHandlers(options.marketplacePool);
       app.get("/api/v1/merchant/offers", auth.requireSession, merchantRole, merchant.listOffers);
-      app.post("/api/v1/merchant/offers/:id/response", auth.requireSession, merchantRole, merchant.respondToOffer);
+      app.post(
+        "/api/v1/merchant/offers/:id/response",
+        auth.requireSession,
+        merchantRole,
+        merchant.respondToOffer,
+      );
       app.get("/api/v1/merchant/jobs", auth.requireSession, merchantRole, merchant.listJobs);
-      app.post("/api/v1/merchant/jobs/:id/start", auth.requireSession, merchantRole, merchant.startJob);
+      app.post(
+        "/api/v1/merchant/jobs/:id/start",
+        auth.requireSession,
+        merchantRole,
+        merchant.startJob,
+      );
     }
   }
 
@@ -228,7 +383,10 @@ export function createApiApp(options: ApiAppOptions = {}) {
     const parsed = categoryParams.safeParse(req.params);
     if (!parsed.success) {
       return res.status(400).json({
-        error: { code: "INVALID_INPUT", message: "The requested sample category is not supported." },
+        error: {
+          code: "INVALID_INPUT",
+          message: "The requested sample category is not supported.",
+        },
         requestId: req.id,
       });
     }
@@ -249,7 +407,8 @@ export function createApiApp(options: ApiAppOptions = {}) {
       total: price.total,
       collectionMethod: "cash_on_service_completion_in_demo_only",
       priceVersion: price.rates.version,
-      notice: "Fictional estimate only; not an offer, merchant quote, tax determination, booking, or payment instruction.",
+      notice:
+        "Fictional estimate only; not an offer, merchant quote, tax determination, booking, or payment instruction.",
     });
   });
 
@@ -274,7 +433,10 @@ export function createApiApp(options: ApiAppOptions = {}) {
         requestId: req.id,
       });
     }
-    req.log.error({ errorType: typeof candidate.name === "string" ? candidate.name : "UnknownError" }, "Unhandled API error");
+    req.log.error(
+      { errorType: typeof candidate.name === "string" ? candidate.name : "UnknownError" },
+      "Unhandled API error",
+    );
     return res.status(500).json({
       error: { code: "INTERNAL_ERROR", message: "The request could not be completed." },
       requestId: req.id,

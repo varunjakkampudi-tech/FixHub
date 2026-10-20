@@ -19,8 +19,11 @@ describe("Fix Hub demo API foundation", () => {
     const docs = await request(app).get("/openapi.json").expect(200);
     expect(docs.body.openapi).toBe("3.1.0");
     expect(docs.body.paths["/api/v1/demo/prices/{category}"]).toBeDefined();
-    expect(docs.body.paths["/api/v1/customer/pricing-preview"].get.parameters.map((parameter: { name: string }) => parameter.name))
-      .toEqual(["serviceId", "addressId"]);
+    expect(
+      docs.body.paths["/api/v1/customer/pricing-preview"].get.parameters.map(
+        (parameter: { name: string }) => parameter.name,
+      ),
+    ).toEqual(["serviceId", "addressId"]);
     for (const [path, verb] of [
       ["/api/v1/customer/bookings/{id}/complete", "post"],
       ["/api/v1/customer/bookings/{id}/quote-approval", "post"],
@@ -30,14 +33,20 @@ describe("Fix Hub demo API foundation", () => {
       const operation = docs.body.paths[path][verb];
       expect(operation.responses["400"]).toBeDefined();
       expect(operation.responses["403"]).toBeDefined();
-      expect(operation.parameters.find((parameter: { name: string }) => parameter.name === "Idempotency-Key").schema.pattern)
-        .toBe("^[A-Za-z0-9._:-]{16,128}$");
+      expect(
+        operation.parameters.find(
+          (parameter: { name: string }) => parameter.name === "Idempotency-Key",
+        ).schema.pattern,
+      ).toBe("^[A-Za-z0-9._:-]{16,128}$");
     }
     await request(app).get("/docs/").expect(200);
   });
 
   it("keeps production readiness false until authentication and persistent storage exist", async () => {
-    const app = createApiApp({ environment: "production", allowedOrigins: ["https://example.test"] });
+    const app = createApiApp({
+      environment: "production",
+      allowedOrigins: ["https://example.test"],
+    });
     const result = await request(app).get("/health/ready").expect(503);
     expect(result.body.status).toBe("not_ready");
   });
@@ -74,7 +83,11 @@ describe("Fix Hub demo API foundation", () => {
 
   it("bounds JSON bodies and rejects malformed JSON without leaking parser details", async () => {
     const app = createApiApp({ environment: "test", allowedOrigins: ["http://localhost:5173"] });
-    await request(app).post("/api/v1/demo/prices/electrician").set("content-type", "application/json").send("{").expect(400);
+    await request(app)
+      .post("/api/v1/demo/prices/electrician")
+      .set("content-type", "application/json")
+      .send("{")
+      .expect(400);
     const tooLarge = await request(app)
       .post("/api/v1/demo/prices/electrician")
       .set("content-type", "application/json")
@@ -85,11 +98,17 @@ describe("Fix Hub demo API foundation", () => {
 
   it("allows credentialed CORS only for exact configured origins", async () => {
     const app = createApiApp({ environment: "test", allowedOrigins: ["http://localhost:5173"] });
-    const allowed = await request(app).get("/health/live").set("origin", "http://localhost:5173").expect(200);
+    const allowed = await request(app)
+      .get("/health/live")
+      .set("origin", "http://localhost:5173")
+      .expect(200);
     expect(allowed.headers["access-control-allow-origin"]).toBe("http://localhost:5173");
     expect(allowed.headers["access-control-expose-headers"]).toContain("x-request-id");
     expect(allowed.headers["access-control-allow-credentials"]).toBe("true");
-    const rejected = await request(app).get("/health/live").set("origin", "https://attacker.test").expect(200);
+    const rejected = await request(app)
+      .get("/health/live")
+      .set("origin", "https://attacker.test")
+      .expect(200);
     expect(rejected.headers["access-control-allow-origin"]).toBeUndefined();
   });
 
@@ -111,7 +130,11 @@ describe("Fix Hub demo API foundation", () => {
     const stream = new PassThrough();
     stream.on("data", (chunk: Buffer) => lines.push(chunk.toString("utf8")));
     const logger = pino({ level: "info" }, stream);
-    const app = createApiApp({ environment: "test", allowedOrigins: ["http://localhost:5173"], logger });
+    const app = createApiApp({
+      environment: "test",
+      allowedOrigins: ["http://localhost:5173"],
+      logger,
+    });
     await request(app)
       .get("/api/v1/demo/prices/electrician?email=private@example.test&token=sample-secret")
       .expect(200);

@@ -711,8 +711,10 @@ BLOCKER-015: Direct-to-main publication and branch protection
      enforcement, conversation resolution, no force pushes and no deletions are configured.
      It also records that a required approval may exist and cannot be proven from this
      repository. Direct-main compatibility is "PROPOSED; ENFORCEMENT COMPATIBILITY NOT PROVEN".
-  3. A documentation-only checkpoint was pushed to main with a normal push (no force). The
-     push result and the post-push CI run are recorded in PROGRESS.md section 7.
+  3. The documentation-only checkpoint was pushed to main with a normal push (no force):
+     2383a109c35a1259a490db050929690db32c4bc7..28bf5126b2b9a25864d9353f3ba92f5a16899ad3.
+     Hosted CI run 39365885589 (FixHub CI Quality & Validation Pipeline) completed with
+     conclusion success on 28bf512. The owner must decide whether this path stays allowed.
 
 - Exact owner action: Decide whether future documentation checkpoints go direct to main, or
   through a pull request you approve. Decide whether code changes always go through a pull
@@ -839,6 +841,10 @@ BLOCKER-019: Browser run reports API connection refused (OPEN)
 - Requirement or gate: Goal section 16A.4a; EXPECTED_RUNTIME_MESSAGES.md
 - Status: OPEN
 
+- Status (2026-10-20): npm run test:playwright timed out waiting on port 5173 in the final run, and manual
+  preview on 5173 did not answer, while port 5175 did. Root cause not established.
+  Next step: free port 5173 and rerun the standard command; if it still fails, record the environment
+  in QUALITY_AUDIT.md.
 - Verified facts:
   - npm run test:playwright passed 12 of 12 tests (desktop Chromium and Pixel 5) on
     2026-10-20 on the working tree after the cleanup changes.

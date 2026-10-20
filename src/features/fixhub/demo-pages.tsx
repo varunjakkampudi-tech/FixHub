@@ -58,9 +58,27 @@ export function DemoPage() {
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
               {[
-                { id: "sample-c1", name: locale === "te-IN" ? "కస్టమర్" : "Customer", role: "customer" as const, desc: locale === "te-IN" ? "సేవలను బుక్ చేయండి" : "Book & track home services" },
-                { id: "sample-m1", name: locale === "te-IN" ? "వ్యాపారి" : "Merchant", role: "merchant" as const, desc: locale === "te-IN" ? "జాబ్ ఆఫర్‌లను స్వీకరించండి" : "Accept leads & manage jobs" },
-                { id: "sample-admin", name: locale === "te-IN" ? "అడ్మిన్ (నేను)" : "Admin (Me)", role: "admin" as const, desc: locale === "te-IN" ? "పూర్తి సిస్టమ్ నియంత్రణ" : "System controls & logs" },
+                {
+                  id: "sample-c1",
+                  name: locale === "te-IN" ? "కస్టమర్" : "Customer",
+                  role: "customer" as const,
+                  desc: locale === "te-IN" ? "సేవలను బుక్ చేయండి" : "Book & track home services",
+                },
+                {
+                  id: "sample-m1",
+                  name: locale === "te-IN" ? "వ్యాపారి" : "Merchant",
+                  role: "merchant" as const,
+                  desc:
+                    locale === "te-IN"
+                      ? "జాబ్ ఆఫర్‌లను స్వీకరించండి"
+                      : "Accept leads & manage jobs",
+                },
+                {
+                  id: "sample-admin",
+                  name: locale === "te-IN" ? "అడ్మిన్ (నేను)" : "Admin (Me)",
+                  role: "admin" as const,
+                  desc: locale === "te-IN" ? "పూర్తి సిస్టమ్ నియంత్రణ" : "System controls & logs",
+                },
               ].map((p) => (
                 <Button
                   key={p.id}
@@ -262,9 +280,21 @@ export function DemoAuth({ mode = "sign-in" }: { mode?: string }) {
                   </p>
                   <div className="grid grid-cols-3 gap-2 mb-3">
                     {[
-                      { id: "sample-c1", label: locale === "te-IN" ? "కస్టమర్" : "Customer", desc: "User" },
-                      { id: "sample-m1", label: locale === "te-IN" ? "వ్యాపారి" : "Merchant", desc: "Provider" },
-                      { id: "sample-admin", label: locale === "te-IN" ? "అడ్మిన్ (నేను)" : "Admin (Me)", desc: "Console" },
+                      {
+                        id: "sample-c1",
+                        label: locale === "te-IN" ? "కస్టమర్" : "Customer",
+                        desc: "User",
+                      },
+                      {
+                        id: "sample-m1",
+                        label: locale === "te-IN" ? "వ్యాపారి" : "Merchant",
+                        desc: "Provider",
+                      },
+                      {
+                        id: "sample-admin",
+                        label: locale === "te-IN" ? "అడ్మిన్ (నేను)" : "Admin (Me)",
+                        desc: "Console",
+                      },
                     ].map((roleChoice) => (
                       <button
                         key={roleChoice.id}
@@ -277,7 +307,9 @@ export function DemoAuth({ mode = "sign-in" }: { mode?: string }) {
                         }`}
                       >
                         <span className="text-sm">{roleChoice.label}</span>
-                        <span className="text-[10px] text-muted-foreground uppercase">{roleChoice.desc}</span>
+                        <span className="text-[10px] text-muted-foreground uppercase">
+                          {roleChoice.desc}
+                        </span>
                       </button>
                     ))}
                   </div>
@@ -287,9 +319,15 @@ export function DemoAuth({ mode = "sign-in" }: { mode?: string }) {
                     value={selected}
                     onChange={(e) => setSelected(e.target.value)}
                   >
-                    <option value="sample-c1">Customer · {locale === "te-IN" ? "కస్టమర్" : "Customer"}</option>
-                    <option value="sample-m1">Merchant · {locale === "te-IN" ? "వ్యాపారి" : "Merchant"}</option>
-                    <option value="sample-admin">Admin (Me) · {locale === "te-IN" ? "అడ్మిన్" : "Super Admin"}</option>
+                    <option value="sample-c1">
+                      Customer · {locale === "te-IN" ? "కస్టమర్" : "Customer"}
+                    </option>
+                    <option value="sample-m1">
+                      Merchant · {locale === "te-IN" ? "వ్యాపారి" : "Merchant"}
+                    </option>
+                    <option value="sample-admin">
+                      Admin (Me) · {locale === "te-IN" ? "అడ్మిన్" : "Super Admin"}
+                    </option>
                   </select>
                 </div>
               )}
@@ -934,7 +972,8 @@ function BookingList({ role, targetId }: { role: Role; targetId?: string | undef
                     : statusLabel(job.status, locale)}
                 </span>
                 <span>
-                  {placeLabel(job.zone, locale)} · {job.date} · {money((job.quote ?? job.estimate).total, locale)}
+                  {placeLabel(job.zone, locale)} · {job.date} ·{" "}
+                  {money((job.quote ?? job.estimate).total, locale)}
                 </span>
               </span>
             </Button>

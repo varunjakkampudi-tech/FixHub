@@ -24,7 +24,12 @@ describe("demo service bill", () => {
   });
 
   it("provides a direct UTF-8 download with itemized demo charges and truthful exclusions", () => {
-    const file = demoServiceRecordFile("FH-123", "Electrical repair", calculate(initialPolicy.plumbing), "en-IN");
+    const file = demoServiceRecordFile(
+      "FH-123",
+      "Electrical repair",
+      calculate(initialPolicy.plumbing),
+      "en-IN",
+    );
     expect(file.filename).toBe("fixhub-demo-service-record-FH-123.txt");
     expect(file.href).toMatch(/^data:text\/plain;charset=utf-8,/);
     expect(decodeURIComponent(file.href.slice(file.href.indexOf(",") + 1))).toBe(file.content);
@@ -39,7 +44,12 @@ describe("demo service bill", () => {
   });
 
   it("localizes the download and prevents user-supplied line breaks or unsafe filename characters", () => {
-    const file = demoServiceRecordFile("../FH\nPAID", "Repair\nPaid", calculate(initialPolicy.electrician), "te-IN");
+    const file = demoServiceRecordFile(
+      "../FH\nPAID",
+      "Repair\nPaid",
+      calculate(initialPolicy.electrician),
+      "te-IN",
+    );
     expect(file.filename).toBe("fixhub-demo-service-record-FH-PAID.txt");
     expect(file.content).toContain("ఫిక్స్ హబ్ — సేవా రికార్డు · డెమో");
     expect(file.content).toContain("రిఫరెన్స్: ../FH PAID");

@@ -19,7 +19,7 @@ export class DistributedLock {
     resource: string,
     ttlMs: number = 10000,
     retryCount: number = 3,
-    retryDelayMs: number = 100
+    retryDelayMs: number = 100,
   ): Promise<LockHandle | null> {
     const lockKey = `lock:${resource}`;
     const lockValue = crypto.randomUUID();
@@ -65,7 +65,7 @@ export class DistributedLock {
     ttlMs: number,
     fn: () => Promise<T>,
     retryCount: number = 3,
-    retryDelayMs: number = 100
+    retryDelayMs: number = 100,
   ): Promise<T> {
     const handle = await this.acquire(resource, ttlMs, retryCount, retryDelayMs);
     if (!handle) {

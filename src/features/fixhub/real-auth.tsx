@@ -48,7 +48,13 @@ export function RealAuth({ mode = "sign-in" }: { mode?: string }) {
         else await navigate({ to: "/customer/bookings" });
       }
     } catch (cause) {
-      setError(cause instanceof ApiError ? cause.message : (te ? "అభ్యర్థన పూర్తి కాలేదు. మళ్లీ ప్రయత్నించండి." : "We could not complete that request. Please try again."));
+      setError(
+        cause instanceof ApiError
+          ? cause.message
+          : te
+            ? "అభ్యర్థన పూర్తి కాలేదు. మళ్లీ ప్రయత్నించండి."
+            : "We could not complete that request. Please try again.",
+      );
     } finally {
       setBusy(false);
     }
@@ -63,7 +69,13 @@ export function RealAuth({ mode = "sign-in" }: { mode?: string }) {
     try {
       await requestEmailCode();
     } catch (cause) {
-      setError(cause instanceof ApiError ? cause.message : (te ? "కోడ్‌ను మళ్లీ పంపలేకపోయాం. కొద్దిసేపటి తర్వాత ప్రయత్నించండి." : "We could not resend the code. Please try again shortly."));
+      setError(
+        cause instanceof ApiError
+          ? cause.message
+          : te
+            ? "కోడ్‌ను మళ్లీ పంపలేకపోయాం. కొద్దిసేపటి తర్వాత ప్రయత్నించండి."
+            : "We could not resend the code. Please try again shortly.",
+      );
     } finally {
       setResending(false);
       setBusy(false);
@@ -75,19 +87,35 @@ export function RealAuth({ mode = "sign-in" }: { mode?: string }) {
       <main id="main" className="wrap">
         <section className="mx-auto max-w-lg pb-10">
           <PageTop
-            title={stage === "code"
-              ? (te ? "మీ ఇమెయిల్‌ను ధృవీకరించండి" : "Check your email")
-              : registering
-                ? (te ? "Fix Hubలో చేరండి" : "Create your Fix Hub account")
-                : (te ? "Fix Hubకు సైన్ ఇన్ చేయండి" : "Sign in to Fix Hub")}
-            desc={stage === "code"
-              ? (te ? "మీరు అందుకున్న ఆరు అంకెల కోడ్‌ను నమోదు చేయండి." : "Enter the six-digit code we sent you. It expires after ten minutes.")
-              : (te ? "మీ ఇమెయిల్‌తో సురక్షితంగా కొనసాగండి." : "Use your email to continue. No password is required.")}
+            title={
+              stage === "code"
+                ? te
+                  ? "మీ ఇమెయిల్‌ను ధృవీకరించండి"
+                  : "Check your email"
+                : registering
+                  ? te
+                    ? "Fix Hubలో చేరండి"
+                    : "Create your Fix Hub account"
+                  : te
+                    ? "Fix Hubకు సైన్ ఇన్ చేయండి"
+                    : "Sign in to Fix Hub"
+            }
+            desc={
+              stage === "code"
+                ? te
+                  ? "మీరు అందుకున్న ఆరు అంకెల కోడ్‌ను నమోదు చేయండి."
+                  : "Enter the six-digit code we sent you. It expires after ten minutes."
+                : te
+                  ? "మీ ఇమెయిల్‌తో సురక్షితంగా కొనసాగండి."
+                  : "Use your email to continue. No password is required."
+            }
           />
           <form onSubmit={submit} noValidate>
             {stage === "email" ? (
               <div className="form-group">
-                <label htmlFor="fixhub-email" className="form-label">{te ? "ఇమెయిల్ చిరునామా" : "Email address"}</label>
+                <label htmlFor="fixhub-email" className="form-label">
+                  {te ? "ఇమెయిల్ చిరునామా" : "Email address"}
+                </label>
                 <input
                   id="fixhub-email"
                   className="form-input"
@@ -106,7 +134,9 @@ export function RealAuth({ mode = "sign-in" }: { mode?: string }) {
               <div className="fixhub-auth-step">
                 <p className="mb-4 text-sm">{email}</p>
                 <div className="form-group">
-                  <label htmlFor="fixhub-code" className="form-label">{te ? "ఆరు అంకెల కోడ్" : "Six-digit code"}</label>
+                  <label htmlFor="fixhub-code" className="form-label">
+                    {te ? "ఆరు అంకెల కోడ్" : "Six-digit code"}
+                  </label>
                   <input
                     id="fixhub-code"
                     className="form-input"
@@ -124,17 +154,61 @@ export function RealAuth({ mode = "sign-in" }: { mode?: string }) {
                 </div>
               </div>
             )}
-            {message && <div role="status" className="mb-4"><Notice>{message}</Notice></div>}
-            {error && <div role="alert" className="mb-4"><Notice error>{error}</Notice></div>}
-            <Button type="submit" className="w-full" disabled={busy || (stage === "code" && code.length !== 6)}>
-              {busy ? (te ? "దయచేసి వేచి ఉండండి…" : "Please wait…") : stage === "email" ? (te ? "కోడ్ పంపండి" : "Send sign-in code") : (te ? "ధృవీకరించి కొనసాగండి" : "Verify and continue")}
+            {message && (
+              <div role="status" className="mb-4">
+                <Notice>{message}</Notice>
+              </div>
+            )}
+            {error && (
+              <div role="alert" className="mb-4">
+                <Notice error>{error}</Notice>
+              </div>
+            )}
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={busy || (stage === "code" && code.length !== 6)}
+            >
+              {busy
+                ? te
+                  ? "దయచేసి వేచి ఉండండి…"
+                  : "Please wait…"
+                : stage === "email"
+                  ? te
+                    ? "కోడ్ పంపండి"
+                    : "Send sign-in code"
+                  : te
+                    ? "ధృవీకరించి కొనసాగండి"
+                    : "Verify and continue"}
             </Button>
             {stage === "code" && (
               <div className="mt-2 grid gap-1">
-                <Button type="button" variant="ghost" className="w-full" disabled={busy} onClick={() => void resendCode()}>
-                  {resending ? (te ? "పంపిస్తోంది…" : "Sending…") : (te ? "కోడ్‌ను మళ్లీ పంపండి" : "Resend code")}
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="w-full"
+                  disabled={busy}
+                  onClick={() => void resendCode()}
+                >
+                  {resending
+                    ? te
+                      ? "పంపిస్తోంది…"
+                      : "Sending…"
+                    : te
+                      ? "కోడ్‌ను మళ్లీ పంపండి"
+                      : "Resend code"}
                 </Button>
-                <Button type="button" variant="ghost" className="w-full" disabled={busy} onClick={() => { setStage("email"); setCode(""); setMessage(""); }}>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="w-full"
+                  disabled={busy}
+                  onClick={() => {
+                    setStage("email");
+                    setCode("");
+                    setMessage("");
+                  }}
+                >
                   {te ? "ఇమెయిల్ మార్చండి" : "Use a different email"}
                 </Button>
               </div>
@@ -142,9 +216,14 @@ export function RealAuth({ mode = "sign-in" }: { mode?: string }) {
           </form>
           <p className="mt-5 text-xs text-muted-foreground">
             {te ? "కొనసాగడానికి ముందు " : "Before continuing, review the "}
-            <Link className="underline" to="/terms">{te ? "నిబంధనలు" : "Terms"}</Link>
+            <Link className="underline" to="/terms">
+              {te ? "నిబంధనలు" : "Terms"}
+            </Link>
             {te ? " మరియు " : " and "}
-            <Link className="underline" to="/privacy">{te ? "గోప్యత" : "Privacy information"}</Link>.
+            <Link className="underline" to="/privacy">
+              {te ? "గోప్యత" : "Privacy information"}
+            </Link>
+            .
           </p>
         </section>
       </main>

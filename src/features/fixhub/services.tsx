@@ -76,14 +76,20 @@ export function ServicesPage({
                     <span className="svc-text">
                       <strong>{c.names[locale]}</strong>
                       <span>{c.description[locale]}</span>
-                      <em className="svc-price">{locale === "te-IN" ? "అంచనా ధర లోపల చూడండి" : "See estimated price"}</em>
+                      <em className="svc-price">
+                        {locale === "te-IN" ? "అంచనా ధర లోపల చూడండి" : "See estimated price"}
+                      </em>
                     </span>
                     <ChevronRight className="svc-chev" aria-hidden="true" />
                   </Link>
                 </li>
               );
             })}
-            <li className="svc-sample-note">{locale === "te-IN" ? "చిత్రాలు నమూనా మాత్రమే — నిజమైన నిపుణులు కాదు." : "Photos are SAMPLE images — not real FixHub professionals."}</li>
+            <li className="svc-sample-note">
+              {locale === "te-IN"
+                ? "చిత్రాలు నమూనా మాత్రమే — నిజమైన నిపుణులు కాదు."
+                : "Photos are SAMPLE images — not real FixHub professionals."}
+            </li>
           </ul>
         ) : (
           <div className="content-grid">

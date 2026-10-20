@@ -61,7 +61,9 @@ function lintFile(filePath) {
   ];
   for (const pattern of secretPatterns) {
     if (pattern.test(content)) {
-      console.error(`[SECURITY LINT ERROR] ${relativePath}: Potential hardcoded credential pattern detected!`);
+      console.error(
+        `[SECURITY LINT ERROR] ${relativePath}: Potential hardcoded credential pattern detected!`,
+      );
       errorCount++;
     }
   }

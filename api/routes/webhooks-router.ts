@@ -20,5 +20,7 @@ webhooksRouter.get("/whatsapp", (req, res) => {
 webhooksRouter.post("/whatsapp", (req, res) => {
   const body = req.body;
   // Acknowledge Meta webhook quickly with 200 OK
-  return res.status(200).json({ status: "received", eventsCount: Array.isArray(body?.entry) ? body.entry.length : 1 });
+  return res
+    .status(200)
+    .json({ status: "received", eventsCount: Array.isArray(body?.entry) ? body.entry.length : 1 });
 });
