@@ -3,7 +3,7 @@
 **Project:** Fix Hub (Viswatra)  
 **Parent Brand:** Viswatra  
 **Baseline Main Commit:** `49943686c5941aa54a9efd6b0ed495f6e569169e`  
-**Current Active Baseline:** `49943686c5941aa54a9efd6b0ed495f6e569169e` (Single Canonical Branch: `main`)  
+**Current Active Baseline:** `67c4d573fe7a24f5ea37da45b7a1106bd73eec17` (Single Canonical Branch: `main`)  
 **Governing Documents:**  
 - `docs/specs/FixHub-Product-Spec-v1.3.md` (Scope Frozen, Checksum `F549D93B52E1EB8A08CC1426F6B4244DA4C9A4EE569DE9D7031316923DEBC52D`)
 - `docs/specs/FixHub-Engineering-Standards.md` (Checksum `FCC1760BC72D38221EBB153538CEB35DB9040D0E8DBB952985000C9D4666ED55`)
