@@ -1,4 +1,3 @@
-import crypto from "node:crypto";
 
 export interface RedisClientInterface {
   get(key: string): Promise<string | null>;

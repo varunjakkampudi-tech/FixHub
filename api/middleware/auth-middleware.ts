@@ -33,18 +33,6 @@ export function authenticate(req: Request, res: Response, next: NextFunction): v
   next();
 }
 
-export function optionalAuthenticate(req: Request, _res: Response, next: NextFunction): void {
-  const authHeader = req.headers.authorization;
-  if (authHeader && authHeader.startsWith("Bearer ")) {
-    const token = authHeader.slice(7).trim();
-    const payload = defaultAuthService.verifyToken(token);
-    if (payload) {
-      req.user = payload;
-    }
-  }
-  next();
-}
-
 export function requireRole(...roles: string[]) {
   return (req: Request, res: Response, next: NextFunction): void => {
     if (!req.user) {

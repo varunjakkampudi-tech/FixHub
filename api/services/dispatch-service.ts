@@ -35,7 +35,6 @@ export class DispatchService {
 
     for (const merchant of eligible) {
       // Check if offer already exists
-      const existingKey = `${bookingId}:${merchant.id}`;
       let alreadyOffered = false;
       for (const off of this.repo.bookingOffers.values()) {
         if (off.bookingId === bookingId && off.merchantId === merchant.id) {

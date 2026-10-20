@@ -22,7 +22,6 @@ import {
   Grid2X2,
   ShieldCheck,
   BriefcaseBusiness,
-  Bell,
   LayoutDashboard,
   Users,
   Settings,

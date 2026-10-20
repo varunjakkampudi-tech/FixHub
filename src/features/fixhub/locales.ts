@@ -1,5 +1,4 @@
 export type Locale = "en-IN" | "te-IN" | "hi-IN";
-export const hindiEnabled = true;
 export const messages = {
   home: ["Home", "హోమ్"],
   services: ["Services", "సేవలు"],
@@ -504,11 +503,6 @@ export const messages = {
   checked: ["Checked", "తనిఖీ పూర్తయింది"],
 } satisfies Record<string, readonly [string, string]>;
 export type MessageKey = keyof typeof messages;
-export const localeResources = {
-  "en-IN": messages,
-  "te-IN": messages,
-  "hi-IN": { enabled: false, fallback: "en-IN" },
-};
 export const categories = [
   {
     id: "electrician",
@@ -581,59 +575,3 @@ export const categories = [
     teDesc: "ఇతర ఇంటి సేవలను చూడండి",
   },
 ];
-
-export const localeMetadata = [
-  { code: "en-IN", name: "English", nativeName: "English", direction: "ltr" },
-  { code: "te-IN", name: "Telugu", nativeName: "తెలుగు", direction: "ltr" },
-  { code: "hi-IN", name: "Hindi", nativeName: "हिन्दी", direction: "ltr" },
-  { code: "ta-IN", name: "Tamil", nativeName: "தமிழ்", direction: "ltr" },
-  { code: "kn-IN", name: "Kannada", nativeName: "ಕನ್ನಡ", direction: "ltr" },
-] as const;
-
-export const futureLanguageOverrides: Record<string, Partial<Record<MessageKey, string>>> = {
-  "hi-IN": {
-    home: "होम",
-    services: "सेवाएं",
-    bookings: "बुकिंग",
-    help: "सहायता",
-    profile: "प्रोफ़ाइल",
-    how: "यह कैसे काम करता है",
-    partners: "पार्टनर्स के लिए",
-    support: "सहायता",
-    signin: "साइन इन",
-    location: "तणुकु",
-    state: "आंध्र प्रदेश",
-    search: "खोजें",
-    book: "सेवा का अनुरोध करें",
-  },
-  "ta-IN": {
-    home: "முகப்பு",
-    services: "சேவைகள்",
-    bookings: "முன்பதிவுகள்",
-    help: "உதவி",
-    profile: "சுயவிவரம்",
-    signin: "உள்நுழைக",
-    location: "தணுக்கு",
-    search: "தேடுங்கள்",
-  },
-  "kn-IN": {
-    home: "ಮುಖಪುಟ",
-    services: "ಸೇವೆಗಳು",
-    bookings: "ಬುಕಿಂಗ್‌ಗಳು",
-    help: "ಸಹಾಯ",
-    profile: "ಪ್ರೊಫೈಲ್",
-    signin: "ಸೈನ್ ಇನ್",
-    location: "ತಣುಕು",
-    search: "ಹುಡುಕಿ",
-  },
-};
-
-export function resolveTranslation(key: MessageKey, locale: string): string {
-  if (locale === "te-IN") {
-    return messages[key]?.[1] || messages[key]?.[0] || key;
-  }
-  const override = futureLanguageOverrides[locale]?.[key];
-  if (override) return override;
-  return messages[key]?.[0] || key;
-}
-

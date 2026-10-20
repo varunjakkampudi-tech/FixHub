@@ -7,7 +7,7 @@ import * as Accordion from "@radix-ui/react-accordion";
 import { Button } from "@/components/ui/button";
 import { useFixHub } from "./context";
 import { type MessageKey } from "./locales";
-import { PageShell, PageTop, Steps, Trust, Notice, Empty, LocaleControl, Modal } from "./shared";
+import { PageShell, PageTop, Steps, Trust, Notice, Empty, LocaleControl } from "./shared";
 export function FAQ() {
   const { t } = useFixHub();
   return (
@@ -228,111 +228,4 @@ export function PublicPage({ page }: { page: string }) {
 export function AuthPage({ mode = "sign-in" }: { mode?: string }) {
   if (mode === "sign-in" || mode.includes("register")) return <RealAuth mode={mode} />;
   return <DemoAuth mode={mode} />;
-}
-function LegacyAuthPage({ mode = "sign-in" }: { mode?: string }) {
-  const { t } = useFixHub();
-  const [input, setInput] = useState("");
-  const [error, setError] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [confirm, setConfirm] = useState(false);
-  const choose = mode === "register";
-  const otp = mode.includes("otp") || mode.includes("verification");
-  const blocked =
-    mode.includes("suspended") || mode.includes("denied") || mode === "account-pending";
-  return (
-    <PageShell>
-      <main id="main" className="wrap">
-        <div className="mx-auto max-w-lg pb-10">
-          <PageTop title={t(choose ? "register" : "authTitle")} desc={t("authDesc")} />
-          {choose ? (
-            <div className="grid gap-4">
-              {[
-                ["/customer/register", "customer"],
-                ["/merchant/onboarding", "merchant"],
-              ].map(([to, key]) => (
-                <Button asChild variant="outline" key={to}>
-                  <Link to={to ?? "/"}>
-                    {t(key as MessageKey)}
-                    <ArrowRight />
-                  </Link>
-                </Button>
-              ))}
-            </div>
-          ) : blocked ? (
-            <Empty
-              title={mode.includes("pending") ? "pending" : "restricted"}
-              desc="restrictedDesc"
-              action={
-                <Button asChild>
-                  <Link to="/help">{t("help")}</Link>
-                </Button>
-              }
-            />
-          ) : (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                const valid = otp ? /^\d{6}$/.test(input) : input.trim().length >= 5;
-                if (!valid) {
-                  setError(true);
-                  return;
-                }
-                setError(false);
-                if (otp) setSuccess(true);
-                else setConfirm(true);
-              }}
-            >
-              <Notice warning>{t("authDesc")}</Notice>
-              <div className="form-group">
-                <label className="form-label" htmlFor="auth-input">
-                  {t(otp ? "otp" : mode.includes("password") ? "password" : "phone")}
-                </label>
-                <input
-                  id="auth-input"
-                  className="form-input"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  autoComplete="off"
-                  inputMode={otp ? "numeric" : "text"}
-                  maxLength={otp ? 6 : 100}
-                  type={mode.includes("password") ? "password" : "text"}
-                  aria-invalid={error}
-                />
-              </div>
-              {otp && <p className="mb-5 text-sm text-muted-foreground">{t("otpDesc")}</p>}
-              {error && <Notice error>{t("required")}</Notice>}
-              <Button className="w-full" type="submit">
-                {t(otp ? "verify" : "sendCode")}
-              </Button>
-              <div className="mt-5 flex flex-wrap justify-between gap-4">
-                <Link to="/register" className="text-link">
-                  {t("register")}
-                </Link>
-                <Link to="/forgot-password" className="text-link">
-                  {t("password")}
-                </Link>
-              </div>
-              {success && (
-                <div className="mt-5">
-                  <Notice>
-                    {t("saved")} · {t("demo")}
-                  </Notice>
-                  <Button asChild>
-                    <Link to="/customer">{t("customer")}</Link>
-                  </Button>
-                </div>
-              )}
-            </form>
-          )}
-        </div>
-      </main>
-      <Modal open={confirm} onOpenChange={setConfirm} title={t("otp")} description={t("otpDesc")}>
-        <Button asChild>
-          <Link to="/otp" onClick={() => setConfirm(false)}>
-            {t("next")}
-          </Link>
-        </Button>
-      </Modal>
-    </PageShell>
-  );
 }

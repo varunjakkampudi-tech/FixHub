@@ -4,14 +4,13 @@ import { Button } from "@/components/ui/button";
 import { useDemo } from "./demo-context";
 import { useFixHub } from "./context";
 import { PageShell, PageTop, Notice, Modal } from "./shared";
-import { DemoBookingDetail, DemoPage, DemoNotifications } from "./demo-pages";
+import { DemoBookingDetail, DemoNotifications } from "./demo-pages";
 import { PriceBreakdown } from "./demo-price";
 import {
   calculate,
   money,
   type Category,
   type Command,
-  type Merchant,
   type Persona,
 } from "./demo-model";
 import {

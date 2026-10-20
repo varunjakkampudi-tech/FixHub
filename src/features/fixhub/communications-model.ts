@@ -476,14 +476,3 @@ export interface MessagingProvider {
   getMessageStatus(id: string): Promise<{ status: "blocked" }>;
   estimateMessageCost(text: string): ReturnType<typeof smsSegments>;
 }
-export const disabledTwilioProvider: MessagingProvider = {
-  startPhoneVerification: async () => ({ status: "blocked" }),
-  checkPhoneVerification: async () => ({ status: "blocked" }),
-  sendSms: async () => ({ status: "blocked" }),
-  sendWhatsAppTemplate: async () => ({ status: "blocked" }),
-  sendWhatsAppSessionReply: async () => ({ status: "blocked" }),
-  handleInboundWhatsApp: async () => ({ status: "blocked" }),
-  handleTwilioStatusCallback: async () => ({ status: "blocked" }),
-  getMessageStatus: async () => ({ status: "blocked" }),
-  estimateMessageCost: smsSegments,
-};

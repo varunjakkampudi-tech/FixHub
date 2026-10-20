@@ -1,17 +1,16 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useState, useRef, useEffect } from "react";
-import { ArrowRight, ArrowLeft, ImagePlus, CircleCheck, Clock, Trash2 } from "lucide-react";
+import { ArrowRight, ArrowLeft, ImagePlus, CircleCheck, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useFixHub } from "./context";
 import { categories, type MessageKey } from "./locales";
-import { PageShell, PageTop, Notice, Empty, Modal } from "./shared";
+import { PageShell, PageTop, Notice, Empty } from "./shared";
 import { useDemo } from "./demo-context";
 import { PriceBreakdown } from "./demo-price";
-import { calculate, categoriesDemo, zones, type Category, type Role } from "./demo-model";
+import { calculate, categoriesDemo, type Category, type Role } from "./demo-model";
 import { dt } from "./demo-copy";
 import { CityPicker, AddressEditor, SampleProviders } from "./location-ui";
 import { enabledServices, ratesFor } from "./location-model";
-import { lt } from "./location-copy";
 import { DemoBookings } from "./demo-pages";
 import { resolveApiSessionMode, type ApiSessionMode } from "./api-client";
 import { RealBookingHistory, RealBookingPage } from "./real-booking";
@@ -42,7 +41,6 @@ function DemoBookingPage({ step = 0 }: { step?: number }) {
   const { t, locale, draft, updateDraft, setSubmitted, setCancelled } = useFixHub();
   const demo = useDemo();
   const zone = draft.zone;
-  const setZone = (zone: string) => updateDraft({ zone });
   const service = demo.state.registry.services.find((s) => s.id === draft.service);
   const cityId = draft.cityId ?? "tanuku";
   const address = demo.state.registry.addresses.find(
@@ -436,143 +434,6 @@ export function SubmittedPage() {
           }
         />
       </main>
-    </PageShell>
-  );
-}
-function LegacyBookingHistory({
-  detail = false,
-  mode = "timeline",
-}: {
-  detail?: boolean;
-  mode?: string;
-}) {
-  const { t, draft, locale, submitted, cancelled, setCancelled } = useFixHub();
-  const [confirm, setConfirm] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const name = categories.find((c) => c.id === draft.service);
-  return (
-    <PageShell>
-      <main id="main" className="wrap pb-8">
-        <PageTop title={t(detail ? "viewBooking" : "bookings")} desc={t("demo")} />
-        {!detail && !submitted ? (
-          <Empty
-            title="noBookings"
-            desc="noBookingsDesc"
-            action={
-              <Button asChild>
-                <Link to="/customer/book/new">{t("book")}</Link>
-              </Button>
-            }
-          />
-        ) : (
-          <div className="content-grid">
-            <section>
-              <Notice warning>{t("submittedDesc")}</Notice>
-              <div className="service-card">
-                <span className="status">{t(cancelled ? "cancelled" : "requestOnly")}</span>
-                <h2>{locale === "te-IN" ? name?.te : name?.en}</h2>
-                <p>{draft.problem || t("sampleOffer")}</p>
-                {!detail ? (
-                  <Link className="text-link" to="/customer/bookings/$id" params={{ id: "demo" }}>
-                    {t("viewBooking")}
-                    <ArrowRight size={15} />
-                  </Link>
-                ) : (
-                  <>
-                    <h3>{t("timeline")}</h3>
-                    <div className="timeline">
-                      {(
-                        [
-                          "draft",
-                          "matching",
-                          "assigned",
-                          "waitingQuote",
-                          "work",
-                          "completed",
-                        ] as MessageKey[]
-                      ).map((s, i) => (
-                        <div className="timeline-item" key={s}>
-                          {i === 0 ? <CircleCheck size={20} /> : <Clock size={20} />}
-                          <div>
-                            <strong>{t(s)}</strong>
-                            {i === 1 && <p>{t("availabilityNote")}</p>}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    {mode === "quote" || mode === "payment" ? (
-                      <Notice>{t("quoteNote")}</Notice>
-                    ) : null}
-                    {mode === "review" || mode === "complaint" ? (
-                      <label className="form-label">
-                        {t("message")}
-                        <textarea className="form-input mt-3" onChange={() => setSaved(false)} />
-                        <Button className="mt-3" onClick={() => setSaved(true)}>
-                          {t("sendDemo")}
-                        </Button>
-                      </label>
-                    ) : null}
-                    {mode === "reschedule" ? (
-                      <div className="form-group">
-                        <label htmlFor="reschedule" className="form-label">
-                          {t("date")}
-                        </label>
-                        <input id="reschedule" type="date" className="form-input" />
-                        <Button className="mt-3" onClick={() => setSaved(true)}>
-                          {t("saveChanges")}
-                        </Button>
-                      </div>
-                    ) : null}
-                    {saved && <Notice>{t("saved")}</Notice>}
-                    <div className="flex flex-wrap gap-3">
-                      <Button
-                        variant="outline"
-                        onClick={() => setConfirm(true)}
-                        disabled={cancelled}
-                      >
-                        {t("cancel")}
-                      </Button>
-                      <Button asChild variant="ghost">
-                        <Link to="/customer/bookings/$id/reschedule" params={{ id: "demo" }}>
-                          {t("calendar")}
-                        </Link>
-                      </Button>
-                      <Button asChild variant="ghost">
-                        <Link to="/customer/bookings/$id/complaint" params={{ id: "demo" }}>
-                          {t("reportIssue")}
-                        </Link>
-                      </Button>
-                    </div>
-                  </>
-                )}
-              </div>
-            </section>
-            <aside className="summary-panel">
-              <h2>{t("summary")}</h2>
-              <p className="text-sm text-muted-foreground">{t("quoteNote")}</p>
-              <Link to="/help" className="text-link">
-                {t("help")}
-                <ArrowRight size={15} />
-              </Link>
-            </aside>
-          </div>
-        )}
-      </main>
-      <Modal
-        open={confirm}
-        onOpenChange={setConfirm}
-        title={t("confirmTitle")}
-        description={t("confirmDesc")}
-      >
-        <Button
-          onClick={() => {
-            setCancelled(true);
-            setConfirm(false);
-          }}
-        >
-          {t("confirm")}
-        </Button>
-      </Modal>
     </PageShell>
   );
 }

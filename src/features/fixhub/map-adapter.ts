@@ -79,8 +79,3 @@ export class MockMapAdapter implements LocationAdapter {
 }
 // Deliberately not a live implementation. Enable only after separate owner approval,
 // restricted browser rendering credentials, authenticated bounded Places/Geocoding and Cloud authorization.
-export const liveMapsSetup = {
-  enabled: false,
-  provider: "Google Maps Platform",
-  billingApproved: false,
-} as const;

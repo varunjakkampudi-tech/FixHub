@@ -3,7 +3,6 @@ import { ArrowRight, ChevronRight } from "lucide-react";
 import { servicePhoto } from "./service-photos";
 import { Button } from "@/components/ui/button";
 import { useFixHub } from "./context";
-import { categories } from "./locales";
 import { PageShell, PageTop, SearchBox, CategoryIcon, Empty, Notice } from "./shared";
 import { useState } from "react";
 import { ServicePrice } from "./demo-price";
