@@ -1,13 +1,13 @@
 # FixHub — Automated & Manual Test Matrix (QA-01 to QA-34)
 
 **Project:** Fix Hub (Viswatra)  
-**Current Main Commit Baseline:** `1ded0fbe89c6a43fb03c6d61371a6570b38d62b1`  
-**Total Vitest Suites:** 43 Test Files (218 Tests Passing, 100% PASS)  
-**Total Real Browser Playwright Tests:** 6 Tests Passing (Desktop Chromium + Mobile Chromium Pixel 5)  
-**Total Doc Validator Tests:** 53 Tests Passing (100% PASS)  
+**Baseline for this checkpoint:** main at `2383a109c35a1259a490db050929690db32c4bc7` (measured 2026-10-20)  
+**Total Vitest Suites:** 43 test files; 218 tests on main and 220 on the task branch; all passing on 2026-10-20  
+**Total Real Browser Playwright Tests:** 12 (6 per project: Desktop Chromium and Pixel 5); all passed on 2026-10-20  
+**Documentation validator:** one `node:test` test (`npm run test:docs`), passing. An earlier figure of 53 was not a test count and is withdrawn.  
 **TypeScript Type Check:** 0 Errors (`npx tsc --noEmit`)  
-**Lint Suite:** 392 Files Scanned, 0 Errors (`npm run lint`)  
-**Formatting Check:** PASS (`npm run format:check`)  
+**Lint Suite:** 362 files scanned on the task branch (391 on main), 0 findings. This is a custom script, not ESLint.  
+**Formatting Check:** FAIL (`npm run format:check`; 360 files flagged on the Windows checkout; see blocker.txt BLOCKER-018)  
 
 ---
 
@@ -15,18 +15,18 @@
 
 | Suite Script | Target Focus | Test Files | Tests | Result | Evidence Level | Execution Time |
 |---|---|---|---|---|---|---|
-| `npm run lint` | Syntax, formatting, security lint rules | 392 files | N/A | **PASS** | LINT_STATIC | 5.2s |
-| `npm run format:check` | Prettier code style and syntax formatting | 392 files | N/A | **PASS** | FORMAT_STATIC | 1.8s |
-| `npm test` | All Vitest unit, component, API suites | 43 files | 218 | **PASS** | TESTED_UNIT / INTEGRATION | 49.2s |
-| `npm run test:docs` | Documentation & requirement integrity | 1 file | 53 | **PASS** | DOC_INTEGRITY | ~260s |
+| `npm run lint` | Custom lint: syntax, security and secret-pattern checks (not ESLint) | 362 files (task branch) | N/A | **PASS** | LINT_STATIC | not re-timed |
+| `npm run format:check` | Prettier code style (not installed as a declared dependency) | 360 files flagged | N/A | **FAIL** | FORMAT_STATIC | not re-timed |
+| `npm test` | All Vitest unit, component, API suites | 43 files | 220 (task branch); 218 (main) | **PASS** | TESTED_UNIT / INTEGRATION | not re-timed |
+| `npm run test:docs` | Documentation & requirement integrity (validator regression) | 1 file | 1 | **PASS** | DOC_INTEGRITY | not re-timed |
 | `npm run test:smoke` | API health, OpenAPI Swagger, security headers | 1 file | 3 | **PASS** | TESTED_API_CONTRACT | 1.8s |
 | `npm run test:sanity` | 3-Role OTP auth, merchant catalog discovery | 1 file | 2 | **PASS** | TESTED_API_CONTRACT | 2.1s |
 | `npm run test:critical` | Atomic Redlock concurrency, role isolation | 1 file | 3 | **PASS** | TESTED_UNIT | 2.4s |
 | `npm run test:regression` | Dispute lifecycle, quote renegotiation, payload boundaries | 1 file | 3 | **PASS** | TESTED_API_CONTRACT | 2.2s |
 | `npm run test:journey` | Full multi-role REST API journey simulation | 1 file | 1 | **PASS** | TESTED_API_CONTRACT | 2.5s |
-| `npm run test:playwright` | Real Playwright browser automation (Chromium + Mobile) | 1 file | 6 | **PASS** | TESTED_BROWSER | 14.5s |
-| `npm run test:security` | Security quarantine & defect regression (FR-1) | 1 file | 10 | **PASS** | TESTED_UNIT_SECURITY | 3.1s |
-| `npm run test:all` | Comprehensive quality pipeline | 46+ files | 277+ | **PASS** | COMPREHENSIVE_PIPELINE | ~330s |
+| `npm run test:playwright` | Real Playwright browser automation (Chromium + Mobile) | 1 file | 12 | **PASS** | TESTED_BROWSER | not re-timed; web server logged API connection refusals (BLOCKER-019) |
+| `npm run test:security` | Security quarantine & defect regression (FR-1) | 1 file | 12 (task branch); 10 (main) | **PASS** | TESTED_UNIT_SECURITY | not re-timed |
+| `npm run test:all` | Comprehensive quality pipeline | not re-run in this checkpoint | not measured | NOT_RUN | COMPREHENSIVE_PIPELINE | n/a |
 
 ---
 

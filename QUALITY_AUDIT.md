@@ -72,3 +72,41 @@
   - Liveness probe: `/health/live` returns 200 OK.
   - Readiness probe: `/health/ready` validates PostgreSQL and Redis connectivity.
 - **Distributed Concurrency:** Redlock engine guarantees atomic first-acceptance locking, verified under concurrent multi-worker race conditions with zero double-assignments.
+
+---
+
+## Checkpoint 2026-10-20: audit record and corrections
+
+This section records the cleanup audit of 2026-10-20 (baseline `2383a109c35a1259a490db050929690db32c4bc7`). The entries above are earlier records. Where they conflict with this section, this section governs. Details are in `PROGRESS.md` sections 5 and 7 and in `blocker.txt`.
+
+### Scope and method
+
+- Tooling: TypeScript unused-declaration analysis; an unreferenced-export scan over `api/`, `src/`, `scripts/` and `e2e/`; an orphan-module scan; a dependency import scan; secret-pattern and private-path scans over tracked files; and the documentation validator.
+- Manual line-by-line review: `api/services/auth-service.ts`, `api/routes/auth-router.ts`, `api/app.ts` (route mounts), `api/db/repository.ts` (seeding), `blocker.txt`, `docs/archive/ARCHIVE_MANIFEST.md`, `README.md`, `PROGRESS.md`.
+- Not manually reviewed: the other source and test files, the 148 documents under `docs/`, and the generated route tree. The denominator is 597 tracked files; 0 of them have a completed line-by-line review in this checkpoint.
+
+### Findings and disposition
+
+| # | Category | Finding | Disposition |
+|---|---|---|---|
+| Q-01 | Dead code | 17 unused declarations and imports (TypeScript) | FIXED on the task branch; re-check reports 0 |
+| Q-02 | Dead code | 17 unreferenced exports; an unused duplicate API client | FIXED on the task branch |
+| Q-03 | Dead code | 28 unused shadcn UI component files | FIXED on the task branch (restore from baseline if needed) |
+| Q-04 | Dependencies | 22 declared dependencies with no import | FIXED on the task branch (`npm uninstall`) |
+| Q-05 | Tooling | Three one-off Python QA scripts with `/tmp` paths | FIXED on the task branch (removed; in Git history) |
+| Q-06 | Privacy | Private local filesystem paths in a tracked manifest (two copies) | FIXED on `main` (documentation commit); copy at root removed |
+| Q-07 | Governance | Cross-product portfolio matrix in a product repository | FIXED on `main` (file removed; copy moved to owner backup); owner to designate location (BLOCKER-014) |
+| Q-08 | Security | Token signature compared with `===` | FIXED on the task branch (`crypto.timingSafeEqual`); owner review pending |
+| Q-09 | Security | Fictional admin and merchant accounts seeded in every environment, including a published admin phone number | FIXED on the task branch; owner review pending (BLOCKER-023) |
+| Q-10 | Security | Two sign-in paths on `/api/v1/auth`; in-memory repository used at runtime | OPEN; owner decision (BLOCKER-010, BLOCKER-011) |
+| Q-11 | Security | Token signing secret default may have existed in other environments | OPEN; owner confirmation and rotation (BLOCKER-002) |
+| Q-12 | Scope | Kannada strings in an unused locale block (outside English and Telugu scope) | FIXED on the task branch (block removed) |
+| Q-13 | Tooling | Prettier check fails; ESLint not installed; no coverage tool | OPEN (BLOCKER-018) |
+| Q-14 | Accuracy | Test counts and tooling claims in TEST_MATRIX.md, GAP_MATRIX.md and earlier QUALITY_AUDIT.md entries (for example "ESLint", "53 doc validator tests", "verified under concurrent multi-worker race conditions") | Corrected in TEST_MATRIX.md and GAP_MATRIX.md (FR-4 and FR-6 set to PARTIAL). The claim about concurrency above is **not supported** in this repository: the real-PostgreSQL race proof has not been run (see GAP_MATRIX.md FR-4). |
+| Q-15 | Accuracy | Blocker entries citing non-existent tables, files and environment names | FIXED in `blocker.txt` (see PROGRESS.md section 7.1) |
+| Q-16 | Accuracy | Browser suite: API connection refusals during the web server start | OPEN (BLOCKER-019) |
+
+### Status of this audit
+
+- The repository cleanup is **not VERIFIED** under the Completion Program (section 2.5): the full inventory, manual line-by-line review of every file, and independent review have not been completed.
+- No category in the portfolio adoption matrix is marked VERIFIED for FixHub on the basis of this checkpoint.

@@ -1,6 +1,6 @@
 # Documentation index
 
-This tree contains product foundation and governance documents for Fix Hub, the owner-selected product name under parent company Viswatra. `A–Z Services` and `viswatra-marketplace` are historical planning identifiers. `fixhub-platform` is a recommended identifier; the current public repository is `varunjakkampudi-tech/FixHub`, default branch `main`. Logo, visual identity, colors, typography, domain, and tagline remain OPEN.
+This tree contains product foundation and governance documents for Fix Hub, the owner-selected product name under parent company Viswatra. `A–Z Services` and `viswatra-marketplace` are historical planning identifiers. `fixhub-platform` is a recommended identifier; the current public repository uses `main` as its default branch. Logo, visual identity, colors, typography, domain, and tagline remain OPEN.
 
 ## Product
 

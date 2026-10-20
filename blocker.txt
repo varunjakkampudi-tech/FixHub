@@ -1,329 +1,997 @@
 ================================================================================
-FIX HUB (VISWATRA) — MASTER ACTIONABLE BLOCKER REGISTER
+FIX HUB (VISWATRA) - MASTER ACTIONABLE BLOCKER REGISTER
 ================================================================================
-Document: blocker.txt
-Authoritative Standard: FixHub-Autonomous-Goal.md (Section 17) & Viswatra Global Engineering Quality Standard v1.1
-Repository: varunjakkampudi-tech/FixHub
-Baseline SHA: 67c4d573fe7a24f5ea37da45b7a1106bd73eec17
-Last Updated: 2026-10-20
+Document:            blocker.txt
+Governing rules:     docs/specs/FixHub-Autonomous-Goal.md (sections 0.1, 17, 20)
+                     docs/specs/Viswatra-Global-Engineering-Quality-Standard-v1.1.md (section 3, item 11)
+Repository:          this repository; default branch main
+Last updated:        2026-10-20 (cleanup checkpoint, see PROGRESS.md section 7)
+Baseline reviewed:   main at 2383a109c35a1259a490db050929690db32c4bc7
 
-This file is the single, authoritative, actionable register of all dependencies,
-external accounts, legal obligations, and governance actions that require the
-human owner/founder. All items marked READY_FOR_OWNER contain step-by-step
-action instructions. Resolved items are preserved with verified evidence.
+HOW TO READ THIS FILE
+- Status values: OPEN, READY_FOR_OWNER, BLOCKED, RESOLVED, VERIFIED.
+  RESOLVED = fixed with evidence on the stated branch or commit.
+  VERIFIED = re-checked at the stated level of evidence. A status in an earlier
+  version of this file is not a status unless it is repeated here with evidence.
+- "Verified fact" = checked in this repository on 2026-10-20 by a command or file read.
+  "Self-reported" = stated by an earlier document and not re-verified.
+  "Assumption" = external fact or legal reading that needs owner or specialist confirmation.
+- Environment variable NAMES are listed. Values must never be written here.
+- Every "Tests to rerun" entry is a script that exists in package.json.
+- Commit SHAs are listed only where they were verified on 2026-10-20.
 
 ================================================================================
-BLOCKER-001: Governance & Autonomous Implementation Activation (v1.3, D01, D17)
+OWNER APPROVAL RECORDS (owner-written entries only)
+================================================================================
+No approval entry is recorded in this file as of 2026-10-20.
+Agents never create, edit, backdate, or remove approval entries here.
+
+Consequence while no entry exists:
+- FixHub Autonomous Goal status: AWAITING_OWNER_APPROVAL (Goal section 0.1).
+- Product implementation beyond pre-activation work is not authorized.
+- The 2026-10-15 work authority (docs/governance/product-foundation-work-authority.md)
+  permits research, requirements, architecture, interaction specifications,
+  design-system preparation and bounded offline proofs. It does not permit
+  application feature work, provider calls, production work or deployment.
+
+Checkpoint scope (2026-10-20): a documentation commit for main, plus cleanup
+commits kept on a task branch for owner review (see BLOCKER-016 and BLOCKER-017).
+
+================================================================================
+SUMMARY TABLE
+================================================================================
+ID        Priority  Status             Title
+--------  --------  -----------------  -------------------------------------------
+BLOCKER-001  P0    READY_FOR_OWNER    Record owner approval of spec v1.3, D01, D17 on main
+BLOCKER-002  P0    READY_FOR_OWNER    Rotate JWT secret where the leaked default may have been used
+BLOCKER-003  P1    READY_FOR_OWNER    Legal entity and e-commerce operator registration (legal review)
+BLOCKER-004  P1    READY_FOR_OWNER    WhatsApp provider decision (D05) and template approval
+BLOCKER-005  P1    READY_FOR_OWNER    Indian SMS/DLT registration (depends on D04)
+BLOCKER-006  P2    READY_FOR_OWNER    Mobile store accounts (depends on D06)
+BLOCKER-007  P2    READY_FOR_OWNER    Separate staging host, backups, domain and TLS (D12)
+BLOCKER-008  P2    READY_FOR_OWNER    Native Telugu review of money, consent and safety copy (D27)
+BLOCKER-009  P0    RESOLVED           FR-1 commit #21 security defects (unit-tested; not system-verified)
+BLOCKER-010  P0    READY_FOR_OWNER    Commit #21 in-memory runtime paths still mounted (FR-3, D18)
+BLOCKER-023  P0    RESOLVED           Fictional admin and merchant accounts seeded in every environment (task branch)
+BLOCKER-011  P0    READY_FOR_OWNER    Two sign-in paths on /api/v1/auth (FR-2, D04, amendment v1.3-A)
+BLOCKER-012  P1    READY_FOR_OWNER    Owner-side source documents changed; amendments await approval
+BLOCKER-013  P1    READY_FOR_OWNER    Repository name and links in governance documents (CR-02)
+BLOCKER-014  P1    READY_FOR_OWNER    Portfolio adoption matrix removed from this repository
+BLOCKER-015  P1    READY_FOR_OWNER    Direct-to-main publication and branch-protection compatibility
+BLOCKER-016  P1    READY_FOR_OWNER    Cleanup commits on task branch need owner review before promotion
+BLOCKER-017  P1    OPEN               Independent review not performed for this checkpoint
+BLOCKER-018  P1    OPEN               Format, lint and coverage gates are not met (tooling)
+BLOCKER-019  P2    OPEN               Browser run: API not reachable during the Playwright web server start
+BLOCKER-020  P2    OPEN               Scope classification of features beyond FixHub spec v1.3
+BLOCKER-021  P2    OPEN               Naming and folder structure follow-up (documents)
+BLOCKER-022  P1    READY_FOR_OWNER    Open owner decisions D02-D27 (consolidated list and external dependencies)
+
+================================================================================
+BLOCKER-001: Governance activation (spec v1.3, D01, D17)
 ================================================================================
 - ID: BLOCKER-001
-- Title: Record Owner Approval of FixHub Spec v1.3, Decision D01, and D17 on Main
-- Priority: CRITICAL (P0)
-- Module: Governance & Repository Work Authority
-- Spec Requirement / Gate: FixHub-Autonomous-Goal.md (Section 0.1), AGENTS.md
+- Title: Record owner approval of Product Specification v1.3, D01, and D17 on main
+- Priority: P0 (CRITICAL)
+- Module: Governance and repository work authority
+- Requirement or gate: Autonomous Goal section 0.1; Quality Standard section 2.4
 - Status: READY_FOR_OWNER
-- Problem: Autonomous implementation of later stages remains officially at
-  AWAITING_OWNER_APPROVAL until owner approval is recorded on main.
-- Verified Cause: Section 0.1 of FixHub-Autonomous-Goal.md strictly prohibits AI agents
-  from self-certifying or backdating owner approval.
-- Current State: Autonomous pre-activation authority is complete (backup bundle verified,
-  Stage 0 security quarantine remediated, draft matrices and tests complete).
-- Impact: Further autonomous commits on branches require recorded owner authorization.
-- What Was Tried: Forensic repository audit, backup verification, and Stage 0 quarantine
-  completed under existing governance.
-- Work Completed:
-  1. Full Git bundle backup created and verified (`fixhub-baseline-b34ea99...bundle`).
-  2. Four FR-1 security defects remediated with 10 passing regression tests.
-  3. Prepared exact proposed text for AGENTS.md and work-authority amendment.
-- Why Autonomous Resolution Is Unsafe: AI agents cannot impersonate the owner or
-  grant themselves governance authority.
-- Exact Owner Action: Commit and push the approval record to `main` or merge a PR
-  containing the approval record in `PROGRESS.md` and the updated `AGENTS.md`.
-- Step-by-Step Instructions:
-  1. Open `AGENTS.md` and ensure the work authorization reflects:
-     "The owner authorizes autonomous development on development integration branches
-      pursuant to FixHub-Product-Spec-v1.3.md, D01, and D17, preserving protected main."
-  2. In `docs/governance/decision-register.md`, update DEC-009 / D01 and add D17:
-     - D01: One coordinated launch scope (LOCKED - Approved by Owner on 2026-10-19).
-     - D17: Autonomous branch integration workflow (LOCKED - Approved by Owner on 2026-10-19).
-  3. Commit these changes to `main`.
-- Environment Variable Names: None.
-- Dependencies: Owner GitHub review and merge.
-- Expected Result: Autonomous Goal Section 0.1 activation status changes from
-  AWAITING_OWNER_APPROVAL to ACTIVE.
-- Verification: Run `git log origin/main -n 1` to verify approval commit on `main`.
-- Tests to Rerun: `npm run test:docs`
-- Evidence: `PROGRESS.md` section 1.
+
+- Problem: Autonomous implementation stays at AWAITING_OWNER_APPROVAL until the owner
+  records the approval in this file.
+
+- Verified cause (verified fact): No owner-written approval entry exists at the top of
+  this file. The decision register (docs/governance/decision-register.md) lists DEC-001
+  to DEC-018. It has no row labelled D01 or D17.
+
+- Corrections in this checkpoint:
+  - The earlier text said D01 and D17 were "LOCKED - Approved by Owner on 2026-10-19" in
+    docs/governance/decision-register.md. That is not what the register contains
+    (verified). The earlier wording is withdrawn.
+  - The owner-side Autonomous Goal and Engineering Standards now contain PROPOSED
+    amendments v1.3-A, v1.3-B, v1.3-C (see BLOCKER-012). Those do not change section 0.1.
+
+- Current state: Verified. Activation not met.
+
+- Impact: Feature work, provider integration and hosting work remain unauthorized.
+
+- What was tried: Read section 0.1 of the Goal, the work authority, the decision register
+  and this file on 2026-10-20.
+
+- Why autonomous resolution is unsafe: An agent cannot create, backdate or infer owner
+  approval (Goal section 0.1; Quality Standard section 2.4).
+
+- Exact owner action:
+  1. Decide whether to approve spec v1.3, D01 and D17 as written in the owner's current
+     documents (see BLOCKER-012 for the version question).
+  2. Add an owner-written entry at the top of this file, using ID OWNER-APPROVAL-1, with
+     date, approver, approved document names and versions, and the decisions approved.
+  3. Commit that entry to main through your normal approved process.
+
+- Step-by-step instructions:
+  1. Open blocker.txt on main.
+  2. Above the SUMMARY TABLE, add:
+       OWNER-APPROVAL-1 | RESOLVED | YYYY-MM-DD | Approver: <name> |
+       Approved: FixHub-Product-Spec-v1.3.md (version/checksum: <value>), D01, D17
+  3. Confirm AGENTS.md and docs/governance/product-foundation-work-authority.md contain the
+     D17 wording you approve. Those files are owner-governed; agents do not edit them.
+  4. Commit the entry. The agent will re-read the file at the next session and update
+     PROGRESS.md section 1.
+
+- Environment variable names: none.
+- Dependencies: owner decision; BLOCKER-012.
+- Expected result: Goal section 0.1 status changes to ACTIVE.
+- Verification: The approval entry is on main and the file's history shows its commit.
+- Tests to rerun: npm run test:docs
+- Evidence: docs/governance/decision-register.md; docs/governance/product-foundation-work-authority.md
 
 ================================================================================
-BLOCKER-002: Production & Staging Cryptographic Secret Configuration
+BLOCKER-002: JWT signing secret rotation and investigation follow-up
 ================================================================================
 - ID: BLOCKER-002
-- Title: Configure Production JWT and HMAC Cryptographic Secrets
-- Priority: CRITICAL (P0)
-- Module: Authentication & Security (FR-1, SR-01)
-- Spec Requirement / Gate: FixHub-Product-Spec-v1.3.md (FR-1), Quality Standard Cat 12
+- Title: Rotate the JWT and HMAC signing secret; confirm no environment used the leaked default
+- Priority: P0 (CRITICAL)
+- Module: Authentication and security (FR-1, SR-01)
+- Requirement or gate: FR-1; Engineering Standards section 2; Quality Standard section 22
 - Status: READY_FOR_OWNER
-- Problem: The repository is public. A default JWT secret string was historically
-  committed in PR #21 and is publicly visible in git history.
-- Verified Cause: `api/services/auth-service.ts` originally contained a fallback secret.
-- Current State: Code-level quarantine is active. The backend refuses to start and halts
-  immediately in non-test environments if `JWT_SECRET` is unset, < 32 chars, or equals
-  the leaked default string.
-- Impact: Production or staging deployments will crash intentionally on startup until
-  the owner provisions unique, secure secrets.
-- What Was Tried: Investigation documented in `docs/investigations/fr-1-jwt-secret.md`.
-  Startup enforcement guard implemented and tested.
-- Work Completed: Hardcoded fallback removed; startup validation added; negative tests
-  passing in `api/test/security-quarantine-fr1.test.ts`.
-- Why Autonomous Resolution Is Unsafe: AI agents must never generate production secrets
-  or store real cryptographic keys in code repositories.
-- Exact Owner Action: Generate a cryptographically random 64-character secret and inject
-  it into the server environment configuration (never commit to git).
-- Step-by-Step Instructions:
-  1. Open a secure terminal on your local machine.
-  2. Run the command:
-     node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-  3. Copy the resulting 64-character hex string.
-  4. In your production hosting environment (or local `.env` for production runs), set:
-     JWT_SECRET=<your-generated-64-char-hex-string>
-     AUTH_HMAC_SECRET=<your-generated-64-char-hex-string>
-  5. Ensure these environment variables are never committed to version control.
-  6. Session Invalidation Procedure: Purge any pre-existing session records from the database
-     via `TRUNCATE auth_sessions;` so no legacy sessions survive rotation.
-  7. Activity Audit: Review `audit_logs` table and access logs to confirm no unrecognized
-     privileged actions or unauthorized booking states occurred prior to rotation.
-- Environment Variable Names: `JWT_SECRET`, `AUTH_HMAC_SECRET`
-- Dependencies: Owner terminal and hosting environment secrets manager.
-- Expected Result: Backend starts in production mode without security violation errors.
-- Verification: Start server with production environment variables; verify 200 OK on `/health/live`.
-- Tests to Rerun: `npm run test:smoke`
-- Evidence: `docs/investigations/fr-1-jwt-secret.md`.
+
+- Problem: A default signing string was committed in commit #21 (merged through PR #21)
+  and is visible in the public repository history.
+
+- Verified cause (verified fact):
+  - The string EXPOSED_LEAKED_JWT_SECRET in api/services/auth-service.ts is now used only
+    to reject that value at startup in non-test mode.
+  - The earlier fallback was introduced in commit a534af0 and merged through commit
+    dd1bc789ae372c80281a7e4f3d11768a48ccaaab (see docs/investigations/fr-1-jwt-secret.md).
+
+- Current state (verified fact):
+  - getAuthJwtSecret() in api/services/auth-service.ts refuses to run outside test mode
+    unless JWT_SECRET or AUTH_HMAC_SECRET is set, has at least 32 characters, and is not the
+    leaked value.
+  - Regression tests: api/test/security-quarantine-fr1.test.ts (12 tests on the task branch;
+    10 on main).
+
+- Corrections in this checkpoint:
+  - Earlier step 6 said to run TRUNCATE auth_sessions. No table with that name exists.
+    The session table in api/migrations/001_identity.sql is identity_session.
+  - Earlier step 7 referred to an audit_logs table. No table with that name exists in
+    api/migrations. Audit storage is not implemented yet.
+  - The investigation record says FixHub "has never had a public staging or production
+    server deployed". That is a statement from repository search only. The agent cannot
+    check hosting accounts, provider consoles or deployment logs. The owner must confirm it.
+
+- Impact: If any environment (including a demo or preview host) ever ran with the default
+  secret, tokens signed with it must be treated as compromised.
+
+- What was tried: Repository history search, CI workflow review, .env review and
+  documentation search (see docs/investigations/fr-1-jwt-secret.md).
+
+- Why autonomous resolution is unsafe: Secret generation and rotation happen only in the
+  owner's hosting environment. The agent must not hold or create production keys.
+
+- Exact owner action:
+  1. Confirm, for every hosting account, preview host and demo host you have used, whether
+     the default string was ever set in its environment. Record the answer in
+     docs/investigations/fr-1-jwt-secret.md through a reviewed change.
+  2. If it was set, or you cannot rule it out, rotate the secret (steps below).
+
+- Step-by-step instructions:
+  1. Generate a 64-character hex value in a trusted local terminal:
+       node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+  2. In each hosting environment, set JWT_SECRET to that value. Set AUTH_HMAC_SECRET only if
+     your deployment still uses it. Do not commit either value.
+  3. Invalidate existing sessions. The current database session table is identity_session
+     (api/migrations/001_identity.sql). Remove its rows only after backing up the database
+     and reviewing them with the database owner.
+  4. Review authentication activity for the affected period. No audit table exists yet, so
+     use your hosting provider's logs.
+  5. Record the rotation date and the reviewer in docs/investigations/fr-1-jwt-secret.md.
+
+- Environment variable names: JWT_SECRET, AUTH_HMAC_SECRET (names only).
+- Dependencies: BLOCKER-010 and BLOCKER-011 (two token-issuing paths are still mounted).
+- Expected result: Startup in non-test mode fails without a valid, non-leaked secret.
+- Verification: Start the API with NODE_ENV unset and no secret: it must exit with the
+  FATAL_SECURITY_ERROR message.
+- Tests to rerun: npm run test:security
+- Evidence: api/services/auth-service.ts; api/test/security-quarantine-fr1.test.ts;
+  docs/investigations/fr-1-jwt-secret.md
 
 ================================================================================
-BLOCKER-003: Legal Entity Formation & Andhra Pradesh GST E-Commerce Registration
+BLOCKER-003: Legal entity and e-commerce operator registration
 ================================================================================
 - ID: BLOCKER-003
-- Title: Legal Incorporation & GSTIN Registration for Electronic Commerce Operator
-- Priority: HIGH (P1)
-- Module: Legal, Finance & Compliance (TR-05, D09)
-- Spec Requirement / Gate: FixHub-Product-Spec-v1.3.md (D09, TR-05), Gate G08
+- Title: Legal entity, GST registration as an e-commerce operator, and legal review
+- Priority: P1 (HIGH)
+- Module: Legal, finance and compliance (TR-05, D09)
+- Requirement or gate: Product Spec TR-05, D09; gate G08
 - Status: READY_FOR_OWNER
-- Problem: Cannot legally collect platform commissions, issue e-commerce invoices, or
-  process electronic marketplace transactions in India without GSTIN e-commerce registration.
-- Verified Cause: Central Goods and Services Tax (CGST) Act Section 9(5) and Section 52
-  mandate Electronic Commerce Operator (ECO) registration regardless of turnover threshold.
-- Current State: Application operates strictly on Cash-on-Completion (COD) basis with
-  direct customer-to-merchant settlement. No platform escrow or online fees collected.
-- Impact: Online digital payment collection and platform fee monetization cannot be activated.
-- What Was Tried: Consulted questions documented in `docs/product/feasibility/legal/legal-counsel-questions.md`.
-- Work Completed: Cash on Completion (COD) payment flow and disclaimers fully built and tested.
-- Why Autonomous Resolution Is Unsafe: Requires government identity verification, incorporation
-  documents, and legal contracts signed by a living corporate officer.
-- Exact Owner Action: Incorporate corporate entity and obtain AP GSTIN registration.
-- Step-by-Step Instructions:
-  1. Incorporate Private Limited or LLP entity under parent brand Viswatra with MCA.
-  2. Obtain corporate PAN, TAN, and bank account in India.
-  3. Apply for GSTIN registration in Andhra Pradesh (State Code: 37) under E-Commerce Operator category.
-  4. Engage Chartered Accountant / AP High Court counsel to review merchant terms of service.
-  5. Once registered, provide legal entity name and GSTIN for invoice footer configuration.
-- Environment Variable Names: `LEGAL_ENTITY_NAME`, `LEGAL_ENTITY_GSTIN`
-- Dependencies: Ministry of Corporate Affairs (MCA), GST Portal, Legal Counsel.
-- Expected Result: Legal compliance for e-commerce intermediary operations in Tanuku, AP.
-- Verification: GSTIN verified active on services.gst.gov.in.
-- Tests to Rerun: `npm run test:regression`
-- Evidence: `docs/product/feasibility/legal/legal-counsel-questions.md`.
+
+- Problem: Marketplace payments, platform fees and e-commerce invoices need legal
+  structure and registrations that the agent cannot create.
+
+- Verified cause: Assumption. The GST and e-commerce operator reading in the earlier text
+  is a legal interpretation. It must be confirmed by a qualified adviser before use.
+
+- Corrections in this checkpoint:
+  - The earlier text said the cash-on-completion flow was "fully built and tested". That is
+    self-reported. Evidence for the flow exists only as tests in api/test; no legal review
+    supports the disclaimers.
+  - Environment variable names LEGAL_ENTITY_NAME and LEGAL_ENTITY_GSTIN are not read by
+    any code (verified: no references). They are planned names only.
+
+- Current state: No payment or fee collection is implemented.
+
+- Exact owner action: Obtain legal advice on the entity structure and registrations, then
+  decide the launch payment model (D09).
+
+- Step-by-step instructions:
+  1. Open docs/product/feasibility/legal/legal-counsel-questions.md.
+  2. Send the questions to qualified counsel. The agent does not contact counsel.
+  3. Record the advice and your decision on D09 in docs/governance/decision-register.md
+     through a reviewed change.
+  4. Provide the legal entity name and GSTIN only if you want them shown on invoices;
+     the agent will then add them as configuration, not as source code.
+
+- Environment variable names (planned, not read by code): LEGAL_ENTITY_NAME, LEGAL_ENTITY_GSTIN
+- Dependencies: legal counsel; D09.
+- Expected result: Written advice and an owner decision on D09.
+- Verification: The advice is filed in the feasibility legal folder; no value is written in code.
+- Tests to rerun: npm run test:docs
+- Evidence: docs/product/feasibility/legal/legal-counsel-questions.md
 
 ================================================================================
-BLOCKER-004: Meta WhatsApp Cloud API Production Account & Number Verification
+BLOCKER-004: WhatsApp provider decision (D05) and template approval
 ================================================================================
 - ID: BLOCKER-004
-- Title: Meta WhatsApp Business Platform Account & Dedicated SIM Verification
-- Priority: HIGH (P1)
-- Module: Channels & Communications (CH-01, D05)
-- Spec Requirement / Gate: FixHub-Product-Spec-v1.3.md (CH-01, D05), Gate G10
+- Title: Choose the WhatsApp provider and obtain template approval
+- Priority: P1 (HIGH)
+- Module: Channels and notifications (CH-01, CH-04, TR-06, D05)
+- Requirement or gate: Product Spec CH-01, CH-04, D05; gate G10
 - Status: READY_FOR_OWNER
-- Problem: Live automated WhatsApp booking updates, technician dispatch alerts, and
-  customer notifications cannot be transmitted without a verified Meta Business Account.
-- Verified Cause: Meta WhatsApp Cloud API requires business verification, approved templates,
-  and dedicated phone numbers.
-- Current State: Complete adapter pattern implemented (`api/twilio.ts`, `api/notification-outbox.ts`).
-  Mocks and unit tests active (10 passing tests).
-- Impact: Live WhatsApp messages are held safely in the outbox; customers only see in-app updates.
-- What Was Tried: Tested adapter interfaces and outbox queue resilience with 100% pass rate.
-- Work Completed: In-app notification center, webhook HMAC verification, and outbox retry dispatcher built.
-- Why Autonomous Resolution Is Unsafe: Requires corporate credit card, government business proof,
-  and WhatsApp terms acceptance.
-- Exact Owner Action: Register and verify business on Meta Business Manager and procure a dedicated SIM.
-- Step-by-Step Instructions:
-  1. Navigate to business.facebook.com and verify Viswatra / FixHub business profile with GSTIN/Udyam.
-  2. Procure a clean, dedicated SIM phone number for Tanuku service dispatch (not registered on personal WhatsApp).
-  3. Under WhatsApp Manager, add and verify the phone number via voice/SMS OTP.
-  4. Submit transactional notification templates (Booking Confirmed, Technician En Route, Quote Review).
-  5. Generate a permanent System User token with `whatsapp_business_messaging` permission.
-  6. Add credentials to hosting environment variables.
-- Environment Variable Names:
-  `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_BUSINESS_ACCOUNT_ID`
-- Dependencies: Meta Business Manager, Telecom SIM Provider.
-- Expected Result: Real WhatsApp messages delivered to Tanuku customers and merchants.
-- Verification: Send test template message via WhatsApp Cloud API Explorer to verify 200 OK.
-- Tests to Rerun: `npm run test:all`
-- Evidence: `api/test/whatsapp-contact.test.ts`.
+
+- Problem: Automated WhatsApp messages need an approved provider, approved templates,
+  opt-in and a verified sender.
+
+- Corrections in this checkpoint:
+  - The earlier text described a Meta WhatsApp Cloud API integration and listed variables
+    WHATSAPP_ACCESS_TOKEN, WHATSAPP_PHONE_NUMBER_ID, WHATSAPP_BUSINESS_ACCOUNT_ID. No code
+    reads those names (verified: no references).
+  - The code uses Twilio. The adapter is api/twilio.ts. The README lists
+    TWILIO_WHATSAPP_SERVICE_CONTENT_SID, TWILIO_WHATSAPP_STATUS_CONTENT_SID and
+    TWILIO_WHATSAPP_VERIFICATION_CONTENT_SID.
+  - The provider choice is open (D05). See BLOCKER-022.
+  - The earlier "10 passing tests" figure is not re-verified. Evidence now: api/test/twilio.test.ts
+    and api/test/whatsapp-contact.test.ts.
+
+- Current state: Adapter and outbox code exist; notifications are disabled by default.
+  No live message has been sent by this repository.
+
+- Exact owner action: Decide D05; then obtain provider account, sender and template
+  approval through the provider's own process.
+
+- Step-by-step instructions:
+  1. Decide the provider in docs/governance/decision-register.md (D05).
+  2. Provision the approved sender and templates in the provider console.
+  3. Provide the variable names and values to the deployment environment only.
+  4. Ask the agent to re-run the adapter contract tests in mock mode; live validation
+     remains an owner-supervised step.
+
+- Environment variable names (existing): TWILIO_WHATSAPP_SERVICE_CONTENT_SID,
+  TWILIO_WHATSAPP_STATUS_CONTENT_SID, TWILIO_WHATSAPP_VERIFICATION_CONTENT_SID
+- Dependencies: D05; provider approval; BLOCKER-011 (WhatsApp is messaging only, not sign-in).
+- Expected result: Approved provider with approved templates, recorded as VERIFIED_PROVIDER
+  only after a real account test.
+- Verification: Live test by the owner. Mocks never count as VERIFIED_PROVIDER.
+- Tests to rerun: npm run test:all
+- Evidence: api/twilio.ts; api/test/twilio.test.ts; api/test/whatsapp-contact.test.ts
 
 ================================================================================
-BLOCKER-005: TRAI SMS DLT Registration & Header Whitelisting (India Telecommunication)
+BLOCKER-005: Indian SMS / DLT registration
 ================================================================================
 - ID: BLOCKER-005
-- Title: Telecom Regulatory Authority of India (TRAI) DLT Registration
-- Priority: HIGH (P1)
-- Module: Authentication & Notifications (CH-05, D04)
-- Spec Requirement / Gate: FixHub-Product-Spec-v1.3.md (CH-05, D04), Gate G10
+- Title: Telecom DLT registration for transactional SMS in India
+- Priority: P1 (HIGH)
+- Module: Notifications (CH-05, D04)
+- Requirement or gate: Product Spec CH-05, D04; gate G10
 - Status: READY_FOR_OWNER
-- Problem: Transactional SMS messages (OTPs, service alerts) are blocked by Indian telecom
-  operators without Distributed Ledger Technology (DLT) entity and template registration.
-- Verified Cause: Telecom Commercial Communications Customer Preference Regulations (TCCCPR 2018).
-- Current State: Application provides safe local OTP verification in test and development modes.
-- Impact: Production transactional SMS cannot be sent to Indian mobile numbers (+91).
-- What Was Tried: Verified safe local authentication flows in Vitest and Playwright.
-- Work Completed: Truthful OTP generation, rate limiting, and RBAC authentication service implemented.
-- Why Autonomous Resolution Is Unsafe: Requires Indian business registration documents on telecom portal.
-- Exact Owner Action: Register entity on an Indian telecom DLT portal and whitelist headers.
-- Step-by-Step Instructions:
-  1. Register Viswatra on Jio DLT (telemarketer.jio.com) or Vilpower DLT (vilpower.in).
-  2. Register 6-character alphabetic Sender Header (e.g., "FIXHUB" or "VSWTRA").
-  3. Submit transactional SMS message templates with designated variable tags.
-  4. Once approved, bind DLT Principal Entity ID (PE ID) and Template IDs into SMS provider configuration (Twilio or Gupshup).
-- Environment Variable Names: `DLT_PE_ID`, `DLT_SENDER_ID`, `DLT_OTP_TEMPLATE_ID`
-- Dependencies: Jio/Vodafone-Idea/Airtel DLT Portal.
-- Expected Result: Indian telecom delivery of 6-digit OTP SMS within 5 seconds.
-- Verification: Send test SMS through approved gateway and verify delivery on AP mobile network.
-- Tests to Rerun: `npm run test:sanity`
-- Evidence: `api/test/security-quarantine-fr1.test.ts`.
+
+- Problem: Transactional SMS to Indian numbers requires DLT registration.
+
+- Corrections in this checkpoint:
+  - Environment variable names DLT_PE_ID, DLT_SENDER_ID, DLT_OTP_TEMPLATE_ID are not read by
+    any code (verified). They are planned names only.
+  - The registration portal names and the six-character header rule in the earlier text are
+    assumptions. Confirm them on the telecom portal before acting.
+  - Relevance: the owner-side amendment v1.3-A (pending) says phone OTP is not a sign-in
+    method. SMS may therefore be unnecessary. Decide D04 first (BLOCKER-011).
+  - The evidence path cited earlier (api/test/security-quarantine-fr1.test.ts) is not evidence
+    for SMS delivery. No SMS delivery code exists in this repository.
+
+- Exact owner action: Decide D04 and whether SMS is needed at all. If it is, register the
+  sender and templates through the DLT portal you choose.
+
+- Step-by-step instructions: 1) decide D04; 2) if SMS is needed, register the entity and
+  templates on a DLT portal; 3) provide the values to the deployment environment only.
+
+- Environment variable names (planned, not read by code): DLT_PE_ID, DLT_SENDER_ID, DLT_OTP_TEMPLATE_ID
+- Dependencies: D04; BLOCKER-011.
+- Expected result: Approved registration, if SMS is in scope.
+- Verification: Owner-supervised delivery test to an approved number.
+- Tests to rerun: npm run test:all
+- Evidence: none in this repository yet.
 
 ================================================================================
-BLOCKER-006: Mobile App Store Developer Accounts (Apple & Google)
+BLOCKER-006: Mobile store accounts
 ================================================================================
 - ID: BLOCKER-006
-- Title: Enroll in Apple Developer Program & Google Play Console
-- Priority: MEDIUM (P2)
-- Module: Distribution Channels (CH-02, CH-03, D06)
-- Spec Requirement / Gate: FixHub-Product-Spec-v1.3.md (CH-02, CH-03, D06), Gate G17
+- Title: Apple and Google developer accounts
+- Priority: P2 (MEDIUM)
+- Module: Distribution (CH-02, CH-03, D06)
+- Requirement or gate: Product Spec CH-02, CH-03, D06; gate G17
 - Status: READY_FOR_OWNER
-- Problem: Native Android and iOS customer/merchant apps cannot be published without
-  developer accounts.
-- Verified Cause: Apple and Google require paid organizational developer subscriptions
-  and legal D-U-N-S verification.
-- Current State: Web PWA is fully responsive across mobile viewports (tested in Playwright).
-- Impact: Native store distribution is deferred until accounts are activated.
-- What Was Tried: Validated mobile touch targets, viewport scaling, and offline service worker compatibility.
-- Work Completed: Mobile-first responsive UI, touch-friendly 48px controls, and PWA manifest configured.
-- Why Autonomous Resolution Is Unsafe: Requires payment of annual store fees ($99 Apple, $25 Google)
-  and legal account holder agreement.
-- Exact Owner Action: Enroll organization in Apple Developer and Google Play Console programs.
-- Step-by-Step Instructions:
-  1. Obtain a D-U-N-S Number for Viswatra via Dun & Bradstreet (dnb.com).
-  2. Enroll in Apple Developer Program (developer.apple.com) as an Organization.
-  3. Create Google Play Console Developer Account (play.google.com/console).
-  4. Set up merchant payment profiles and tax forms.
-- Environment Variable Names: None.
-- Dependencies: Dun & Bradstreet, Apple Inc., Google LLC.
-- Expected Result: Access to App Store Connect and Google Play Console for app publication.
-- Verification: Developer console dashboards accessible and in Good Standing.
-- Tests to Rerun: `npm run test:playwright`
-- Evidence: `src/test/fixhub-hardening.test.ts`.
+
+- Problem: Native apps cannot be published without developer accounts.
+
+- Corrections in this checkpoint:
+  - Store fees and D-U-N-S requirements in the earlier text are assumptions. Confirm them on
+    the vendors' own pages.
+  - Mobile technology is undecided (D06). This blocker should not be acted on before D06.
+  - The evidence cited earlier (src/test/fixhub-hardening.test.ts) does not test store
+    accounts. It is not evidence for this blocker.
+  - The earlier statement that the web app is "fully responsive ... tested in Playwright"
+    is partly true: the browser suite covers two projects (desktop Chromium and Pixel 5),
+    see BLOCKER-019. It does not prove store readiness.
+
+- Exact owner action: Decide D06 first; then enrol the organization in each store program.
+- Step-by-step instructions: 1) decide D06; 2) obtain a D-U-N-S number if the vendor requires
+  one; 3) enrol in each program; 4) complete the payment and tax profile yourself.
+- Environment variable names: none.
+- Dependencies: D06; D-U-N-S; legal entity (BLOCKER-003).
+- Expected result: Accounts in good standing.
+- Verification: Owner checks each console.
+- Tests to rerun: none applicable until D06 is decided.
+- Evidence: none in this repository.
 
 ================================================================================
-BLOCKER-007: Staging Host & Cloud Infrastructure Provisioning
+BLOCKER-007: Staging host, backups, domain and TLS
 ================================================================================
 - ID: BLOCKER-007
-- Title: Provision Staging Environment Host and Dedicated Database
-- Priority: MEDIUM (P2)
-- Module: DevOps & SRE (Section 0.2, Category 18)
-- Spec Requirement / Gate: FixHub-Autonomous-Goal.md (Section 0.2), Gate G16
+- Title: Provide a separate staging host; decide hosting, backups, domain and TLS (D12)
+- Priority: P2 (MEDIUM)
+- Module: Operations (Goal section 0.2; Quality Standard section 28)
+- Requirement or gate: Goal section 0.2; gate G16; D12
 - Status: READY_FOR_OWNER
-- Problem: Full staging deployment validation requires an isolated staging host
-  separate from developer machines.
-- Verified Cause: Autonomous goal section 0.2 requires an owner-provided staging host.
-- Current State: Ephemeral local test containers and in-memory spatial repositories passing 100%.
-- Impact: Staging deployment tests (`TESTED_STAGING`) cannot run until host is provided.
-- What Was Tried: Complete local Docker and Node.js test pipeline executed with 100% pass rate.
-- Work Completed: Database migration scripts (001_initial_schema.sql), health probes,
-  and container startup scripts ready.
-- Why Autonomous Resolution Is Unsafe: AI agents cannot purchase cloud instances,
-  manage DNS records, or incur recurring financial charges.
-- Exact Owner Action: Provision an Ubuntu VPS or container instance (e.g., on Hetzner, AWS,
-  or DigitalOcean) with PostgreSQL 16+ (PostGIS extension enabled) and Redis.
-- Step-by-Step Instructions:
-  1. Provision a 2 vCPU / 4 GB RAM server instance.
-  2. Install Docker or native PostgreSQL 16 with `postgis` extension and Redis 7+.
-  3. Configure domain or subdomain pointing to host (e.g. `staging.fixhub.in`).
-  4. Provide deployment SSH credentials or CI/CD webhook secret in GitHub repository settings.
-- Environment Variable Names: `STAGING_DATABASE_URL`, `STAGING_REDIS_URL`, `STAGING_HOST`
-- Dependencies: Cloud hosting provider account.
-- Expected Result: Staging environment accessible for automated deployment testing.
-- Verification: `curl https://staging.fixhub.in/health/ready` returns 200 OK.
-- Tests to Rerun: `npm run test:all`
-- Evidence: `api/test/database.test.ts`, `api/test/redis-lock.test.ts`.
+
+- Problem: Staging deployment checks need an isolated host that is not a developer machine
+  and not production.
+
+- Corrections in this checkpoint:
+  - Removed: the earlier example that listed AWS as a provider (CR-02 forbids AWS).
+  - Removed: the domain staging.fixhub.in and the sizing "2 vCPU / 4 GB". Those were
+    invented. Any staging name and size must be chosen by the owner.
+  - Removed: "in-memory spatial repositories passing 100%". Runtime still uses in-memory
+    repositories (BLOCKER-010). That is not acceptable for staging.
+  - Environment variable names STAGING_DATABASE_URL, STAGING_REDIS_URL, STAGING_HOST are not
+    read by any code (verified). Planned names only.
+  - Owner-side amendment v1.3-C (pending approval) says the existing Hostinger VPS is not a
+    FixHub staging host. Confirm this when approving the amendment.
+
+- Current state: Local development and ephemeral CI are the only environments.
+- Exact owner action: Choose a hosting provider under D12 (non-AWS per CR-02), provision a
+  separate staging host with PostgreSQL (PostGIS if required by the decision), and provide
+  the access method through your secrets manager.
+- Step-by-step instructions: 1) decide D12; 2) provision a separate host; 3) create a
+  database user limited to that database; 4) store credentials in the secrets manager;
+  5) tell the agent the host name only when it is safe to record.
+- Environment variable names (planned, not read by code): STAGING_DATABASE_URL, STAGING_REDIS_URL, STAGING_HOST
+- Dependencies: D12, D26 (file storage and malware scanning), BLOCKER-010.
+- Expected result: A staging environment that is reachable for smoke tests.
+- Verification: Health checks through the chosen host, recorded as TESTED_STAGING only after
+  the run.
+- Tests to rerun: npm run test:smoke, npm run test:sanity (against the staging host once it exists)
+- Evidence: none yet.
 
 ================================================================================
-BLOCKER-008: Native Telugu Speaker Review of Financial & Consent Copy
+BLOCKER-008: Native Telugu review
 ================================================================================
 - ID: BLOCKER-008
-- Title: Native Speaker Linguistic Review for Tanuku Telugu Dialect
-- Priority: MEDIUM (P2)
-- Module: Localization & UX (L10N-01, D27)
-- Spec Requirement / Gate: FixHub-Product-Spec-v1.3.md (L10N-01, D27), Gate G12
+- Title: Native-speaker review of Telugu money, consent, cancellation and safety copy
+- Priority: P2 (MEDIUM)
+- Module: Localization (L10N-01, L10N-14, D27)
+- Requirement or gate: Product Spec L10N-01, D27; gate G12
 - Status: READY_FOR_OWNER
-- Problem: Legal, money, and consent copy in Telugu is marked "pending native review"
-  and requires human verification by a native speaker familiar with West Godavari dialect.
-- Verified Cause: Spec section 13 states native review cannot be simulated by AI.
-- Current State: 100% string key parity between English and Telugu catalogs.
-- Impact: Formal bilingual sign-off gate G12 remains conditional.
-- What Was Tried: Verified automated key completeness, ICU syntax, and zero missing translations.
-- Work Completed: Telugu translation catalog implemented in `src/features/fixhub/locale-context.tsx`.
-- Why Autonomous Resolution Is Unsafe: AI translation can miss subtle local legal, cultural,
-  or monetary phrasing nuances in rural/semi-urban Andhra Pradesh.
-- Exact Owner Action: Have a native Telugu speaker from Tanuku / West Godavari review
-  the translation file.
-- Step-by-Step Instructions:
-  1. Open `src/features/fixhub/locale-context.tsx`.
-  2. Review Telugu translations for:
-     - Inspection fee clarity ("తనిఖీ రుసుము")
-     - Cash on completion terms ("పని పూర్తయిన తర్వాత నగదు చెల్లింపు")
-     - Cancellation disclosures ("రద్దు నిబంధనలు")
-     - Safety and dispute policies ("సమస్య పరిష్కారం & వివాదాలు")
-  3. Provide text corrections if any wording appears unnatural to Tanuku residents.
-- Environment Variable Names: None.
-- Dependencies: Human Telugu speaker review.
-- Expected Result: Verified 100% natural, accurate bilingual customer experience.
-- Verification: Record reviewer name and date in `QUALITY_AUDIT.md`.
-- Tests to Rerun: `npm run test:all`
-- Evidence: `src/test/fixhub-communications.test.ts`.
+
+- Problem: Telugu copy for money, consent and safety must be checked by a native reviewer.
+
+- Corrections in this checkpoint:
+  - The file src/features/fixhub/locale-context.tsx named earlier does not exist (verified).
+    Telugu strings are spread across src/features/fixhub (for example communications-copy.ts,
+    account.tsx and booking.tsx).
+  - The earlier claim of "100% key parity" was not re-verified on 2026-10-20. No automated
+    key-completeness script exists in package.json.
+  - A Kannada override block in src/features/fixhub/locales.ts was unused and outside the
+    English and Telugu scope (FR-9). It was removed on the task branch (see PROGRESS.md section 7).
+
+- Exact owner action: Arrange a native Tanuku or West Godavari reviewer. Record reviewer,
+  date and string version in QUALITY_AUDIT.md.
+- Step-by-step instructions:
+  1. Export the Telugu strings for review (the agent can produce a list on request).
+  2. Review the four groups: inspection or service fees, cash on completion, cancellation,
+     disputes and safety.
+  3. Return corrections; the agent updates the strings and resets their review status.
+- Environment variable names: none.
+- Dependencies: a reviewer you arrange (D27).
+- Expected result: Recorded review for every money, consent and safety string.
+- Verification: QUALITY_AUDIT.md entry with reviewer, date and string version.
+- Tests to rerun: npm run test:l10n
+- Evidence: src/test/fixhub-communications.test.ts
 
 ================================================================================
-BLOCKER-009: [RESOLVED & VERIFIED] FR-1 Commit #21 Security Quarantine
+BLOCKER-009: FR-1 commit #21 security defects (RESOLVED, not system-verified)
 ================================================================================
 - ID: BLOCKER-009
-- Title: Remediation of Four Critical Security Vulnerabilities from Commit #21
-- Priority: CRITICAL (P0)
-- Module: Authentication & Core Security (FR-1)
-- Spec Requirement / Gate: FixHub-Product-Spec-v1.3.md (FR-1), Stage 0 Goal
-- Status: VERIFIED
-- Problem: Commit #21 introduced role self-assignment, fixed OTP bypass, exposed default
-  JWT secret, and false delivery claims.
-- Verified Cause: Unvetted authentication code merged into main in PR #21.
-- Current State: All 4 vulnerabilities completely resolved and quarantined with 10 automated
-  regression tests passing 100%.
-- Impact: Resolved. System is fully protected against privilege escalation, code bypass,
-  token forgery, and untruthful messages.
-- Work Completed:
-  1. Role self-assignment eliminated: `requestOtp` ignores client role; existing DB role loaded;
-     new registrations strictly default to `customer`.
-  2. Fixed OTP bypass eliminated: static code and `testOtp` restricted to test environment only.
-  3. Fallback secret eliminated: server halts on startup if secret is missing or insecure in production.
-  4. Delivery claims made truthful: no false claims of SMS/WhatsApp transmission.
-- Verification Evidence:
-  - Vitest regression suite: `api/test/security-quarantine-fr1.test.ts` (10 passing tests).
-  - Full suite: 218 passing tests across 43 files.
-  - Investigation report: `docs/investigations/fr-1-jwt-secret.md`.
-- Completion Date: 2026-10-19.
+- Title: Remediation of four commit #21 security defects
+- Priority: P0 (CRITICAL)
+- Module: Authentication (FR-1)
+- Requirement or gate: Product Spec FR-1; Goal section 7 (Stage 0)
+- Status: RESOLVED (unit-tested). Not VERIFIED at system level.
+
+- Problem: Commit #21 added role self-assignment, a fixed-code path, a default signing
+  secret, and a false delivery claim.
+
+- Current state (verified fact on 2026-10-20):
+  1. Role self-assignment: the request schema in api/routes/auth-router.ts no longer declares a
+     role field. The unused field was removed in the task-branch commit described in
+     PROGRESS.md section 7. New registrations default to "customer" in
+     api/services/auth-service.ts.
+  2. Fixed code: the constant code is used only when NODE_ENV is "test". Outside test mode
+     the code is random and it is never returned in the response.
+  3. Default secret: see BLOCKER-002.
+  4. False delivery claim: messages say the code was dispatched to the outbox, not that
+     it was delivered.
+  5. Token signature comparison now uses crypto.timingSafeEqual (task branch only).
+
+- Limits (verified fact): These four fixes sit in the phone-OTP path that is still mounted
+  beside the email-code path (BLOCKER-010 and BLOCKER-011). The path is not a production
+  identity model. The owner-side amendment v1.3-A (pending) says it must be removed or
+  disabled. System-level verification therefore cannot be claimed until that happens.
+
+- Verification evidence:
+  - api/test/security-quarantine-fr1.test.ts: 10 tests on main; 12 on the task branch.
+  - Full Vitest suite: 218 tests in 43 files on main; 220 tests on the task branch.
+- Tests to rerun: npm run test:security
+- Evidence: api/services/auth-service.ts; api/routes/auth-router.ts;
+  api/test/security-quarantine-fr1.test.ts
+
 ================================================================================
+BLOCKER-010: Commit #21 in-memory runtime paths still mounted (FR-3, D18)
+================================================================================
+- ID: BLOCKER-010
+- Title: Remove or migrate in-memory runtime routes; owner decision on commit #21 (D18)
+- Priority: P0 (CRITICAL)
+- Module: Data and persistence (FR-3, D18)
+- Requirement or gate: Product Spec FR-3; Engineering Standards section 2 and 4.2; Quality Standard section 10
+- Status: READY_FOR_OWNER
+
+- Problem: The API still uses an in-memory Repository (api/db/repository.ts) at runtime
+  through several routers. FR-3 says no runtime path may use it outside tests.
+
+- Verified cause (verified fact): api/app.ts mounts these routers, which read and write
+  defaultRepository:
+    /api/v1/auth                 api/routes/auth-router.ts (phone OTP; see BLOCKER-011)
+    /api/v1/merchants            api/routes/merchants-router.ts
+    /api/v1/bookings             api/routes/bookings-router.ts
+    /api/v1/disputes             api/routes/disputes-router.ts
+    /api/v1                      api/routes/reviews-router.ts
+    /api/v1/notifications        api/routes/notifications-router.ts
+    /api/v1/webhooks             api/routes/webhooks-router.ts
+  Newer PostgreSQL-backed handlers are mounted beside them (api/app.ts lines 176-223:
+  marketplace, merchant, support and whatsapp-contact). Some paths overlap in purpose
+  (for example /api/v1/bookings and /api/v1/customer/bookings).
+
+- Current state: Verified. The in-memory repository is not removed. Removing it changes
+  behaviour and tests. Engineering Standards section 2 and D18 require an owner decision.
+
+- Why autonomous resolution is unsafe: Commit #21 code is not to be deleted or merged until
+  D18 is decided (Quality Standard section 7.4). Removing the routers changes API behaviour.
+
+- Exact owner action: Decide D18 for each item: (a) retire; (b) migrate into api/migrations
+  and the PostgreSQL handlers; or (c) keep as a test double only.
+
+- Step-by-step instructions:
+  1. Read the route list above and the handlers in api/app.ts lines 176-223.
+  2. Decide per router. Record each decision in docs/governance/decision-register.md.
+  3. Ask the agent to produce a migration plan per router (after activation) with tests for
+     each replaced route.
+
+- Environment variable names: none.
+- Dependencies: BLOCKER-011; D18; approval record (BLOCKER-001).
+- Expected result: No runtime route reads defaultRepository outside test mode.
+- Verification: grep for defaultRepository in api/ shows only test files.
+- Tests to rerun: npm test; npm run test:api
+- Evidence: api/app.ts; api/db/repository.ts; api/routes/*.ts
+
+================================================================================
+BLOCKER-011: Two sign-in paths on /api/v1/auth (FR-2, D04, amendment v1.3-A)
+================================================================================
+- ID: BLOCKER-011
+- Title: Choose one identity model; retire the phone-OTP path
+- Priority: P0 (CRITICAL)
+- Module: Identity and sessions (FR-2, D04, SR-09)
+- Requirement or gate: Product Spec FR-2, D04, SR-09; Engineering Standards section 4.1
+- Status: READY_FOR_OWNER
+
+- Problem: Two identity models share the same prefix (verified fact):
+  - Phone OTP, in memory: api/routes/auth-router.ts (/request-otp, /verify-otp, /me) and
+    api/services/auth-service.ts.
+  - Email code, PostgreSQL: api/auth.ts, mounted at /api/v1/auth/code, /verify, /me,
+    /logout and /account-deletion (api/app.ts lines 176-185).
+
+- Owner-side direction (pending approval, see BLOCKER-012): amendment v1.3-A states that
+  Resend email OTP is the only sign-in method and that the commit #21 phone-OTP path is
+  RETIRED and must be removed or disabled (FR-1). The tracked v1.3 text says "reconcile".
+  The two texts conflict until the owner approves one.
+
+- Current state: Verified. Both paths are mounted and both issue tokens.
+
+- Impact: A second identity path weakens the identity model and the approval story.
+
+- Exact owner action:
+  1. Approve or reject amendment v1.3-A (BLOCKER-012).
+  2. If approved, confirm that the phone-OTP path is retired.
+  3. Record the decision on D04.
+
+- Step-by-step instructions (after approval):
+  1. Remove the phone-OTP routes from api/app.ts and their handlers (auth-router.ts and
+     auth-service.ts), with their tests in api/test/security-quarantine-fr1.test.ts (rewrite
+     them as "route is absent"), src/test/sanity.test.ts and src/test/e2e-journey-api.test.ts,
+     which call the phone-OTP routes. api/test/completion-review.test.ts and
+     api/test/merchant.test.ts use the email-code path and stay.
+  2. Keep the email-code path and its tests.
+  3. Run the full check list in PROGRESS.md section 6.
+
+- Environment variable names: none for the removal itself.
+- Dependencies: BLOCKER-012; D04; BLOCKER-010.
+- Expected result: One sign-in path.
+- Verification: GET/POST to the removed paths returns 404; email-code tests pass.
+- Tests to rerun: npm run test:security; npm run test:api
+- Evidence: api/app.ts; api/routes/auth-router.ts; api/auth.ts
+
+================================================================================
+BLOCKER-012: Owner-side source documents changed; amendments await approval
+================================================================================
+- ID: BLOCKER-012
+- Title: Owner-side source documents differ from the tracked copies; approve or reject the amendments
+- Priority: P1 (HIGH)
+- Module: Governance and specifications
+- Requirement or gate: Quality Standard section 2.4; Goal section 0.1; the spec change-control rules
+- Status: READY_FOR_OWNER
+
+- Verified facts (2026-10-20):
+  1. The owner-side copies in the owner's documents folder (outside this repository) were
+     modified on 2026-10-20 while this checkpoint ran. Their SHA-256 values differ from the
+     tracked copies in docs/specs/, which still match the values in
+     docs/archive/ARCHIVE_MANIFEST.md.
+  2. Tracked copies (unchanged by this checkpoint):
+       FixHub-Product-Spec-v1.3.md                    F549D93B52E1EB8A08CC1426F6B4244DA4C9A4EE569DE9D7031316923DEBC52D
+       FixHub-Autonomous-Goal.md                      514380767025A1A18D12338225AF331A420AAC11E1AD840A19514F38C990E298
+       FixHub-Engineering-Standards.md                FCC1760BC72D38221EBB153538CEB35DB9040D0E8DBB952985000C9D4666ED55
+       Viswatra-Global-Engineering-Completion-Program-v1.1.md   9421280DAC8D38DACCD26378D378A862751F7DCC9BB0D8392A408CB50A1F90EC
+       Viswatra-Global-Engineering-Quality-Standard-v1.1.md     429B54C2003D8E5BF4A2949507F5A8A2C5284820F6588C4B1E3266FE18112066
+  3. Owner-side copies at the time of this checkpoint (not approved; may change again):
+       FixHub-Product-Spec-v1.3.md                    D61268053840235C9B0F5216D606A5B4E820C0FFDEC7E1FF8A34F6B87977A5AA
+       FixHub-Autonomous-Goal.md                      DBB790793D89DD68A497E6E7D4D2FE472B0D4CE4A29E41F51234BA8BA34A41F5
+       FixHub-Engineering-Standards.md                171CD128468C1442351ABCE6C4982D13ED91AD3CFD170AA16F29EB2BC3EBB23A
+       Viswatra-Global-Engineering-Completion-Program-v1.1.md   EF678997840F0BCFB34BED86A163E66F4F38AA0D75D6F12678977368DF7508C0
+       Viswatra-Global-Engineering-Quality-Standard-v1.1.md     F3D122A02AD56BBBB0B6468C8589393B19146C01CC8BBC0546689FDC7D03B4BD
+  4. Differences include these PROPOSED items, each labelled PENDING_OWNER_APPROVAL:
+     - Product Spec amendment v1.3-A: Resend email OTP as the sole sign-in method; sending
+       domain not verified (DOMAIN_UNVERIFIED); phone-OTP path RETIRED.
+     - Product Spec amendment v1.3-B: AI gateway boundary; no generative AI in launch scope;
+       privileged step-up method OPEN.
+     - Product Spec amendment v1.3-C: hosting and CI/CD work items; staging host READY_FOR_OWNER.
+     - Engineering Standards amendments v1.3-A, v1.3-C: email OTP controls, testing additions.
+     - Quality Standard Appendix D (CR-03): PROPOSED_AMENDMENT, not in force.
+     - Quality Standard CR-02 rules (no AWS; no repository names or links) appear in the
+       owner-side copy as numbered rules. The tracked copy has the CR-02 section only.
+  5. The Goal and the Standards now say "the FixHub repository" where the tracked copy names
+     the repository. The owner-side copy of the Completion Program removes the repository
+     link from its Source line.
+
+- Exact owner action:
+  1. Decide whether each amendment is approved, rejected, or deferred.
+  2. Decide whether the owner-side copies replace the tracked copies. Replacing them changes
+     checksums that other records cite (ARCHIVE_MANIFEST.md, PROGRESS.md).
+  3. If you approve, commit the new copies and the recorded checksums through your normal
+     process. The agent will then update those checksum references in a separate change.
+
+- Step-by-step instructions:
+  1. Compare the owner-side and tracked copies (diff with CRLF removed).
+  2. Record the decision for each amendment in docs/governance/decision-register.md.
+  3. Commit the chosen spec versions, and record the approval entry in blocker.txt (BLOCKER-001).
+
+- Environment variable names proposed by the amendments (names only): RESEND_API_KEY,
+  RESEND_FROM_EMAIL, OTP_HMAC_SECRET, OPENROUTER_API_KEY (not used until approved).
+- Dependencies: owner decision; BLOCKER-001.
+- Expected result: One approved spec version tracked in docs/specs/.
+- Verification: sha256sum docs/specs/*.md matches the recorded checksums.
+- Tests to rerun: npm run test:docs
+- Evidence: docs/archive/ARCHIVE_MANIFEST.md section 2
+
+================================================================================
+BLOCKER-013: Repository name and links in governance and historical documents (CR-02)
+================================================================================
+- ID: BLOCKER-013
+- Title: Remove repository names and links from governance and historical documents
+- Priority: P1 (HIGH)
+- Module: Documentation governance (CR-02; Quality Standard section 1, item 12)
+- Requirement or gate: Quality Standard CR-02; Completion Program CR-02
+- Status: READY_FOR_OWNER
+
+- Verified facts: this checkpoint removed the repository name from README.md and
+  docs/README.md, and from the archive manifest and this file. The name still appears in:
+    AGENTS.md
+    docs/specs/FixHub-Autonomous-Goal.md          (checksum-tracked canonical copy)
+    docs/specs/FixHub-Engineering-Standards.md    (checksum-tracked canonical copy)
+    docs/specs/FixHub-Product-Spec-v1.3.md        (checksum-tracked canonical copy)
+    docs/governance/product-foundation-work-authority.md
+    docs/governance/solo-maintainer-policy.md
+    docs/product/feasibility/research-authority.md
+    docs/reviews/foundation-approval.md
+    docs/reviews/foundation-quality-review.md
+    docs/reviews/foundation-review.md
+  The agent did not edit these files. Governance records, approval records and checksum-tracked
+  specifications are owner-controlled.
+
+- Exact owner action: Decide whether to amend these files (for CR-02) or accept them as
+  historical. Approval records (docs/reviews/foundation-*.md) should be amended only by
+  a new dated note, not by editing the original.
+
+- Step-by-step instructions: 1) decide per file; 2) for checksum-tracked specs, approve
+  a new version first (BLOCKER-012); 3) for review records, add a dated correction note.
+
+- Environment variable names: none.
+- Dependencies: BLOCKER-012.
+- Expected result: No repository name or link in governance text, or a documented exception.
+- Verification: a search for the repository owner handle returns only the owner-approved exceptions listed in BLOCKER-013.
+- Tests to rerun: npm run test:docs
+- Evidence: git grep output recorded in PROGRESS.md section 7.
+
+================================================================================
+BLOCKER-014: Portfolio adoption matrix removed from this repository
+================================================================================
+- ID: BLOCKER-014
+- Title: Portfolio adoption matrix moved out of the product repository
+- Priority: P1 (HIGH)
+- Module: Governance and portfolio reporting (Completion Program section 1)
+- Requirement or gate: Completion Program section 1 ("Keep it outside the product repositories")
+- Status: READY_FOR_OWNER
+
+- Problem: The file PORTFOLIO_ADOPTION_MATRIX.md was in this public repository. It shows
+  other products' status columns. The Completion Program requires that matrix to stay outside
+  product repositories.
+
+- Action taken (verified): the file was copied to the owner's external backup folder
+  (path withheld) and removed from the repository in the docs commit for this checkpoint.
+  Its SHA-256 at removal: bc4376e4e329c9a17e62925be83120947d5191aa7efd8e5f18bd4673a7fee411
+
+- Overclaims noted in the removed file (not supportable on 2026-10-20):
+  - Category 3 (repository governance) marked VERIFIED, citing ARCHIVE_MANIFEST.md.
+  - Category 5 (naming conventions) marked VERIFIED, citing scripts/lint.mjs. That script is
+    a custom check, not ESLint.
+  The Completion Program (section 2.5) allows VERIFIED only with full, current, product-specific
+  evidence for every category. None of these categories meets that bar.
+
+- Exact owner action: Choose the location for the portfolio matrix (outside every product
+  repository). Reset the statuses, starting from NOT_ASSESSED, when the new location is set.
+
+- Step-by-step instructions: 1) choose a private location; 2) copy the file from the backup
+  folder; 3) set its FixHub column statuses to what the evidence supports.
+
+- Environment variable names: none.
+- Dependencies: owner decision.
+- Expected result: Matrix kept outside this repository with corrected statuses.
+- Verification: The file is absent from git ls-files in this repository.
+- Tests to rerun: npm run test:docs
+- Evidence: PROGRESS.md section 7
+
+================================================================================
+BLOCKER-015: Direct-to-main publication and branch protection
+================================================================================
+- ID: BLOCKER-015
+- Title: Confirm whether direct publication to main is permitted for documentation checkpoints
+- Priority: P1 (HIGH)
+- Module: Repository governance and GitHub settings
+- Requirement or gate: docs/governance/product-foundation-work-authority.md (limited direct-main procedure);
+  AGENTS.md ("Repository documentation changes may be pushed to main when explicitly requested")
+- Status: READY_FOR_OWNER
+
+- Verified facts:
+  1. The remote has one branch, main (git ls-remote --heads).
+  2. The work authority records that a required status check (docs-validation), administrator
+     enforcement, conversation resolution, no force pushes and no deletions are configured.
+     It also records that a required approval may exist and cannot be proven from this
+     repository. Direct-main compatibility is "PROPOSED; ENFORCEMENT COMPATIBILITY NOT PROVEN".
+  3. A documentation-only checkpoint was pushed to main with a normal push (no force). The
+     push result and the post-push CI run are recorded in PROGRESS.md section 7.
+
+- Exact owner action: Decide whether future documentation checkpoints go direct to main, or
+  through a pull request you approve. Decide whether code changes always go through a pull
+  request.
+
+- Step-by-step instructions: 1) review the protection settings in the GitHub repository
+  settings; 2) decide the policy; 3) if pull requests are required, the agent prepares the
+  branch and opens the request only when you ask.
+
+- Environment variable names: none.
+- Dependencies: owner decision; BLOCKER-016.
+- Expected result: A written publication policy in the work authority.
+- Verification: The policy names the allowed paths and the required approvals.
+- Tests to rerun: npm run test:docs
+- Evidence: docs/governance/product-foundation-work-authority.md; docs/governance/solo-maintainer-policy.md
+
+================================================================================
+BLOCKER-016: Cleanup commits on the task branch need owner review
+================================================================================
+- ID: BLOCKER-016
+- Title: Code cleanup and auth hardening are on a task branch, not on main
+- Priority: P1 (HIGH)
+- Module: Code cleanup and identity (Engineering Standards section 6)
+- Requirement or gate: Engineering Standards section 6 (owner review before promotion for identity,
+  sessions, roles and authorization); Goal section 16
+- Status: READY_FOR_OWNER
+
+- Verified facts:
+  - Task branch: claude/fixhub-code-review-cleanup-22b476 (local only at the time of this
+    checkpoint). Its commits sit on top of main and are listed with
+    git log --oneline main..claude/fixhub-code-review-cleanup-22b476.
+  - Contents: removal of unused declarations and an unused duplicate API client; removal of
+    28 unused shadcn UI component files; removal of 22 dependencies no source file imports;
+    removal of temporary QA scripts under tools/ (three Python files); a constant-time
+    token-signature comparison and removal of an ignored role field (identity area);
+    a seed guard that creates fictional accounts (including an admin) only in test mode or when
+    FIXHUB_LOCAL_DEMO_SEED=true (BLOCKER-023), with a regression test; and formatting changes if
+    they are part of the branch.
+  - Restore path for any removed file: git show 2383a109c35a1259a490db050929690db32c4bc7:<path>
+
+- Why it stays on the branch: the identity change is a sensitive area; the work authority
+  does not allow application code on main; and the owner must review it.
+
+- Exact owner action: Review the branch, then either approve a pull request or allow the
+  owner-approved merge path.
+
+- Step-by-step instructions:
+  1. Run git log --oneline main..claude/fixhub-code-review-cleanup-22b476.
+  2. Run git diff --stat main claude/fixhub-code-review-cleanup-22b476.
+  3. Re-run the check list in PROGRESS.md section 6 on the branch.
+  4. Decide: merge, request changes, or discard. The agent will not delete the branch until
+     you decide.
+
+- Environment variable names: none.
+- Dependencies: BLOCKER-015; BLOCKER-017.
+- Expected result: Owner-reviewed merge or a recorded decision to discard.
+- Verification: Full check list on the branch (PROGRESS.md section 6).
+- Tests to rerun: npm run typecheck; npm run lint; npm test; npm run test:docs; npm run build;
+  npm run test:playwright
+- Evidence: PROGRESS.md section 7
+
+================================================================================
+BLOCKER-017: Independent review not performed (OPEN)
+================================================================================
+- ID: BLOCKER-017
+- Title: Independent review for this checkpoint is pending
+- Priority: P1 (HIGH)
+- Module: Review process (Goal section 16; Quality Standard section 3, item 7)
+- Requirement or gate: Goal section 16
+- Status: OPEN
+
+- Verified fact: No independent review session was run for this checkpoint. The author of the
+  changes is the same agent session that ran the checks.
+
+- Action: Label every change in this checkpoint "independent review pending". The
+  identity change (BLOCKER-016) must not be promoted until an independent review or an
+  owner review is recorded.
+
+- Exact owner action: Choose the independent reviewer (another person or a separate agent
+  session with only the requirements, diff and test results).
+- Environment variable names: none.
+- Dependencies: BLOCKER-016.
+- Tests to rerun: none.
+- Evidence: none yet.
+
+================================================================================
+BLOCKER-018: Format, lint and coverage gates are not met (OPEN)
+================================================================================
+- ID: BLOCKER-018
+- Title: Prettier, ESLint and coverage gates are not in place or not passing
+- Priority: P1 (HIGH)
+- Module: Tooling (Engineering Standards sections 1.2, 1.3, 7.3)
+- Requirement or gate: Engineering Standards section 7.3 items 2 and 14; Goal section 4.2
+- Status: OPEN
+
+- Verified facts (2026-10-20):
+  1. npm run lint (scripts/lint.mjs, a custom check) passes: 391 files scanned, no findings.
+     It is not ESLint.
+  2. ESLint is not installed in node_modules, although .eslintrc.json exists.
+  3. npm run format:check (Prettier) fails. With default settings on this Windows checkout
+     it reports 360 files; with --end-of-line auto it reports 98 files. The failures are
+     real formatting differences and line-ending differences.
+  4. No coverage tool is declared (@vitest/coverage-v8 is absent), so no thresholds are
+     measured (Engineering Standards section 7.2).
+  5. Mutation testing, bundle budgets, secret scanning (gitleaks), SBOM and SAST are not set up.
+
+- Action: The Engineering Standards allow the agent to add tooling after activation (Goal
+  section 1.3 and FH-C-02). Activation is not met (BLOCKER-001). The format change on the
+  task branch is labelled in PROGRESS.md section 7.
+
+- Exact owner action: Approve activation (BLOCKER-001) so the tooling work can proceed.
+- Environment variable names: none.
+- Dependencies: BLOCKER-001.
+- Tests to rerun: npm run lint; npm run format:check; npm run test:docs
+- Evidence: PROGRESS.md section 7 (command outputs)
+
+================================================================================
+BLOCKER-019: Browser run reports API connection refused (OPEN)
+================================================================================
+- ID: BLOCKER-019
+- Title: Playwright web server reports ECONNREFUSED 127.0.0.1:4000 during the run
+- Priority: P2 (MEDIUM)
+- Module: Browser runtime gate (CR-01; Quality Standard section 25.4)
+- Requirement or gate: Goal section 16A.4a; EXPECTED_RUNTIME_MESSAGES.md
+- Status: OPEN
+
+- Verified facts:
+  - npm run test:playwright passed 12 of 12 tests (desktop Chromium and Pixel 5) on
+    2026-10-20 on the working tree after the cleanup changes.
+  - The web server output contained repeated "connect ECONNREFUSED 127.0.0.1:4000" lines,
+    which mean the API on port 4000 was not running during the browser run.
+  - The browser suite uses demo mode. It does not show whether any UI request to the API
+    failed silently.
+
+- Exact owner or agent action (after activation): Determine which UI request targets port
+  4000 during these tests. Record each expected failure in EXPECTED_RUNTIME_MESSAGES.md
+  with its exact pattern, or fix the request. Run the suite with the API started.
+
+- Environment variable names: PLAYWRIGHT_BASE_URL (optional; the config reads it).
+- Dependencies: BLOCKER-001.
+- Tests to rerun: npm run test:playwright
+- Evidence: playwright.config.ts; e2e/browser-validation.spec.ts
+
+================================================================================
+BLOCKER-020: Scope classification of features beyond FixHub spec v1.3 (OPEN)
+================================================================================
+- ID: BLOCKER-020
+- Title: Classify features that exist in code but may be outside the frozen scope
+- Priority: P2 (MEDIUM)
+- Module: Scope control (Product Spec section 17; Engineering Standards section 9)
+- Requirement or gate: Quality Standard section 1, item 5; Goal section 8
+- Status: OPEN
+
+- Verified facts that need classification:
+  - Demo personas and browser-stored demo records (src/features/fixhub/demo-*.ts(x)).
+  - Google Maps URL links in src/features/fixhub (no SDK is loaded).
+  - Hindi locale type and disabled flag: the Locale type still includes "hi-IN" in
+    src/features/fixhub/locales.ts. Hindi is off by default under FR-9.
+  - An in-memory Redis stand-in: api/redis/client.ts (Standards section 1.2).
+  - Duplicate sign-in and booking UI paths (see BLOCKER-010 and BLOCKER-011).
+  - Many Lovable references in governance and planning documents (no Lovable configuration
+    files remain in the tree; verified).
+
+- Action: Record each item as IN_SCOPE, OUT_OF_SCOPE (to archive), or OWNER_DECISION. The
+  agent does not delete in-scope or owner-decision items without a decision.
+
+- Exact owner action: Decide D19 and D23 for the enhancement items in Product Spec section 19.1.
+- Environment variable names: none.
+- Dependencies: D19, D23.
+- Tests to rerun: npm run test:docs
+- Evidence: FEATURE_MATRIX.md; GAP_MATRIX.md
+
+================================================================================
+BLOCKER-021: Naming and folder structure follow-up (OPEN)
+================================================================================
+- ID: BLOCKER-021
+- Title: Professional names and folder structure for documents
+- Priority: P2 (MEDIUM)
+- Module: Documentation structure (owner instruction of 2026-10-15; Engineering Standards section 9)
+- Requirement or gate: Work authority ("professional domain-based file, folder and test names")
+- Status: OPEN
+
+- Verified facts:
+  - About 20 matrix and register files sit at the repository root (for example GAP_MATRIX.md,
+    TEST_MATRIX.md, FEATURE_MATRIX.md, COMPLETE_LAUNCH_GATE_MATRIX.md, RISK_REGISTER.md).
+  - Some document names carry phase numbers, for example
+    docs/reviews/phase-01-scope-amendment-2026-10-16.md. The owner's instruction asks for
+    domain names, not numbered phase names. Roadmap identifiers stay inside governing content.
+  - Renaming requires updating links, document-lineage.json, validators and checksums together.
+
+- Action: Plan a rename set and run it in one reviewed change with validators (test:docs).
+- Exact owner action: Approve the target folder (for example docs/matrices/) and the rule for
+  phase-numbered file names.
+- Environment variable names: none.
+- Dependencies: owner decision; BLOCKER-015.
+- Tests to rerun: npm run test:docs
+- Evidence: git ls-files output in PROGRESS.md section 7
+
+================================================================================
+BLOCKER-022: Open owner decisions D02-D27 and external dependencies (consolidated)
+================================================================================
+- ID: BLOCKER-022
+- Title: Owner decisions and external dependencies that block capabilities
+- Priority: P1 (HIGH)
+- Module: All (Goal section 17; Engineering Standards section 10)
+- Requirement or gate: Each decision blocks only the capability it affects (Product Spec 19.11)
+- Status: READY_FOR_OWNER
+
+- Verified fact: docs/governance/decision-register.md uses DEC-nnn IDs. The D-numbers
+  D02-D27 are listed in docs/blueprint/open-decisions.md and in the owner documents. The
+  mapping between the two lists is not complete in this repository.
+
+- Decisions and dependencies (each needs an owner decision or an external action):
+  D01, D17  approval of spec v1.3 and the development-branch workflow (BLOCKER-001)
+  D02       brand identity; logo, colours, domain, tagline (owner)
+  D03       launch categories and policies (owner)
+  D04       identity and OTP channels; email OTP through Resend selected (amendment v1.3-A, pending) (BLOCKER-011)
+  D05       WhatsApp provider (BLOCKER-004)
+  D06       mobile technology and stores (BLOCKER-006)
+  D07       geography beyond Tanuku (owner)
+  D08       merchant verification rules (owner; legal review TR-05)
+  D09       payments and invoices (BLOCKER-003)
+  D10       privacy policy and retention (owner; legal review)
+  D11       support staffing (owner; gate G11)
+  D12       hosting, backups, domain and TLS, Redis (BLOCKER-007)
+  D13       performance targets (owner, measured)
+  D14       beta participants (owner)
+  D15       monetization and advertising (owner)
+  D16       launch GO (owner only)
+  D18       commit #21 disposition (BLOCKER-010)
+  D19       enhancement classification (BLOCKER-020)
+  D20       assisted booking (owner)
+  D21       maintenance reminders (owner)
+  D22       quality thresholds, device matrix, sample sizes (owner)
+  D23       classification of EH-19 to EH-25 (owner)
+  D24       reliability signals affecting dispatch (owner)
+  D25       separation of duties for configuration publishing (owner)
+  D26       file storage, malware scanning, backup key custody (owner; external vendor)
+  D27       native Telugu reviewers and the Tanuku locality list (owner; BLOCKER-008)
+  External dependencies: legal review (BLOCKER-003); Tanuku field evidence and merchant supply
+  (gate G04, owner-arranged); pilot (gate G25, owner-arranged).
+
+- Exact owner action: Record each decision in docs/governance/decision-register.md with its
+  D-number and approver date.
+- Environment variable names: none.
+- Dependencies: owner.
+- Tests to rerun: npm run test:docs
+- Evidence: docs/blueprint/open-decisions.md; docs/governance/decision-register.md
+
+================================================================================
+BLOCKER-023: Fictional privileged accounts were seeded in every environment
+================================================================================
+- ID: BLOCKER-023
+- Title: Seeded admin and merchant accounts with published phone numbers
+- Priority: P0 (CRITICAL)
+- Module: Identity and authorization (FR-1 role rules; Engineering Standards section 2, "no test or demo shortcut reachable outside test mode")
+- Requirement or gate: Product Spec FR-1, SR-02; Quality Standard section 22
+- Status: RESOLVED on the task branch (unit-tested). Owner review pending (BLOCKER-016).
+
+- Verified cause (before this checkpoint): api/db/repository.ts seeded usr-admin-001
+  (phone +919999999999, role admin), usr-admin-002, usr-cust-001, usr-merch-001 and
+  usr-merch-001-alt from the Repository constructor, in any NODE_ENV. The phone numbers are
+  in a public repository. The phone-OTP path (BLOCKER-011) could issue sessions for them.
+  Combined with BLOCKER-010 (in-memory routers mounted), this is a predictable privileged
+  account on every running API instance.
+
+- Fix on the task branch:
+  - seedInitialData() returns early unless NODE_ENV is "test" or FIXHUB_LOCAL_DEMO_SEED is "true"
+    (function seedsDemoAccounts() in api/db/repository.ts).
+  - .env.example documents FIXHUB_LOCAL_DEMO_SEED as local-development only.
+  - Regression test: api/test/security-quarantine-fr1.test.ts, "Defect 5".
+
+- Side effect for owners: local API runs (npm run dev) start with no seeded accounts unless
+  FIXHUB_LOCAL_DEMO_SEED=true is set in the local, untracked environment file.
+
+- Exact owner action: Review the branch change. Decide whether local demonstration seeding
+  should stay behind the flag. Confirm that no deployed environment ever ran the old seeds
+  (BLOCKER-002 step 1 covers the same question).
+- Environment variable names: FIXHUB_LOCAL_DEMO_SEED (local development only; never shared or production)
+- Dependencies: BLOCKER-016; BLOCKER-011.
+- Tests to rerun: npm run test:security; npm test
+- Evidence: api/db/repository.ts; api/test/security-quarantine-fr1.test.ts ("Defect 5")

@@ -1,6 +1,6 @@
 # Fix Hub | Viswatra product planning
 
-Fix Hub is the owner-selected product name under the confirmed parent company Viswatra. `A–Z Services` and `viswatra-marketplace` are historical planning identifiers, not current product names. Logo, visual identity, colors, typography, domain, and tagline remain open. `fixhub-platform` is a recommended identifier; the existing public repository is `varunjakkampudi-tech/FixHub`, with `main` as its default branch.
+Fix Hub is the owner-selected product name under the confirmed parent company Viswatra. `A–Z Services` and `viswatra-marketplace` are historical planning identifiers, not current product names. Logo, visual identity, colors, typography, domain, and tagline remain open. `fixhub-platform` is a recommended identifier; this public repository uses `main` as its default branch.
 
 This repository contains planning documentation, a locally runnable UI demonstration and an optional PostgreSQL-backed API implementation. Local tests and synthetic database proofs cover selected behavior; live provider delivery and production operation remain unverified. The marketplace has not launched, and the UI is not an approved final product design. See [the documentation index](docs/README.md), [approved governing roadmap V4.1](docs/roadmap/master-roadmap.md), [document provenance](docs/governance/document-provenance.md), [contribution guidance](CONTRIBUTING.md), and [security policy](SECURITY.md).
 
